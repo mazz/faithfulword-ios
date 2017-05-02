@@ -1,0 +1,9 @@
+*.m4v
+*.xcworkspace/
+target/
+*.xcuserdata/
+*.xcscheme
+*.pkg
+*.ipa
+xcschememanagement.plist
+Pods/
