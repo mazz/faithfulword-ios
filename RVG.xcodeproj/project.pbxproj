@@ -7,6 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08D033F70490F54B52DA4B70 /* Pods_RVGTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */; };
+		1EDE74EBB4FC67EBD59742ED /* Pods_RVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */; };
+		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
+		701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */; };
+		701F01551E65DA2E0010B320 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* Reachability.swift */; };
+		701F01571E65DA440010B320 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01561E65DA440010B320 /* BaseClass.swift */; };
+		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
+		701F015F1E65E9810010B320 /* VcTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F015E1E65E9810010B320 /* VcTableViewCell.swift */; };
+		701F01611E65F3B40010B320 /* CollectionViewCellVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */; };
+		701F01631E65F64A0010B320 /* ViewControllerBusinessLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01621E65F64A0010B320 /* ViewControllerBusinessLogicClass.swift */; };
+		703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */; };
+		703D12B91E67156D0093E1AA /* SongsVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* SongsVc.swift */; };
+		703D12BC1E6718DF0093E1AA /* SongCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */; };
+		703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12BD1E67199F0093E1AA /* ModelSongClass.swift */; };
+		703D12C01E671A0E0093E1AA /* SongVcBusinessLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12BF1E671A0E0093E1AA /* SongVcBusinessLogicClass.swift */; };
+		703D12C31E6721820093E1AA /* playerVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12C21E6721820093E1AA /* playerVc.swift */; };
+		709234321E673BDE001F1621 /* classsDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709234311E673BDE001F1621 /* classsDownload.swift */; };
+		70C937A11E6B38F900ACE009 /* AboutUsVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsVc.swift */; };
+		70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */; };
+		70C937A71E6B474500ACE009 /* ContactUsVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A61E6B474500ACE009 /* ContactUsVc.swift */; };
+		70C937A91E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */; };
+		70C937AB1E6B4D5100ACE009 /* ModelContactUs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */; };
 		70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20611E6479A800AF619F /* AppDelegate.swift */; };
 		70CD20641E6479A800AF619F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* ViewController.swift */; };
 		70CD20671E6479A800AF619F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20651E6479A800AF619F /* Main.storyboard */; };
@@ -14,6 +36,12 @@
 		70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */; };
 		70CD20771E6479A800AF619F /* RVGTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20761E6479A800AF619F /* RVGTests.swift */; };
 		70CD20821E6479A800AF619F /* RVGUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20811E6479A800AF619F /* RVGUITests.swift */; };
+		70CD20921E64838800AF619F /* Singleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20911E64838800AF619F /* Singleton.swift */; };
+		70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD209F1E64857D00AF619F /* ExtentionsAll.swift */; };
+		70CD20A71E6486CC00AF619F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20A61E6486CC00AF619F /* Constants.swift */; };
+		70E4B3191E6BBC7300A214E4 /* ChangeLanguageVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E4B3181E6BBC7300A214E4 /* ChangeLanguageVc.swift */; };
+		70E4B31B1E6BC41000A214E4 /* TableViewCellFutter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E4B31A1E6BC41000A214E4 /* TableViewCellFutter.swift */; };
+		C4BABE1A6FF4627E9945C10B /* Pods_RVGUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +62,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
+		54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.debug.xcconfig"; sourceTree = "<group>"; };
+		5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.release.xcconfig"; sourceTree = "<group>"; };
+		701F014F1E65DA000010B320 /* LoadingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
+		701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceSingleTon.swift; sourceTree = "<group>"; };
+		701F01541E65DA2E0010B320 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseClass.swift; sourceTree = "<group>"; };
+		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
+		701F015E1E65E9810010B320 /* VcTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VcTableViewCell.swift; sourceTree = "<group>"; };
+		701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCellVc.swift; sourceTree = "<group>"; };
+		701F01621E65F64A0010B320 /* ViewControllerBusinessLogicClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerBusinessLogicClass.swift; sourceTree = "<group>"; };
+		703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelOfViewControllerFolders.swift; sourceTree = "<group>"; };
+		703D12B81E67156D0093E1AA /* SongsVc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongsVc.swift; sourceTree = "<group>"; };
+		703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCellTableViewCell.swift; sourceTree = "<group>"; };
+		703D12BD1E67199F0093E1AA /* ModelSongClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSongClass.swift; sourceTree = "<group>"; };
+		703D12BF1E671A0E0093E1AA /* SongVcBusinessLogicClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongVcBusinessLogicClass.swift; sourceTree = "<group>"; };
+		703D12C21E6721820093E1AA /* playerVc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playerVc.swift; sourceTree = "<group>"; };
+		704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.release.xcconfig"; sourceTree = "<group>"; };
+		708F578A1E7482B10011639A /* RVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RVG.entitlements; sourceTree = "<group>"; };
+		709234311E673BDE001F1621 /* classsDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classsDownload.swift; sourceTree = "<group>"; };
+		70C937A01E6B38F900ACE009 /* AboutUsVc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutUsVc.swift; sourceTree = "<group>"; };
+		70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyPolicy.swift; sourceTree = "<group>"; };
+		70C937A61E6B474500ACE009 /* ContactUsVc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsVc.swift; sourceTree = "<group>"; };
+		70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsBusinessLogicClass.swift; sourceTree = "<group>"; };
+		70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelContactUs.swift; sourceTree = "<group>"; };
 		70CD205E1E6479A800AF619F /* RVG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RVG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20611E6479A800AF619F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70CD20631E6479A800AF619F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +102,14 @@
 		70CD207D1E6479A800AF619F /* RVGUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RVGUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20811E6479A800AF619F /* RVGUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RVGUITests.swift; sourceTree = "<group>"; };
 		70CD20831E6479A900AF619F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		70CD20911E64838800AF619F /* Singleton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Singleton.swift; sourceTree = "<group>"; };
+		70CD209F1E64857D00AF619F /* ExtentionsAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtentionsAll.swift; sourceTree = "<group>"; };
+		70CD20A61E6486CC00AF619F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		70E4B3181E6BBC7300A214E4 /* ChangeLanguageVc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeLanguageVc.swift; sourceTree = "<group>"; };
+		70E4B31A1E6BC41000A214E4 /* TableViewCellFutter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCellFutter.swift; sourceTree = "<group>"; };
+		9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AF36FF2BC753A1E5EDF5D392 /* Pods-RVGTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EDE74EBB4FC67EBD59742ED /* Pods_RVG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08D033F70490F54B52DA4B70 /* Pods_RVGTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,12 +133,110 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4BABE1A6FF4627E9945C10B /* Pods_RVGUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */,
+				C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */,
+				9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		701F01531E65DA1F0010B320 /* Rechability */ = {
+			isa = PBXGroup;
+			children = (
+				701F01541E65DA2E0010B320 /* Reachability.swift */,
+			);
+			name = Rechability;
+			sourceTree = "<group>";
+		};
+		701F015C1E65E9350010B320 /* FolderVc */ = {
+			isa = PBXGroup;
+			children = (
+				701F015D1E65E9440010B320 /* cell */,
+				70CD20631E6479A800AF619F /* ViewController.swift */,
+				701F01621E65F64A0010B320 /* ViewControllerBusinessLogicClass.swift */,
+			);
+			name = FolderVc;
+			sourceTree = "<group>";
+		};
+		701F015D1E65E9440010B320 /* cell */ = {
+			isa = PBXGroup;
+			children = (
+				701F015E1E65E9810010B320 /* VcTableViewCell.swift */,
+				701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */,
+				70E4B31A1E6BC41000A214E4 /* TableViewCellFutter.swift */,
+			);
+			name = cell;
+			sourceTree = "<group>";
+		};
+		703D12B71E6715540093E1AA /* SongsVc */ = {
+			isa = PBXGroup;
+			children = (
+				703D12BA1E6718B90093E1AA /* cell */,
+				703D12B81E67156D0093E1AA /* SongsVc.swift */,
+				703D12BF1E671A0E0093E1AA /* SongVcBusinessLogicClass.swift */,
+			);
+			name = SongsVc;
+			sourceTree = "<group>";
+		};
+		703D12BA1E6718B90093E1AA /* cell */ = {
+			isa = PBXGroup;
+			children = (
+				703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */,
+			);
+			name = cell;
+			sourceTree = "<group>";
+		};
+		703D12C11E6721650093E1AA /* PlayerVc */ = {
+			isa = PBXGroup;
+			children = (
+				703D12C21E6721820093E1AA /* playerVc.swift */,
+			);
+			name = PlayerVc;
+			sourceTree = "<group>";
+		};
+		70C1E9551E6490630031761A /* LoadingIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				701F014F1E65DA000010B320 /* LoadingIndicator.swift */,
+			);
+			name = LoadingIndicator;
+			sourceTree = "<group>";
+		};
+		70C9379F1E6B38E300ACE009 /* AboutUs */ = {
+			isa = PBXGroup;
+			children = (
+				70C937A01E6B38F900ACE009 /* AboutUsVc.swift */,
+			);
+			name = AboutUs;
+			sourceTree = "<group>";
+		};
+		70C937A21E6B3F8400ACE009 /* PrivacyPolicy */ = {
+			isa = PBXGroup;
+			children = (
+				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
+			);
+			name = PrivacyPolicy;
+			sourceTree = "<group>";
+		};
+		70C937A51E6B472700ACE009 /* ContactUsVc */ = {
+			isa = PBXGroup;
+			children = (
+				70C937A61E6B474500ACE009 /* ContactUsVc.swift */,
+				70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */,
+			);
+			name = ContactUsVc;
+			sourceTree = "<group>";
+		};
 		70CD20551E6479A800AF619F = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +244,8 @@
 				70CD20751E6479A800AF619F /* RVGTests */,
 				70CD20801E6479A800AF619F /* RVGUITests */,
 				70CD205F1E6479A800AF619F /* Products */,
+				ECD8BE2A9332D5FFAA15DA3A /* Pods */,
+				1B0B08D6C53FEED03CFF156F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,12 +262,12 @@
 		70CD20601E6479A800AF619F /* RVG */ = {
 			isa = PBXGroup;
 			children = (
+				708F578A1E7482B10011639A /* RVG.entitlements */,
+				70CD20931E64842000AF619F /* MVC */,
 				70CD20611E6479A800AF619F /* AppDelegate.swift */,
-				70CD20631E6479A800AF619F /* ViewController.swift */,
-				70CD20651E6479A800AF619F /* Main.storyboard */,
 				70CD20681E6479A800AF619F /* Assets.xcassets */,
-				70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */,
 				70CD206D1E6479A800AF619F /* Info.plist */,
+				70CD20911E64838800AF619F /* Singleton.swift */,
 			);
 			path = RVG;
 			sourceTree = "<group>";
@@ -125,6 +290,134 @@
 			path = RVGUITests;
 			sourceTree = "<group>";
 		};
+		70CD20931E64842000AF619F /* MVC */ = {
+			isa = PBXGroup;
+			children = (
+				70CD20971E64845A00AF619F /* Models */,
+				70CD20961E64844300AF619F /* Views */,
+				70CD20941E64842B00AF619F /* Controllers */,
+				70CD20951E64843600AF619F /* HelperClasses */,
+			);
+			name = MVC;
+			sourceTree = "<group>";
+		};
+		70CD20941E64842B00AF619F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				70E4B3171E6BBC5400A214E4 /* ChangeLanguageVc */,
+				70C937A51E6B472700ACE009 /* ContactUsVc */,
+				70C937A21E6B3F8400ACE009 /* PrivacyPolicy */,
+				70C9379F1E6B38E300ACE009 /* AboutUs */,
+				703D12C11E6721650093E1AA /* PlayerVc */,
+				703D12B71E6715540093E1AA /* SongsVc */,
+				701F015C1E65E9350010B320 /* FolderVc */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		70CD20951E64843600AF619F /* HelperClasses */ = {
+			isa = PBXGroup;
+			children = (
+				701F01531E65DA1F0010B320 /* Rechability */,
+				70C1E9551E6490630031761A /* LoadingIndicator */,
+				70CD20A51E6486B400AF619F /* Constants */,
+				70CD20A41E64869100AF619F /* ThirdParties */,
+				70CD20A11E6485A000AF619F /* InheritanceBaseClass */,
+				70CD209E1E64856300AF619F /* ExtentionsAll */,
+				70CD209B1E64852400AF619F /* CommonMethodsClasss */,
+				70CD20981E6484CF00AF619F /* WebApiClass */,
+				709234311E673BDE001F1621 /* classsDownload.swift */,
+			);
+			name = HelperClasses;
+			sourceTree = "<group>";
+		};
+		70CD20961E64844300AF619F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */,
+				70CD20651E6479A800AF619F /* Main.storyboard */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		70CD20971E64845A00AF619F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */,
+				703D12BD1E67199F0093E1AA /* ModelSongClass.swift */,
+				70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		70CD20981E6484CF00AF619F /* WebApiClass */ = {
+			isa = PBXGroup;
+			children = (
+				701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */,
+			);
+			name = WebApiClass;
+			sourceTree = "<group>";
+		};
+		70CD209B1E64852400AF619F /* CommonMethodsClasss */ = {
+			isa = PBXGroup;
+			children = (
+				701F01581E65DA590010B320 /* CommonMethodsClass.swift */,
+			);
+			name = CommonMethodsClasss;
+			sourceTree = "<group>";
+		};
+		70CD209E1E64856300AF619F /* ExtentionsAll */ = {
+			isa = PBXGroup;
+			children = (
+				70CD209F1E64857D00AF619F /* ExtentionsAll.swift */,
+			);
+			name = ExtentionsAll;
+			sourceTree = "<group>";
+		};
+		70CD20A11E6485A000AF619F /* InheritanceBaseClass */ = {
+			isa = PBXGroup;
+			children = (
+				701F01561E65DA440010B320 /* BaseClass.swift */,
+			);
+			name = InheritanceBaseClass;
+			sourceTree = "<group>";
+		};
+		70CD20A41E64869100AF619F /* ThirdParties */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ThirdParties;
+			sourceTree = "<group>";
+		};
+		70CD20A51E6486B400AF619F /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				70CD20A61E6486CC00AF619F /* Constants.swift */,
+			);
+			name = Constants;
+			sourceTree = "<group>";
+		};
+		70E4B3171E6BBC5400A214E4 /* ChangeLanguageVc */ = {
+			isa = PBXGroup;
+			children = (
+				70E4B3181E6BBC7300A214E4 /* ChangeLanguageVc.swift */,
+			);
+			name = ChangeLanguageVc;
+			sourceTree = "<group>";
+		};
+		ECD8BE2A9332D5FFAA15DA3A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */,
+				42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */,
+				AF36FF2BC753A1E5EDF5D392 /* Pods-RVGTests.debug.xcconfig */,
+				5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */,
+				39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */,
+				704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +425,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "RVG" */;
 			buildPhases = (
+				7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */,
 				70CD205A1E6479A800AF619F /* Sources */,
 				70CD205B1E6479A800AF619F /* Frameworks */,
 				70CD205C1E6479A800AF619F /* Resources */,
+				33FE5B74C59638D836131FA2 /* [CP] Embed Pods Frameworks */,
+				8D30C73712A29CC525F02209 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -149,9 +445,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70CD20891E6479A900AF619F /* Build configuration list for PBXNativeTarget "RVGTests" */;
 			buildPhases = (
+				728593336821B7B36BBCDB60 /* [CP] Check Pods Manifest.lock */,
 				70CD206E1E6479A800AF619F /* Sources */,
 				70CD206F1E6479A800AF619F /* Frameworks */,
 				70CD20701E6479A800AF619F /* Resources */,
+				7BF17F791A2471A21D364F36 /* [CP] Embed Pods Frameworks */,
+				763A934FA3C53F316570A20E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -167,9 +466,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70CD208C1E6479A900AF619F /* Build configuration list for PBXNativeTarget "RVGUITests" */;
 			buildPhases = (
+				84C16F592823C0C6BEDCB3B7 /* [CP] Check Pods Manifest.lock */,
 				70CD20791E6479A800AF619F /* Sources */,
 				70CD207A1E6479A800AF619F /* Frameworks */,
 				70CD207B1E6479A800AF619F /* Resources */,
+				C876F8C81075A62C1B91F49E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,7 +494,16 @@
 				TargetAttributes = {
 					70CD205D1E6479A800AF619F = {
 						CreatedOnToolsVersion = 8.0;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = TLUP94SK4Y;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InterAppAudio = {
+								enabled = 0;
+							};
+						};
 					};
 					70CD20711E6479A800AF619F = {
 						CreatedOnToolsVersion = 8.0;
@@ -254,13 +564,161 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		33FE5B74C59638D836131FA2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RVG/Pods-RVG-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		728593336821B7B36BBCDB60 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		763A934FA3C53F316570A20E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		7BF17F791A2471A21D364F36 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		84C16F592823C0C6BEDCB3B7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		8D30C73712A29CC525F02209 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RVG/Pods-RVG-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C876F8C81075A62C1B91F49E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		70CD205A1E6479A800AF619F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70E4B31B1E6BC41000A214E4 /* TableViewCellFutter.swift in Sources */,
+				70C937A91E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift in Sources */,
+				70C937A11E6B38F900ACE009 /* AboutUsVc.swift in Sources */,
+				703D12BC1E6718DF0093E1AA /* SongCellTableViewCell.swift in Sources */,
+				701F01631E65F64A0010B320 /* ViewControllerBusinessLogicClass.swift in Sources */,
+				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
+				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
+				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
+				703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */,
+				703D12C31E6721820093E1AA /* playerVc.swift in Sources */,
+				703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */,
 				70CD20641E6479A800AF619F /* ViewController.swift in Sources */,
+				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
+				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
+				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
+				703D12C01E671A0E0093E1AA /* SongVcBusinessLogicClass.swift in Sources */,
+				701F01611E65F3B40010B320 /* CollectionViewCellVc.swift in Sources */,
+				70C937A71E6B474500ACE009 /* ContactUsVc.swift in Sources */,
+				70CD20921E64838800AF619F /* Singleton.swift in Sources */,
+				70E4B3191E6BBC7300A214E4 /* ChangeLanguageVc.swift in Sources */,
+				703D12B91E67156D0093E1AA /* SongsVc.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
+				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
+				701F015F1E65E9810010B320 /* VcTableViewCell.swift in Sources */,
+				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
+				70C937AB1E6B4D5100ACE009 /* ModelContactUs.swift in Sources */,
+				701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,30 +866,45 @@
 		};
 		70CD20871E6479A900AF619F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
+				DEVELOPMENT_TEAM = TLUP94SK4Y;
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.charan.RVG;
+				PRODUCT_BUNDLE_IDENTIFIER = com.charan.SRVG;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "272e52a3-6107-4234-88b6-28b3e24317b1";
+				PROVISIONING_PROFILE_SPECIFIER = "XC Ad Hoc: *";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		70CD20881E6479A900AF619F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
+				DEVELOPMENT_TEAM = AW22Z53SAJ;
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.charan.RVG;
+				PRODUCT_BUNDLE_IDENTIFIER = com.charan.SRVG;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "0ff86994-58fe-40eb-8631-486ceb10764b";
+				PROVISIONING_PROFILE_SPECIFIER = DistibutionRVG;
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 		70CD208A1E6479A900AF619F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AF36FF2BC753A1E5EDF5D392 /* Pods-RVGTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -446,6 +919,7 @@
 		};
 		70CD208B1E6479A900AF619F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -460,6 +934,7 @@
 		};
 		70CD208D1E6479A900AF619F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = RVGUITests/Info.plist;
@@ -473,6 +948,7 @@
 		};
 		70CD208E1E6479A900AF619F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				INFOPLIST_FILE = RVGUITests/Info.plist;
@@ -503,6 +979,7 @@
 				70CD20881E6479A900AF619F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70CD20891E6479A900AF619F /* Build configuration list for PBXNativeTarget "RVGTests" */ = {
 			isa = XCConfigurationList;
@@ -511,6 +988,7 @@
 				70CD208B1E6479A900AF619F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70CD208C1E6479A900AF619F /* Build configuration list for PBXNativeTarget "RVGUITests" */ = {
 			isa = XCConfigurationList;
@@ -519,6 +997,7 @@
 				70CD208E1E6479A900AF619F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
