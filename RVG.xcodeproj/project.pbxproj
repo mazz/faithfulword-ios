@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		08D033F70490F54B52DA4B70 /* Pods_RVGTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */; };
 		1EDE74EBB4FC67EBD59742ED /* Pods_RVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */; };
+		689DEFD21EB9753F00371829 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689DEFD11EB9753F00371829 /* DonateViewController.swift */; };
+		689DEFD61EBAC52C00371829 /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689DEFD51EBAC52C00371829 /* MenuTableViewCell.swift */; };
+		689DEFDC1EBAC68400371829 /* MenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 689DEFDB1EBAC68400371829 /* MenuTableViewCell.xib */; };
 		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
 		701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */; };
 		701F01551E65DA2E0010B320 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* Reachability.swift */; };
@@ -67,6 +70,9 @@
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
 		54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.debug.xcconfig"; sourceTree = "<group>"; };
 		5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.release.xcconfig"; sourceTree = "<group>"; };
+		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
+		689DEFD51EBAC52C00371829 /* MenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
+		689DEFDB1EBAC68400371829 /* MenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuTableViewCell.xib; sourceTree = "<group>"; };
 		701F014F1E65DA000010B320 /* LoadingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceSingleTon.swift; sourceTree = "<group>"; };
 		701F01541E65DA2E0010B320 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -174,6 +180,8 @@
 				701F015E1E65E9810010B320 /* VcTableViewCell.swift */,
 				701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */,
 				70E4B31A1E6BC41000A214E4 /* TableViewCellFutter.swift */,
+				689DEFD51EBAC52C00371829 /* MenuTableViewCell.swift */,
+				689DEFDB1EBAC68400371829 /* MenuTableViewCell.xib */,
 			);
 			name = cell;
 			sourceTree = "<group>";
@@ -311,6 +319,7 @@
 				703D12C11E6721650093E1AA /* PlayerVc */,
 				703D12B71E6715540093E1AA /* SongsVc */,
 				701F015C1E65E9350010B320 /* FolderVc */,
+				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -489,8 +498,8 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
-				ORGANIZATIONNAME = "Charanbir Sandhu";
+				LastUpgradeCheck = 0810;
+				ORGANIZATIONNAME = KJVRVG;
 				TargetAttributes = {
 					70CD205D1E6479A800AF619F = {
 						CreatedOnToolsVersion = 8.0;
@@ -544,6 +553,7 @@
 			files = (
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
+				689DEFDC1EBAC68400371829 /* MenuTableViewCell.xib in Resources */,
 				70CD20671E6479A800AF619F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -702,11 +712,13 @@
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
 				703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */,
 				703D12C31E6721820093E1AA /* playerVc.swift in Sources */,
+				689DEFD61EBAC52C00371829 /* MenuTableViewCell.swift in Sources */,
 				703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */,
 				70CD20641E6479A800AF619F /* ViewController.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
 				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
+				689DEFD21EB9753F00371829 /* DonateViewController.swift in Sources */,
 				703D12C01E671A0E0093E1AA /* SongVcBusinessLogicClass.swift in Sources */,
 				701F01611E65F3B40010B320 /* CollectionViewCellVc.swift in Sources */,
 				70C937A71E6B474500ACE009 /* ContactUsVc.swift in Sources */,
@@ -791,6 +803,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -840,6 +853,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -868,6 +882,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
@@ -887,6 +902,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
