@@ -22,7 +22,7 @@ class ViewControllerBusinessLogicClass {
                         obj.arrOfFolders.append(object)
                     }
                 }
-                obj.collectionVw.reloadData()
+                obj.collectionView.reloadData()
             }
             }) { (err) in
                 obj.showSingleButtonAlertWithoutAction(title: err)
