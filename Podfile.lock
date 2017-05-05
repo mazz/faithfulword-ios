@@ -1,12 +1,22 @@
 PODS:
+  - CardIO (5.4.1)
   - IQKeyboardManagerSwift (4.0.6)
+  - PayPal-iOS-SDK (2.15.1):
+    - PayPal-iOS-SDK/CardIO (= 2.15.1)
+    - PayPal-iOS-SDK/Core (= 2.15.1)
+  - PayPal-iOS-SDK/CardIO (2.15.1):
+    - CardIO (~> 5.4.1)
+  - PayPal-iOS-SDK/Core (2.15.1)
 
 DEPENDENCIES:
   - IQKeyboardManagerSwift
+  - PayPal-iOS-SDK
 
 SPEC CHECKSUMS:
+  CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
   IQKeyboardManagerSwift: b3015e819559ca76381f87a0833f44d178564603
+  PayPal-iOS-SDK: c68974319e6ded822313d831ad6051dcf23e00f9
 
-PODFILE CHECKSUM: bed29a2e767fb0de08bc0d91dcb82485742ab57c
+PODFILE CHECKSUM: 092cfd9ea969aa05a267f6cf0a99b1abd429ec44
 
 COCOAPODS: 1.0.1
