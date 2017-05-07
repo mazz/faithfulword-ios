@@ -14,7 +14,7 @@
         <!--Books-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -62,7 +62,7 @@
                                             </constraints>
                                         </view>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="jUQ-7D-5ZQ" customClass="VcTableViewCell" customModule="RVG" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="jUQ-7D-5ZQ" customClass="VcTableViewCell" customModule="KJVRVG" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="122" width="300" height="50"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jUQ-7D-5ZQ" id="fIp-Yt-2Tk">
@@ -119,7 +119,7 @@
                                                     <outlet property="lbl" destination="F8E-Vu-Fcf" id="9ZQ-TJ-Pq4"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell1" rowHeight="130" id="Ht1-5T-Heq" customClass="TableViewCellFutter" customModule="RVG" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell1" rowHeight="130" id="Ht1-5T-Heq" customClass="TableViewCellFutter" customModule="KJVRVG" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="172" width="300" height="130"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ht1-5T-Heq" id="6uv-cj-EX2">
@@ -187,7 +187,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="NHv-4M-a6L" customClass="CollectionViewCellVc" customModule="RVG" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="NHv-4M-a6L" customClass="CollectionViewCellVc" customModule="KJVRVG" customModuleProvider="target">
                                                 <rect key="frame" x="7" y="0.0" width="362" height="91"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -367,7 +367,7 @@
         <!--Change Language-->
         <scene sceneID="V3y-fD-IrM">
             <objects>
-                <viewController storyboardIdentifier="ChangeLanguageVc" title="Change Language" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bs4-fi-hwm" customClass="ChangeLanguageVc" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChangeLanguageVc" title="Change Language" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bs4-fi-hwm" customClass="ChangeLanguageVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="P1m-kd-dsQ"/>
                         <viewControllerLayoutGuide type="bottom" id="Q1s-M9-Odr"/>
@@ -481,7 +481,7 @@
         <!--About Us-->
         <scene sceneID="5pj-jK-np0">
             <objects>
-                <viewController storyboardIdentifier="AboutUsVc" title="About Us" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Mb-Fp-bqX" customClass="AboutUsVc" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AboutUsVc" title="About Us" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Mb-Fp-bqX" customClass="AboutUsVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bzE-fb-NcT"/>
                         <viewControllerLayoutGuide type="bottom" id="ct0-Hv-m5V"/>
@@ -524,7 +524,7 @@
         <!--Chapters-->
         <scene sceneID="IB0-f5-IC3">
             <objects>
-                <viewController storyboardIdentifier="SongsVc" title="Chapters" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kh0-eY-UNT" customClass="SongsVc" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SongsVc" title="Chapters" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kh0-eY-UNT" customClass="SongsVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bqK-Iq-piI"/>
                         <viewControllerLayoutGuide type="bottom" id="vNI-Nw-8qD"/>
@@ -540,7 +540,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="50" id="E7R-hb-Rg7" customClass="SongCellTableViewCell" customModule="RVG" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="50" id="E7R-hb-Rg7" customClass="SongCellTableViewCell" customModule="KJVRVG" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="E7R-hb-Rg7" id="H7p-kl-pWj">
@@ -632,7 +632,7 @@
         <!--KJV RVG-->
         <scene sceneID="jAq-fW-u1T">
             <objects>
-                <viewController storyboardIdentifier="playerVc" title="KJV RVG" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hn4-mT-zVs" customClass="playerVc" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="playerVc" title="KJV RVG" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hn4-mT-zVs" customClass="playerVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ULG-gX-3tW"/>
                         <viewControllerLayoutGuide type="bottom" id="7Jp-fz-RyR"/>
@@ -821,7 +821,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7Ml-XL-Vn7" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" translucent="NO" id="rnM-WX-jCO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="blackTranslucent" translucent="NO" id="rnM-WX-jCO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -843,7 +843,7 @@
         <!--Privacy Policy-->
         <scene sceneID="hUj-aS-x0t">
             <objects>
-                <viewController storyboardIdentifier="PrivacyPolicy" useStoryboardIdentifierAsRestorationIdentifier="YES" id="VVa-dK-r7o" customClass="PrivacyPolicy" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PrivacyPolicy" useStoryboardIdentifierAsRestorationIdentifier="YES" id="VVa-dK-r7o" customClass="PrivacyPolicy" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="eT2-qi-o1Z"/>
                         <viewControllerLayoutGuide type="bottom" id="nLy-9D-e8k"/>
@@ -886,7 +886,7 @@
         <!--Contact Us Vc-->
         <scene sceneID="0y0-Ct-tC6">
             <objects>
-                <viewController storyboardIdentifier="ContactUsVc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="i72-Py-cYH" customClass="ContactUsVc" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ContactUsVc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="i72-Py-cYH" customClass="ContactUsVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="t2W-EY-RNZ"/>
                         <viewControllerLayoutGuide type="bottom" id="pfL-VD-onp"/>
@@ -1083,7 +1083,7 @@
         <!--Donate View Controller-->
         <scene sceneID="uRe-vR-aXS">
             <objects>
-                <viewController storyboardIdentifier="DonateViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CF8-mr-EKi" customClass="DonateViewController" customModule="RVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DonateViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CF8-mr-EKi" customClass="DonateViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="uDq-6u-u0R"/>
                         <viewControllerLayoutGuide type="bottom" id="BUc-kQ-gap"/>
@@ -1095,25 +1095,126 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash-screen" translatesAutoresizingMaskIntoConstraints="NO" id="n2g-1z-aUT">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apIcon" translatesAutoresizingMaskIntoConstraints="NO" id="p2j-Ot-tXC">
+                                <rect key="frame" x="123" y="35" width="128" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="808-B2-iCQ"/>
+                                    <constraint firstAttribute="width" constant="128" id="jqT-GE-UEm"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QPj-Ry-cZw">
+                                <rect key="frame" x="0.0" y="200" width="375" height="67"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USD" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AyI-94-1oL">
+                                        <rect key="frame" x="166" y="41" width="42" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="42" id="h56-Pa-sNt"/>
+                                            <constraint firstAttribute="height" constant="21" id="rRX-Yw-jgq"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" usesAttributedText="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="y9O-ba-qMM" customClass="CurrencyField" customModule="KJVRVG" customModuleProvider="target">
+                                        <rect key="frame" x="97.5" y="8" width="180" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="R5P-J8-28P"/>
+                                            <constraint firstAttribute="width" constant="180" id="kuA-bd-NgP"/>
+                                        </constraints>
+                                        <attributedString key="attributedText"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="AyI-94-1oL" firstAttribute="centerX" secondItem="QPj-Ry-cZw" secondAttribute="centerX" id="C7h-wM-n91"/>
+                                    <constraint firstItem="y9O-ba-qMM" firstAttribute="centerX" secondItem="QPj-Ry-cZw" secondAttribute="centerX" id="Cnm-lO-1g7"/>
+                                    <constraint firstAttribute="height" constant="67" id="DAs-HK-M8g"/>
+                                    <constraint firstItem="y9O-ba-qMM" firstAttribute="top" secondItem="QPj-Ry-cZw" secondAttribute="top" constant="8" id="Tsy-ra-8ns"/>
+                                    <constraint firstItem="AyI-94-1oL" firstAttribute="top" secondItem="y9O-ba-qMM" secondAttribute="bottom" constant="3" id="s3e-rD-zyO"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Donate to KJVRVG" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GzK-B5-PVL">
+                                <rect key="frame" x="73" y="171" width="229" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="229" id="4U4-u7-Gme"/>
+                                    <constraint firstAttribute="height" constant="21" id="hMu-pX-Cc7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="efg-tW-S3C">
+                                <rect key="frame" x="77" y="617" width="221" height="30"/>
+                                <color key="backgroundColor" red="0.33725490200000002" green="0.60686274510000005" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="221" id="HAY-fZ-3s7"/>
+                                    <constraint firstAttribute="height" constant="30" id="p5D-cE-nCV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <state key="normal" title="Donate Via PayPal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="donate:" destination="CF8-mr-EKi" eventType="touchUpInside" id="I9E-AF-9E9"/>
+                                </connections>
+                            </button>
+                            <view opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1pt-ZT-dVt">
+                                <rect key="frame" x="20" y="283" width="335" height="100"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" image="check" translatesAutoresizingMaskIntoConstraints="NO" id="iW9-1t-I7p">
+                                        <rect key="frame" x="107" y="4" width="121" height="42"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q2F-xp-T0c">
+                                        <rect key="frame" x="0.0" y="54" width="335" height="38"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <string key="text">Your donation was successful.
+Thank you!</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.85000002379999995" green="0.85000002379999995" blue="0.85000002379999995" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="GzK-B5-PVL" firstAttribute="top" secondItem="p2j-Ot-tXC" secondAttribute="bottom" constant="8" id="2iV-p9-9JS"/>
+                            <constraint firstAttribute="trailing" secondItem="QPj-Ry-cZw" secondAttribute="trailing" id="7Tt-Qm-nx1"/>
+                            <constraint firstItem="p2j-Ot-tXC" firstAttribute="top" secondItem="uDq-6u-u0R" secondAttribute="bottom" constant="15" id="GVw-sq-GK0"/>
                             <constraint firstAttribute="trailing" secondItem="n2g-1z-aUT" secondAttribute="trailing" id="OX4-ZE-5o3"/>
                             <constraint firstItem="n2g-1z-aUT" firstAttribute="top" secondItem="37B-NC-wJp" secondAttribute="top" id="Sc1-B8-coo"/>
+                            <constraint firstItem="QPj-Ry-cZw" firstAttribute="top" secondItem="GzK-B5-PVL" secondAttribute="bottom" constant="8" id="WU7-nd-JVq"/>
+                            <constraint firstItem="BUc-kQ-gap" firstAttribute="top" secondItem="efg-tW-S3C" secondAttribute="bottom" constant="20" id="Wz3-AT-3Rz"/>
+                            <constraint firstItem="GzK-B5-PVL" firstAttribute="centerX" secondItem="37B-NC-wJp" secondAttribute="centerX" id="ZrC-bf-VF5"/>
                             <constraint firstItem="n2g-1z-aUT" firstAttribute="leading" secondItem="37B-NC-wJp" secondAttribute="leading" id="bVc-WJ-mag"/>
+                            <constraint firstItem="QPj-Ry-cZw" firstAttribute="leading" secondItem="37B-NC-wJp" secondAttribute="leading" id="f1k-A4-DqI"/>
                             <constraint firstItem="BUc-kQ-gap" firstAttribute="top" secondItem="n2g-1z-aUT" secondAttribute="bottom" id="jl0-7f-cNA"/>
+                            <constraint firstItem="efg-tW-S3C" firstAttribute="centerX" secondItem="37B-NC-wJp" secondAttribute="centerX" id="mLA-8a-GbB"/>
+                            <constraint firstItem="p2j-Ot-tXC" firstAttribute="centerX" secondItem="37B-NC-wJp" secondAttribute="centerX" id="of3-2S-mog"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="donateButton" destination="efg-tW-S3C" id="dRJ-cO-lv4"/>
+                        <outlet property="donationTextField" destination="y9O-ba-qMM" id="XmY-Mz-Cdl"/>
+                        <outlet property="logoImageView" destination="p2j-Ot-tXC" id="AYR-Jx-txE"/>
+                        <outlet property="successMessageLabel" destination="Q2F-xp-T0c" id="SJl-B6-Fw9"/>
+                        <outlet property="successView" destination="1pt-ZT-dVt" id="sKq-43-6t2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6cG-CV-Xi6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2590" y="704"/>
+            <point key="canvasLocation" x="3940" y="769.56521739130437"/>
         </scene>
     </scenes>
     <resources>
         <image name="Splash-screen" width="780" height="1104"/>
         <image name="apIcon" width="200" height="200"/>
         <image name="boo" width="1139" height="857"/>
+        <image name="check" width="84" height="75"/>
         <image name="close" width="780" height="1104"/>
         <image name="dots" width="167" height="167"/>
         <image name="ffffff_ecf0f1-3" width="335" height="335"/>
