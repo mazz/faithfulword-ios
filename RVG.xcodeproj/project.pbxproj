@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		08D033F70490F54B52DA4B70 /* Pods_RVGTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */; };
-		1EDE74EBB4FC67EBD59742ED /* Pods_RVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */; };
 		689DEFD21EB9753F00371829 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689DEFD11EB9753F00371829 /* DonateViewController.swift */; };
 		689DEFD61EBAC52C00371829 /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689DEFD51EBAC52C00371829 /* MenuTableViewCell.swift */; };
 		689DEFDC1EBAC68400371829 /* MenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 689DEFDB1EBAC68400371829 /* MenuTableViewCell.xib */; };
@@ -131,7 +130,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1EDE74EBB4FC67EBD59742ED /* Pods_RVG.framework in Frameworks */,
 				F4EAE455D8A9B4AFF89DDE65 /* Pods_KJVRVG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
