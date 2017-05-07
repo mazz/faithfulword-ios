@@ -16,13 +16,25 @@ class ViewController: BaseClass {
     static var shareInstance : ViewController?
     var arrOfFolders : [ModelOfViewControllerFolders] = []
     let objViewControllerBusinessLogicClass : ViewControllerBusinessLogicClass? = ViewControllerBusinessLogicClass()
-    @IBOutlet weak var collectionVw: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnBlur: UIButton!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
-    @IBOutlet weak var tableVw: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet var menuBar: UIBarButtonItem!
+    
+    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
+                                               (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
+                                               (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
+                                               (NSLocalizedString("Change Language", comment: ""), UIImage(named: "language_180")!),
+                                               (NSLocalizedString("Donate", comment: ""), UIImage(named: "books-stack-of-three")!),
+                                               (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
+                                               (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
+                                               ]
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.register(UINib(nibName: "MenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MenuTableViewCellID")
+        
         ViewController.shareInstance=self
         btnBlur.isHidden=true
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
@@ -67,7 +79,7 @@ class ViewController: BaseClass {
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let layouts = collectionVw.collectionViewLayout as? UICollectionViewFlowLayout
+        let layouts = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
         layouts?.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
     }
     @IBAction func menuBtn(_ sender: UIButton) {
@@ -107,27 +119,29 @@ class ViewController: BaseClass {
 
 extension ViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return 8
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 6 {
+        if indexPath.row == 7 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1") as? TableViewCellFutter
             cell?.selectionStyle = .none
             cell?.setValues(row: indexPath.row)
             
             return cell!
-        }else{
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? VcTableViewCell
+        } else {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? VcTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCellID") as? MenuTableViewCell
+            cell?.backgroundColor = UIColor.clear
             cell?.selectionStyle = .none
-            cell?.setValues(row: indexPath.row)
-            
+            cell?.label.text = tableRowsArray?[indexPath.row].0
+            cell?.iconView.image = tableRowsArray?[indexPath.row].1
             return cell!
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 6 {
+        if indexPath.row == 7 {
             return 130
         }else{
             return 50
@@ -135,26 +149,32 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 6 {
+        if indexPath.row == 7 {
             return
         }
-        if indexPath.row == 0{
+        if indexPath.row == 0 {
             objViewControllerBusinessLogicClass?.hitWebService(obj: self)
-        }else if indexPath.row == 1{
+        }
+        else if indexPath.row == 1 {
             let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsVc")
             self.navigationController?.pushViewController(vc, animated: true)
-        }else if indexPath.row == 2{
+        }
+        else if indexPath.row == 2 {
             shareTextButton()
         }
-        else if indexPath.row == 3{
+        else if indexPath.row == 3 {
             let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageVc")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 4{
+        else if indexPath.row == 4 {
+            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        else if indexPath.row == 5 {
             let vc = self.pushVc(strBdName: "Main", vcName: "PrivacyPolicy")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 5{
+        else if indexPath.row == 6 {
             let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsVc")
             self.navigationController?.pushViewController(vc, animated: true)
         }
