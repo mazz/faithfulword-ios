@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  RVG
 //
 //  Created by Charanbir Sandhu on 27/02/17.
@@ -8,12 +8,12 @@
 
 import UIKit
 
-class ViewController: BaseClass {
+class MainViewController: BaseClass {
 
     @IBOutlet weak var lblHome: UILabel!
     @IBOutlet weak var btnPlayer: UIButton!
     @IBOutlet weak var lblRVG2010: UILabel!
-    static var shareInstance : ViewController?
+    static var shareInstance : MainViewController?
     var arrOfFolders : [ModelOfViewControllerFolders] = []
     let objViewControllerBusinessLogicClass : ViewControllerBusinessLogicClass? = ViewControllerBusinessLogicClass()
     @IBOutlet weak var collectionView: UICollectionView!
@@ -35,7 +35,7 @@ class ViewController: BaseClass {
         
         tableView.register(UINib(nibName: "MenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MenuTableViewCellID")
         
-        ViewController.shareInstance=self
+        MainViewController.shareInstance=self
         btnBlur.isHidden=true
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
        self.navigationItem.leftBarButtonItem=menuBar
@@ -117,7 +117,7 @@ class ViewController: BaseClass {
     }
 }
 
-extension ViewController: UITableViewDelegate,UITableViewDataSource{
+extension MainViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 8
     }
@@ -182,7 +182,7 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource{
     }
 }
 
-extension ViewController: UICollectionViewDelegate,UICollectionViewDataSource{
+extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrOfFolders.count
     }

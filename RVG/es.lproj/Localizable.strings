@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  RVG
+
+  Created by maz on 2017-05-07.
+  Copyright © 2017 KJVRVG. All rights reserved.
+*/
+
+/* No comment provided by engineer. */
+"About Us" = "Información de nosotros";
+
+/* No comment provided by engineer. */
+"Books" = "Libros";
+
+/* No comment provided by engineer. */
+"Change Language" = "Cambiar idioma";
+
+/* No comment provided by engineer. */
+"Contact Us" = "Contáctenos";
+
+/* No comment provided by engineer. */
+"Donate" = "Donate";
+
+/* No comment provided by engineer. */
+"Privacy Policy" = "Política de privacidad";
+
+/* No comment provided by engineer. */
+"Share" = "Compartir";
+
+/* No comment provided by engineer. */
+"Your donation was successful.\nThank you!" = "Your donation was successful.\nThank you!";
+
