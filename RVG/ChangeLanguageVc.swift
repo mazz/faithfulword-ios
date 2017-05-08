@@ -27,8 +27,8 @@ class ChangeLanguageVc: BaseClass {
             language="english"
             UserDefaults.standard.synchronize()
             self.title = "Select Language"
-            ViewController.shareInstance?.tableView.reloadData()
-            ViewController.shareInstance?.collectionView.reloadData()
+            MainViewController.shareInstance?.tableView.reloadData()
+            MainViewController.shareInstance?.collectionView.reloadData()
             }else{
             if language == "english"{
                 lblchangeLanguage.text = "Select Your Language"
@@ -81,8 +81,8 @@ class ChangeLanguageVc: BaseClass {
             return
         }
         language=Lang
-        ViewController.shareInstance?.tableView.reloadData()
-        ViewController.shareInstance?.collectionView.reloadData()
+        MainViewController.shareInstance?.tableView.reloadData()
+        MainViewController.shareInstance?.collectionView.reloadData()
         UserDefaults.standard.set(Lang, forKey: keyForSaveLanguage)
         UserDefaults.standard.synchronize()
         _ = self.navigationController?.popViewController(animated: true)

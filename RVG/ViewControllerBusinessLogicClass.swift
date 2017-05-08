@@ -10,7 +10,7 @@ import UIKit
 
 class ViewControllerBusinessLogicClass {
 
-    func hitWebService(obj:ViewController){
+    func hitWebService(obj:MainViewController){
         WebServiceSingleTon().getRequest(linkUrl: getFolders, indicator: true, success: { (data) in
             print(data)
             if data.count>0{

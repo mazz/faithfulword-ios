@@ -14,7 +14,7 @@
         <!--Books-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -252,7 +252,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xF8-Be-0f9">
-                                                <rect key="frame" x="163" y="12" width="49" height="21"/>
+                                                <rect key="frame" x="163.5" y="12" width="49" height="21"/>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
@@ -386,7 +386,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="language_180" translatesAutoresizingMaskIntoConstraints="NO" id="5dX-AE-KYV">
-                                <rect key="frame" x="168" y="199" width="40" height="40"/>
+                                <rect key="frame" x="167.5" y="199" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5dX-AE-KYV" secondAttribute="height" multiplier="1:1" id="eJQ-OX-cT1"/>
                                     <constraint firstAttribute="width" constant="40" id="hgM-eF-jP0"/>
@@ -659,14 +659,14 @@
                                 </constraints>
                             </view>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="3Nz-sk-CLe">
-                                <rect key="frame" x="48" y="590" width="279" height="31"/>
+                                <rect key="frame" x="48" y="589.5" width="279" height="31"/>
                                 <connections>
                                     <action selector="beginSlider:" destination="hn4-mT-zVs" eventType="touchDown" id="lFK-Ym-WAZ"/>
                                     <action selector="seekSlider:" destination="hn4-mT-zVs" eventType="touchUpInside" id="VIu-7M-eXL"/>
                                 </connections>
                             </slider>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rEM-Lq-Kcf">
-                                <rect key="frame" x="94" y="288" width="37" height="37"/>
+                                <rect key="frame" x="93" y="287.5" width="37.5" height="37.5"/>
                                 <state key="normal" title="0" image="player_prev_180">
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
@@ -681,13 +681,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0fX-Q2-Uxv">
-                                <rect key="frame" x="340" y="23" width="35" height="567"/>
+                                <rect key="frame" x="340" y="23" width="35" height="566.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="Baq-K5-NUj"/>
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8H3-k7-rd1">
-                                <rect key="frame" x="141" y="259" width="94" height="94"/>
+                                <rect key="frame" x="140.5" y="259.5" width="94" height="93.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="8H3-k7-rd1" secondAttribute="height" multiplier="1:1" id="lY5-6X-6HR"/>
                                 </constraints>
@@ -699,7 +699,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ssP-eV-gtk">
-                                <rect key="frame" x="245" y="288" width="37" height="37"/>
+                                <rect key="frame" x="244.5" y="287.5" width="37.5" height="37.5"/>
                                 <state key="normal" title="0" image="player_next_180">
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
@@ -708,7 +708,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mhC-f7-UMq">
-                                <rect key="frame" x="16" y="620" width="37" height="37"/>
+                                <rect key="frame" x="16" y="619.5" width="37.5" height="37.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="mhC-f7-UMq" secondAttribute="height" multiplier="1:1" id="onz-tB-qGH"/>
                                 </constraints>
@@ -720,7 +720,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yeX-p6-GRo">
-                                <rect key="frame" x="322" y="620" width="37" height="37"/>
+                                <rect key="frame" x="321.5" y="619.5" width="37.5" height="37.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="yeX-p6-GRo" secondAttribute="height" multiplier="1:1" id="n0X-60-me7"/>
                                 </constraints>
@@ -732,13 +732,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9V-Xr-3fD">
-                                <rect key="frame" x="4" y="597" width="42" height="17"/>
+                                <rect key="frame" x="4" y="596.5" width="42" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="StG-bJ-zCB">
-                                <rect key="frame" x="329" y="597" width="42" height="17"/>
+                                <rect key="frame" x="329" y="596.5" width="42" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -821,7 +821,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7Ml-XL-Vn7" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="blackTranslucent" translucent="NO" id="rnM-WX-jCO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="blackTranslucent" translucent="NO" id="rnM-WX-jCO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1096,7 +1096,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="apIcon" translatesAutoresizingMaskIntoConstraints="NO" id="p2j-Ot-tXC">
-                                <rect key="frame" x="123" y="35" width="128" height="128"/>
+                                <rect key="frame" x="123.5" y="35" width="128" height="128"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="808-B2-iCQ"/>
                                     <constraint firstAttribute="width" constant="128" id="jqT-GE-UEm"/>
@@ -1106,7 +1106,7 @@
                                 <rect key="frame" x="0.0" y="200" width="375" height="67"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USD" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AyI-94-1oL">
-                                        <rect key="frame" x="166" y="41" width="42" height="21"/>
+                                        <rect key="frame" x="166.5" y="41" width="42" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="42" id="h56-Pa-sNt"/>
                                             <constraint firstAttribute="height" constant="21" id="rRX-Yw-jgq"/>
