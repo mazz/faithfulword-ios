@@ -39,7 +39,7 @@
 		70C937A91E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */; };
 		70C937AB1E6B4D5100ACE009 /* ModelContactUs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */; };
 		70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20611E6479A800AF619F /* AppDelegate.swift */; };
-		70CD20641E6479A800AF619F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* ViewController.swift */; };
+		70CD20641E6479A800AF619F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* MainViewController.swift */; };
 		70CD20671E6479A800AF619F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20651E6479A800AF619F /* Main.storyboard */; };
 		70CD20691E6479A800AF619F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20681E6479A800AF619F /* Assets.xcassets */; };
 		70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */; };
@@ -114,7 +114,7 @@
 		70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelContactUs.swift; sourceTree = "<group>"; };
 		70CD205E1E6479A800AF619F /* KJVRVG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KJVRVG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20611E6479A800AF619F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		70CD20631E6479A800AF619F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		70CD20631E6479A800AF619F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		70CD20661E6479A800AF619F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		70CD20681E6479A800AF619F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		70CD206B1E6479A800AF619F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 				703D12C21E6721820093E1AA /* playerVc.swift */,
 				703D12B81E67156D0093E1AA /* SongsVc.swift */,
 				703D12BF1E671A0E0093E1AA /* SongVcBusinessLogicClass.swift */,
-				70CD20631E6479A800AF619F /* ViewController.swift */,
+				70CD20631E6479A800AF619F /* MainViewController.swift */,
 				701F01621E65F64A0010B320 /* ViewControllerBusinessLogicClass.swift */,
 				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
 			);
@@ -668,7 +668,7 @@
 				703D12C31E6721820093E1AA /* playerVc.swift in Sources */,
 				689DEFD61EBAC52C00371829 /* MenuTableViewCell.swift in Sources */,
 				703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */,
-				70CD20641E6479A800AF619F /* ViewController.swift in Sources */,
+				70CD20641E6479A800AF619F /* MainViewController.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
 				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
