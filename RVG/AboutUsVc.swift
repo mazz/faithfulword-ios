@@ -15,11 +15,12 @@ class AboutUsVc: BaseClass {
         super.viewDidLoad()
         hitWebService()
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english"{
-            self.title = "About Us"
-        }else{
-            self.title = "Información de nosotros"
+        if language == "english" {
+            self.title = NSLocalizedString("About Us", comment: "")
         }
+//        else {
+//            self.title = "Información de nosotros"
+//        }
         // Do any additional setup after loading the view.
     }
     

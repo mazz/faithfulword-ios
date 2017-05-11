@@ -23,9 +23,10 @@ class SongsVc: BaseClass {
         if folderId != nil{
             objSongVcBusinessLogicClass?.hitWebService(obj: self)
         }
-        if language == "english"{
-            self.title = "Chapters"
-        }else{
+        if language == "english" {
+            self.title = NSLocalizedString("Chapters", comment: "")
+        }
+        else {
             self.title = "Capítulos"
         }
     }

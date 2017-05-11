@@ -22,9 +22,10 @@ class SongCellTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     func setValues(_ obj:ModelSongClass){
-        if language == "english"{
+        if language == "english" {
             lbl.text=obj.trackNameInEnglish
-        }else{
+        }
+        else {
             lbl.text=obj.trackNameInSpanish
         }
     }
