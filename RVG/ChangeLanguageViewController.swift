@@ -1,11 +1,11 @@
 //
-//  ChangeLanguageVc.swift
+//  ChangeLanguageViewController.swift
 //  RVG
 //
 
 import UIKit
 
-class ChangeLanguageVc: BaseClass {
+class ChangeLanguageViewController: BaseClass {
     @IBOutlet weak var btnEnglish: UIButton!
     @IBOutlet weak var btnSpinish: UIButton!
     @IBOutlet weak var btnSubmit: UIButton!

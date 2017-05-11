@@ -36,11 +36,14 @@ class MainViewController: BaseClass {
         MainViewController.shareInstance=self
         btnBlur.isHidden=true
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
-       self.navigationItem.leftBarButtonItem=menuBar
+        
+        self.navigationItem.leftBarButtonItem = menuBar
+        
         objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
-        if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil{
+        
+        if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil {
             DispatchQueue.main.async {
-                let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageVc")
+                let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageViewController")
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
@@ -164,7 +167,7 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             shareTextButton()
         }
         else if indexPath.row == 3 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageVc")
+            let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 4 {
