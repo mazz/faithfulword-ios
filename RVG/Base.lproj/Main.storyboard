@@ -386,7 +386,7 @@
         <!--About Us-->
         <scene sceneID="5pj-jK-np0">
             <objects>
-                <viewController storyboardIdentifier="AboutUsVc" title="About Us" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Mb-Fp-bqX" customClass="AboutUsVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AboutUsViewController" title="About Us" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Mb-Fp-bqX" customClass="AboutUsViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bzE-fb-NcT"/>
                         <viewControllerLayoutGuide type="bottom" id="ct0-Hv-m5V"/>
@@ -429,7 +429,7 @@
         <!--Chapters-->
         <scene sceneID="IB0-f5-IC3">
             <objects>
-                <viewController storyboardIdentifier="SongsVc" title="Chapters" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kh0-eY-UNT" customClass="SongsVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SongsViewController" title="Chapters" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kh0-eY-UNT" customClass="SongsViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bqK-Iq-piI"/>
                         <viewControllerLayoutGuide type="bottom" id="vNI-Nw-8qD"/>
@@ -537,7 +537,7 @@
         <!--KJV RVG-->
         <scene sceneID="jAq-fW-u1T">
             <objects>
-                <viewController storyboardIdentifier="playerVc" title="KJV RVG" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hn4-mT-zVs" customClass="playerVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayerViewController" title="KJV RVG" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hn4-mT-zVs" customClass="PlayerViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ULG-gX-3tW"/>
                         <viewControllerLayoutGuide type="bottom" id="7Jp-fz-RyR"/>
@@ -788,10 +788,10 @@
             </objects>
             <point key="canvasLocation" x="2590" y="704"/>
         </scene>
-        <!--Contact Us Vc-->
+        <!--Contact Us View Controller-->
         <scene sceneID="0y0-Ct-tC6">
             <objects>
-                <viewController storyboardIdentifier="ContactUsVc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="i72-Py-cYH" customClass="ContactUsVc" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ContactUsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="i72-Py-cYH" customClass="ContactUsViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="t2W-EY-RNZ"/>
                         <viewControllerLayoutGuide type="bottom" id="pfL-VD-onp"/>

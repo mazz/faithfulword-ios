@@ -15,7 +15,7 @@ class MainViewController: BaseClass {
     @IBOutlet weak var lblRVG2010: UILabel!
     static var shareInstance : MainViewController?
     var arrOfFolders : [ModelOfViewControllerFolders] = []
-    let objViewControllerBusinessLogicClass : ViewControllerBusinessLogicClass? = ViewControllerBusinessLogicClass()
+    let objMainViewControllerBusinessLogicClass : MainViewControllerBusinessLogicClass? = MainViewControllerBusinessLogicClass()
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnBlur: UIButton!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
@@ -40,7 +40,7 @@ class MainViewController: BaseClass {
         btnBlur.isHidden=true
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
        self.navigationItem.leftBarButtonItem=menuBar
-        objViewControllerBusinessLogicClass?.hitWebService(obj: self)
+        objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
         if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil{
             DispatchQueue.main.async {
                 let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageVc")
@@ -50,7 +50,7 @@ class MainViewController: BaseClass {
     }
     
     @IBAction func btnPlayer(_ sender: AnyObject) {
-        if let vc = playerVc.shareInstance{
+        if let vc = PlayerViewController.shareInstance{
             if (self.navigationController?.viewControllers.contains(vc))!{
                 var array = self.navigationController?.viewControllers
                 let index = array?.index(of: vc)
@@ -72,7 +72,7 @@ class MainViewController: BaseClass {
         else {
             lblHome.text = "Libros"
         }
-        if playerVc.shareInstance != nil{
+        if PlayerViewController.shareInstance != nil{
             btnPlayer.isHidden=false
         }else{
             btnPlayer.isHidden=true
@@ -157,10 +157,10 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             return
         }
         if indexPath.row == 0 {
-            objViewControllerBusinessLogicClass?.hitWebService(obj: self)
+            objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
         }
         else if indexPath.row == 1 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsVc")
+            let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 2 {
@@ -179,7 +179,7 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 6 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsVc")
+            let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         menuBtn(UIButton())
@@ -200,7 +200,7 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let id = arrOfFolders[indexPath.row].id{
-            let vc = self.pushVc(strBdName: "Main", vcName: "SongsVc") as? SongsVc
+            let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
             vc?.folderId = id
             self.navigationController?.pushViewController(vc!, animated: true)
         }

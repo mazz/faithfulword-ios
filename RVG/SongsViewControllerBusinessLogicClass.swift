@@ -1,16 +1,13 @@
 //
-//  SongVcBusinessLogicClass.swift
+//  SongsViewControllerBusinessLogicClass.swift
 //  RVG
-//
-//  Created by Charanbir Sandhu on 01/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
 //
 
 import UIKit
 
-class SongVcBusinessLogicClass {
+class SongsViewControllerBusinessLogicClass {
 
-    func hitWebService(obj:SongsVc){
+    func hitWebService(obj:SongsViewController){
         WebServiceSingleTon().getRequest(linkUrl: getFolders+obj.folderId!, indicator: true, success: { (data) in
             print(data)
             if data.count>0{
@@ -29,8 +26,8 @@ class SongVcBusinessLogicClass {
         }
     }
     
-    func checkViewController(obj:SongsVc,row:Int){
-        let vc = obj.pushVc(strBdName: "Main", vcName: "playerVc") as? playerVc
+    func checkViewController(obj:SongsViewController,row:Int){
+        let vc = obj.pushVc(strBdName: "Main", vcName: "PlayerViewController") as? PlayerViewController
         vc?.objSongsModel=[]
         vc?.objSongsModel = obj.arrOfSongs
         vc?.index=row

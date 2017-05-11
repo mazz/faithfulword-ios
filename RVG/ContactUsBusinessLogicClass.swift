@@ -10,7 +10,7 @@ import UIKit
 
 class ContactUsBusinessLogicClass {
 
-    func checkValidations(obj:ContactUsVc){
+    func checkValidations(obj:ContactUsViewController){
         obj.objModel.name=obj.txtName.text
         obj.objModel.email=obj.txtEmail.text
         obj.objModel.message=obj.txtMessage.text
@@ -51,7 +51,7 @@ class ContactUsBusinessLogicClass {
         }
     }
     
-    func hitService(obj:ContactUsVc) {
+    func hitService(obj:ContactUsViewController) {
         let params = ["name":obj.objModel.name!,"email":obj.objModel.email!,"message":obj.objModel.message!]
         WebServiceSingleTon().PostRequest(params: params as NSDictionary, linkUrl: contactUs, indicator: true, success: { (data) in
             

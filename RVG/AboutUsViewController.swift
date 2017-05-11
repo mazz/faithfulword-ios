@@ -1,14 +1,11 @@
 //
-//  AboutUsVc.swift
+//  AboutUsViewController.swift
 //  RVG
-//
-//  Created by Charanbir Sandhu on 04/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
 //
 
 import UIKit
 
-class AboutUsVc: BaseClass {
+class AboutUsViewController: BaseClass {
 
     @IBOutlet weak var txtVw: UITextView!
     override func viewDidLoad() {

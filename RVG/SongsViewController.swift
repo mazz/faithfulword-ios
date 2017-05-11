@@ -1,5 +1,5 @@
 //
-//  SongsVc.swift
+//  SongsViewController.swift
 //  RVG
 //
 //  Created by Charanbir Sandhu on 01/03/17.
@@ -8,20 +8,20 @@
 
 import UIKit
 
-class SongsVc: BaseClass {
+class SongsViewController: BaseClass {
 
-    static var shareInstance : SongsVc? = nil
+    static var shareInstance : SongsViewController? = nil
     @IBOutlet var btnRightPlayer: UIBarButtonItem!
     var arrOfSongs : [ModelSongClass] = []
-    let objSongVcBusinessLogicClass : SongVcBusinessLogicClass? = SongVcBusinessLogicClass()
+    let objSongBusinessLogicClass : SongsViewControllerBusinessLogicClass? = SongsViewControllerBusinessLogicClass()
     var folderId : String? = nil
     @IBOutlet weak var tableVw: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden=false
-        SongsVc.shareInstance=self
+        SongsViewController.shareInstance=self
         if folderId != nil{
-            objSongVcBusinessLogicClass?.hitWebService(obj: self)
+            objSongBusinessLogicClass?.hitWebService(obj: self)
         }
         if language == "english" {
             self.title = NSLocalizedString("Chapters", comment: "")
@@ -33,7 +33,7 @@ class SongsVc: BaseClass {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if playerVc.shareInstance != nil{
+        if PlayerViewController.shareInstance != nil{
             self.navigationItem.rightBarButtonItem=btnRightPlayer
         }else{
             self.navigationItem.rightBarButtonItem=nil
@@ -41,7 +41,7 @@ class SongsVc: BaseClass {
         self.navigationController?.isNavigationBarHidden=false
     }
     @IBAction func btnPlayer(_ sender: AnyObject) {
-        if let vc = playerVc.shareInstance{
+        if let vc = PlayerViewController.shareInstance{
             if (self.navigationController?.viewControllers.contains(vc))!{
                 var array = self.navigationController?.viewControllers
                 let index = array?.index(of: vc)
@@ -68,7 +68,7 @@ class SongsVc: BaseClass {
 
 }
 
-extension SongsVc: UITableViewDelegate,UITableViewDataSource{
+extension SongsViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrOfSongs.count
     }
@@ -82,7 +82,7 @@ extension SongsVc: UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let vc = playerVc.shareInstance{
+        if let vc = PlayerViewController.shareInstance{
             if (self.navigationController?.viewControllers.contains(vc))!{
                 var array = self.navigationController?.viewControllers
                 let index = array?.index(of: vc)
@@ -93,10 +93,10 @@ extension SongsVc: UITableViewDelegate,UITableViewDataSource{
                 array?.append(vc)
                 self.navigationController?.viewControllers = array!
             }else{
-                objSongVcBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
+                objSongBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
             }
         }else{
-            objSongVcBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
+            objSongBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
         }
     }
 }
