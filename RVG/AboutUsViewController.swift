@@ -12,9 +12,9 @@ class AboutUsViewController: BaseClass {
         super.viewDidLoad()
         hitWebService()
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english" {
-            self.title = NSLocalizedString("About Us", comment: "")
-        }
+//        if language == "english" {
+        self.title = NSLocalizedString("About Us", comment: "")
+//        }
 //        else {
 //            self.title = "Información de nosotros"
 //        }

@@ -2,9 +2,6 @@
 //  MainViewController.swift
 //  RVG
 //
-//  Created by Charanbir Sandhu on 27/02/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
-//
 
 import UIKit
 
@@ -66,12 +63,12 @@ class MainViewController: BaseClass {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if language == "english" {
-            lblHome.text = NSLocalizedString("Books", comment: "")
-        }
-        else {
-            lblHome.text = "Libros"
-        }
+//        if language == "english" {
+        lblHome.text = NSLocalizedString("Books", comment: "")
+//        }
+//        else {
+//            lblHome.text = "Libros"
+//        }
         if PlayerViewController.shareInstance != nil{
             btnPlayer.isHidden=false
         }else{

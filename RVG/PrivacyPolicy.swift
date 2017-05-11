@@ -2,9 +2,6 @@
 //  PrivacyPolicy.swift
 //  RVG
 //
-//  Created by Charanbir Sandhu on 05/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
-//
 
 import UIKit
 
@@ -16,9 +13,9 @@ class PrivacyPolicy: BaseClass{
         super.viewDidLoad()
         hitWebService()
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english" {
-            self.title = NSLocalizedString("Privacy Policy", comment: "")
-        }
+//        if language == "english" {
+        self.title = NSLocalizedString("Privacy Policy", comment: "")
+//        }
 //        else {
 //            self.title = "Política de privacidad"
 //        }

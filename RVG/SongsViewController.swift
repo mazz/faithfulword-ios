@@ -2,9 +2,6 @@
 //  SongsViewController.swift
 //  RVG
 //
-//  Created by Charanbir Sandhu on 01/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
-//
 
 import UIKit
 
@@ -23,12 +20,12 @@ class SongsViewController: BaseClass {
         if folderId != nil{
             objSongBusinessLogicClass?.hitWebService(obj: self)
         }
-        if language == "english" {
-            self.title = NSLocalizedString("Chapters", comment: "")
-        }
-        else {
-            self.title = "Capítulos"
-        }
+//        if language == "english" {
+        self.title = NSLocalizedString("Chapters", comment: "")
+//        }
+//        else {
+//            self.title = "Capítulos"
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
