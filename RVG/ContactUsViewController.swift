@@ -1,5 +1,5 @@
 //
-//  ContactUsVc.swift
+//  ContactUsViewController.swift
 //  RVG
 //  
 //  Created by Charanbir Sandhu on 05/03/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ContactUsVc: BaseClass {
+class ContactUsViewController: BaseClass {
 
     @IBOutlet weak var lblSubmit: UIButton!
     @IBOutlet weak var lblEmail: UILabel!
@@ -71,7 +71,7 @@ class ContactUsVc: BaseClass {
 
 }
 
-extension ContactUsVc : UITextFieldDelegate{
+extension ContactUsViewController : UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
     }
