@@ -434,14 +434,14 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     @IBAction func btnRightAction(_ sender: AnyObject) {
         var str : String!
         var yes : String!
-        if language == "english" {
+//        if language == "english" {
             str = NSLocalizedString("Do you want to close the player?", comment: "")
             yes = NSLocalizedString("Yes", comment: "")
-        }
-        else {
-            yes = "Sí"
-            str = "¿Quieres cerrar el reproductor?"
-        }
+//        }
+//        else {
+//            yes = "Sí"
+//            str = "¿Quieres cerrar el reproductor?"
+//        }
         self.showTwoButtonAlertWithLeftAction(title: str, buttonTitleLeft: yes, buttonTitleRight: "No") { (nil) in
             self.isWhile = false
             self.isPlay = false

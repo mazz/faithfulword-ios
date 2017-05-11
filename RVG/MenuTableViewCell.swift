@@ -2,9 +2,6 @@
 //  MenuTableViewCell.swift
 //  RVG
 //
-//  Created by maz on 2017-05-03.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
-//
 
 import UIKit
 
