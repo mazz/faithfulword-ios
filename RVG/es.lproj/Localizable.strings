@@ -6,6 +6,8 @@
   Copyright © 2017 KJVRVG. All rights reserved.
 */
 
+/* find . -name \*.swift | xargs genstrings -o . */
+
 /* No comment provided by engineer. */
 "About Us" = "Información de nosotros";
 
@@ -16,17 +18,58 @@
 "Change Language" = "Cambiar idioma";
 
 /* No comment provided by engineer. */
+"Chapters" = "Capítulos";
+
+/* No comment provided by engineer. */
 "Contact Us" = "Contáctenos";
+
+/* No comment provided by engineer. */
+"Do you want to close the player?" = "¿Quieres cerrar el reproductor?";
 
 /* No comment provided by engineer. */
 "Donate" = "Donate";
 
 /* No comment provided by engineer. */
+"Email" = "correo electrónico";
+
+/* No comment provided by engineer. */
+"Message" = "Mensaje";
+
+/* No comment provided by engineer. */
+"Name" = "Nombre";
+
+/* No comment provided by engineer. */
+"Please fill out your email address" = "Por favor, complete su dirección de correo electrónico";
+
+/* No comment provided by engineer. */
+"Please fill out your message" = "Por favor, complete su mensaje";
+
+/* No comment provided by engineer. */
+"Please fill out your name" = "Por favor escribe tu nombre";
+
+/* No comment provided by engineer. */
 "Privacy Policy" = "Política de privacidad";
+
+/* No comment provided by engineer. */
+"Psalm 119:105" = "Salmo 119:105";
 
 /* No comment provided by engineer. */
 "Share" = "Compartir";
 
 /* No comment provided by engineer. */
-"Your donation was successful.\nThank you!" = "Your donation was successful.\nThank you!";
+"Submit" = "Enviar";
 
+/* No comment provided by engineer. */
+"Thank you, we will contact you soon" = "Gracias, nos pondremos en contacto contigo pronto";
+
+/* No comment provided by engineer. */
+"The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8" = "The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8";
+
+/* No comment provided by engineer. */
+"Thy word is a lamp unto my feet, and a light unto my path" = "Lámpara es a mis pies tu palabra, y lumbrera a mi camino";
+
+/* No comment provided by engineer. */
+"Yes" = "Sí";
+
+/* No comment provided by engineer. */
+"Your donation was successful.\nThank you!" = "Your donation was successful.\nThank you!";

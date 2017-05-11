@@ -24,19 +24,20 @@ class ContactUsVc: BaseClass {
         
         btnSubmit.layer.borderColor = UIColor.white.cgColor
         // Do any additional setup after loading the view.
-        if language == "english"{
-            self.title = "Contact Us"
-            lblSubmit.setTitle("Submit", for: .normal)
-            lblName.text = "Name"
-            lblEmail.text = "Email"
-            lblMessage.text = "Message"
-        }else{
-            self.title = "Contáctenos"
-            lblName.text = "Nombre"
-            lblEmail.text = "correo electrónico"
-            lblMessage.text = "Mensaje"
-            lblSubmit.setTitle("Enviar", for: .normal)
+        if language == "english" {
+            self.title = NSLocalizedString("Contact Us", comment: "")
+            lblSubmit.setTitle(NSLocalizedString("Submit", comment: ""), for: .normal)
+            lblName.text = NSLocalizedString("Name", comment: "")
+            lblEmail.text = NSLocalizedString("Email", comment: "")
+            lblMessage.text = NSLocalizedString("Message", comment: "")
         }
+//        else {
+//            self.title = "Contáctenos"
+//            lblName.text = "Nombre"
+//            lblEmail.text = "correo electrónico"
+//            lblMessage.text = "Mensaje"
+//            lblSubmit.setTitle("Enviar", for: .normal)
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

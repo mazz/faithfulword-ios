@@ -192,9 +192,10 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
             index=index-1
             configureView((objSongsModel?[index].trackPath)!)
             currentSongIndex=objSongsModel?[index].id
-            if language == "english"{
+            if language == "english" {
                 lblName.text=objSongsModel?[index].trackNameInEnglish
-            }else{
+            }
+            else {
                 lblName.text=objSongsModel?[index].trackNameInSpanish
             }
         }
@@ -212,9 +213,10 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
             index=index+1
             configureView((objSongsModel?[index].trackPath)!)
             currentSongIndex=objSongsModel?[index].id
-            if language == "english"{
+            if language == "english" {
                 lblName.text=objSongsModel?[index].trackNameInEnglish
-            }else{
+            }
+            else {
                 lblName.text=objSongsModel?[index].trackNameInSpanish
             }
         }
@@ -249,9 +251,10 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english"{
+        if language == "english" {
             lblName.text=objSongsModel?[index].trackNameInEnglish
-        }else{
+        }
+        else {
             lblName.text=objSongsModel?[index].trackNameInSpanish
         }
         
@@ -434,10 +437,11 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
     @IBAction func btnRightAction(_ sender: AnyObject) {
         var str : String!
         var yes : String!
-        if language == "english"{
-            str = "Do you want to close the player?"
-            yes = "Yes"
-        }else{
+        if language == "english" {
+            str = NSLocalizedString("Do you want to close the player?", comment: "")
+            yes = NSLocalizedString("Yes", comment: "")
+        }
+        else {
             yes = "Sí"
             str = "¿Quieres cerrar el reproductor?"
         }

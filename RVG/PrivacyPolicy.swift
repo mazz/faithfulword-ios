@@ -16,11 +16,12 @@ class PrivacyPolicy: BaseClass{
         super.viewDidLoad()
         hitWebService()
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english"{
-            self.title = "Privacy Policy"
-        }else{
-            self.title = "Política de privacidad"
+        if language == "english" {
+            self.title = NSLocalizedString("Privacy Policy", comment: "")
         }
+//        else {
+//            self.title = "Política de privacidad"
+//        }
         // Do any additional setup after loading the view.
     }
     
