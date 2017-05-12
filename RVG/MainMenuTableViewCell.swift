@@ -1,18 +1,18 @@
 //
-//  MenuFooterTableViewCell.swift
+//  MainMenuTableViewCell.swift
 //  RVG
 //
-//  Created by maz on 2017-05-09.
+//  Created by maz on 2017-05-11.
 //  Copyright © 2017 KJVRVG. All rights reserved.
 //
 
 import UIKit
 
-class MenuFooterTableViewCell: UITableViewCell {
+class MainMenuTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var verseBodyLabel: UILabel!
-    @IBOutlet weak var chapterAndVerseLabel: UILabel!
-    
+    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var iconView: UIImageView!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -93,7 +93,7 @@
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="NHv-4M-a6L" customClass="CollectionViewCellVc" customModule="KJVRVG" customModuleProvider="target">
-                                                <rect key="frame" x="7" y="0.0" width="362" height="91"/>
+                                                <rect key="frame" x="6.5" y="0.0" width="362" height="91"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="362" height="91"/>
@@ -272,7 +272,7 @@
         <!--Change Language-->
         <scene sceneID="V3y-fD-IrM">
             <objects>
-                <viewController storyboardIdentifier="ChangeLanguageViewController" title="Change Language" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bs4-fi-hwm" customClass="ChangeLanguageViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChangeLanguageViewController" title="Change Language" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bs4-fi-hwm" customClass="ChangeLanguageViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="P1m-kd-dsQ"/>
                         <viewControllerLayoutGuide type="bottom" id="Q1s-M9-Odr"/>
