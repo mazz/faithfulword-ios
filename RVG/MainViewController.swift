@@ -30,8 +30,12 @@ class MainViewController: BaseClass {
     override func viewDidLoad() {
         super.viewDidLoad()
         // MenuFooterTableViewCell
-        tableView.register(UINib(nibName: "MenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MenuTableViewCellID")
-        tableView.register(UINib(nibName: "MenuFooterTableViewCell", bundle: nil), forCellReuseIdentifier: "MenuFooterTableViewCellID")
+
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 40
+
+        tableView.register(UINib(nibName: "MainMenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuTableViewCellID")
+        tableView.register(UINib(nibName: "MainMenuFooterTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuFooterTableViewCellID")
         
         MainViewController.shareInstance=self
         btnBlur.isHidden=true
@@ -126,7 +130,7 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 7 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuFooterTableViewCellID") as? MenuFooterTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
             cell?.verseBodyLabel.text = NSLocalizedString("Thy word is a lamp unto my feet, and a light unto my path", comment: "")
@@ -134,21 +138,12 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
 
             return cell!
         } else {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? VcTableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCellID") as? MenuTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuTableViewCellID") as? MainMenuTableViewCell
             cell?.backgroundColor = UIColor.clear
             cell?.selectionStyle = .none
             cell?.label.text = tableRowsArray?[indexPath.row].0
             cell?.iconView.image = tableRowsArray?[indexPath.row].1
             return cell!
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 7 {
-            return 130
-        }else{
-            return 50
         }
     }
     

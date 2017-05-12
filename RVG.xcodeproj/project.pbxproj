@@ -11,11 +11,11 @@
 		687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6CD1EC00AE3002EDCC3 /* Localizable.strings */; };
 		687BF6D71EC013CA002EDCC3 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6D61EC013CA002EDCC3 /* Info.plist */; };
 		687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6D81EC014B2002EDCC3 /* InfoPlist.strings */; };
-		687BF6DD1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687BF6DB1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.swift */; };
-		687BF6DE1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6DC1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.xib */; };
+		687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */; };
+		687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */; };
 		689DEFD21EB9753F00371829 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689DEFD11EB9753F00371829 /* DonateViewController.swift */; };
-		689DEFD61EBAC52C00371829 /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689DEFD51EBAC52C00371829 /* MenuTableViewCell.swift */; };
-		689DEFDC1EBAC68400371829 /* MenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 689DEFDB1EBAC68400371829 /* MenuTableViewCell.xib */; };
+		68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */; };
+		68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */; };
 		68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE411EBC143400FCD897 /* UIView+Debug.m */; };
 		68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE441EBD622300FCD897 /* CurrencyField.swift */; };
 		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
@@ -79,11 +79,11 @@
 		687BF6CE1EC00AE3002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		687BF6D61EC013CA002EDCC3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		687BF6D91EC014B2002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		687BF6DB1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuFooterTableViewCell.swift; sourceTree = "<group>"; };
-		687BF6DC1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuFooterTableViewCell.xib; sourceTree = "<group>"; };
+		687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuFooterTableViewCell.swift; sourceTree = "<group>"; };
+		687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuFooterTableViewCell.xib; sourceTree = "<group>"; };
 		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
-		689DEFD51EBAC52C00371829 /* MenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
-		689DEFDB1EBAC68400371829 /* MenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuTableViewCell.xib; sourceTree = "<group>"; };
+		68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuTableViewCell.swift; sourceTree = "<group>"; };
+		68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuTableViewCell.xib; sourceTree = "<group>"; };
 		68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RVG-Bridging-Header.h"; sourceTree = "<group>"; };
 		68E2BE401EBC143400FCD897 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
 		68E2BE411EBC143400FCD897 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
@@ -176,10 +176,10 @@
 			children = (
 				703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */,
 				701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */,
-				689DEFD51EBAC52C00371829 /* MenuTableViewCell.swift */,
-				689DEFDB1EBAC68400371829 /* MenuTableViewCell.xib */,
-				687BF6DB1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.swift */,
-				687BF6DC1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.xib */,
+				68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */,
+				68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */,
+				687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */,
+				687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -497,11 +497,11 @@
 			files = (
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
+				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
-				687BF6DE1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.xib in Resources */,
+				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
 				687BF6D71EC013CA002EDCC3 /* Info.plist in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
-				689DEFDC1EBAC68400371829 /* MenuTableViewCell.xib in Resources */,
 				70CD20671E6479A800AF619F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -659,7 +659,6 @@
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
 				703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */,
 				703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */,
-				689DEFD61EBAC52C00371829 /* MenuTableViewCell.swift in Sources */,
 				703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */,
 				70CD20641E6479A800AF619F /* MainViewController.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
@@ -670,9 +669,10 @@
 				701F01611E65F3B40010B320 /* CollectionViewCellVc.swift in Sources */,
 				70C937A71E6B474500ACE009 /* ContactUsViewController.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
-				687BF6DD1EC2BB5D002EDCC3 /* MenuFooterTableViewCell.swift in Sources */,
+				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
 				70E4B3191E6BBC7300A214E4 /* ChangeLanguageViewController.swift in Sources */,
 				703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */,
+				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
