@@ -1,25 +1,23 @@
 //
-//  AboutUsVc.swift
+//  AboutUsViewController.swift
 //  RVG
-//
-//  Created by Charanbir Sandhu on 04/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
 //
 
 import UIKit
 
-class AboutUsVc: BaseClass {
+class AboutUsViewController: BaseClass {
 
     @IBOutlet weak var txtVw: UITextView!
     override func viewDidLoad() {
         super.viewDidLoad()
         hitWebService()
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english"{
-            self.title = "About Us"
-        }else{
-            self.title = "Información de nosotros"
-        }
+//        if language == "english" {
+        self.title = NSLocalizedString("About Us", comment: "")
+//        }
+//        else {
+//            self.title = "Información de nosotros"
+//        }
         // Do any additional setup after loading the view.
     }
     

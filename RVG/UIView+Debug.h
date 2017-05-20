@@ -1,10 +1,5 @@
 //
 //  UIView+ConstraintHelpers.h
-//  PractitionerPortal
-//
-//  Created by Kashif Shaikh on 12/22/2013.
-//  Copyright (c) 2013 PointClickCare. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 

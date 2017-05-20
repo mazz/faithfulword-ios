@@ -1,9 +1,6 @@
 //
-//  playerVc.swift
+//  PlayerViewController.swift
 //  RVG
-//
-//  Created by Charanbir Sandhu on 01/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
 //
 
 import UIKit
@@ -11,7 +8,7 @@ import AVFoundation
 import MediaPlayer
 
 
-class playerVc: BaseClass, AVAudioPlayerDelegate
+class PlayerViewController: BaseClass, AVAudioPlayerDelegate
 {
     var isPlay : Bool? = false
     var isSeek : Bool? = true
@@ -56,7 +53,7 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
     var isPause : Bool? = false
     var index = Int(0)
     var objSongsModel : [ModelSongClass]?
-    static var shareInstance : playerVc? = nil
+    static var shareInstance : PlayerViewController? = nil
     @IBOutlet var barRightBtn: UIBarButtonItem!
     @IBOutlet var barLeftBtn: UIBarButtonItem!
     override func viewDidLoad() {
@@ -87,7 +84,7 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
             
         }
         UIApplication.shared.beginReceivingRemoteControlEvents()
-        playerVc.shareInstance=self
+        PlayerViewController.shareInstance=self
         self.navigationItem.leftBarButtonItem=barLeftBtn
         self.navigationItem.rightBarButtonItem=barRightBtn
 //_ = self.downloadsSession
@@ -192,9 +189,10 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
             index=index-1
             configureView((objSongsModel?[index].trackPath)!)
             currentSongIndex=objSongsModel?[index].id
-            if language == "english"{
+            if language == "english" {
                 lblName.text=objSongsModel?[index].trackNameInEnglish
-            }else{
+            }
+            else {
                 lblName.text=objSongsModel?[index].trackNameInSpanish
             }
         }
@@ -212,9 +210,10 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
             index=index+1
             configureView((objSongsModel?[index].trackPath)!)
             currentSongIndex=objSongsModel?[index].id
-            if language == "english"{
+            if language == "english" {
                 lblName.text=objSongsModel?[index].trackNameInEnglish
-            }else{
+            }
+            else {
                 lblName.text=objSongsModel?[index].trackNameInSpanish
             }
         }
@@ -249,9 +248,10 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english"{
+        if language == "english" {
             lblName.text=objSongsModel?[index].trackNameInEnglish
-        }else{
+        }
+        else {
             lblName.text=objSongsModel?[index].trackNameInSpanish
         }
         
@@ -434,13 +434,14 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
     @IBAction func btnRightAction(_ sender: AnyObject) {
         var str : String!
         var yes : String!
-        if language == "english"{
-            str = "Do you want to close the player?"
-            yes = "Yes"
-        }else{
-            yes = "Sí"
-            str = "¿Quieres cerrar el reproductor?"
-        }
+//        if language == "english" {
+            str = NSLocalizedString("Do you want to close the player?", comment: "")
+            yes = NSLocalizedString("Yes", comment: "")
+//        }
+//        else {
+//            yes = "Sí"
+//            str = "¿Quieres cerrar el reproductor?"
+//        }
         self.showTwoButtonAlertWithLeftAction(title: str, buttonTitleLeft: yes, buttonTitleRight: "No") { (nil) in
             self.isWhile = false
             self.isPlay = false
@@ -448,7 +449,7 @@ class playerVc: BaseClass, AVAudioPlayerDelegate
             self.removeObserver()
             self.player=nil
             self.playerItem=nil
-            playerVc.shareInstance=nil
+            PlayerViewController.shareInstance=nil
             NotificationCenter.default.removeObserver(self)
           _ = self.navigationController?.popViewController(animated: true)
         }

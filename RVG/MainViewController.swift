@@ -1,21 +1,18 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  RVG
-//
-//  Created by Charanbir Sandhu on 27/02/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
 //
 
 import UIKit
 
-class ViewController: BaseClass {
+class MainViewController: BaseClass {
 
     @IBOutlet weak var lblHome: UILabel!
     @IBOutlet weak var btnPlayer: UIButton!
     @IBOutlet weak var lblRVG2010: UILabel!
-    static var shareInstance : ViewController?
+    static var shareInstance : MainViewController?
     var arrOfFolders : [ModelOfViewControllerFolders] = []
-    let objViewControllerBusinessLogicClass : ViewControllerBusinessLogicClass? = ViewControllerBusinessLogicClass()
+    let objMainViewControllerBusinessLogicClass : MainViewControllerBusinessLogicClass? = MainViewControllerBusinessLogicClass()
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnBlur: UIButton!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
@@ -32,24 +29,32 @@ class ViewController: BaseClass {
                                                ]
     override func viewDidLoad() {
         super.viewDidLoad()
+        // MenuFooterTableViewCell
+
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 40
+
+        tableView.register(UINib(nibName: "MainMenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuTableViewCellID")
+        tableView.register(UINib(nibName: "MainMenuFooterTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuFooterTableViewCellID")
         
-        tableView.register(UINib(nibName: "MenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MenuTableViewCellID")
-        
-        ViewController.shareInstance=self
+        MainViewController.shareInstance=self
         btnBlur.isHidden=true
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
-       self.navigationItem.leftBarButtonItem=menuBar
-        objViewControllerBusinessLogicClass?.hitWebService(obj: self)
-        if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil{
+        
+        self.navigationItem.leftBarButtonItem = menuBar
+        
+        objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+        
+        if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil {
             DispatchQueue.main.async {
-                let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageVc")
+                let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageViewController")
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
     }
     
     @IBAction func btnPlayer(_ sender: AnyObject) {
-        if let vc = playerVc.shareInstance{
+        if let vc = PlayerViewController.shareInstance{
             if (self.navigationController?.viewControllers.contains(vc))!{
                 var array = self.navigationController?.viewControllers
                 let index = array?.index(of: vc)
@@ -65,12 +70,13 @@ class ViewController: BaseClass {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        if language == "english"{
-            lblHome.text = "Books"
-        }else{
-            lblHome.text = "Libros"
-        }
-        if playerVc.shareInstance != nil{
+//        if language == "english" {
+        lblHome.text = NSLocalizedString("Books", comment: "")
+//        }
+//        else {
+//            lblHome.text = "Libros"
+//        }
+        if PlayerViewController.shareInstance != nil{
             btnPlayer.isHidden=false
         }else{
             btnPlayer.isHidden=true
@@ -101,7 +107,7 @@ class ViewController: BaseClass {
      func shareTextButton() {
         
         // text to share
-        let text = "The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8"
+        let text = NSLocalizedString("The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8", comment: "")
         
         // set up activity view controller
         let textToShare = [ text ]
@@ -117,21 +123,22 @@ class ViewController: BaseClass {
     }
 }
 
-extension ViewController: UITableViewDelegate,UITableViewDataSource{
+extension MainViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 8
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 7 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell1") as? TableViewCellFutter
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
-            cell?.setValues(row: indexPath.row)
-            
+            cell?.backgroundColor = UIColor.clear
+            cell?.verseBodyLabel.text = NSLocalizedString("Thy word is a lamp unto my feet, and a light unto my path", comment: "")
+            cell?.chapterAndVerseLabel.text = NSLocalizedString("Psalm 119:105", comment: "")
+
             return cell!
         } else {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? VcTableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTableViewCellID") as? MenuTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuTableViewCellID") as? MainMenuTableViewCell
             cell?.backgroundColor = UIColor.clear
             cell?.selectionStyle = .none
             cell?.label.text = tableRowsArray?[indexPath.row].0
@@ -140,30 +147,22 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource{
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 7 {
-            return 130
-        }else{
-            return 50
-        }
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 7 {
             return
         }
         if indexPath.row == 0 {
-            objViewControllerBusinessLogicClass?.hitWebService(obj: self)
+            objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
         }
         else if indexPath.row == 1 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsVc")
+            let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 2 {
             shareTextButton()
         }
         else if indexPath.row == 3 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageVc")
+            let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 4 {
@@ -175,14 +174,14 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource{
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 6 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsVc")
+            let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         menuBtn(UIButton())
     }
 }
 
-extension ViewController: UICollectionViewDelegate,UICollectionViewDataSource{
+extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrOfFolders.count
     }
@@ -196,7 +195,7 @@ extension ViewController: UICollectionViewDelegate,UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let id = arrOfFolders[indexPath.row].id{
-            let vc = self.pushVc(strBdName: "Main", vcName: "SongsVc") as? SongsVc
+            let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
             vc?.folderId = id
             self.navigationController?.pushViewController(vc!, animated: true)
         }
