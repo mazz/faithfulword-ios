@@ -1,17 +1,17 @@
 //
-//  MenuTableViewCell.swift
+//  MainMenuFooterTableViewCell.swift
 //  RVG
 //
-//  Created by maz on 2017-05-03.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
+//  Created by maz on 2017-05-09.
+//  Copyright © 2017 KJVRVG. All rights reserved.
 //
 
 import UIKit
 
-class MenuTableViewCell: UITableViewCell {
+class MainMenuFooterTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var iconView: UIImageView!
+    @IBOutlet weak var verseBodyLabel: UILabel!
+    @IBOutlet weak var chapterAndVerseLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,5 +23,5 @@ class MenuTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
 }

@@ -1,14 +1,11 @@
 //
-//  ContactUsVc.swift
+//  ContactUsViewController.swift
 //  RVG
 //  
-//  Created by Charanbir Sandhu on 05/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
-//
 
 import UIKit
 
-class ContactUsVc: BaseClass {
+class ContactUsViewController: BaseClass {
 
     @IBOutlet weak var lblSubmit: UIButton!
     @IBOutlet weak var lblEmail: UILabel!
@@ -24,19 +21,20 @@ class ContactUsVc: BaseClass {
         
         btnSubmit.layer.borderColor = UIColor.white.cgColor
         // Do any additional setup after loading the view.
-        if language == "english"{
-            self.title = "Contact Us"
-            lblSubmit.setTitle("Submit", for: .normal)
-            lblName.text = "Name"
-            lblEmail.text = "Email"
-            lblMessage.text = "Message"
-        }else{
-            self.title = "Contáctenos"
-            lblName.text = "Nombre"
-            lblEmail.text = "correo electrónico"
-            lblMessage.text = "Mensaje"
-            lblSubmit.setTitle("Enviar", for: .normal)
+        if language == "english" {
+            self.title = NSLocalizedString("Contact Us", comment: "")
+            lblSubmit.setTitle(NSLocalizedString("Submit", comment: ""), for: .normal)
+            lblName.text = NSLocalizedString("Name", comment: "")
+            lblEmail.text = NSLocalizedString("Email", comment: "")
+            lblMessage.text = NSLocalizedString("Message", comment: "")
         }
+//        else {
+//            self.title = "Contáctenos"
+//            lblName.text = "Nombre"
+//            lblEmail.text = "correo electrónico"
+//            lblMessage.text = "Mensaje"
+//            lblSubmit.setTitle("Enviar", for: .normal)
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,7 +68,7 @@ class ContactUsVc: BaseClass {
 
 }
 
-extension ContactUsVc : UITextFieldDelegate{
+extension ContactUsViewController : UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return textField.resignFirstResponder()
     }

@@ -2,9 +2,6 @@
 //  SongCellTableViewCell.swift
 //  RVG
 //
-//  Created by Charanbir Sandhu on 01/03/17.
-//  Copyright © 2017 Charanbir Sandhu. All rights reserved.
-//
 
 import UIKit
 
@@ -22,9 +19,10 @@ class SongCellTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     func setValues(_ obj:ModelSongClass){
-        if language == "english"{
+        if language == "english" {
             lbl.text=obj.trackNameInEnglish
-        }else{
+        }
+        else {
             lbl.text=obj.trackNameInSpanish
         }
     }
