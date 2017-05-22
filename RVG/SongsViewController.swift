@@ -12,6 +12,7 @@ class SongsViewController: BaseClass {
     var arrOfSongs : [ModelSongClass] = []
     let objSongBusinessLogicClass : SongsViewControllerBusinessLogicClass? = SongsViewControllerBusinessLogicClass()
     var folderId : String? = nil
+    var bookId : String? = nil
     @IBOutlet weak var tableVw: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,12 +21,7 @@ class SongsViewController: BaseClass {
         if folderId != nil{
             objSongBusinessLogicClass?.hitWebService(obj: self)
         }
-//        if language == "english" {
         self.title = NSLocalizedString("Chapters", comment: "")
-//        }
-//        else {
-//            self.title = "Capítulos"
-//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,7 +61,7 @@ class SongsViewController: BaseClass {
 
 }
 
-extension SongsViewController: UITableViewDelegate,UITableViewDataSource{
+extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrOfSongs.count
     }

@@ -9,6 +9,7 @@ target 'KJVRVG' do
     pod 'IQKeyboardManagerSwift'
     pod 'PayPal-iOS-SDK'
     pod 'ObjectMapper', '~> 2.2'
+    pod 'MBProgressHUD', '~> 1.0.0'
     target 'RVGTests' do
         inherit! :search_paths
         # Pods for testing
