@@ -11,7 +11,10 @@ class MainViewController: BaseClass {
     @IBOutlet weak var btnPlayer: UIButton!
     @IBOutlet weak var lblRVG2010: UILabel!
     static var shareInstance : MainViewController?
+    
     var arrOfFolders : [ModelOfViewControllerFolders] = []
+    var books : [Book] = []
+    
     let objMainViewControllerBusinessLogicClass : MainViewControllerBusinessLogicClass? = MainViewControllerBusinessLogicClass()
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnBlur: UIButton!
@@ -45,12 +48,22 @@ class MainViewController: BaseClass {
         
         objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
         
+        BibleService.sharedInstance().getBooks(success: { (books) in
+            Bible.sharedInstance().books = books
+            
+            print(Bible.sharedInstance().books! as [Book])
+            
+            self.books = Bible.sharedInstance().books!
+        }, errors: {_ in })
+
+        
         if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil {
             DispatchQueue.main.async {
                 let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageViewController")
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
+        
     }
     
     @IBAction func btnPlayer(_ sender: AnyObject) {
@@ -152,9 +165,9 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             return
         }
         if indexPath.row == 0 {
-            objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+//            objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
         }
-        else if indexPath.row == 1 {
+        if indexPath.row == 1 {
             let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
@@ -189,7 +202,7 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? CollectionViewCellVc
         cell?.setData(obj: arrOfFolders[indexPath.row])
         
-        
+//        print("book at index: \(indexPath.row) \(self.books[indexPath.row])")
         return cell!
     }
     
