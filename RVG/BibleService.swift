@@ -12,7 +12,7 @@ import ObjectMapper
 class BibleService {
     static var bibleService :  BibleService?
     
-    internal let folderApi :        String = "/v1/book"
+    internal let bookApi :        String = "/v1/book"
     internal let contactUsApi :     String = "/v1/contact-us"
 
     class func sharedInstance() -> BibleService {
@@ -22,86 +22,91 @@ class BibleService {
         return bibleService!
     }
     
-    func getBooks(success: @escaping ([Book]?) -> (), errors: @escaping (String) -> ()) -> () {
-        
-        let reachability = Reachability()!
+    func getBooks(success: @escaping ([Book]?) -> ()) throws -> () {
+        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
 
+        let reachability = Reachability()!
+        
         if (reachability.currentReachabilityStatus == .notReachable) {
-            errors("Internet not available")
+            throw SessionError.urlNotReachable
         }
         else {
-            
-            let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
-            print("env: \(env)")
-            
-            if let urlStr = env.baseURL?.absoluteString?.appending(folderApi) {
-                //.appending(linkUrl)
-                print("urlStr: \(urlStr)")
+            if let urlStr = env.baseURL?.absoluteString?.appending(bookApi) {
                 let url = NSURL(string: urlStr)
-                
                 let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
                 request.httpMethod = "GET"
-                request.setValue("es", forHTTPHeaderField:"Language-Id")
+                
+                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
+                print("userAgent: \(Device.userAgent())")
+                print("platform: \(Device.platform())")
+                
+                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
+                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
                 
                 let session = URLSession.shared
                 
-                let task = session.dataTask(with: request as URLRequest, completionHandler: {(data, response, error) in
+                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
+                    var parsedObject: BookResponse
                     
-                    if (error == nil) {
-                        do {
-                            let jsonString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                            
-                            
-//                            guard let jsonObject = json as? [String:Any] else {
-////                                throw Error.jsonError("JSON is not an object: \(json)")
-//                                print("json error")
-//                                return
-//                            }
-
-//                            guard let parsedObject = T(JSON: jsonObject) else {
-////                                throw ASError.jsonError(“Could not decode json object: \(jsonObject)“)
-//                                print("parse error")
-//                            }
-//                            let book = BookResponse(map: json as! Map)
-                            var parsedObject: BookResponse
-                            // doesn't work, but should
-                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                            if let jsonObject = json as? [String:Any] {
-                                parsedObject = BookResponse(JSON: jsonObject)!
-                                print(parsedObject)
-                                success(parsedObject.books)
-                            }
-                            
-
-//                            let bookResponse = Mapper<BookResponse>().map(JSONString: jsonString as! String)
-//
-//                            if parsedObject != nil {
-//                                DispatchQueue.main.async {
-//                                    success(parsedObject.books)
-//                            }
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = BookResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.books)
                         }
-                        catch let error1 as NSError {
-                            DispatchQueue.main.async {
-                                //print(error1.localizedDescription)
-                                errors(error1.localizedDescription)
-//                                self.HideIndicator()
-                            }
-                        }
+                    } catch {
+                        print("error: \(error)")
                     }
-                    else {
-                        print(error)
-                        DispatchQueue.main.async {
-//                            self.HideIndicator()
-                            errors((error?.localizedDescription)!)
-                        }
-                    }
-                    
-                });
+                })
                 
                 task.resume()
-                
             }
-            
         }
+        
+    }
+    
+    func getMedia(forBookId bookId: (String), success: @escaping ([Media]?) -> ()) throws -> () {
+        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
+        
+        let reachability = Reachability()!
+        
+        if (reachability.currentReachabilityStatus == .notReachable) {
+            throw SessionError.urlNotReachable
+        }
+        else {
+            if let urlStr = env.baseURL?.absoluteString?.appending(bookApi) {
+                let url = NSURL(string: urlStr.appending("/\(bookId)"))
+                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.httpMethod = "GET"
+                
+                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
+                print("userAgent: \(Device.userAgent())")
+                print("platform: \(Device.platform())")
+                
+                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
+                request.setValue("es-US", forHTTPHeaderField:"Language-Id")
+//                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
+                
+                let session = URLSession.shared
+                
+                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
+                    var parsedObject: MediaResponse
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = MediaResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.media)
+                        }
+                    } catch {
+                        print("error: \(error)")
+                    }
+                })
+                
+                task.resume()
+            }
+        }
+        
     }
 }

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		08D033F70490F54B52DA4B70 /* Pods_RVGTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */; };
+		4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */; };
+		4CD63DFD1ED4D27600C4E2EC /* MediaResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFC1ED4D27600C4E2EC /* MediaResponse.swift */; };
+		4CD63DFF1ED4D29A00C4E2EC /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFE1ED4D29A00C4E2EC /* Media.swift */; };
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
 		4CF401EB1ED391F400632272 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401EA1ED391F400632272 /* Device.swift */; };
@@ -80,6 +83,9 @@
 		39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
+		4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
+		4CD63DFC1ED4D27600C4E2EC /* MediaResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaResponse.swift; sourceTree = "<group>"; };
+		4CD63DFE1ED4D29A00C4E2EC /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookCollectionViewCell.swift; sourceTree = "<group>"; };
 		4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookCollectionViewCell.xib; sourceTree = "<group>"; };
 		4CF401EA1ED391F400632272 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
@@ -312,7 +318,6 @@
 				70CD20981E6484CF00AF619F /* WebApiClass */,
 				709234311E673BDE001F1621 /* classsDownload.swift */,
 				68E2BE441EBD622300FCD897 /* CurrencyField.swift */,
-				4CF401EA1ED391F400632272 /* Device.swift */,
 			);
 			name = HelperClasses;
 			sourceTree = "<group>";
@@ -321,11 +326,18 @@
 			isa = PBXGroup;
 			children = (
 				681E11801ED13B1400B028DD /* BookResponse.swift */,
+				4CD63DFC1ED4D27600C4E2EC /* MediaResponse.swift */,
+				4CD63DFE1ED4D29A00C4E2EC /* Media.swift */,
 				689A05441ED27A9E00D3232D /* Bible.swift */,
 				681E117E1ED138DA00B028DD /* Book.swift */,
 				703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */,
 				703D12BD1E67199F0093E1AA /* ModelSongClass.swift */,
 				70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */,
+				681E11781ED1098600B028DD /* BibleService.swift */,
+				681E117A1ED110CB00B028DD /* Environment.swift */,
+				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
+				4CF401EA1ED391F400632272 /* Device.swift */,
+				4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -334,9 +346,6 @@
 			isa = PBXGroup;
 			children = (
 				701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */,
-				681E11781ED1098600B028DD /* BibleService.swift */,
-				681E117A1ED110CB00B028DD /* Environment.swift */,
-				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
 			);
 			name = WebApiClass;
 			sourceTree = "<group>";
@@ -699,12 +708,15 @@
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
+				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
 				703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */,
 				703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */,
+				4CD63DFF1ED4D29A00C4E2EC /* Media.swift in Sources */,
+				4CD63DFD1ED4D27600C4E2EC /* MediaResponse.swift in Sources */,
 				70CD20641E6479A800AF619F /* MainViewController.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,

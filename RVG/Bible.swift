@@ -12,6 +12,7 @@ class Bible {
     static var bible :  Bible?
     
     public var books : [Book]?
+    public var media : [Media]?
     
     class func sharedInstance() -> Bible {
         DispatchQueue.once(token: "com.kjvrvg.dispatch.bible") {
@@ -20,13 +21,5 @@ class Bible {
         }
         return bible!
     }
-    
-//    func connectedEnvironment() -> Environment {
-//        
-//        if let environment = Environment(url: NSURL(string: "https://japheth.ca")!, name: "development") {
-//            connected = environment
-//        }
-//        return connected!
-//    }
     
 }

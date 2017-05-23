@@ -87,24 +87,29 @@ class MainViewController: BaseClass {
         loadingNotification.mode = MBProgressHUDMode.indeterminate
 //        loadingNotification.label.text = "Loading"
         objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+
         
         if Bible.sharedInstance().books == nil {
-            BibleService.sharedInstance().getBooks(success: { (books) in
-                Bible.sharedInstance().books = books
-                
-                print(Bible.sharedInstance().books! as [Book])
-                
+            do {
+                try BibleService.sharedInstance().getBooks(success: { (books) in
+                    Bible.sharedInstance().books = books
+                    
+                    print(Bible.sharedInstance().books! as [Book])
+                    
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.bookIds = Bible.sharedInstance().books!
+                        self.collectionView.reloadData()
+                    }
+                    
+                })
+            } catch {
+                print("error: \(error)")
                 DispatchQueue.main.async {
                     MBProgressHUD.hide(for: self.view, animated: true)
-                    self.bookIds = Bible.sharedInstance().books!
-                    self.collectionView.reloadData()
                 }
-                
-            }, errors: {_ in
-                DispatchQueue.main.async {
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                }
-            })
+
+            }
         } else {
             self.collectionView.reloadData()
         }
