@@ -22,6 +22,15 @@ class SongsViewController: BaseClass {
             objSongBusinessLogicClass?.hitWebService(obj: self)
         }
         self.title = NSLocalizedString("Chapters", comment: "")
+        
+        do {
+            try BibleService.sharedInstance().getMedia(forBookId: "e931ea58-080f-46ee-ae21-3bbec0365ddc", success: { (media) in
+                print("got media: \(String(describing: media))")
+            })
+            
+        } catch {
+            print("failed getting media")
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
