@@ -12,7 +12,8 @@ import ObjectMapper
 class BibleService {
     static var bibleService :  BibleService?
     
-    internal let bookApi :        String = "/v1/book"
+    internal let bookApi :        String = "/v1/books"
+    internal let mediaApi :        String = "/v1/books/{bid}/media"
     internal let contactUsApi :     String = "/v1/contact-us"
 
     class func sharedInstance() -> BibleService {
@@ -75,8 +76,11 @@ class BibleService {
             throw SessionError.urlNotReachable
         }
         else {
-            if let urlStr = env.baseURL?.absoluteString?.appending(bookApi) {
-                let url = NSURL(string: urlStr.appending("/\(bookId)"))
+            if let urlStr = env.baseURL?.absoluteString?.appending(mediaApi) {
+                let finalUrlStr = urlStr.replacingOccurrences(of: "{bid}", with: bookId, options: .literal, range: nil)
+                print("finalUrl: \(finalUrlStr)")
+                
+                let url = NSURL(string: finalUrlStr)
                 let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
                 request.httpMethod = "GET"
                 
@@ -85,8 +89,8 @@ class BibleService {
                 print("platform: \(Device.platform())")
                 
                 request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
-                request.setValue("es-US", forHTTPHeaderField:"Language-Id")
-//                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
+                // request.setValue("es-US", forHTTPHeaderField:"Language-Id")
+                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
                 
                 let session = URLSession.shared
                 
