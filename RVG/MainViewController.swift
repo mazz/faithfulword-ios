@@ -265,6 +265,8 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         if let id = arrOfFolders[indexPath.row].id {
             let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
             vc?.folderId = id
+            vc?.bookId = bookIds[indexPath.row].bookId!
+            
             self.navigationController?.pushViewController(vc!, animated: true)
         }
     }

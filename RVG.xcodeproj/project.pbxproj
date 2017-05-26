@@ -14,6 +14,8 @@
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
 		4CF401EB1ED391F400632272 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401EA1ED391F400632272 /* Device.swift */; };
+		68121CB21ED7D12800273342 /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68121CB01ED7D12800273342 /* SongTableViewCell.swift */; };
+		68121CB31ED7D12800273342 /* SongTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68121CB11ED7D12800273342 /* SongTableViewCell.xib */; };
 		681E11791ED1098600B028DD /* BibleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E11781ED1098600B028DD /* BibleService.swift */; };
 		681E117B1ED110CB00B028DD /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117A1ED110CB00B028DD /* Environment.swift */; };
 		681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117C1ED1141100B028DD /* EnvironmentService.swift */; };
@@ -91,6 +93,8 @@
 		4CF401EA1ED391F400632272 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.debug.xcconfig"; sourceTree = "<group>"; };
 		5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.release.xcconfig"; sourceTree = "<group>"; };
+		68121CB01ED7D12800273342 /* SongTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
+		68121CB11ED7D12800273342 /* SongTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongTableViewCell.xib; sourceTree = "<group>"; };
 		681E11781ED1098600B028DD /* BibleService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BibleService.swift; sourceTree = "<group>"; };
 		681E117A1ED110CB00B028DD /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		681E117C1ED1141100B028DD /* EnvironmentService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentService.swift; sourceTree = "<group>"; };
@@ -200,6 +204,8 @@
 				703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */,
 				701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */,
 				68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */,
+				68121CB01ED7D12800273342 /* SongTableViewCell.swift */,
+				68121CB11ED7D12800273342 /* SongTableViewCell.xib */,
 				4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */,
 				4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */,
 				68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */,
@@ -531,6 +537,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68121CB31ED7D12800273342 /* SongTableViewCell.xib in Resources */,
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
@@ -724,6 +731,7 @@
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
 				689DEFD21EB9753F00371829 /* DonateViewController.swift in Sources */,
 				703D12C01E671A0E0093E1AA /* SongsViewControllerBusinessLogicClass.swift in Sources */,
+				68121CB21ED7D12800273342 /* SongTableViewCell.swift in Sources */,
 				701F01611E65F3B40010B320 /* CollectionViewCellVc.swift in Sources */,
 				70C937A71E6B474500ACE009 /* ContactUsViewController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
