@@ -53,6 +53,9 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     var isPause : Bool? = false
     var index = Int(0)
     var objSongsModel : [ModelSongClass]?
+    
+    var media : [Media]?
+    
     static var shareInstance : PlayerViewController? = nil
     @IBOutlet var barRightBtn: UIBarButtonItem!
     @IBOutlet var barLeftBtn: UIBarButtonItem!
@@ -188,13 +191,13 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             self.isWhile = false
             index=index-1
             configureView((objSongsModel?[index].trackPath)!)
-            currentSongIndex=objSongsModel?[index].id
-            if language == "english" {
+            currentSongIndex=objSongsModel?[index].trackPath
+//            if language == "english" {
                 lblName.text=objSongsModel?[index].trackNameInEnglish
-            }
-            else {
-                lblName.text=objSongsModel?[index].trackNameInSpanish
-            }
+//            }
+//            else {
+//                lblName.text=objSongsModel?[index].trackNameInSpanish
+//            }
         }
     }
     @IBAction func btnNext() {
@@ -209,13 +212,13 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             self.isWhile = false
             index=index+1
             configureView((objSongsModel?[index].trackPath)!)
-            currentSongIndex=objSongsModel?[index].id
-            if language == "english" {
+            currentSongIndex=objSongsModel?[index].trackPath
+//            if language == "english" {
                 lblName.text=objSongsModel?[index].trackNameInEnglish
-            }
-            else {
-                lblName.text=objSongsModel?[index].trackNameInSpanish
-            }
+//            }
+//            else {
+//                lblName.text=objSongsModel?[index].trackNameInSpanish
+//            }
         }
     }
     @IBAction func beginSlider(_ sender: UISlider) {
@@ -248,12 +251,12 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english" {
+//        if language == "english" {
             lblName.text=objSongsModel?[index].trackNameInEnglish
-        }
-        else {
-            lblName.text=objSongsModel?[index].trackNameInSpanish
-        }
+//        }
+//        else {
+//            lblName.text=objSongsModel?[index].trackNameInSpanish
+//        }
         
         
         
@@ -261,16 +264,16 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
         
         
         if let str = currentSongIndex{
-            if str != objSongsModel?[index].id {
+            if str != objSongsModel?[index].trackPath {
                 removeObserver()
                 configureView((objSongsModel?[index].trackPath)!)
-                currentSongIndex=objSongsModel?[index].id
+                currentSongIndex=objSongsModel?[index].trackPath
             }else{
                 
             }
         }else{
             configureView((objSongsModel?[index].trackPath)!)
-            currentSongIndex=objSongsModel?[index].id
+            currentSongIndex=objSongsModel?[index].trackPath
         }
         
     }
@@ -392,12 +395,12 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                                 self.index=self.index+1
                                 self.isWhile = false
                                 self.configureView((self.objSongsModel?[self.index].trackPath)!)
-                                self.currentSongIndex=self.objSongsModel?[self.index].id
-                                if language == "english"{
+                                self.currentSongIndex=self.objSongsModel?[self.index].trackPath
+//                                if language == "english"{
                                     self.lblName.text=self.objSongsModel?[self.index].trackNameInEnglish
-                                }else{
-                                    self.lblName.text=self.objSongsModel?[self.index].trackNameInSpanish
-                                }
+//                                }else{
+//                                    self.lblName.text=self.objSongsModel?[self.index].trackNameInSpanish
+//                                }
                             }else{
                                 let time = CMTimeMakeWithSeconds(0.0, 100)
                                 self.player.seek(to: time)
