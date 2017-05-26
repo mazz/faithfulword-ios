@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class SongsViewController: BaseClass {
 
@@ -24,16 +25,25 @@ class SongsViewController: BaseClass {
         SongsViewController.shareInstance=self
         
         if folderId != nil{
-            objSongBusinessLogicClass?.hitWebService(obj: self)
+//            objSongBusinessLogicClass?.hitWebService(obj: self)
         }
         self.title = NSLocalizedString("Chapters", comment: "")
         
         do {
             if let _ = bookId {
                 // "e931ea58-080f-46ee-ae21-3bbec0365ddc"
+                
+                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+                loadingNotification.mode = MBProgressHUDMode.indeterminate
+                //        loadingNotification.label.text = "Loading"
+
                 try BibleService.sharedInstance().getMedia(forBookId: bookId!, success: { (media) in
                     print("got media: \(String(describing: media))")
                     self.media = media!
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.tableVw.reloadData()
+                    }
                 })
             }
             
@@ -84,7 +94,7 @@ class SongsViewController: BaseClass {
 
 extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrOfSongs.count
+        return self.media.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -101,7 +111,7 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
                 var array = self.navigationController?.viewControllers
                 let index = array?.index(of: playerViewController)
                 print(index)
-                playerViewController.objSongsModel = self.arrOfSongs
+//                playerViewController.objSongsModel = self.arrOfSongs
                 playerViewController.media = self.media
                 playerViewController.index=indexPath.row
                 array?.remove(at: index!)
@@ -113,8 +123,8 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
                 let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerViewController") as? PlayerViewController
                 
 //                let vc = obj.pushVc(strBdName: "Main", vcName: "PlayerViewController") as? PlayerViewController
-                viewController?.objSongsModel = []
-                viewController?.objSongsModel = self.arrOfSongs
+//                viewController?.objSongsModel = []
+//                viewController?.objSongsModel = self.arrOfSongs
                 viewController?.media = self.media
 
                 viewController?.index = indexPath.row
@@ -126,8 +136,8 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
             let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerViewController") as? PlayerViewController
             
             //                let vc = obj.pushVc(strBdName: "Main", vcName: "PlayerViewController") as? PlayerViewController
-            viewController?.objSongsModel = []
-            viewController?.objSongsModel = self.arrOfSongs
+//            viewController?.objSongsModel = []
+//            viewController?.objSongsModel = self.arrOfSongs
 
             viewController?.media = self.media
 
