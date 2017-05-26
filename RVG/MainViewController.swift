@@ -86,7 +86,7 @@ class MainViewController: BaseClass {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
 //        loadingNotification.label.text = "Loading"
-        objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+//        objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
 
         
         if Bible.sharedInstance().books == nil {
@@ -262,11 +262,10 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let id = arrOfFolders[indexPath.row].id {
+        if let bookId = bookIds[indexPath.row].bookId {
             let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
-            vc?.folderId = id
-            vc?.bookId = bookIds[indexPath.row].bookId!
-            
+//            vc?.folderId = id
+            vc?.bookId = bookId
             self.navigationController?.pushViewController(vc!, animated: true)
         }
     }
