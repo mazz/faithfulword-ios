@@ -4,6 +4,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class MainViewController: BaseClass {
 
@@ -11,7 +12,10 @@ class MainViewController: BaseClass {
     @IBOutlet weak var btnPlayer: UIButton!
     @IBOutlet weak var lblRVG2010: UILabel!
     static var shareInstance : MainViewController?
+    
     var arrOfFolders : [ModelOfViewControllerFolders] = []
+    var bookIds : [Book] = []
+    
     let objMainViewControllerBusinessLogicClass : MainViewControllerBusinessLogicClass? = MainViewControllerBusinessLogicClass()
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnBlur: UIButton!
@@ -27,6 +31,37 @@ class MainViewController: BaseClass {
                                                (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
                                                (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
                                                ]
+    
+    var bookTitles: [String] = [NSLocalizedString("Matthew", comment: ""),
+                                NSLocalizedString("Mark", comment: ""),
+                                NSLocalizedString("Luke", comment: ""),
+                                NSLocalizedString("John", comment: ""),
+                                NSLocalizedString("Acts", comment: ""),
+                                NSLocalizedString("Romans", comment: ""),
+                                NSLocalizedString("1 Corinthians", comment: ""),
+                                NSLocalizedString("2 Corinthians", comment: ""),
+                                NSLocalizedString("Galatians", comment: ""),
+                                NSLocalizedString("Ephesians", comment: ""),
+                                NSLocalizedString("Philippians", comment: ""),
+                                NSLocalizedString("Colossians", comment: ""),
+                                NSLocalizedString("1 Thessalonians", comment: ""),
+                                NSLocalizedString("2 Thessalonians", comment: ""),
+                                NSLocalizedString("1 Timothy", comment: ""),
+                                NSLocalizedString("2 Timothy", comment: ""),
+                                NSLocalizedString("Titus", comment: ""),
+                                NSLocalizedString("Philemon", comment: ""),
+                                NSLocalizedString("Hebrews", comment: ""),
+                                NSLocalizedString("James", comment: ""),
+                                NSLocalizedString("1 Peter", comment: ""),
+                                NSLocalizedString("2 Peter", comment: ""),
+                                NSLocalizedString("1 John", comment: ""),
+                                NSLocalizedString("2 John", comment: ""),
+                                NSLocalizedString("3 John", comment: ""),
+                                NSLocalizedString("Jude", comment: ""),
+                                NSLocalizedString("Revelation", comment: ""),
+                                NSLocalizedString("Plan Of Salvation", comment: ""),
+                                ]
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         // MenuFooterTableViewCell
@@ -36,6 +71,10 @@ class MainViewController: BaseClass {
 
         tableView.register(UINib(nibName: "MainMenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuTableViewCellID")
         tableView.register(UINib(nibName: "MainMenuFooterTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuFooterTableViewCellID")
+
+//        collectionView.register(nib: UINib(nibName: "BookCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BookCollectionViewCellID")
+        collectionView.register(UINib(nibName: "BookCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BookCollectionViewCellID")
+//        (UINib(nibName: "BookCollectionViewCell", bundle: nil), forCellReuseIdentifier: "BookCollectionViewCellID")
         
         MainViewController.shareInstance=self
         btnBlur.isHidden=true
@@ -43,7 +82,38 @@ class MainViewController: BaseClass {
         
         self.navigationItem.leftBarButtonItem = menuBar
         
-        objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+        
+        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        loadingNotification.mode = MBProgressHUDMode.indeterminate
+//        loadingNotification.label.text = "Loading"
+//        objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+
+        
+        if Bible.sharedInstance().books == nil {
+            do {
+                try BibleService.sharedInstance().getBooks(success: { (books) in
+                    Bible.sharedInstance().books = books
+                    
+                    print(Bible.sharedInstance().books! as [Book])
+                    
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.bookIds = Bible.sharedInstance().books!
+                        self.collectionView.reloadData()
+                    }
+                    
+                })
+            } catch {
+                print("error: \(error)")
+                DispatchQueue.main.async {
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                }
+
+            }
+        } else {
+            self.collectionView.reloadData()
+        }
+
         
         if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil {
             DispatchQueue.main.async {
@@ -51,6 +121,7 @@ class MainViewController: BaseClass {
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
+        
     }
     
     @IBAction func btnPlayer(_ sender: AnyObject) {
@@ -70,12 +141,8 @@ class MainViewController: BaseClass {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-//        if language == "english" {
         lblHome.text = NSLocalizedString("Books", comment: "")
-//        }
-//        else {
-//            lblHome.text = "Libros"
-//        }
+
         if PlayerViewController.shareInstance != nil{
             btnPlayer.isHidden=false
         }else{
@@ -152,9 +219,9 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             return
         }
         if indexPath.row == 0 {
-            objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+//            objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
         }
-        else if indexPath.row == 1 {
+        if indexPath.row == 1 {
             let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
@@ -183,20 +250,22 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
 
 extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return arrOfFolders.count
+        return bookTitles.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? CollectionViewCellVc
-        cell?.setData(obj: arrOfFolders[indexPath.row])
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BookCollectionViewCellID", for: indexPath) as? BookCollectionViewCell
+//        cell?.setData(obj: arrOfFolders[indexPath.row])
+        cell?.label.text = bookTitles[indexPath.row]
         
-        
+        print("book at index: \(indexPath.row) \(self.bookTitles[indexPath.row])")
         return cell!
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let id = arrOfFolders[indexPath.row].id{
+        if let bookId = bookIds[indexPath.row].bookId {
             let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
-            vc?.folderId = id
+//            vc?.folderId = id
+            vc?.bookId = bookId
             self.navigationController?.pushViewController(vc!, animated: true)
         }
     }

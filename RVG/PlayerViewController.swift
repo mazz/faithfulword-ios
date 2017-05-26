@@ -53,6 +53,9 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     var isPause : Bool? = false
     var index = Int(0)
     var objSongsModel : [ModelSongClass]?
+    
+    var media : [Media]?
+    
     static var shareInstance : PlayerViewController? = nil
     @IBOutlet var barRightBtn: UIBarButtonItem!
     @IBOutlet var barLeftBtn: UIBarButtonItem!
@@ -187,18 +190,18 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             self.playerItem=nil
             self.isWhile = false
             index=index-1
-            configureView((objSongsModel?[index].trackPath)!)
-            currentSongIndex=objSongsModel?[index].id
-            if language == "english" {
-                lblName.text=objSongsModel?[index].trackNameInEnglish
-            }
-            else {
-                lblName.text=objSongsModel?[index].trackNameInSpanish
-            }
+            configureView((media?[index].url)!)
+            currentSongIndex=media?[index].url
+//            if language == "english" {
+                lblName.text=media?[index].localizedName
+//            }
+//            else {
+//                lblName.text=objSongsModel?[index].trackNameInSpanish
+//            }
         }
     }
     @IBAction func btnNext() {
-        if index<((objSongsModel?.count)!-1){
+        if index<((media?.count)!-1){
             isPlay = false
             self.player.pause()
             lblTimePending.text = "0.00"
@@ -208,14 +211,14 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             self.playerItem=nil
             self.isWhile = false
             index=index+1
-            configureView((objSongsModel?[index].trackPath)!)
-            currentSongIndex=objSongsModel?[index].id
-            if language == "english" {
-                lblName.text=objSongsModel?[index].trackNameInEnglish
-            }
-            else {
-                lblName.text=objSongsModel?[index].trackNameInSpanish
-            }
+            configureView((media?[index].url)!)
+            currentSongIndex = media?[index].url
+//            if language == "english" {
+                lblName.text=media?[index].localizedName
+//            }
+//            else {
+//                lblName.text=objSongsModel?[index].trackNameInSpanish
+//            }
         }
     }
     @IBAction func beginSlider(_ sender: UISlider) {
@@ -248,12 +251,12 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden=false
-        if language == "english" {
-            lblName.text=objSongsModel?[index].trackNameInEnglish
-        }
-        else {
-            lblName.text=objSongsModel?[index].trackNameInSpanish
-        }
+//        if language == "english" {
+            lblName.text=media?[index].localizedName
+//        }
+//        else {
+//            lblName.text=objSongsModel?[index].trackNameInSpanish
+//        }
         
         
         
@@ -261,16 +264,16 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
         
         
         if let str = currentSongIndex{
-            if str != objSongsModel?[index].id {
+            if str != media?[index].url {
                 removeObserver()
-                configureView((objSongsModel?[index].trackPath)!)
-                currentSongIndex=objSongsModel?[index].id
+                configureView((media?[index].url)!)
+                currentSongIndex = media?[index].url
             }else{
                 
             }
         }else{
-            configureView((objSongsModel?[index].trackPath)!)
-            currentSongIndex=objSongsModel?[index].id
+            configureView((media?[index].url)!)
+            currentSongIndex=media?[index].url
         }
         
     }
@@ -352,6 +355,10 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     }
     
     func setTime(){
+        // FIXME: app enters this function sometimes while no
+        // longer playing. before running this code
+        // check if self.player is not nil
+        
         DispatchQueue.global().async {
             while self.isWhile! {
              //   print("run")
@@ -381,7 +388,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                             self.player.play()
                             self.isPlay = true
                         }else{
-                            if self.index<((self.objSongsModel?.count)!-1){
+                            if self.index<((self.media?.count)!-1){
                                 let time = CMTimeMakeWithSeconds(0.0, 100)
                                 self.player.seek(to: time)
                                 self.isPlay = false
@@ -391,13 +398,13 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                                 self.playerItem=nil
                                 self.index=self.index+1
                                 self.isWhile = false
-                                self.configureView((self.objSongsModel?[self.index].trackPath)!)
-                                self.currentSongIndex=self.objSongsModel?[self.index].id
-                                if language == "english"{
-                                    self.lblName.text=self.objSongsModel?[self.index].trackNameInEnglish
-                                }else{
-                                    self.lblName.text=self.objSongsModel?[self.index].trackNameInSpanish
-                                }
+                                self.configureView((self.media?[self.index].url)!)
+                                self.currentSongIndex=self.media?[self.index].url
+//                                if language == "english"{
+                                    self.lblName.text=self.media?[self.index].localizedName
+//                                }else{
+//                                    self.lblName.text=self.objSongsModel?[self.index].trackNameInSpanish
+//                                }
                             }else{
                                 let time = CMTimeMakeWithSeconds(0.0, 100)
                                 self.player.seek(to: time)

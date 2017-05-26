@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11542" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="SongTableViewCell" customModule="KJVRVG" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M4g-nl-xjA">
+                        <rect key="frame" x="0.0" y="48" width="375" height="1"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.69999999999999996" id="d1H-Vg-mLS"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="right_arrow_ic" translatesAutoresizingMaskIntoConstraints="NO" id="eci-bR-gps">
+                        <rect key="frame" x="337" y="0.0" width="30" height="50"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="O6P-Vh-JyA"/>
+                            <constraint firstAttribute="width" constant="30" id="rxs-bq-yLB"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="music_ic180" translatesAutoresizingMaskIntoConstraints="NO" id="L29-aB-1u1">
+                        <rect key="frame" x="8" y="0.0" width="30" height="50"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="IDp-OA-uKo"/>
+                            <constraint firstAttribute="height" constant="50" id="gcl-co-kF9"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lsp-l0-Qlg">
+                        <rect key="frame" x="46" y="16" width="283" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="18" id="jdo-kU-744"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="M4g-nl-xjA" secondAttribute="trailing" id="Ag3-aK-Wzw"/>
+                    <constraint firstItem="lsp-l0-Qlg" firstAttribute="leading" secondItem="L29-aB-1u1" secondAttribute="trailing" constant="8" id="BFY-rq-Ah1"/>
+                    <constraint firstAttribute="trailing" secondItem="eci-bR-gps" secondAttribute="trailing" constant="8" id="E4D-Vb-h1X"/>
+                    <constraint firstAttribute="bottom" secondItem="M4g-nl-xjA" secondAttribute="bottom" id="IqT-dF-2m2"/>
+                    <constraint firstItem="lsp-l0-Qlg" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="QFx-b8-dPd"/>
+                    <constraint firstItem="L29-aB-1u1" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Rfo-yl-TYp"/>
+                    <constraint firstItem="M4g-nl-xjA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Wd7-oH-tsG"/>
+                    <constraint firstItem="eci-bR-gps" firstAttribute="leading" secondItem="lsp-l0-Qlg" secondAttribute="trailing" constant="8" id="kZG-6W-QxR"/>
+                    <constraint firstItem="eci-bR-gps" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="oOL-wb-Umm"/>
+                    <constraint firstItem="L29-aB-1u1" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="ovh-Bd-O2X"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <connections>
+                <outlet property="songLabel" destination="lsp-l0-Qlg" id="Z6h-1U-ES0"/>
+            </connections>
+            <point key="canvasLocation" x="54.5" y="53"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="music_ic180" width="180" height="180"/>
+        <image name="right_arrow_ic" width="180" height="180"/>
+    </resources>
+</document>
