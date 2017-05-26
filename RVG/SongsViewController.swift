@@ -4,28 +4,55 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class SongsViewController: BaseClass {
 
     static var shareInstance : SongsViewController? = nil
     @IBOutlet var btnRightPlayer: UIBarButtonItem!
     var arrOfSongs : [ModelSongClass] = []
+    
     let objSongBusinessLogicClass : SongsViewControllerBusinessLogicClass? = SongsViewControllerBusinessLogicClass()
+    
     var folderId : String? = nil
+    var bookId : String? = nil
+    var media : [Media] = []
+
     @IBOutlet weak var tableVw: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden=false
         SongsViewController.shareInstance=self
+        
         if folderId != nil{
-            objSongBusinessLogicClass?.hitWebService(obj: self)
+//            objSongBusinessLogicClass?.hitWebService(obj: self)
         }
-//        if language == "english" {
         self.title = NSLocalizedString("Chapters", comment: "")
-//        }
-//        else {
-//            self.title = "Capítulos"
-//        }
+        
+        do {
+            if let _ = bookId {
+                // "e931ea58-080f-46ee-ae21-3bbec0365ddc"
+                
+                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+                loadingNotification.mode = MBProgressHUDMode.indeterminate
+                //        loadingNotification.label.text = "Loading"
+
+                try BibleService.sharedInstance().getMedia(forBookId: bookId!, success: { (media) in
+                    print("got media: \(String(describing: media))")
+                    self.media = media!
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.tableVw.reloadData()
+                    }
+                })
+            }
+            
+        } catch {
+            print("failed getting media")
+        }
+        
+        tableVw.register(UINib(nibName: "SongTableViewCell", bundle: nil), forCellReuseIdentifier: "SongTableViewCellID")
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,35 +92,58 @@ class SongsViewController: BaseClass {
 
 }
 
-extension SongsViewController: UITableViewDelegate,UITableViewDataSource{
+extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrOfSongs.count
+        return self.media.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as? SongCellTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SongTableViewCellID") as? SongTableViewCell
         cell?.selectionStyle = .none
-        cell?.setValues(arrOfSongs[indexPath.row])
+        cell?.songLabel?.text = self.media[indexPath.row].localizedName!
         
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let vc = PlayerViewController.shareInstance{
-            if (self.navigationController?.viewControllers.contains(vc))!{
+        if let playerViewController = PlayerViewController.shareInstance {
+            if (self.navigationController?.viewControllers.contains(playerViewController))! {
                 var array = self.navigationController?.viewControllers
-                let index = array?.index(of: vc)
+                let index = array?.index(of: playerViewController)
                 print(index)
-                vc.objSongsModel = self.arrOfSongs
-                vc.index=indexPath.row
+//                playerViewController.objSongsModel = self.arrOfSongs
+                playerViewController.media = self.media
+                playerViewController.index=indexPath.row
                 array?.remove(at: index!)
-                array?.append(vc)
+                array?.append(playerViewController)
                 self.navigationController?.viewControllers = array!
-            }else{
-                objSongBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
+            } else {
+//                objSongBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
+
+                let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerViewController") as? PlayerViewController
+                
+//                let vc = obj.pushVc(strBdName: "Main", vcName: "PlayerViewController") as? PlayerViewController
+//                viewController?.objSongsModel = []
+//                viewController?.objSongsModel = self.arrOfSongs
+                viewController?.media = self.media
+
+                viewController?.index = indexPath.row
+                self.navigationController?.pushViewController(viewController!, animated: false)
+
             }
-        }else{
-            objSongBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
+        } else {
+//            objSongBusinessLogicClass?.checkViewController(obj: self, row: indexPath.row)
+            let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerViewController") as? PlayerViewController
+            
+            //                let vc = obj.pushVc(strBdName: "Main", vcName: "PlayerViewController") as? PlayerViewController
+//            viewController?.objSongsModel = []
+//            viewController?.objSongsModel = self.arrOfSongs
+
+            viewController?.media = self.media
+
+            viewController?.index = indexPath.row
+            self.navigationController?.pushViewController(viewController!, animated: false)
+
         }
     }
 }
