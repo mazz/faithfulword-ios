@@ -16,7 +16,6 @@ class MainViewController: BaseClass {
     var arrOfFolders : [ModelOfViewControllerFolders] = []
     var bookIds : [Book] = []
     
-    let objMainViewControllerBusinessLogicClass : MainViewControllerBusinessLogicClass? = MainViewControllerBusinessLogicClass()
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var btnBlur: UIButton!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
@@ -26,7 +25,6 @@ class MainViewController: BaseClass {
     var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
-                                               (NSLocalizedString("Change Language", comment: ""), UIImage(named: "language_180")!),
                                                (NSLocalizedString("Donate", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
                                                (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
@@ -114,14 +112,6 @@ class MainViewController: BaseClass {
             self.collectionView.reloadData()
         }
 
-        
-        if (UserDefaults.standard.value(forKey: isFirstTime) as? String) == nil {
-            DispatchQueue.main.async {
-                let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageViewController")
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-        }
-        
     }
     
     @IBAction func btnPlayer(_ sender: AnyObject) {
@@ -192,11 +182,11 @@ class MainViewController: BaseClass {
 
 extension MainViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return 7
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 7 {
+        if indexPath.row == 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
@@ -215,7 +205,7 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 7 {
+        if indexPath.row == 6 {
             return
         }
         if indexPath.row == 0 {
@@ -229,18 +219,14 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             shareTextButton()
         }
         else if indexPath.row == 3 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "ChangeLanguageViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
-        else if indexPath.row == 4 {
             let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 5 {
+        else if indexPath.row == 4 {
             let vc = self.pushVc(strBdName: "Main", vcName: "PrivacyPolicy")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 6 {
+        else if indexPath.row == 5 {
             let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }

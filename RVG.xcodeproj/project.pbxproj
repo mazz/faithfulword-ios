@@ -36,13 +36,9 @@
 		701F01551E65DA2E0010B320 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* Reachability.swift */; };
 		701F01571E65DA440010B320 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01561E65DA440010B320 /* BaseClass.swift */; };
 		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
-		701F01611E65F3B40010B320 /* CollectionViewCellVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */; };
-		701F01631E65F64A0010B320 /* MainViewControllerBusinessLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01621E65F64A0010B320 /* MainViewControllerBusinessLogicClass.swift */; };
 		703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */; };
 		703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* SongsViewController.swift */; };
-		703D12BC1E6718DF0093E1AA /* SongCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */; };
 		703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12BD1E67199F0093E1AA /* ModelSongClass.swift */; };
-		703D12C01E671A0E0093E1AA /* SongsViewControllerBusinessLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12BF1E671A0E0093E1AA /* SongsViewControllerBusinessLogicClass.swift */; };
 		703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12C21E6721820093E1AA /* PlayerViewController.swift */; };
 		709234321E673BDE001F1621 /* classsDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709234311E673BDE001F1621 /* classsDownload.swift */; };
 		70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */; };
@@ -120,13 +116,9 @@
 		701F01541E65DA2E0010B320 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseClass.swift; sourceTree = "<group>"; };
 		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
-		701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCellVc.swift; sourceTree = "<group>"; };
-		701F01621E65F64A0010B320 /* MainViewControllerBusinessLogicClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewControllerBusinessLogicClass.swift; sourceTree = "<group>"; };
 		703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelOfViewControllerFolders.swift; sourceTree = "<group>"; };
 		703D12B81E67156D0093E1AA /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongsViewController.swift; sourceTree = "<group>"; };
-		703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCellTableViewCell.swift; sourceTree = "<group>"; };
 		703D12BD1E67199F0093E1AA /* ModelSongClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSongClass.swift; sourceTree = "<group>"; };
-		703D12BF1E671A0E0093E1AA /* SongsViewControllerBusinessLogicClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongsViewControllerBusinessLogicClass.swift; sourceTree = "<group>"; };
 		703D12C21E6721820093E1AA /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.release.xcconfig"; sourceTree = "<group>"; };
 		708F578A1E7482B10011639A /* RVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RVG.entitlements; sourceTree = "<group>"; };
@@ -201,8 +193,6 @@
 		68E2BE431EBC215800FCD897 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				703D12BB1E6718DF0093E1AA /* SongCellTableViewCell.swift */,
-				701F01601E65F3B40010B320 /* CollectionViewCellVc.swift */,
 				68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */,
 				68121CB01ED7D12800273342 /* SongTableViewCell.swift */,
 				68121CB11ED7D12800273342 /* SongTableViewCell.xib */,
@@ -303,9 +293,7 @@
 				70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */,
 				703D12C21E6721820093E1AA /* PlayerViewController.swift */,
 				703D12B81E67156D0093E1AA /* SongsViewController.swift */,
-				703D12BF1E671A0E0093E1AA /* SongsViewControllerBusinessLogicClass.swift */,
 				70CD20631E6479A800AF619F /* MainViewController.swift */,
-				701F01621E65F64A0010B320 /* MainViewControllerBusinessLogicClass.swift */,
 				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
 			);
 			name = ViewControllers;
@@ -710,8 +698,6 @@
 			files = (
 				70C937A91E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift in Sources */,
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
-				703D12BC1E6718DF0093E1AA /* SongCellTableViewCell.swift in Sources */,
-				701F01631E65F64A0010B320 /* MainViewControllerBusinessLogicClass.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
@@ -730,9 +716,7 @@
 				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
 				689DEFD21EB9753F00371829 /* DonateViewController.swift in Sources */,
-				703D12C01E671A0E0093E1AA /* SongsViewControllerBusinessLogicClass.swift in Sources */,
 				68121CB21ED7D12800273342 /* SongTableViewCell.swift in Sources */,
-				701F01611E65F3B40010B320 /* CollectionViewCellVc.swift in Sources */,
 				70C937A71E6B474500ACE009 /* ContactUsViewController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,

@@ -444,64 +444,6 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="azJ-RM-zkJ">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" rowHeight="50" id="E7R-hb-Rg7" customClass="SongCellTableViewCell" customModule="KJVRVG" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="50"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="E7R-hb-Rg7" id="H7p-kl-pWj">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="music_ic180" translatesAutoresizingMaskIntoConstraints="NO" id="csb-lD-bxR">
-                                                    <rect key="frame" x="8" y="0.0" width="30" height="50"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="30" id="eT3-AO-khl"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="right_arrow_ic" translatesAutoresizingMaskIntoConstraints="NO" id="zvp-6y-lgq">
-                                                    <rect key="frame" x="337" y="0.0" width="30" height="50"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="30" id="gOh-Hm-iH5"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eo2-ek-9fK">
-                                                    <rect key="frame" x="46" y="16" width="283" height="18"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eOl-mb-CiV">
-                                                    <rect key="frame" x="0.0" y="49" width="375" height="1"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="bWo-d1-CTp"/>
-                                                    </constraints>
-                                                </imageView>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="zvp-6y-lgq" firstAttribute="top" secondItem="H7p-kl-pWj" secondAttribute="top" id="0eo-gg-LF8"/>
-                                                <constraint firstItem="eOl-mb-CiV" firstAttribute="leading" secondItem="H7p-kl-pWj" secondAttribute="leading" id="78Y-lA-5Zb"/>
-                                                <constraint firstAttribute="bottom" secondItem="zvp-6y-lgq" secondAttribute="bottom" id="AB6-0o-tml"/>
-                                                <constraint firstItem="eo2-ek-9fK" firstAttribute="leading" secondItem="csb-lD-bxR" secondAttribute="trailing" constant="8" id="BBY-T0-z9G"/>
-                                                <constraint firstItem="csb-lD-bxR" firstAttribute="top" secondItem="H7p-kl-pWj" secondAttribute="top" id="NN2-9A-Q9m"/>
-                                                <constraint firstItem="zvp-6y-lgq" firstAttribute="leading" secondItem="eo2-ek-9fK" secondAttribute="trailing" constant="8" id="Pcp-lX-gpn"/>
-                                                <constraint firstAttribute="trailing" secondItem="eOl-mb-CiV" secondAttribute="trailing" id="SlP-Ge-t9M"/>
-                                                <constraint firstAttribute="bottom" secondItem="csb-lD-bxR" secondAttribute="bottom" id="coW-u9-Oi3"/>
-                                                <constraint firstItem="eo2-ek-9fK" firstAttribute="centerY" secondItem="csb-lD-bxR" secondAttribute="centerY" id="gEt-1l-fEq"/>
-                                                <constraint firstAttribute="trailing" secondItem="zvp-6y-lgq" secondAttribute="trailing" constant="8" id="lV6-Mk-zVg"/>
-                                                <constraint firstItem="csb-lD-bxR" firstAttribute="leading" secondItem="H7p-kl-pWj" secondAttribute="leading" constant="8" id="neN-fj-vbx"/>
-                                                <constraint firstAttribute="bottom" secondItem="eOl-mb-CiV" secondAttribute="bottom" id="qFh-nG-XH4"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <connections>
-                                            <outlet property="lbl" destination="eo2-ek-9fK" id="nl2-ho-XAI"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="kh0-eY-UNT" id="xM4-lV-Vtk"/>
                                     <outlet property="delegate" destination="kh0-eY-UNT" id="n0G-5r-Zah"/>
@@ -1126,7 +1068,6 @@ Thank you!</string>
         <image name="language_180" width="128" height="128"/>
         <image name="leftArrow" width="21" height="21"/>
         <image name="menu" width="780" height="1104"/>
-        <image name="music_ic180" width="180" height="180"/>
         <image name="player_next_180" width="180" height="180"/>
         <image name="player_play_180" width="180" height="180"/>
         <image name="player_prev_180" width="180" height="180"/>

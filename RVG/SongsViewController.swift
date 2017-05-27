@@ -11,9 +11,7 @@ class SongsViewController: BaseClass {
     static var shareInstance : SongsViewController? = nil
     @IBOutlet var btnRightPlayer: UIBarButtonItem!
     var arrOfSongs : [ModelSongClass] = []
-    
-    let objSongBusinessLogicClass : SongsViewControllerBusinessLogicClass? = SongsViewControllerBusinessLogicClass()
-    
+        
     var folderId : String? = nil
     var bookId : String? = nil
     var media : [Media] = []
