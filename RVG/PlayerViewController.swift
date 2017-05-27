@@ -6,7 +6,7 @@
 import UIKit
 import AVFoundation
 import MediaPlayer
-
+import MBProgressHUD
 
 class PlayerViewController: BaseClass, AVAudioPlayerDelegate
 {
@@ -192,12 +192,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             index=index-1
             configureView((media?[index].url)!)
             currentSongIndex=media?[index].url
-//            if language == "english" {
                 lblName.text=media?[index].localizedName
-//            }
-//            else {
-//                lblName.text=objSongsModel?[index].trackNameInSpanish
-//            }
         }
     }
     @IBAction func btnNext() {
@@ -213,12 +208,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             index=index+1
             configureView((media?[index].url)!)
             currentSongIndex = media?[index].url
-//            if language == "english" {
                 lblName.text=media?[index].localizedName
-//            }
-//            else {
-//                lblName.text=objSongsModel?[index].trackNameInSpanish
-//            }
         }
     }
     @IBAction func beginSlider(_ sender: UISlider) {
@@ -251,17 +241,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden=false
-//        if language == "english" {
             lblName.text=media?[index].localizedName
-//        }
-//        else {
-//            lblName.text=objSongsModel?[index].trackNameInSpanish
-//        }
-        
-        
-        
-        
-        
         
         if let str = currentSongIndex{
             if str != media?[index].url {
@@ -281,7 +261,11 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     
     
     func configureView(_ url:String) {
-        self.showIndicator()
+        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: false)
+        loadingNotification.mode = MBProgressHUDMode.indeterminate
+        loadingNotification.graceTime = 5
+        loadingNotification.minShowTime = 0
+
         self.isWhile = true
          playerItem = AVPlayerItem( url:NSURL( string:url ) as! URL )
         self.player = AVPlayer(playerItem:playerItem)
@@ -309,7 +293,9 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
         if object is AVPlayerItem {
             if (object as? AVPlayerItem) != nil{
                 if (player.currentItem!.isPlaybackLikelyToKeepUp) {
-                   self.HideIndicator()
+
+                    MBProgressHUD.hide(for: self.view, animated: false)
+
                     if self.isWhile == true{
                         setTime()
                         isPlay = true
@@ -319,13 +305,20 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                     }
                 }
                 else {
-                    self.showIndicator()
+
+                    let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: false)
+                    loadingNotification.mode = MBProgressHUDMode.indeterminate
+                    loadingNotification.graceTime = 5
+                    loadingNotification.minShowTime = 0
+
                     btnPlayPuause.setTitle("0", for: .normal)
                     btnPlayPuause.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
                     isPlay = false
                     player.pause()
                     DispatchQueue.main.asyncAfter(deadline: .now()+7.5){
-                        self.HideIndicator()
+
+                        MBProgressHUD.hide(for: self.view, animated: false)
+
                         self.setTime()
                         self.isPlay = true
                         self.player.play()
@@ -400,11 +393,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                                 self.isWhile = false
                                 self.configureView((self.media?[self.index].url)!)
                                 self.currentSongIndex=self.media?[self.index].url
-//                                if language == "english"{
                                     self.lblName.text=self.media?[self.index].localizedName
-//                                }else{
-//                                    self.lblName.text=self.objSongsModel?[self.index].trackNameInSpanish
-//                                }
                             }else{
                                 let time = CMTimeMakeWithSeconds(0.0, 100)
                                 self.player.seek(to: time)
