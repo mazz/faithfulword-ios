@@ -55,7 +55,6 @@
 		70CD20821E6479A800AF619F /* RVGUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20811E6479A800AF619F /* RVGUITests.swift */; };
 		70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD209F1E64857D00AF619F /* ExtentionsAll.swift */; };
 		70CD20A71E6486CC00AF619F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20A61E6486CC00AF619F /* Constants.swift */; };
-		70E4B3191E6BBC7300A214E4 /* ChangeLanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E4B3181E6BBC7300A214E4 /* ChangeLanguageViewController.swift */; };
 		C4BABE1A6FF4627E9945C10B /* Pods_RVGUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */; };
 		F4EAE455D8A9B4AFF89DDE65 /* Pods_KJVRVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF186C60E7CB0762EA6444C2 /* Pods_KJVRVG.framework */; };
 /* End PBXBuildFile section */
@@ -142,7 +141,6 @@
 		70CD20831E6479A900AF619F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70CD209F1E64857D00AF619F /* ExtentionsAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtentionsAll.swift; sourceTree = "<group>"; };
 		70CD20A61E6486CC00AF619F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		70E4B3181E6BBC7300A214E4 /* ChangeLanguageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeLanguageViewController.swift; sourceTree = "<group>"; };
 		8731013F9F382E28E02DF104 /* Pods-KJVRVG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KJVRVG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-KJVRVG/Pods-KJVRVG.debug.xcconfig"; sourceTree = "<group>"; };
 		9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF36FF2BC753A1E5EDF5D392 /* Pods-RVGTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -286,7 +284,6 @@
 		70CD20941E64842B00AF619F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				70E4B3181E6BBC7300A214E4 /* ChangeLanguageViewController.swift */,
 				70C937A61E6B474500ACE009 /* ContactUsViewController.swift */,
 				70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */,
 				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
@@ -722,7 +719,6 @@
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
 				681E117B1ED110CB00B028DD /* Environment.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
-				70E4B3191E6BBC7300A214E4 /* ChangeLanguageViewController.swift in Sources */,
 				703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
