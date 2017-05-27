@@ -15,7 +15,8 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var successMessageLabel: UILabel!
     @IBOutlet weak var successView: UIView!
-
+    @IBOutlet weak var titleLabel: UILabel!
+    
     let currencyFormatter = NumberFormatter()
     
     var environment:String = PayPalEnvironmentNoNetwork {
@@ -31,7 +32,9 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.titleLabel.text = NSLocalizedString("Donate to KJV RVG", comment: "")
         self.title = NSLocalizedString("Donate", comment: "")
+        self.donateButton.setTitle(NSLocalizedString("Donate via PayPal", comment: ""), for: .normal)
         self.navigationController?.isNavigationBarHidden=false
         
         print("PayPal iOS SDK Version: \(PayPalMobile.libraryVersion())")
@@ -151,8 +154,3 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     }
 
 }
-
-
-//extension ViewController: UITextFieldDelegate {
-//}
-
