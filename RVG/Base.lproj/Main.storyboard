@@ -436,8 +436,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VEN-yx-N49">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="boo" translatesAutoresizingMaskIntoConstraints="NO" id="sRt-kx-kxL"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="boo" translatesAutoresizingMaskIntoConstraints="NO" id="sRt-kx-kxL">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -448,6 +451,11 @@
                                     <constraint firstAttribute="trailing" secondItem="sRt-kx-kxL" secondAttribute="trailing" id="ong-NF-akW"/>
                                     <constraint firstAttribute="width" secondItem="VEN-yx-N49" secondAttribute="height" multiplier="4:3" id="vti-wM-5Fc"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="vti-wM-5Fc"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="3Nz-sk-CLe">
                                 <rect key="frame" x="48" y="589.5" width="279" height="31"/>
@@ -457,7 +465,7 @@
                                 </connections>
                             </slider>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rEM-Lq-Kcf">
-                                <rect key="frame" x="93" y="287.5" width="37.5" height="37.5"/>
+                                <rect key="frame" x="93" y="475" width="37.5" height="37.5"/>
                                 <state key="normal" title="0" image="player_prev_180">
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
@@ -466,19 +474,19 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvJ-eM-xbi">
-                                <rect key="frame" x="0.0" y="5" width="375" height="18"/>
+                                <rect key="frame" x="0.0" y="380" width="375" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0fX-Q2-Uxv">
-                                <rect key="frame" x="340" y="23" width="35" height="566.5"/>
+                                <rect key="frame" x="340" y="398" width="35" height="191.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="Baq-K5-NUj"/>
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8H3-k7-rd1">
-                                <rect key="frame" x="140.5" y="259.5" width="94" height="93.5"/>
+                                <rect key="frame" x="140.5" y="447" width="94" height="93.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="8H3-k7-rd1" secondAttribute="height" multiplier="1:1" id="lY5-6X-6HR"/>
                                 </constraints>
@@ -490,7 +498,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ssP-eV-gtk">
-                                <rect key="frame" x="244.5" y="287.5" width="37.5" height="37.5"/>
+                                <rect key="frame" x="244.5" y="475" width="37.5" height="37.5"/>
                                 <state key="normal" title="0" image="player_next_180">
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
