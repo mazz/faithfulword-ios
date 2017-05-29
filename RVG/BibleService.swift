@@ -113,4 +113,47 @@ class BibleService {
         }
         
     }
+    
+    func postContactUs(forContactUsModel contactUsModel: (ContactUsModel), success: @escaping () -> ()) throws -> () {
+        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
+        
+        let reachability = Reachability()!
+        
+        if (reachability.currentReachabilityStatus == .notReachable) {
+            throw SessionError.urlNotReachable
+        }
+        else {
+            if let urlStr = env.baseURL?.absoluteString?.appending(contactUsApi) {
+//                let finalUrlStr = urlStr.replacingOccurrences(of: "{bid}", with: bookId, options: .literal, range: nil)
+//                print("finalUrl: \(finalUrlStr)")
+                
+                let url = NSURL(string: urlStr)
+                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.httpMethod = "POST"
+                
+                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
+                print("userAgent: \(Device.userAgent())")
+                print("platform: \(Device.platform())")
+                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
+                // request.setValue("es-US", forHTTPHeaderField:"Language-Id")
+                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
+                
+                do {
+                    let json = try JSONSerialization.data(withJSONObject: ["name": contactUsModel.name, "email": contactUsModel.email, "message": contactUsModel.message, "signup": contactUsModel.signup], options: [.prettyPrinted])
+                    request.httpBody = json
+
+                } catch {
+                    print("error: \(error)")
+                }
+                
+                let session = URLSession.shared
+                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
+                    print("contact us response data: \(String(describing: data))")
+                })
+                
+                task.resume()
+            }
+        }
+    }
+
 }
