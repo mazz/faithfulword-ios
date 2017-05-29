@@ -48,7 +48,24 @@ class ContactUsViewController: BaseClass {
     }
 
     @IBAction func btnSubmit(_ sender: AnyObject) {
-        ContactUsBusinessLogicClass().checkValidations(obj: self)
+        let contactUs: ContactUsModel = ContactUsModel(name: "test name", email: "test@email.com", message: "test message", signup: false)
+        
+        do {
+            try BibleService.sharedInstance().postContactUs(contactUsModel: contactUs) { (Void) in
+                
+                DispatchQueue.main.async {
+                    print("contact us success")
+                    self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Thank you, we will contact you soon", comment: ""))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
+                        _ = self.navigationController?.popViewController(animated: true)
+                    }
+                    
+                }
+            }
+        } catch  {
+            print("contact us error: \(error)")
+        }
+
     }
 
 }
