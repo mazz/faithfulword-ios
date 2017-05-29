@@ -21,13 +21,13 @@ class ContactUsViewController: BaseClass {
         
         btnSubmit.layer.borderColor = UIColor.white.cgColor
         // Do any additional setup after loading the view.
-        if language == "english" {
-            self.title = NSLocalizedString("Contact Us", comment: "")
-            lblSubmit.setTitle(NSLocalizedString("Submit", comment: ""), for: .normal)
-            lblName.text = NSLocalizedString("Name", comment: "")
-            lblEmail.text = NSLocalizedString("Email", comment: "")
-            lblMessage.text = NSLocalizedString("Message", comment: "")
-        }
+//        if language == "english" {
+        self.title = NSLocalizedString("Contact Us", comment: "")
+        lblSubmit.setTitle(NSLocalizedString("Submit", comment: ""), for: .normal)
+        lblName.text = NSLocalizedString("Name", comment: "")
+        lblEmail.text = NSLocalizedString("Email", comment: "")
+        lblMessage.text = NSLocalizedString("Message", comment: "")
+//        }
 //        else {
 //            self.title = "Contáctenos"
 //            lblName.text = "Nombre"
@@ -47,24 +47,9 @@ class ContactUsViewController: BaseClass {
         self.navigationController?.isNavigationBarHidden=true
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
     @IBAction func btnSubmit(_ sender: AnyObject) {
         ContactUsBusinessLogicClass().checkValidations(obj: self)
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
