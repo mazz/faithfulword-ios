@@ -114,7 +114,7 @@ class BibleService {
         
     }
     
-    func postContactUs(forContactUsModel contactUsModel: (ContactUsModel), success: @escaping () -> ()) throws -> () {
+    func postContactUs(contactUsModel: (ContactUsModel), success: @escaping (Void) -> ()) throws -> () {
         let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
         
         let reachability = Reachability()!
@@ -148,7 +148,8 @@ class BibleService {
                 
                 let session = URLSession.shared
                 let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
-                    print("contact us response data: \(String(describing: data))")
+                    print("contact us response data: \(String(describing: data!))")
+                    success()
                 })
                 
                 task.resume()
