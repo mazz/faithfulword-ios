@@ -261,10 +261,11 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     
     
     func configureView(_ url:String) {
-        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: false)
-        loadingNotification.mode = MBProgressHUDMode.indeterminate
-        loadingNotification.graceTime = 5
-        loadingNotification.minShowTime = 0
+//        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: false)
+//        loadingNotification.mode = MBProgressHUDMode.indeterminate
+//        loadingNotification.graceTime = 5
+//        loadingNotification.minShowTime = 0
+        self.showIndicator()
 
         self.isWhile = true
          playerItem = AVPlayerItem( url:NSURL( string:url ) as! URL )
@@ -294,7 +295,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             if (object as? AVPlayerItem) != nil{
                 if (player.currentItem!.isPlaybackLikelyToKeepUp) {
 
-                    MBProgressHUD.hide(for: self.view, animated: false)
+//                    MBProgressHUD.hide(for: self.view, animated: false)
+                    self.HideIndicator()
 
                     if self.isWhile == true{
                         setTime()
@@ -306,10 +308,12 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                 }
                 else {
 
-                    let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: false)
-                    loadingNotification.mode = MBProgressHUDMode.indeterminate
-                    loadingNotification.graceTime = 5
-                    loadingNotification.minShowTime = 0
+//                    let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: false)
+//                    loadingNotification.mode = MBProgressHUDMode.indeterminate
+//                    loadingNotification.graceTime = 5
+//                    loadingNotification.minShowTime = 0
+
+                    self.showIndicator()
 
                     btnPlayPuause.setTitle("0", for: .normal)
                     btnPlayPuause.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
@@ -317,7 +321,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                     player.pause()
                     DispatchQueue.main.asyncAfter(deadline: .now()+7.5){
 
-                        MBProgressHUD.hide(for: self.view, animated: false)
+//                        MBProgressHUD.hide(for: self.view, animated: false)
+                        self.HideIndicator()
 
                         self.setTime()
                         self.isPlay = true
