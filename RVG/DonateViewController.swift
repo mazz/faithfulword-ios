@@ -88,7 +88,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
         print("donationTextField.amount: \(donationTextField.amount)")
         
         if donationTextField.amount > 0.0 {
-            let item1 = PayPalItem(name: "KJVRVG Donation", withQuantity: 1, withPrice: NSDecimalNumber(string: String(donationTextField.amount)), withCurrency: "USD", withSku: "KJVRVG-ios-0001")
+            let item1 = PayPalItem(name: "KJVRVG Donation", withQuantity: 1, withPrice: NSDecimalNumber(string: String(donationTextField.amount)), withCurrency: "USD", withSku: "KJVRVG-0001")
             
             let items = [item1]
             let subtotal = PayPalItem.totalPrice(forItems: items)
