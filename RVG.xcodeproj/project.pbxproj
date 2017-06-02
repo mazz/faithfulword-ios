@@ -26,6 +26,7 @@
 		687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6D81EC014B2002EDCC3 /* InfoPlist.strings */; };
 		687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */; };
 		687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */; };
+		6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */; };
 		689A05451ED27A9E00D3232D /* Bible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A05441ED27A9E00D3232D /* Bible.swift */; };
 		689DEFD21EB9753F00371829 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689DEFD11EB9753F00371829 /* DonateViewController.swift */; };
 		68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */; };
@@ -104,6 +105,7 @@
 		687BF6D91EC014B2002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuFooterTableViewCell.swift; sourceTree = "<group>"; };
 		687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuFooterTableViewCell.xib; sourceTree = "<group>"; };
+		6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherLanguagesViewController.swift; sourceTree = "<group>"; };
 		689A05441ED27A9E00D3232D /* Bible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bible.swift; sourceTree = "<group>"; };
 		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
 		68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuTableViewCell.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				703D12B81E67156D0093E1AA /* SongsViewController.swift */,
 				70CD20631E6479A800AF619F /* MainViewController.swift */,
 				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
+				6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -733,6 +736,7 @@
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				681E11791ED1098600B028DD /* BibleService.swift in Sources */,
 				701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */,
+				6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

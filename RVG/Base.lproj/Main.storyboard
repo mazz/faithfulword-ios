@@ -325,7 +325,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g41-vG-G8C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1125.5999999999999" y="703.89805097451278"/>
+            <point key="canvasLocation" x="1126" y="704"/>
         </scene>
         <!--About Us-->
         <scene sceneID="5pj-jK-np0">
@@ -1005,6 +1005,63 @@ Thank you!</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6cG-CV-Xi6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3940" y="769.56521739130437"/>
+        </scene>
+        <!--Other Languages-->
+        <scene sceneID="7dh-Pl-GNZ">
+            <objects>
+                <viewController storyboardIdentifier="OtherLanguagesViewController" title="Other Languages" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XNS-Js-NKc" customClass="OtherLanguagesViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pPG-Sb-Gtd"/>
+                        <viewControllerLayoutGuide type="bottom" id="pIh-a3-UQe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="REA-ru-FXF">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tso-EL-KHu">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CQp-VT-RT6" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Splash-screen" translatesAutoresizingMaskIntoConstraints="NO" id="ysS-Da-l7i">
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6m-6c-pgA">
+                                                <rect key="frame" x="8" y="8" width="359" height="117"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <string key="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugia</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="CQp-VT-RT6" secondAttribute="trailing" id="H12-d0-760"/>
+                                    <constraint firstItem="CQp-VT-RT6" firstAttribute="leading" secondItem="tso-EL-KHu" secondAttribute="leading" id="Wba-e5-RlP"/>
+                                    <constraint firstItem="CQp-VT-RT6" firstAttribute="top" secondItem="tso-EL-KHu" secondAttribute="top" id="jhM-8X-W2r"/>
+                                    <constraint firstAttribute="bottom" secondItem="CQp-VT-RT6" secondAttribute="bottom" id="lTQ-Ek-pAr"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tso-EL-KHu" firstAttribute="leading" secondItem="REA-ru-FXF" secondAttribute="leading" id="0CT-B2-QeV"/>
+                            <constraint firstAttribute="trailing" secondItem="tso-EL-KHu" secondAttribute="trailing" id="0ep-1Q-MUS"/>
+                            <constraint firstItem="tso-EL-KHu" firstAttribute="top" secondItem="REA-ru-FXF" secondAttribute="top" id="SmB-SM-olx"/>
+                            <constraint firstItem="CQp-VT-RT6" firstAttribute="width" secondItem="REA-ru-FXF" secondAttribute="width" id="XVg-8k-ElD"/>
+                            <constraint firstItem="pIh-a3-UQe" firstAttribute="top" secondItem="tso-EL-KHu" secondAttribute="bottom" id="ZOR-Hf-s2Y"/>
+                            <constraint firstItem="CQp-VT-RT6" firstAttribute="height" secondItem="REA-ru-FXF" secondAttribute="height" priority="250" id="j82-E2-3kK"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Bvn-11-0uW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1125.5999999999999" y="1368.6656671664168"/>
         </scene>
     </scenes>
     <resources>
