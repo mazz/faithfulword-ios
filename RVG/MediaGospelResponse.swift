@@ -1,16 +1,16 @@
 //
-//  MediaResponse.swift
+//  GospelResponse.swift
 //  RVG
 //
-//  Created by michael on 2017-05-23.
+//  Created by maz on 2017-06-08.
 //  Copyright © 2017 KJVRVG. All rights reserved.
 //
 
 import Foundation
 import ObjectMapper
 
-class MediaResponse : Mappable {
-    var media : [Media]?
+class MediaGospelResponse : Mappable {
+    var media : [MediaGospel]?
     
     required init?(map: Map) {
         
