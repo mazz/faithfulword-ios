@@ -1,15 +1,15 @@
 //
-//  Media.swift
+//  Gospel.swift
 //  RVG
 //
-//  Created by michael on 2017-05-23.
+//  Created by maz on 2017-06-08.
 //  Copyright © 2017 KJVRVG. All rights reserved.
 //
 
 import Foundation
 import ObjectMapper
 
-class Media : Mappable {
+class MediaGospel : Mappable {
     var localizedName : String?
     var url : String?
     
@@ -21,5 +21,6 @@ class Media : Mappable {
         localizedName  <- map["localizedName"]
         url  <- map["url"]
     }
+    
     
 }

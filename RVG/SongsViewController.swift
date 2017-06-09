@@ -7,24 +7,16 @@ import UIKit
 import MBProgressHUD
 
 class SongsViewController: BaseClass {
-
-    static var shareInstance : SongsViewController? = nil
     @IBOutlet var btnRightPlayer: UIBarButtonItem!
-    var arrOfSongs : [ModelSongClass] = []
-        
-    var folderId : String? = nil
+    
     var bookId : String? = nil
-    var media : [Media] = []
+    var media : [MediaChapter] = []
 
     @IBOutlet weak var tableVw: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden=false
-        SongsViewController.shareInstance=self
         
-        if folderId != nil{
-//            objSongBusinessLogicClass?.hitWebService(obj: self)
-        }
         self.title = NSLocalizedString("Chapters", comment: "")
         
         do {
@@ -35,7 +27,7 @@ class SongsViewController: BaseClass {
                 loadingNotification.mode = MBProgressHUDMode.indeterminate
                 //        loadingNotification.label.text = "Loading"
 
-                try BibleService.sharedInstance().getMedia(forBookId: bookId!, success: { (media) in
+                try BibleService.sharedInstance().getMediaChapters(forBookId: bookId!, success: { (media) in
                     print("got media: \(String(describing: media))")
                     self.media = media!
                     DispatchQueue.main.async {
@@ -109,7 +101,6 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
                 var array = self.navigationController?.viewControllers
                 let index = array?.index(of: playerViewController)
                 print(index)
-//                playerViewController.objSongsModel = self.arrOfSongs
                 playerViewController.media = self.media
                 playerViewController.index=indexPath.row
                 array?.remove(at: index!)
@@ -122,7 +113,6 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
                 
 //                let vc = obj.pushVc(strBdName: "Main", vcName: "PlayerViewController") as? PlayerViewController
 //                viewController?.objSongsModel = []
-//                viewController?.objSongsModel = self.arrOfSongs
                 viewController?.media = self.media
 
                 viewController?.index = indexPath.row
@@ -134,8 +124,6 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
             let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerViewController") as? PlayerViewController
             
             //                let vc = obj.pushVc(strBdName: "Main", vcName: "PlayerViewController") as? PlayerViewController
-//            viewController?.objSongsModel = []
-//            viewController?.objSongsModel = self.arrOfSongs
 
             viewController?.media = self.media
 

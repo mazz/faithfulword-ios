@@ -21,20 +21,11 @@ class ContactUsViewController: BaseClass {
         
         btnSubmit.layer.borderColor = UIColor.white.cgColor
         // Do any additional setup after loading the view.
-//        if language == "english" {
         self.title = NSLocalizedString("Contact Us", comment: "")
         lblSubmit.setTitle(NSLocalizedString("Submit", comment: ""), for: .normal)
         lblName.text = NSLocalizedString("Name", comment: "")
         lblEmail.text = NSLocalizedString("Email", comment: "")
         lblMessage.text = NSLocalizedString("Message", comment: "")
-//        }
-//        else {
-//            self.title = "Contáctenos"
-//            lblName.text = "Nombre"
-//            lblEmail.text = "correo electrónico"
-//            lblMessage.text = "Mensaje"
-//            lblSubmit.setTitle("Enviar", for: .normal)
-//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,7 +37,7 @@ class ContactUsViewController: BaseClass {
         super.viewWillDisappear(true)
         self.navigationController?.isNavigationBarHidden=true
     }
-
+/*
     @IBAction func btnSubmit(_ sender: AnyObject) {
         let contactUs: ContactUsModel = ContactUsModel(name: "test name", email: "test@email.com", message: "test message", signup: false)
         
@@ -67,8 +58,9 @@ class ContactUsViewController: BaseClass {
         }
 
     }
-
+*/
 }
+
 
 extension ContactUsViewController : UITextFieldDelegate{
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

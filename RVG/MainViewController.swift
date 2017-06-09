@@ -22,7 +22,8 @@ class MainViewController: BaseClass {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var menuBar: UIBarButtonItem!
     
-    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
+    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Gospel", comment: ""), UIImage(named: "books-stack-of-three")!),
+                                                (NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
                                                (NSLocalizedString("Donate", comment: ""), UIImage(named: "books-stack-of-three")!),
@@ -209,24 +210,28 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             return
         }
         if indexPath.row == 0 {
-//            objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
+            let vc = self.pushVc(strBdName: "Main", vcName: "LanguageViewController")
+            self.navigationController?.pushViewController(vc, animated: true)
         }
-        if indexPath.row == 1 {
+        else if indexPath.row == 1 {
+            // no action, just close menu
+        }
+        if indexPath.row == 2 {
             let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 2 {
+        else if indexPath.row == 3 {
             shareTextButton()
         }
-        else if indexPath.row == 3 {
+        else if indexPath.row == 4 {
             let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 4 {
+        else if indexPath.row == 5 {
             let vc = self.pushVc(strBdName: "Main", vcName: "PrivacyPolicy")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 5 {
+        else if indexPath.row == 6 {
             let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }

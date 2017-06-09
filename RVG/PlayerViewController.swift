@@ -54,7 +54,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     var index = Int(0)
     var objSongsModel : [ModelSongClass]?
     
-    var media : [Media]?
+    var media : [MediaChapter]?
     
     static var shareInstance : PlayerViewController? = nil
     @IBOutlet var barRightBtn: UIBarButtonItem!
