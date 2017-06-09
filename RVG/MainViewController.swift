@@ -26,6 +26,7 @@ class MainViewController: BaseClass {
                                                 (NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
+                                               (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("Donate", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
                                                (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
@@ -183,11 +184,11 @@ class MainViewController: BaseClass {
 
 extension MainViewController: UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return (tableRowsArray?.count)! + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 6 {
+        if indexPath.row == (tableRowsArray?.count)! {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
@@ -206,7 +207,7 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 6 {
+        if indexPath.row == (tableRowsArray?.count)! {
             return
         }
         if indexPath.row == 0 {
@@ -224,14 +225,21 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             shareTextButton()
         }
         else if indexPath.row == 4 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
+            let vc = self.pushVc(strBdName: "Main", vcName: "OtherLanguagesViewController") as! OtherLanguagesViewController
+            let videoURL = URL(fileURLWithPath:Bundle.main.path(forResource: "other-languages-sm", ofType: "m4v")!)
+            vc.looper = QueuePlayerLooper(videoURL: videoURL, loopCount: -1)
+            
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 5 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "PrivacyPolicy")
+            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 6 {
+            let vc = self.pushVc(strBdName: "Main", vcName: "PrivacyPolicy")
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        else if indexPath.row == 7 {
             let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
