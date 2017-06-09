@@ -100,6 +100,18 @@
 		4CDD655E1EEB423F00C59DD5 /* other-languages-sm.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "other-languages-sm.m4v"; sourceTree = "<group>"; };
 		4CDD65601EEB42B600C59DD5 /* Looper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Looper.swift; sourceTree = "<group>"; };
 		4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuePlayerLooper.swift; sourceTree = "<group>"; };
+		4CDD65641EEB4F2600C59DD5 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4CDD65651EEB4F2600C59DD5 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		4CDD65661EEB4F2600C59DD5 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CDD65671EEB4F2600C59DD5 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4CDD65681EEB4F3E00C59DD5 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		4CDD65691EEB4F3E00C59DD5 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
+		4CDD656A1EEB4F3E00C59DD5 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		4CDD656B1EEB4F3E00C59DD5 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		4CDD656C1EEB4F5700C59DD5 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4CDD656D1EEB4F5700C59DD5 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Main.strings; sourceTree = "<group>"; };
+		4CDD656E1EEB4F5800C59DD5 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4CDD656F1EEB4F5800C59DD5 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookCollectionViewCell.swift; sourceTree = "<group>"; };
 		4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookCollectionViewCell.xib; sourceTree = "<group>"; };
 		4CF401EA1ED391F400632272 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
@@ -548,6 +560,9 @@
 				en,
 				Base,
 				es,
+				fr,
+				"pt-BR",
+				hi,
 			);
 			mainGroup = 70CD20551E6479A800AF619F;
 			productRefGroup = 70CD205F1E6479A800AF619F /* Products */;
@@ -824,6 +839,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				687BF6CE1EC00AE3002EDCC3 /* es */,
+				4CDD65661EEB4F2600C59DD5 /* fr */,
+				4CDD656A1EEB4F3E00C59DD5 /* pt-BR */,
+				4CDD656E1EEB4F5800C59DD5 /* hi */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -832,6 +850,9 @@
 			isa = PBXVariantGroup;
 			children = (
 				687BF6D91EC014B2002EDCC3 /* es */,
+				4CDD65671EEB4F2600C59DD5 /* fr */,
+				4CDD656B1EEB4F3E00C59DD5 /* pt-BR */,
+				4CDD656F1EEB4F5800C59DD5 /* hi */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -841,6 +862,9 @@
 			children = (
 				70CD20661E6479A800AF619F /* Base */,
 				687BF6CC1EC00AC4002EDCC3 /* es */,
+				4CDD65651EEB4F2600C59DD5 /* fr */,
+				4CDD65691EEB4F3E00C59DD5 /* pt-BR */,
+				4CDD656D1EEB4F5700C59DD5 /* hi */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -850,6 +874,9 @@
 			children = (
 				70CD206B1E6479A800AF619F /* Base */,
 				687BF6CB1EC00AC4002EDCC3 /* es */,
+				4CDD65641EEB4F2600C59DD5 /* fr */,
+				4CDD65681EEB4F3E00C59DD5 /* pt-BR */,
+				4CDD656C1EEB4F5700C59DD5 /* hi */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

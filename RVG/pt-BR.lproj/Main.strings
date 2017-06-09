@@ -1,0 +1,99 @@
+
+/* Class = "UIViewController"; title = "About Us"; ObjectID = "2Mb-Fp-bqX"; */
+"2Mb-Fp-bqX.title" = "About Us";
+
+/* Class = "UIButton"; normalTitle = "Continue"; ObjectID = "3rb-8h-bup"; */
+"3rb-8h-bup.normalTitle" = "Continue";
+
+/* Class = "UIButton"; normalTitle = "English"; ObjectID = "6gD-Yb-Cj9"; */
+"6gD-Yb-Cj9.normalTitle" = "English";
+
+/* Class = "UIButton"; normalTitle = "1"; ObjectID = "8H3-k7-rd1"; */
+"8H3-k7-rd1.normalTitle" = "1";
+
+/* Class = "UILabel"; text = "SELECT YOUR LANGUAGE"; ObjectID = "95p-73-kbB"; */
+"95p-73-kbB.text" = "SELECT YOUR LANGUAGE";
+
+/* Class = "UILabel"; text = "USD"; ObjectID = "AyI-94-1oL"; */
+"AyI-94-1oL.text" = "USD";
+
+/* Class = "UINavigationItem"; title = "Books"; ObjectID = "Ds0-aJ-Lm3"; */
+"Ds0-aJ-Lm3.title" = "Books";
+
+/* Class = "UILabel"; text = "Donate to KJV RVG"; ObjectID = "GzK-B5-PVL"; */
+"GzK-B5-PVL.text" = "Donate to KJV RVG";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "HvA-qu-xGL"; */
+"HvA-qu-xGL.title" = "Item";
+
+/* Class = "UILabel"; text = "Your donation was successful.\nThank you!"; ObjectID = "Q2F-xp-T0c"; */
+"Q2F-xp-T0c.text" = "Your donation was successful.\nThank you!";
+
+/* Class = "UILabel"; text = "0.00"; ObjectID = "StG-bJ-zCB"; */
+"StG-bJ-zCB.text" = "0.00";
+
+/* Class = "UILabel"; text = "Message"; ObjectID = "Tyu-XB-UUD"; */
+"Tyu-XB-UUD.text" = "Message";
+
+/* Class = "UIButton"; normalTitle = "Submit"; ObjectID = "UPc-4r-UOs"; */
+"UPc-4r-UOs.normalTitle" = "Submit";
+
+/* Class = "UIViewController"; title = "Other Languages"; ObjectID = "XNS-Js-NKc"; */
+"XNS-Js-NKc.title" = "Other Languages";
+
+/* Class = "UILabel"; text = "KJVRVG"; ObjectID = "XgS-3i-ZEx"; */
+"XgS-3i-ZEx.text" = "KJVRVG";
+
+/* Class = "UIBarButtonItem"; title = "  "; ObjectID = "a95-ue-oDB"; */
+"a95-ue-oDB.title" = "  ";
+
+/* Class = "UIViewController"; title = "Change Language"; ObjectID = "bs4-fi-hwm"; */
+"bs4-fi-hwm.title" = "Change Language";
+
+/* Class = "UIButton"; normalTitle = "Donate Via PayPal"; ObjectID = "efg-tW-S3C"; */
+"efg-tW-S3C.normalTitle" = "Donate Via PayPal";
+
+/* Class = "UILabel"; text = "0.00"; ObjectID = "g9V-Xr-3fD"; */
+"g9V-Xr-3fD.text" = "0.00";
+
+/* Class = "UIButton"; normalTitle = "Spanish"; ObjectID = "gOT-4F-i2n"; */
+"gOT-4F-i2n.normalTitle" = "Spanish";
+
+/* Class = "UIViewController"; title = "KJV RVG"; ObjectID = "hn4-mT-zVs"; */
+"hn4-mT-zVs.title" = "KJV RVG";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "jvJ-eM-xbi"; */
+"jvJ-eM-xbi.text" = "Label";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "kSX-9S-Zlo"; */
+"kSX-9S-Zlo.text" = "Name";
+
+/* Class = "UIViewController"; title = "Chapters"; ObjectID = "kh0-eY-UNT"; */
+"kh0-eY-UNT.title" = "Chapters";
+
+/* Class = "UILabel"; text = "To listen to the Bible in other languages"; ObjectID = "l6m-6c-pgA"; */
+"l6m-6c-pgA.text" = "To listen to the Bible in other languages";
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "lBj-QZ-dra"; */
+"lBj-QZ-dra.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "mKJ-Gf-iPc"; */
+"mKJ-Gf-iPc.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "UIButton"; normalTitle = "0"; ObjectID = "mhC-f7-UMq"; */
+"mhC-f7-UMq.normalTitle" = "0";
+
+/* Class = "UIButton"; normalTitle = "0"; ObjectID = "rEM-Lq-Kcf"; */
+"rEM-Lq-Kcf.normalTitle" = "0";
+
+/* Class = "UILabel"; text = "Email"; ObjectID = "rH4-J8-9gQ"; */
+"rH4-J8-9gQ.text" = "Email";
+
+/* Class = "UIButton"; normalTitle = "0"; ObjectID = "ssP-eV-gtk"; */
+"ssP-eV-gtk.normalTitle" = "0";
+
+/* Class = "UILabel"; text = "Home"; ObjectID = "xF8-Be-0f9"; */
+"xF8-Be-0f9.text" = "Home";
+
+/* Class = "UIButton"; normalTitle = "0"; ObjectID = "yeX-p6-GRo"; */
+"yeX-p6-GRo.normalTitle" = "0";
