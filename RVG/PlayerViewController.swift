@@ -14,7 +14,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     var isSeek : Bool? = true
     @IBOutlet weak var lblTimeTotal: UILabel!
     @IBOutlet weak var lblTimePending: UILabel!
-    @IBOutlet weak var lblName: UILabel!
+    @IBOutlet weak var contentTitleLabel: UILabel!
     @IBOutlet weak var constraint11: NSLayoutConstraint!
     @IBOutlet weak var constraint43: NSLayoutConstraint!
     @IBOutlet weak var seekSlider: UISlider!
@@ -192,7 +192,9 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             index=index-1
             configureView((media?[index].url)!)
             currentSongIndex=media?[index].url
-                lblName.text=media?[index].localizedName
+            
+            
+            contentTitleLabel.text = contentTitle(forMediaIndex: index)
         }
     }
     @IBAction func btnNext() {
@@ -208,7 +210,9 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             index=index+1
             configureView((media?[index].url)!)
             currentSongIndex = media?[index].url
-                lblName.text=media?[index].localizedName
+            contentTitleLabel.text = contentTitle(forMediaIndex: index)
+
+//                contentTitleLabel.text=media?[index].localizedName
         }
     }
     @IBAction func beginSlider(_ sender: UISlider) {
@@ -241,7 +245,9 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden=false
-            lblName.text=media?[index].localizedName
+        contentTitleLabel.text = contentTitle(forMediaIndex: index)
+
+//        contentTitleLabel.text=media?[index].localizedName
         
         if let str = currentSongIndex{
             if str != media?[index].url {
@@ -398,7 +404,9 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                                 self.isWhile = false
                                 self.configureView((self.media?[self.index].url)!)
                                 self.currentSongIndex=self.media?[self.index].url
-                                    self.lblName.text=self.media?[self.index].localizedName
+                                self.contentTitleLabel.text = self.contentTitle(forMediaIndex: self.index)
+
+//                                self.contentTitleLabel.text=self.media?[self.index].localizedName
                             }else{
                                 let time = CMTimeMakeWithSeconds(0.0, 100)
                                 self.player.seek(to: time)
@@ -419,10 +427,6 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
             }
             }
         }
-    }
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func btnLeftAction(_ sender: AnyObject) {
@@ -455,16 +459,24 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
           _ = self.navigationController?.popViewController(animated: true)
         }
     }
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    private func contentTitle(forMediaIndex index: (Int)) -> String {
+        
+        var finalString : String = ""
+        
+        if let localizedName = self.media?[self.index].localizedName {
+            finalString = finalString.appending("\(localizedName)\n ")
+        }
+
+        if let presenterName = self.media?[self.index].presenterName {
+            finalString = finalString.appending("\(presenterName) • ")
+        }
+
+        if let sourceMaterial = self.media?[self.index].sourceMaterial {
+            finalString = finalString.appending(sourceMaterial)
+        }
+        return finalString
     }
-    */
-
 }
 
 //// MARK: - NSURLSessionDownloadDelegate

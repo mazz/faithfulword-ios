@@ -65,8 +65,8 @@
 /* Class = "UIButton"; normalTitle = "Spanish"; ObjectID = "gOT-4F-i2n"; */
 "gOT-4F-i2n.normalTitle" = "Spanish";
 
-/* Class = "UIViewController"; title = "KJV RVG"; ObjectID = "hn4-mT-zVs"; */
-"hn4-mT-zVs.title" = "KJV RVG";
+/* Class = "UIViewController"; title = "KJVRVG"; ObjectID = "hn4-mT-zVs"; */
+"hn4-mT-zVs.title" = "KJVRVG";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "jvJ-eM-xbi"; */
 "jvJ-eM-xbi.text" = "Label";

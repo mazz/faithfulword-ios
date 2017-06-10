@@ -506,10 +506,10 @@
             </objects>
             <point key="canvasLocation" x="2599" y="36"/>
         </scene>
-        <!--KJV RVG-->
+        <!--KJVRVG-->
         <scene sceneID="jAq-fW-u1T">
             <objects>
-                <viewController storyboardIdentifier="PlayerViewController" title="KJV RVG" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hn4-mT-zVs" customClass="PlayerViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayerViewController" title="KJVRVG" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hn4-mT-zVs" customClass="PlayerViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ULG-gX-3tW"/>
                         <viewControllerLayoutGuide type="bottom" id="7Jp-fz-RyR"/>
@@ -551,7 +551,7 @@
                                 </connections>
                             </slider>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rEM-Lq-Kcf">
-                                <rect key="frame" x="93" y="475" width="37.5" height="37.5"/>
+                                <rect key="frame" x="93" y="479" width="37.5" height="37.5"/>
                                 <state key="normal" title="0" image="player_prev_180">
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
@@ -559,20 +559,20 @@
                                     <action selector="btnPrevious" destination="hn4-mT-zVs" eventType="touchUpInside" id="fVr-hV-N1e"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvJ-eM-xbi">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvJ-eM-xbi">
                                 <rect key="frame" x="0.0" y="380" width="375" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0fX-Q2-Uxv">
-                                <rect key="frame" x="340" y="398" width="35" height="191.5"/>
+                                <rect key="frame" x="340" y="406" width="35" height="183.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="35" id="Baq-K5-NUj"/>
                                 </constraints>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8H3-k7-rd1">
-                                <rect key="frame" x="140.5" y="447" width="94" height="93.5"/>
+                                <rect key="frame" x="140.5" y="451" width="94" height="93.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="8H3-k7-rd1" secondAttribute="height" multiplier="1:1" id="lY5-6X-6HR"/>
                                 </constraints>
@@ -584,7 +584,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ssP-eV-gtk">
-                                <rect key="frame" x="244.5" y="475" width="37.5" height="37.5"/>
+                                <rect key="frame" x="244.5" y="479" width="37.5" height="37.5"/>
                                 <state key="normal" title="0" image="player_next_180">
                                     <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </state>
@@ -669,7 +669,7 @@
                             <constraint firstItem="g9V-Xr-3fD" firstAttribute="leading" secondItem="MbZ-cx-JBz" secondAttribute="leading" constant="4" id="ro2-0y-o5e"/>
                             <constraint firstItem="mhC-f7-UMq" firstAttribute="width" secondItem="yeX-p6-GRo" secondAttribute="width" id="t0U-a3-hnO"/>
                             <constraint firstItem="mhC-f7-UMq" firstAttribute="top" secondItem="3Nz-sk-CLe" secondAttribute="bottom" id="u1j-3W-x2y"/>
-                            <constraint firstItem="0fX-Q2-Uxv" firstAttribute="top" secondItem="jvJ-eM-xbi" secondAttribute="bottom" id="ud4-5e-CwC"/>
+                            <constraint firstItem="0fX-Q2-Uxv" firstAttribute="top" secondItem="jvJ-eM-xbi" secondAttribute="bottom" constant="8" id="ud4-5e-CwC"/>
                             <constraint firstItem="3Nz-sk-CLe" firstAttribute="top" secondItem="0fX-Q2-Uxv" secondAttribute="bottom" id="vgC-gs-O3y"/>
                             <constraint firstItem="8H3-k7-rd1" firstAttribute="leading" secondItem="rEM-Lq-Kcf" secondAttribute="trailing" constant="10" id="yBJ-Yv-V2I"/>
                         </constraints>
@@ -680,7 +680,7 @@
                         <outlet property="btnPlayPuause" destination="8H3-k7-rd1" id="Exn-lt-nT3"/>
                         <outlet property="constraint11" destination="T2y-IS-aCu" id="ZqF-aL-8yt"/>
                         <outlet property="constraint43" destination="vti-wM-5Fc" id="2Fo-fC-nru"/>
-                        <outlet property="lblName" destination="jvJ-eM-xbi" id="YkF-Am-liL"/>
+                        <outlet property="contentTitleLabel" destination="jvJ-eM-xbi" id="gsX-RC-fW1"/>
                         <outlet property="lblTimePending" destination="g9V-Xr-3fD" id="ckr-7m-UX2"/>
                         <outlet property="lblTimeTotal" destination="StG-bJ-zCB" id="fec-0k-d9k"/>
                         <outlet property="seekSlider" destination="3Nz-sk-CLe" id="ndn-Kr-QMc"/>
@@ -1016,7 +1016,7 @@
                                     <constraint firstItem="AyI-94-1oL" firstAttribute="top" secondItem="y9O-ba-qMM" secondAttribute="bottom" constant="3" id="s3e-rD-zyO"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Donate to KJV RVG" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GzK-B5-PVL">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Donate to KJVRVG" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GzK-B5-PVL">
                                 <rect key="frame" x="73" y="171" width="229" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="229" id="4U4-u7-Gme"/>
