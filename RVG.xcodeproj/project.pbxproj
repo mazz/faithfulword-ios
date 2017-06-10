@@ -43,6 +43,8 @@
 		68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D31EEA3FBF0082956D /* GospelViewController.swift */; };
 		68BE69D61EEA57380082956D /* LanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D51EEA57380082956D /* LanguageViewController.swift */; };
 		68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BE69D71EEBBB5B0082956D /* SafariServices.framework */; };
+		68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */; };
+		68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */; };
 		68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE411EBC143400FCD897 /* UIView+Debug.m */; };
 		68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE441EBD622300FCD897 /* CurrencyField.swift */; };
 		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
@@ -146,6 +148,8 @@
 		68BE69E21EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Main.strings; sourceTree = "<group>"; };
 		68BE69E31EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		68BE69E41EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifierResponse.swift; sourceTree = "<group>"; };
+		68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifier.swift; sourceTree = "<group>"; };
 		68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RVG-Bridging-Header.h"; sourceTree = "<group>"; };
 		68E2BE401EBC143400FCD897 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
 		68E2BE411EBC143400FCD897 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
@@ -376,12 +380,14 @@
 			isa = PBXGroup;
 			children = (
 				681E11801ED13B1400B028DD /* BookResponse.swift */,
+				68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */,
 				68BE69D11EEA3C600082956D /* GospelResponse.swift */,
 				68BE69CD1EEA35240082956D /* MediaGospelResponse.swift */,
 				4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */,
 				689A05441ED27A9E00D3232D /* Bible.swift */,
 				681E117E1ED138DA00B028DD /* Book.swift */,
 				68BE69CF1EEA3B730082956D /* Gospel.swift */,
+				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
 				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
 				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
 				703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */,
@@ -779,6 +785,7 @@
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,
+				68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */,
 				70CD20641E6479A800AF619F /* MainViewController.swift in Sources */,
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
@@ -804,6 +811,7 @@
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
 				70C937AB1E6B4D5100ACE009 /* ModelContactUs.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
+				68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */,
 				681E11791ED1098600B028DD /* BibleService.swift in Sources */,
 				701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
