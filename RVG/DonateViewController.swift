@@ -19,7 +19,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     
     let currencyFormatter = NumberFormatter()
     
-    var environment:String = PayPalEnvironmentNoNetwork {
+    var environment:String = PayPalEnvironmentSandbox {
         willSet(newEnvironment) {
             if (newEnvironment != environment) {
                 PayPalMobile.preconnect(withEnvironment: newEnvironment)
@@ -32,7 +32,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.titleLabel.text = NSLocalizedString("Donate to KJV RVG", comment: "")
+        self.titleLabel.text = NSLocalizedString("Donate to KJVRVG", comment: "")
         self.title = NSLocalizedString("Donate", comment: "")
         self.donateButton.setTitle(NSLocalizedString("Donate via PayPal", comment: ""), for: .normal)
         self.navigationController?.isNavigationBarHidden=false

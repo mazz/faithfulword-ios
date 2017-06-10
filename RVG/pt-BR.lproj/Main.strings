@@ -20,8 +20,8 @@
 /* Class = "UINavigationItem"; title = "Books"; ObjectID = "Ds0-aJ-Lm3"; */
 "Ds0-aJ-Lm3.title" = "Books";
 
-/* Class = "UILabel"; text = "Donate to KJV RVG"; ObjectID = "GzK-B5-PVL"; */
-"GzK-B5-PVL.text" = "Donate to KJV RVG";
+/* Class = "UILabel"; text = "Donate to KJVRVG"; ObjectID = "GzK-B5-PVL"; */
+"GzK-B5-PVL.text" = "Donate to KJVRVG";
 
 /* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "HvA-qu-xGL"; */
 "HvA-qu-xGL.title" = "Item";
@@ -59,8 +59,8 @@
 /* Class = "UIButton"; normalTitle = "Spanish"; ObjectID = "gOT-4F-i2n"; */
 "gOT-4F-i2n.normalTitle" = "Spanish";
 
-/* Class = "UIViewController"; title = "KJV RVG"; ObjectID = "hn4-mT-zVs"; */
-"hn4-mT-zVs.title" = "KJV RVG";
+/* Class = "UIViewController"; title = "KJVRVG"; ObjectID = "hn4-mT-zVs"; */
+"hn4-mT-zVs.title" = "KJVRVG";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "jvJ-eM-xbi"; */
 "jvJ-eM-xbi.text" = "Label";
