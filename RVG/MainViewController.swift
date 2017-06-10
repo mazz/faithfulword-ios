@@ -183,7 +183,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     }
 }
 
-extension MainViewController: UITableViewDelegate,UITableViewDataSource{
+extension MainViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (tableRowsArray?.count)! + 1
     }
@@ -241,34 +241,37 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 7 {
-//            let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
-            if !MFMailComposeViewController.canSendMail() {
-                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: ""))
+            let mailComposeViewController = configuredMailComposeViewController()
+            if MFMailComposeViewController.canSendMail() {
+                self.present(mailComposeViewController, animated: true, completion: nil)
             } else {
-                let composeVC = MFMailComposeViewController()
-                composeVC.mailComposeDelegate = self as? MFMailComposeViewControllerDelegate
-                
-                // Configure the fields of the interface.
-                composeVC.setToRecipients(["info@kjvrvg.com"])
-                composeVC.setSubject("KJVRVG iOS App")
-
-                // Present the view controller modally.
-                self.present(composeVC, animated: true, completion: nil)
+                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: ""))
             }
-//            self.navigationController?.pushViewController(vc, animated: true)
+            menuBtn(UIButton())
         }
-        menuBtn(UIButton())
     }
-}
-
-extension MFMailComposeViewControllerDelegate {
     
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+    func configuredMailComposeViewController() -> MFMailComposeViewController {
+        let mailComposerVC = MFMailComposeViewController()
+        mailComposerVC.mailComposeDelegate = self
+        
+        mailComposerVC.setToRecipients(["info@kjvrvg.com"])
+        mailComposerVC.setSubject("KJVRVG iOS App Feedback")
+        
+        return mailComposerVC
+    }
+    
+    // MARK: MFMailComposeViewControllerDelegate Method
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+/*    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         // Check the result or perform other tasks.
         
         // Dismiss the mail compose view controller.
-        controller.dismiss(animated: true, completion: nil)
-    }
+        controller.dismiss(animated: true, completion: nil) */
+    
 }
 
 extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
