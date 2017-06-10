@@ -23,12 +23,12 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var menuBar: UIBarButtonItem!
     
-    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Gospel", comment: ""), UIImage(named: "books-stack-of-three")!),
+    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Gospel", comment: ""), UIImage(named: "chapter")!),
                                                 (NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
-                                               (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "books-stack-of-three")!),
-                                               (NSLocalizedString("Donate", comment: ""), UIImage(named: "books-stack-of-three")!),
+                                               (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "preaching")!),
+                                               (NSLocalizedString("Donate", comment: ""), UIImage(named: "donate")!),
                                                (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
                                                (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
                                                ]
