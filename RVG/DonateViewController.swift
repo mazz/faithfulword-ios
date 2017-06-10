@@ -19,7 +19,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     
     let currencyFormatter = NumberFormatter()
     
-    var environment:String = PayPalEnvironmentSandbox {
+    var environment:String = PayPalEnvironmentProduction {
         willSet(newEnvironment) {
             if (newEnvironment != environment) {
                 PayPalMobile.preconnect(withEnvironment: newEnvironment)
