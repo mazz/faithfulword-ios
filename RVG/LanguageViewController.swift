@@ -7,45 +7,73 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class LanguageViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     let textCellIdentifier = "TextCell"
+    var languageIdentifiers : [LanguageIdentifier]  = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("Language", comment: "")
         self.navigationController?.isNavigationBarHidden=false
-
-        // Do any additional setup after loading the view.
+        
+        do {
+//            if let _ = bookId {
+                // "e931ea58-080f-46ee-ae21-3bbec0365ddc"
+                
+                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+                loadingNotification.mode = MBProgressHUDMode.indeterminate
+                //        loadingNotification.label.text = "Loading"
+                
+                
+            try BibleService.sharedInstance().getSupportedLanguageIdentifiers(success: { (languageIdentifiers) in
+                print("got languageIdentifiers: \(String(describing: languageIdentifiers))")
+                DispatchQueue.main.async {
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                    self.languageIdentifiers = languageIdentifiers!
+                    self.tableView.reloadData()
+                }
+            })
+            
+            /*
+                try BibleService.sharedInstance().getMediaChapters(forBookId: bookId!, success: { (media) in
+                    print("got media: \(String(describing: media))")
+                    self.media = media!
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.tableVw.reloadData()
+                    }
+                })
+ */
+//            }
+            
+        } catch {
+            print("failed getting language identifiers")
+        }
+        
+        
+        
+        //getSupportedLanguageIdentifiers
+        
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
 extension LanguageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return self.languageIdentifiers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "SongTableViewCellID") as? SongTableViewCell
-//        cell?.selectionStyle = .none
-//        cell?.songLabel?.text = self.media[indexPath.row].localizedName!
-//        let cell = tableView.dequeueReusableCell(withIdentifier: textCellIdentifier, for: indexPath) //dequeueReusableCellWithIdentifier(textCellIdentifier, forIndexPath: indexPath)
             let cell = UITableViewCell(style:UITableViewCellStyle.subtitle, reuseIdentifier:textCellIdentifier)
         let row = indexPath.row
-        cell.textLabel?.text = "foo"
+        
+        cell.textLabel?.text = (Locale.current as NSLocale).displayName(forKey:NSLocale.Key.identifier, value: languageIdentifiers[row].languageIdentifier!)?.capitalized
+        cell.textLabel?.textColor = UIColor.white
+        cell.accessoryType = .disclosureIndicator
         cell.backgroundColor = UIColor.clear
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         

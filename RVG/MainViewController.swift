@@ -182,6 +182,29 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         self.present(activityViewController, animated: true, completion: nil)
         
     }
+    
+    
+    func configuredMailComposeViewController() -> MFMailComposeViewController {
+        let mailComposerVC = MFMailComposeViewController()
+        mailComposerVC.mailComposeDelegate = self
+        
+        mailComposerVC.setToRecipients(["info@kjvrvg.com"])
+        mailComposerVC.setSubject("KJVRVG iOS App Feedback")
+        
+        return mailComposerVC
+    }
+    
+    // MARK: MFMailComposeViewControllerDelegate Method
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    /*    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+     // Check the result or perform other tasks.
+     
+     // Dismiss the mail compose view controller.
+     controller.dismiss(animated: true, completion: nil) */
+
 }
 
 extension MainViewController: UITableViewDelegate,UITableViewDataSource {
@@ -248,30 +271,9 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
             } else {
                 self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: ""))
             }
-            menuBtn(UIButton())
         }
+        menuBtn(UIButton())
     }
-    
-    func configuredMailComposeViewController() -> MFMailComposeViewController {
-        let mailComposerVC = MFMailComposeViewController()
-        mailComposerVC.mailComposeDelegate = self
-        
-        mailComposerVC.setToRecipients(["info@kjvrvg.com"])
-        mailComposerVC.setSubject("KJVRVG iOS App Feedback")
-        
-        return mailComposerVC
-    }
-    
-    // MARK: MFMailComposeViewControllerDelegate Method
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        controller.dismiss(animated: true, completion: nil)
-    }
-    
-/*    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        // Check the result or perform other tasks.
-        
-        // Dismiss the mail compose view controller.
-        controller.dismiss(animated: true, completion: nil) */
     
 }
 

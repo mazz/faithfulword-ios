@@ -12,10 +12,13 @@ import ObjectMapper
 class BibleService {
     static var bibleService :  BibleService?
     
-    internal let bookApi :          String = "/v1/books"
-    internal let gospelApi :        String = "/v1/gospels"
-    internal let mediaChapterApi :  String = "/v1/books/{bid}/media"
-    internal let mediaGospelApi :   String = "/v1/gospels/{gid}/media"
+    internal let bookApi :                                  String = "/v1/books"
+    internal let gospelApi :                                String = "/v1/gospels"
+    internal let supportedLanguageIdentifierApi :           String = "/v1/languages/supported"
+    internal let allLanguageIdentifierApi :                 String = "/v1/languages"
+    internal let mediaChapterApi :                          String = "/v1/books/{bid}/media"
+    internal let mediaGospelApi :                           String = "/v1/gospels/{gid}/media"
+    
     //internal let contactUsApi :     String = "/v1/contact-us"
 
     class func sharedInstance() -> BibleService {
@@ -195,6 +198,54 @@ class BibleService {
                             parsedObject = MediaGospelResponse(JSON: jsonObject)!
                             print(parsedObject)
                             success(parsedObject.media)
+                        }
+                    } catch {
+                        print("error: \(error)")
+                    }
+                })
+                
+                task.resume()
+            }
+        }
+        
+    }
+
+    
+    func getSupportedLanguageIdentifiers(success: @escaping ([LanguageIdentifier]?) -> ()) throws -> () {
+        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
+        
+        let reachability = Reachability()!
+        
+        if (reachability.currentReachabilityStatus == .notReachable) {
+            throw SessionError.urlNotReachable
+        }
+        else {
+            if let urlStr = env.baseURL?.absoluteString?.appending(supportedLanguageIdentifierApi) {
+                let finalUrlStr = urlStr
+                print("finalUrl: \(finalUrlStr)")
+                
+                let url = NSURL(string: finalUrlStr)
+                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.httpMethod = "GET"
+                
+                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
+                print("userAgent: \(Device.userAgent())")
+                print("platform: \(Device.platform())")
+                
+                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
+                // request.setValue("es-US", forHTTPHeaderField:"Language-Id")
+                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
+                
+                let session = URLSession.shared
+                
+                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
+                    var parsedObject: LanguageIdentifierResponse
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = LanguageIdentifierResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.languageIdentifiers)
                         }
                     } catch {
                         print("error: \(error)")
