@@ -6,6 +6,7 @@
 import UIKit
 import MBProgressHUD
 import MessageUI
+import SafariServices
 
 class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
@@ -237,8 +238,8 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 6 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "PrivacyPolicy")
-            self.navigationController?.pushViewController(vc, animated: true)
+            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/privacy-policy/")! as URL)
+            self.present(svc, animated: true, completion: nil)
         }
         else if indexPath.row == 7 {
             let mailComposeViewController = configuredMailComposeViewController()

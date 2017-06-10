@@ -42,6 +42,7 @@
 		68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D11EEA3C600082956D /* GospelResponse.swift */; };
 		68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D31EEA3FBF0082956D /* GospelViewController.swift */; };
 		68BE69D61EEA57380082956D /* LanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D51EEA57380082956D /* LanguageViewController.swift */; };
+		68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BE69D71EEBBB5B0082956D /* SafariServices.framework */; };
 		68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE411EBC143400FCD897 /* UIView+Debug.m */; };
 		68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE441EBD622300FCD897 /* CurrencyField.swift */; };
 		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
@@ -144,6 +145,7 @@
 		68BE69D11EEA3C600082956D /* GospelResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GospelResponse.swift; sourceTree = "<group>"; };
 		68BE69D31EEA3FBF0082956D /* GospelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GospelViewController.swift; sourceTree = "<group>"; };
 		68BE69D51EEA57380082956D /* LanguageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageViewController.swift; sourceTree = "<group>"; };
+		68BE69D71EEBBB5B0082956D /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RVG-Bridging-Header.h"; sourceTree = "<group>"; };
 		68E2BE401EBC143400FCD897 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
 		68E2BE411EBC143400FCD897 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */,
 				4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */,
 				F4EAE455D8A9B4AFF89DDE65 /* Pods_KJVRVG.framework in Frameworks */,
 			);
@@ -219,6 +222,7 @@
 		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				68BE69D71EEBBB5B0082956D /* SafariServices.framework */,
 				4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */,
 				3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */,
 				C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */,
