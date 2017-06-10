@@ -16,6 +16,7 @@
 		4CDD655F1EEB423F00C59DD5 /* other-languages-sm.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 4CDD655E1EEB423F00C59DD5 /* other-languages-sm.m4v */; };
 		4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65601EEB42B600C59DD5 /* Looper.swift */; };
 		4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */; };
+		4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */; };
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
 		4CF401EB1ED391F400632272 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401EA1ED391F400632272 /* Device.swift */; };
@@ -112,6 +113,7 @@
 		4CDD656D1EEB4F5700C59DD5 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Main.strings; sourceTree = "<group>"; };
 		4CDD656E1EEB4F5800C59DD5 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; lineEnding = 0; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		4CDD656F1EEB4F5800C59DD5 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookCollectionViewCell.swift; sourceTree = "<group>"; };
 		4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookCollectionViewCell.xib; sourceTree = "<group>"; };
 		4CF401EA1ED391F400632272 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */,
 				F4EAE455D8A9B4AFF89DDE65 /* Pods_KJVRVG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -216,6 +219,7 @@
 		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */,
 				3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */,
 				C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */,
 				9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */,

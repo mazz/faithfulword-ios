@@ -5,8 +5,9 @@
 
 import UIKit
 import MBProgressHUD
+import MessageUI
 
-class MainViewController: BaseClass {
+class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var lblHome: UILabel!
     @IBOutlet weak var btnPlayer: UIButton!
@@ -240,10 +241,33 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource{
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 7 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
+//            let vc = self.pushVc(strBdName: "Main", vcName: "ContactUsViewController")
+            if !MFMailComposeViewController.canSendMail() {
+                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: ""))
+            } else {
+                let composeVC = MFMailComposeViewController()
+                composeVC.mailComposeDelegate = self as? MFMailComposeViewControllerDelegate
+                
+                // Configure the fields of the interface.
+                composeVC.setToRecipients(["info@kjvrvg.com"])
+                composeVC.setSubject("KJVRVG iOS App")
+
+                // Present the view controller modally.
+                self.present(composeVC, animated: true, completion: nil)
+            }
+//            self.navigationController?.pushViewController(vc, animated: true)
         }
         menuBtn(UIButton())
+    }
+}
+
+extension MFMailComposeViewControllerDelegate {
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        // Check the result or perform other tasks.
+        
+        // Dismiss the mail compose view controller.
+        controller.dismiss(animated: true, completion: nil)
     }
 }
 
