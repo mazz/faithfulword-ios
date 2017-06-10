@@ -11,7 +11,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var lblHome: UILabel!
     @IBOutlet weak var btnPlayer: UIButton!
-    @IBOutlet weak var lblRVG2010: UILabel!
+
     static var shareInstance : MainViewController?
     
     var arrOfFolders : [ModelOfViewControllerFolders] = []
@@ -193,8 +193,8 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
-            cell?.verseBodyLabel.text = NSLocalizedString("Thy word is a lamp unto my feet, and a light unto my path", comment: "")
-            cell?.chapterAndVerseLabel.text = NSLocalizedString("Psalm 119:105", comment: "")
+            cell?.verseBodyLabel.text = NSLocalizedString("I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture.", comment: "")
+            cell?.chapterAndVerseLabel.text = NSLocalizedString("-Jesus Christ (John 10:9)", comment: "")
 
             return cell!
         } else {

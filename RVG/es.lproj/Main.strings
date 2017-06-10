@@ -44,8 +44,8 @@
 /* Class = "UIButton"; normalTitle = "Submit"; ObjectID = "UPc-4r-UOs"; */
 "UPc-4r-UOs.normalTitle" = "Submit";
 
-/* Class = "UILabel"; text = "RVG 2010 Audio N.T"; ObjectID = "XgS-3i-ZEx"; */
-"XgS-3i-ZEx.text" = "RVG 2010 Audio N.T";
+/* Class = "UILabel"; text = "KJVRVG"; ObjectID = "XgS-3i-ZEx"; */
+"XgS-3i-ZEx.text" = "KJVRVG";
 
 /* Class = "UIBarButtonItem"; title = "  "; ObjectID = "a95-ue-oDB"; */
 "a95-ue-oDB.title" = "  ";
