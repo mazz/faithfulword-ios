@@ -29,7 +29,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     
     var resultText = "" // empty
     var payPalConfig = PayPalConfiguration() // default
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.titleLabel.text = NSLocalizedString("Donate to KJVRVG", comment: "")
@@ -98,6 +98,8 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
             payment.items = items
             
             if (payment.processable) {
+                payPalConfig.acceptCreditCards = true
+
                 let paymentViewController = PayPalPaymentViewController(payment: payment, configuration: payPalConfig, delegate: self)
                 present(paymentViewController!, animated: true, completion: nil)
             }
