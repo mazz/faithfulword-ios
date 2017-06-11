@@ -24,11 +24,10 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var menuBar: UIBarButtonItem!
     
-    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Gospel", comment: ""), UIImage(named: "chapter")!),
-                                                (NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
+    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
-                                               (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "preaching")!),
+                                               (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "language_menu")!),
                                                (NSLocalizedString("Donate", comment: ""), UIImage(named: "donate")!),
                                                (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
                                                (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
@@ -235,36 +234,37 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
         if indexPath.row == (tableRowsArray?.count)! {
             return
         }
-        if indexPath.row == 0 {
+/*        if indexPath.row == 0 {
             let vc = self.pushVc(strBdName: "Main", vcName: "LanguageViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 1 {
+        else */
+            if indexPath.row == 0 {
             // no action, just close menu
         }
-        if indexPath.row == 2 {
+        if indexPath.row == 1 {
             let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 3 {
+        else if indexPath.row == 2 {
             shareTextButton()
         }
-        else if indexPath.row == 4 {
+        else if indexPath.row == 3 {
             let vc = self.pushVc(strBdName: "Main", vcName: "OtherLanguagesViewController") as! OtherLanguagesViewController
             let videoURL = URL(fileURLWithPath:Bundle.main.path(forResource: "other-languages-sm", ofType: "m4v")!)
             vc.looper = QueuePlayerLooper(videoURL: videoURL, loopCount: -1)
             
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 5 {
+        else if indexPath.row == 4 {
             let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 6 {
+        else if indexPath.row == 5 {
             let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/privacy-policy/")! as URL)
             self.present(svc, animated: true, completion: nil)
         }
-        else if indexPath.row == 7 {
+        else if indexPath.row == 6 {
             let mailComposeViewController = configuredMailComposeViewController()
             if MFMailComposeViewController.canSendMail() {
                 self.present(mailComposeViewController, animated: true, completion: nil)
