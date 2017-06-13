@@ -257,8 +257,12 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 4 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
+            
+            let svc = SFSafariViewController(url: NSURL(string: "https://www.paypal.com/donate/?token=OBbh3MfGIEKv0FPvRIy0_QMCdfLDgC7tlDGWIyfEtizwtbM6NsZV8EclsA_UzNw677yJP0")! as URL)
+            self.present(svc, animated: true, completion: nil)
+          
+//            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
+//            self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 5 {
             let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/privacy-policy/")! as URL)
