@@ -258,7 +258,7 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
         }
         else if indexPath.row == 4 {
             
-            let svc = SFSafariViewController(url: NSURL(string: "https://www.paypal.com/donate/?token=OBbh3MfGIEKv0FPvRIy0_QMCdfLDgC7tlDGWIyfEtizwtbM6NsZV8EclsA_UzNw677yJP0")! as URL)
+            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/donate/")! as URL)
             self.present(svc, animated: true, completion: nil)
           
 //            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
