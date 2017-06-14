@@ -18,7 +18,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     @IBOutlet weak var constraint11: NSLayoutConstraint!
     @IBOutlet weak var constraint43: NSLayoutConstraint!
     @IBOutlet weak var seekSlider: UISlider!
-    @IBOutlet weak var btnPlayPuause: UIButton!
+    @IBOutlet weak var playerPlayPauseButton: UIButton!
     var player : AVPlayer!
     var playerItem : AVPlayerItem!
     var isWhile : Bool? = true
@@ -113,10 +113,10 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
         print(sender)
         if player != nil && isPlay == true{
             player.play()
-         //   btnPlayPuause.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
+         //   playerPlayPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
         }else if player != nil && isPlay == false{
             player.pause()
-          //  btnPlayPuause.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
+          //  playerPlayPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
         }
     }
     func audioSessionInterrupted(sender:Notification){
@@ -306,8 +306,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                         setTime()
                         isPlay = true
                         player.play()
-                        btnPlayPuause.setTitle("1", for: .normal)
-                        btnPlayPuause.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
+                        playerPlayPauseButton.setTitle("1", for: .normal)
+                        playerPlayPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
                     }
                 }
                 else {
@@ -319,8 +319,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
 
                     self.showIndicator()
 
-                    btnPlayPuause.setTitle("0", for: .normal)
-                    btnPlayPuause.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
+                    playerPlayPauseButton.setTitle("0", for: .normal)
+                    playerPlayPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
                     isPlay = false
                     player.pause()
                     DispatchQueue.main.asyncAfter(deadline: .now()+7.5){
@@ -331,8 +331,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                         self.setTime()
                         self.isPlay = true
                         self.player.play()
-                        self.btnPlayPuause.setTitle("1", for: .normal)
-                        self.btnPlayPuause.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
+                        self.playerPlayPauseButton.setTitle("1", for: .normal)
+                        self.playerPlayPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
                     }
                 }
             }
@@ -408,8 +408,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
                             }else{
                                 let time = CMTimeMakeWithSeconds(0.0, 100)
                                 self.player.seek(to: time)
-                                self.btnPlayPuause.setTitle("0", for: .normal)
-                                self.btnPlayPuause.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
+                                self.playerPlayPauseButton.setTitle("0", for: .normal)
+                                self.playerPlayPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
                                 self.lblTimeTotal.text = "0.00"
                                 self.isPlay = false
                                 self.player.pause()

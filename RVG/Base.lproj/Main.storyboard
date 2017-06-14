@@ -674,7 +674,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnPlayPuause" destination="8H3-k7-rd1" id="Exn-lt-nT3"/>
                         <outlet property="constraint11" destination="T2y-IS-aCu" id="ZqF-aL-8yt"/>
                         <outlet property="constraint43" destination="vti-wM-5Fc" id="2Fo-fC-nru"/>
                         <outlet property="contentTitleLabel" destination="jvJ-eM-xbi" id="gsX-RC-fW1"/>
@@ -682,6 +681,7 @@
                         <outlet property="lblTimeTotal" destination="StG-bJ-zCB" id="fec-0k-d9k"/>
                         <outlet property="playerBarLeftButton" destination="He3-Ra-xWm" id="NDn-vc-fxm"/>
                         <outlet property="playerBarRightButton" destination="DYa-2e-80P" id="Dpd-gS-5Md"/>
+                        <outlet property="playerPlayPauseButton" destination="8H3-k7-rd1" id="Exn-lt-nT3"/>
                         <outlet property="seekSlider" destination="3Nz-sk-CLe" id="ndn-Kr-QMc"/>
                     </connections>
                 </viewController>
