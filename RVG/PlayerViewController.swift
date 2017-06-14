@@ -57,8 +57,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
     var media : [MediaChapter]?
     
     static var shareInstance : PlayerViewController? = nil
-    @IBOutlet var barRightBtn: UIBarButtonItem!
-    @IBOutlet var barLeftBtn: UIBarButtonItem!
+    @IBOutlet var playerBarRightButton: UIBarButtonItem!
+    @IBOutlet var playerBarLeftButton: UIBarButtonItem!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -88,8 +88,8 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
         }
         UIApplication.shared.beginReceivingRemoteControlEvents()
         PlayerViewController.shareInstance=self
-        self.navigationItem.leftBarButtonItem=barLeftBtn
-        self.navigationItem.rightBarButtonItem=barRightBtn
+        self.navigationItem.leftBarButtonItem=playerBarLeftButton
+        self.navigationItem.rightBarButtonItem=playerBarRightButton
 //_ = self.downloadsSession
 //        startDownload(track: "http://35.164.20.225/media/tracks/tracks_all/abd6a368-7c09-4ee4-a9a6-186fca2d25bb/c56a0c78-4a0f-4dcc-b253-7c197650e_yryWWEq.mp3")
         if UIScreen.main.bounds.height == 480{

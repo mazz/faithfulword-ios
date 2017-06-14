@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="7Ml-XL-Vn7">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="7Ml-XL-Vn7">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -492,7 +492,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="btnRightPlayer" destination="PEd-Oo-JMj" id="RHJ-Tj-Vv7"/>
+                        <outlet property="songsBarRightButton" destination="PEd-Oo-JMj" id="RHJ-Tj-Vv7"/>
                         <outlet property="tableVw" destination="azJ-RM-zkJ" id="Oqr-c7-Cl9"/>
                     </connections>
                 </viewController>
@@ -674,14 +674,14 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="barLeftBtn" destination="He3-Ra-xWm" id="NDn-vc-fxm"/>
-                        <outlet property="barRightBtn" destination="DYa-2e-80P" id="h1l-uZ-egw"/>
                         <outlet property="btnPlayPuause" destination="8H3-k7-rd1" id="Exn-lt-nT3"/>
                         <outlet property="constraint11" destination="T2y-IS-aCu" id="ZqF-aL-8yt"/>
                         <outlet property="constraint43" destination="vti-wM-5Fc" id="2Fo-fC-nru"/>
                         <outlet property="contentTitleLabel" destination="jvJ-eM-xbi" id="gsX-RC-fW1"/>
                         <outlet property="lblTimePending" destination="g9V-Xr-3fD" id="ckr-7m-UX2"/>
                         <outlet property="lblTimeTotal" destination="StG-bJ-zCB" id="fec-0k-d9k"/>
+                        <outlet property="playerBarLeftButton" destination="He3-Ra-xWm" id="NDn-vc-fxm"/>
+                        <outlet property="playerBarRightButton" destination="DYa-2e-80P" id="Dpd-gS-5Md"/>
                         <outlet property="seekSlider" destination="3Nz-sk-CLe" id="ndn-Kr-QMc"/>
                     </connections>
                 </viewController>

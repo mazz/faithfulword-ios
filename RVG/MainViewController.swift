@@ -117,7 +117,12 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     }
     
+    @IBAction func openPlayer(_ sender: AnyObject) {
+        print("btnPlayer: \(sender)")
+    }
+    
     @IBAction func btnPlayer(_ sender: AnyObject) {
+        print("btnPlayer: \(sender)")
         if let vc = PlayerViewController.shareInstance{
             if (self.navigationController?.viewControllers.contains(vc))!{
                 var array = self.navigationController?.viewControllers
