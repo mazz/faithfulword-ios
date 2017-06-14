@@ -257,8 +257,10 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 4 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
+            UIApplication.shared.open(NSURL(string:"http://kjvrvg.com/donate/")! as URL, options: [:], completionHandler: nil)
+
+//            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
+//            self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 5 {
             let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/privacy-policy/")! as URL)

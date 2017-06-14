@@ -7,7 +7,7 @@ target 'KJVRVG' do
 
     # Pods for RVG
     pod 'IQKeyboardManagerSwift'
-    pod 'PayPal-iOS-SDK'
+    #pod 'PayPal-iOS-SDK'
     pod 'ObjectMapper', '~> 2.2'
     pod 'MBProgressHUD', '~> 1.0.0'
     target 'RVGTests' do
