@@ -52,8 +52,6 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
 //    }
     var isPause : Bool? = false
     var index = Int(0)
-    var objSongsModel : [ModelSongClass]?
-    
     var media : [MediaChapter]?
     
     static var shareInstance : PlayerViewController? = nil
@@ -274,7 +272,7 @@ class PlayerViewController: BaseClass, AVAudioPlayerDelegate
         self.showIndicator()
 
         self.isWhile = true
-         playerItem = AVPlayerItem( url:NSURL( string:url ) as! URL )
+        playerItem = AVPlayerItem( url:NSURL( string:url )! as URL )
         self.player = AVPlayer(playerItem:playerItem)
         playerItem.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: .new, context: nil)
 
