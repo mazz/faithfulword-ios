@@ -11,7 +11,7 @@ import SafariServices
 class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var lblHome: UILabel!
-    @IBOutlet weak var btnPlayer: UIButton!
+    @IBOutlet weak var rightHomeButton: UIButton!
 
     static var shareInstance : MainViewController?
     
@@ -117,8 +117,8 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     }
     
-    @IBAction func btnPlayer(_ sender: AnyObject) {
-        print("btnPlayer: \(sender)")
+    @IBAction func revealPlayer(_ sender: AnyObject) {
+        print("revealPlayer: \(sender)")
         if let vc = PlayerViewController.shareInstance{
             if (self.navigationController?.viewControllers.contains(vc))!{
                 var array = self.navigationController?.viewControllers
@@ -129,6 +129,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             }
         }
     }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -138,17 +139,18 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         lblHome.text = NSLocalizedString("Books", comment: "")
 
         if PlayerViewController.shareInstance != nil{
-            btnPlayer.isHidden=false
+            rightHomeButton.isHidden = false
         }else{
-            btnPlayer.isHidden=true
+            rightHomeButton.isHidden = true
         }
-        self.navigationController?.isNavigationBarHidden=true
+        self.navigationController?.isNavigationBarHidden = true
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let layouts = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
         layouts?.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
     }
+    
     @IBAction func menuBtn(_ sender: UIButton) {
         if leftConstraint.constant == 0{
             btnBlur.isHidden=false

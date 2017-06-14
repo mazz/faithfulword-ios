@@ -113,7 +113,7 @@
                                                 </constraints>
                                                 <state key="normal" image="dots"/>
                                                 <connections>
-                                                    <action selector="btnPlayer:" destination="BYZ-38-t0r" eventType="touchUpInside" id="R1r-p9-xVk"/>
+                                                    <action selector="revealPlayer:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SO8-R6-4Zf"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B9q-Xd-ZLR">
@@ -150,8 +150,8 @@
                                             <constraint firstItem="xF8-Be-0f9" firstAttribute="centerX" secondItem="ro8-wk-HBb" secondAttribute="centerX" id="zKy-iR-83j"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Dg-EL-FjI">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="647"/>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Dg-EL-FjI">
+                                        <rect key="frame" x="-30" y="96" width="375" height="647"/>
                                         <connections>
                                             <action selector="menuBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FsF-yT-7jU"/>
                                         </connections>
@@ -195,11 +195,11 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="btnBlur" destination="7Dg-EL-FjI" id="ZxK-BO-Mnc"/>
-                        <outlet property="btnPlayer" destination="AjX-QG-qsY" id="Taw-6p-caS"/>
                         <outlet property="collectionView" destination="AQI-ZE-89r" id="bEI-3o-BoJ"/>
                         <outlet property="lblHome" destination="xF8-Be-0f9" id="elf-GE-FSy"/>
                         <outlet property="leftConstraint" destination="BSe-zu-fh4" id="aao-em-XNn"/>
                         <outlet property="menuBar" destination="Z5k-v7-Iq9" id="raS-z2-Zz6"/>
+                        <outlet property="rightHomeButton" destination="AjX-QG-qsY" id="34R-ga-963"/>
                         <outlet property="tableView" destination="pbc-C0-FXo" id="zcP-o1-spA"/>
                     </connections>
                 </viewController>
