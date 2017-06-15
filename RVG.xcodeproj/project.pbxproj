@@ -53,14 +53,10 @@
 		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
 		703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */; };
 		703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* SongsViewController.swift */; };
-		703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12BD1E67199F0093E1AA /* ModelSongClass.swift */; };
 		703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12C21E6721820093E1AA /* PlayerViewController.swift */; };
 		709234321E673BDE001F1621 /* classsDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709234311E673BDE001F1621 /* classsDownload.swift */; };
 		70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */; };
 		70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */; };
-		70C937A71E6B474500ACE009 /* ContactUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A61E6B474500ACE009 /* ContactUsViewController.swift */; };
-		70C937A91E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */; };
-		70C937AB1E6B4D5100ACE009 /* ModelContactUs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */; };
 		70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20611E6479A800AF619F /* AppDelegate.swift */; };
 		70CD20641E6479A800AF619F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* MainViewController.swift */; };
 		70CD20671E6479A800AF619F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20651E6479A800AF619F /* Main.storyboard */; };
@@ -159,17 +155,13 @@
 		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BaseClass.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
 		703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelOfViewControllerFolders.swift; sourceTree = "<group>"; };
-		703D12B81E67156D0093E1AA /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongsViewController.swift; sourceTree = "<group>"; };
-		703D12BD1E67199F0093E1AA /* ModelSongClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSongClass.swift; sourceTree = "<group>"; };
-		703D12C21E6721820093E1AA /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		703D12B81E67156D0093E1AA /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SongsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		703D12C21E6721820093E1AA /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PlayerViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.release.xcconfig"; sourceTree = "<group>"; };
 		708F578A1E7482B10011639A /* RVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RVG.entitlements; sourceTree = "<group>"; };
 		709234311E673BDE001F1621 /* classsDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classsDownload.swift; sourceTree = "<group>"; };
 		70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AboutUsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyPolicy.swift; sourceTree = "<group>"; };
-		70C937A61E6B474500ACE009 /* ContactUsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsViewController.swift; sourceTree = "<group>"; };
-		70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsBusinessLogicClass.swift; sourceTree = "<group>"; };
-		70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelContactUs.swift; sourceTree = "<group>"; };
 		70CD205E1E6479A800AF619F /* KJVRVG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KJVRVG.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20611E6479A800AF619F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70CD20631E6479A800AF619F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -341,8 +333,6 @@
 		70CD20941E64842B00AF619F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				70C937A61E6B474500ACE009 /* ContactUsViewController.swift */,
-				70C937A81E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift */,
 				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
 				70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */,
 				703D12C21E6721820093E1AA /* PlayerViewController.swift */,
@@ -390,8 +380,6 @@
 				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
 				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
 				703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */,
-				703D12BD1E67199F0093E1AA /* ModelSongClass.swift */,
-				70C937AA1E6B4D5100ACE009 /* ModelContactUs.swift */,
 				681E11781ED1098600B028DD /* BibleService.swift */,
 				4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */,
 				681E117A1ED110CB00B028DD /* Environment.swift */,
@@ -766,7 +754,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70C937A91E6B4CFC00ACE009 /* ContactUsBusinessLogicClass.swift in Sources */,
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
@@ -779,7 +766,6 @@
 				703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */,
-				703D12BE1E67199F0093E1AA /* ModelSongClass.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
@@ -793,7 +779,6 @@
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
 				68121CB21ED7D12800273342 /* SongTableViewCell.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
-				70C937A71E6B474500ACE009 /* ContactUsViewController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				68BE69D01EEA3B730082956D /* Gospel.swift in Sources */,
 				68BE69CE1EEA35240082956D /* MediaGospelResponse.swift in Sources */,
@@ -807,7 +792,6 @@
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
-				70C937AB1E6B4D5100ACE009 /* ModelContactUs.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */,
 				681E11791ED1098600B028DD /* BibleService.swift in Sources */,

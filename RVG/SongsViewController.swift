@@ -7,7 +7,7 @@ import UIKit
 import MBProgressHUD
 
 class SongsViewController: BaseClass {
-    @IBOutlet var btnRightPlayer: UIBarButtonItem!
+    @IBOutlet var songsBarRightButton: UIBarButtonItem!
     
     var bookId : String? = nil
     var media : [MediaChapter] = []
@@ -48,7 +48,7 @@ class SongsViewController: BaseClass {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         if PlayerViewController.shareInstance != nil{
-            self.navigationItem.rightBarButtonItem=btnRightPlayer
+            self.navigationItem.rightBarButtonItem=songsBarRightButton
         }else{
             self.navigationItem.rightBarButtonItem=nil
         }

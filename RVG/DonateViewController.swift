@@ -8,6 +8,13 @@
 
 import UIKit
 
+
+///
+/// ********  this file's target membership has been removed! Will not be part of compilation!! ******** ///
+///
+
+
+
 class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var donationTextField: CurrencyField!
