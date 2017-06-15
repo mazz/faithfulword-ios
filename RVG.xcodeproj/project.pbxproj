@@ -51,7 +51,6 @@
 		701F01551E65DA2E0010B320 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* Reachability.swift */; };
 		701F01571E65DA440010B320 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01561E65DA440010B320 /* BaseClass.swift */; };
 		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
-		703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */; };
 		703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* SongsViewController.swift */; };
 		703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12C21E6721820093E1AA /* PlayerViewController.swift */; };
 		709234321E673BDE001F1621 /* classsDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709234311E673BDE001F1621 /* classsDownload.swift */; };
@@ -154,7 +153,6 @@
 		701F01541E65DA2E0010B320 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BaseClass.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
-		703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelOfViewControllerFolders.swift; sourceTree = "<group>"; };
 		703D12B81E67156D0093E1AA /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SongsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		703D12C21E6721820093E1AA /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PlayerViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -379,7 +377,6 @@
 				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
 				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
 				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
-				703D12B51E6712150093E1AA /* ModelOfViewControllerFolders.swift */,
 				681E11781ED1098600B028DD /* BibleService.swift */,
 				4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */,
 				681E117A1ED110CB00B028DD /* Environment.swift */,
@@ -763,7 +760,6 @@
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
-				703D12B61E6712150093E1AA /* ModelOfViewControllerFolders.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,

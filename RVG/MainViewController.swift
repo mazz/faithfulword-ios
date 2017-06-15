@@ -15,7 +15,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     static var shareInstance : MainViewController?
     
-    var arrOfFolders : [ModelOfViewControllerFolders] = []
     var bookIds : [Book] = []
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -291,7 +290,7 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BookCollectionViewCellID", for: indexPath) as? BookCollectionViewCell
-//        cell?.setData(obj: arrOfFolders[indexPath.row])
+
         cell?.label.text = bookTitles[indexPath.row]
         
         print("book at index: \(indexPath.row) \(self.bookTitles[indexPath.row])")
