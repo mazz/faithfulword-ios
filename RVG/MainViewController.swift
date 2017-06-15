@@ -10,7 +10,7 @@ import SafariServices
 
 class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
-    @IBOutlet weak var lblHome: UILabel!
+    @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
 
     static var shareInstance : MainViewController?
@@ -18,7 +18,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     var bookIds : [Book] = []
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var btnBlur: UIButton!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var menuBar: UIBarButtonItem!
@@ -77,7 +76,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 //        (UINib(nibName: "BookCollectionViewCell", bundle: nil), forCellReuseIdentifier: "BookCollectionViewCellID")
         
         MainViewController.shareInstance=self
-        btnBlur.isHidden=true
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
         
         self.navigationItem.leftBarButtonItem = menuBar
@@ -135,7 +133,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        lblHome.text = NSLocalizedString("Books", comment: "")
+        homeTitleLabel.text = NSLocalizedString("Books", comment: "")
 
         if PlayerViewController.shareInstance != nil{
             rightHomeButton.isHidden = false
@@ -150,19 +148,15 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         layouts?.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
     }
     
-    @IBAction func menuBtn(_ sender: UIButton) {
+    @IBAction func toggleMenu(_ sender: UIButton) {
         if leftConstraint.constant == 0{
-            btnBlur.isHidden=false
             leftConstraint.constant = UIScreen.main.bounds.width*80/100
         }else{
-            btnBlur.isHidden=true
             leftConstraint.constant = 0
         }
-        btnBlur.isUserInteractionEnabled = false
-        UIView.animate(withDuration: 0.2, animations: { 
+        UIView.animate(withDuration: 0.2, animations: {
             self.view.layoutIfNeeded()
             }) { (nil) in
-                self.btnBlur.isUserInteractionEnabled = true
         }
     }
     
@@ -279,7 +273,7 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
                 self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: ""))
             }
         }
-        menuBtn(UIButton())
+        toggleMenu(UIButton())
     }
     
 }

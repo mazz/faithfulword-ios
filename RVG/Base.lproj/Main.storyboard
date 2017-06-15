@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="7Ml-XL-Vn7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="7Ml-XL-Vn7">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -129,7 +129,7 @@
                                                 </constraints>
                                                 <state key="normal" image="menu"/>
                                                 <connections>
-                                                    <action selector="menuBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ymA-zx-rCN"/>
+                                                    <action selector="toggleMenu:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fiL-hr-vvc"/>
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pX5-jd-zFY">
@@ -156,25 +156,15 @@
                                             <constraint firstItem="xF8-Be-0f9" firstAttribute="centerX" secondItem="ro8-wk-HBb" secondAttribute="centerX" id="zKy-iR-83j"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Dg-EL-FjI">
-                                        <rect key="frame" x="-30" y="96" width="375" height="647"/>
-                                        <connections>
-                                            <action selector="menuBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="FsF-yT-7jU"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="c4n-WE-FmS" firstAttribute="top" secondItem="Cz9-om-8nn" secondAttribute="top" id="1UA-xk-y9E"/>
                                     <constraint firstItem="ro8-wk-HBb" firstAttribute="top" secondItem="Cz9-om-8nn" secondAttribute="top" id="5g0-cB-oyG"/>
-                                    <constraint firstAttribute="bottom" secondItem="7Dg-EL-FjI" secondAttribute="bottom" id="9Yb-QT-1Zm"/>
-                                    <constraint firstItem="7Dg-EL-FjI" firstAttribute="top" secondItem="Cz9-om-8nn" secondAttribute="top" id="BAJ-cb-EJg"/>
                                     <constraint firstItem="AQI-ZE-89r" firstAttribute="leading" secondItem="Cz9-om-8nn" secondAttribute="leading" id="Kob-r6-gMq"/>
                                     <constraint firstAttribute="trailing" secondItem="ro8-wk-HBb" secondAttribute="trailing" id="QJF-dR-cMe"/>
                                     <constraint firstItem="ro8-wk-HBb" firstAttribute="leading" secondItem="Cz9-om-8nn" secondAttribute="leading" id="Qqf-Lh-CGE"/>
                                     <constraint firstItem="AQI-ZE-89r" firstAttribute="top" secondItem="Cz9-om-8nn" secondAttribute="top" constant="44" id="ZGF-Pn-0EO"/>
-                                    <constraint firstItem="7Dg-EL-FjI" firstAttribute="leading" secondItem="Cz9-om-8nn" secondAttribute="leading" id="aVM-Cu-nV4"/>
-                                    <constraint firstAttribute="trailing" secondItem="7Dg-EL-FjI" secondAttribute="trailing" id="gqQ-IO-AIL"/>
                                     <constraint firstAttribute="trailing" secondItem="c4n-WE-FmS" secondAttribute="trailing" id="hrF-c1-kdc"/>
                                     <constraint firstItem="c4n-WE-FmS" firstAttribute="leading" secondItem="Cz9-om-8nn" secondAttribute="leading" id="ouA-4D-35t"/>
                                     <constraint firstAttribute="bottom" secondItem="AQI-ZE-89r" secondAttribute="bottom" id="tmg-aA-1dT"/>
@@ -200,9 +190,8 @@
                     </navigationItem>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
-                        <outlet property="btnBlur" destination="7Dg-EL-FjI" id="ZxK-BO-Mnc"/>
                         <outlet property="collectionView" destination="AQI-ZE-89r" id="bEI-3o-BoJ"/>
-                        <outlet property="lblHome" destination="xF8-Be-0f9" id="elf-GE-FSy"/>
+                        <outlet property="homeTitleLabel" destination="xF8-Be-0f9" id="iuT-zv-Sf5"/>
                         <outlet property="leftConstraint" destination="BSe-zu-fh4" id="aao-em-XNn"/>
                         <outlet property="menuBar" destination="Z5k-v7-Iq9" id="raS-z2-Zz6"/>
                         <outlet property="rightHomeButton" destination="AjX-QG-qsY" id="34R-ga-963"/>
@@ -212,7 +201,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <barButtonItem image="menu" id="Z5k-v7-Iq9">
                     <connections>
-                        <action selector="menuBtn:" destination="BYZ-38-t0r" id="ohV-j4-gwZ"/>
+                        <action selector="toggleMenu:" destination="BYZ-38-t0r" id="0dA-6z-aQ6"/>
                     </connections>
                 </barButtonItem>
             </objects>
