@@ -27,6 +27,9 @@
 		681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117C1ED1141100B028DD /* EnvironmentService.swift */; };
 		681E117F1ED138DA00B028DD /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117E1ED138DA00B028DD /* Book.swift */; };
 		681E11811ED13B1400B028DD /* BookResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E11801ED13B1400B028DD /* BookResponse.swift */; };
+		686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */; };
+		686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233EA1EFF71FC0046D952 /* PlayerViewController.swift */; };
+		686233EE1EFF71FC0046D952 /* PlaybackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233EB1EFF71FC0046D952 /* PlaybackService.swift */; };
 		687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6CD1EC00AE3002EDCC3 /* Localizable.strings */; };
 		687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6D81EC014B2002EDCC3 /* InfoPlist.strings */; };
 		687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */; };
@@ -52,7 +55,6 @@
 		701F01571E65DA440010B320 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01561E65DA440010B320 /* BaseClass.swift */; };
 		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
 		703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* SongsViewController.swift */; };
-		703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12C21E6721820093E1AA /* PlayerViewController.swift */; };
 		709234321E673BDE001F1621 /* classsDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709234311E673BDE001F1621 /* classsDownload.swift */; };
 		70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */; };
 		70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */; };
@@ -111,6 +113,9 @@
 		681E117C1ED1141100B028DD /* EnvironmentService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentService.swift; sourceTree = "<group>"; };
 		681E117E1ED138DA00B028DD /* Book.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		681E11801ED13B1400B028DD /* BookResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookResponse.swift; sourceTree = "<group>"; };
+		686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerContainerViewController.swift; sourceTree = "<group>"; };
+		686233EA1EFF71FC0046D952 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		686233EB1EFF71FC0046D952 /* PlaybackService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackService.swift; sourceTree = "<group>"; };
 		687BF6CB1EC00AC4002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		687BF6CC1EC00AC4002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		687BF6CE1EC00AE3002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; lineEnding = 0; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
@@ -154,7 +159,6 @@
 		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BaseClass.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
 		703D12B81E67156D0093E1AA /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SongsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		703D12C21E6721820093E1AA /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PlayerViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.release.xcconfig"; sourceTree = "<group>"; };
 		708F578A1E7482B10011639A /* RVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RVG.entitlements; sourceTree = "<group>"; };
 		709234311E673BDE001F1621 /* classsDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classsDownload.swift; sourceTree = "<group>"; };
@@ -333,7 +337,9 @@
 			children = (
 				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
 				70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */,
-				703D12C21E6721820093E1AA /* PlayerViewController.swift */,
+				686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */,
+				686233EA1EFF71FC0046D952 /* PlayerViewController.swift */,
+				686233EB1EFF71FC0046D952 /* PlaybackService.swift */,
 				703D12B81E67156D0093E1AA /* SongsViewController.swift */,
 				68BE69D31EEA3FBF0082956D /* GospelViewController.swift */,
 				68BE69D51EEA57380082956D /* LanguageViewController.swift */,
@@ -754,14 +760,15 @@
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
+				686233EE1EFF71FC0046D952 /* PlaybackService.swift in Sources */,
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
 				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
+				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
-				703D12C31E6721820093E1AA /* PlayerViewController.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
@@ -771,6 +778,7 @@
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
+				686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */,
 				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
 				68121CB21ED7D12800273342 /* SongTableViewCell.swift in Sources */,

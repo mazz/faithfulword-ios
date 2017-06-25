@@ -12,7 +12,7 @@ class PrivacyPolicy: BaseClass{
         super.viewDidLoad()
         self.textView.isScrollEnabled = false
         
-        self.navigationController?.isNavigationBarHidden=false
+//        self.navigationController?.isNavigationBarHidden=false
         
         self.title = NSLocalizedString("Privacy Policy", comment: "")
         
@@ -22,20 +22,20 @@ class PrivacyPolicy: BaseClass{
 
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        self.navigationController?.isNavigationBarHidden=false
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(true)
+//        self.navigationController?.isNavigationBarHidden=false
+//    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.textView.isScrollEnabled = true
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
-        self.navigationController?.isNavigationBarHidden=true
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(true)
+//        self.navigationController?.isNavigationBarHidden=true
+//    }
 
     /*
     // MARK: - Navigation

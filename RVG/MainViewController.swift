@@ -116,15 +116,15 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     @IBAction func revealPlayer(_ sender: AnyObject) {
         print("revealPlayer: \(sender)")
-        if let vc = PlayerViewController.shareInstance{
-            if (self.navigationController?.viewControllers.contains(vc))!{
-                var array = self.navigationController?.viewControllers
-                let index = array?.index(of: vc)
-                array?.remove(at: index!)
-                array?.append(vc)
-                self.navigationController?.viewControllers = array!
-            }
-        }
+//        if let vc = PlayerViewController.shareInstance{
+//            if (self.navigationController?.viewControllers.contains(vc))!{
+//                var array = self.navigationController?.viewControllers
+//                let index = array?.index(of: vc)
+//                array?.remove(at: index!)
+//                array?.append(vc)
+//                self.navigationController?.viewControllers = array!
+//            }
+//        }
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -133,14 +133,17 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        homeTitleLabel.text = NSLocalizedString("Books", comment: "")
+//        homeTitleLabel.text = NSLocalizedString("Books", comment: "")
 
-        if PlayerViewController.shareInstance != nil{
-            rightHomeButton.isHidden = false
-        }else{
-            rightHomeButton.isHidden = true
-        }
-        self.navigationController?.isNavigationBarHidden = true
+//        rightHomeButton.isHidden = true
+
+//        if PlayerViewController.shareInstance != nil{
+//            rightHomeButton.isHidden = false
+//        }else{
+//            rightHomeButton.isHidden = true
+//        }
+//        
+//        self.navigationController?.isNavigationBarHidden = true
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

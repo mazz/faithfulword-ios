@@ -42,7 +42,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
         self.titleLabel.text = NSLocalizedString("Donate to KJVRVG", comment: "")
         self.title = NSLocalizedString("Donate", comment: "")
         self.donateButton.setTitle(NSLocalizedString("Donate via PayPal", comment: ""), for: .normal)
-        self.navigationController?.isNavigationBarHidden=false
+//        self.navigationController?.isNavigationBarHidden=false
         
         print("PayPal iOS SDK Version: \(PayPalMobile.libraryVersion())")
         

@@ -18,7 +18,7 @@ class GospelViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.isNavigationBarHidden=false
+//        self.navigationController?.isNavigationBarHidden=false
         
         self.title = NSLocalizedString("Gospel", comment: "")
         

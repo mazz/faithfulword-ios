@@ -20,7 +20,7 @@ class OtherLanguagesViewController: UIViewController {
 
         looper?.start(in: tutorialView.layer)
         
-        self.navigationController?.isNavigationBarHidden=false
+//        self.navigationController?.isNavigationBarHidden=false
         self.title = NSLocalizedString("Other Languages", comment: "")
         self.toListenToLabel.text = NSLocalizedString("To listen to the Bible in other languages, follow the instructions in the video below.", comment: "")
 
