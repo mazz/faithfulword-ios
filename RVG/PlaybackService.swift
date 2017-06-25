@@ -205,7 +205,7 @@ class PlaybackService : NSObject {
 
                 self.playbackDisplayDelegate?.setCurrentTime(time: CMTimeGetSeconds(kCMTimeZero), duration: CMTimeGetSeconds((self.currentPlayerItem?.duration)!))
 
-                self.playbackDisplayDelegate?.setTitle(title: (self.currentAsset?.title()!)!)
+                self.playbackDisplayDelegate?.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
                 self.playbackDisplayDelegate?.playbackReady()
                 
                 // do not repeat track by default
@@ -342,6 +342,25 @@ class PlaybackService : NSObject {
             startObservingAndReplace(playerItem: currentPlayerItem)
         }
     }
+    
+    private func contentTitle(mediaIndex index: (Int)) -> String {
+        
+        var finalString : String = ""
+        
+        if let localizedName = self.media?[self.mediaIndex!].localizedName {
+            finalString = finalString.appending("\(localizedName)\n ")
+        }
+        
+        if let presenterName = self.media?[self.mediaIndex!].presenterName {
+            finalString = finalString.appending("\(presenterName) • ")
+        }
+        
+        if let sourceMaterial = self.media?[self.mediaIndex!].sourceMaterial {
+            finalString = finalString.appending(sourceMaterial)
+        }
+        return finalString
+    }
+
 }
 
 extension PlaybackService : PlaybackTransportDelegate {

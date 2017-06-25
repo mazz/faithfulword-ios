@@ -33,7 +33,7 @@ class PlayerViewController : UIViewController {
     @IBOutlet weak var remainingTimeLabel : UILabel!
     @IBOutlet weak var repeatButton: UIButton!
     @IBOutlet weak var volumeButton: UIButton!
-    
+    @IBOutlet weak var contentTitleLabel: UILabel!
     
     weak var playbackTransportDelegate : PlaybackTransportDelegate?
     var scrubbing : Bool?
@@ -234,6 +234,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
 
     func setTitle(title : String) {
         print("PlaybackDisplayDelegate setTitle: \(title)")
+        self.contentTitleLabel.text = title
     }
 
     func playbackReady() {

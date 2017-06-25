@@ -13,7 +13,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
 
-    static var shareInstance : MainViewController?
+//    static var shareInstance : MainViewController?
     
     var bookIds : [Book] = []
     
@@ -75,7 +75,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         collectionView.register(UINib(nibName: "BookCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BookCollectionViewCellID")
 //        (UINib(nibName: "BookCollectionViewCell", bundle: nil), forCellReuseIdentifier: "BookCollectionViewCellID")
         
-        MainViewController.shareInstance=self
+//        MainViewController.shareInstance=self
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
         
         self.navigationItem.leftBarButtonItem = menuBar
