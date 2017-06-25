@@ -133,31 +133,33 @@ class PlayerViewController : BaseClass {
     }
 
     @IBAction func repeatTrack(_ sender: Any) {
-        let repeatTrack = !self.playbackRepeat!
-        self.playbackRepeat = repeatTrack
-        
-
-        if let button = sender as? UIButton {
-            if self.playbackRepeat == true {
-                button.setImage(#imageLiteral(resourceName: "repeat-2"), for: .normal)
-            } else {
-                button.setImage(#imageLiteral(resourceName: "repeat"), for: .normal)
+        if let repeatTrack = self.playbackRepeat {
+            self.playbackRepeat = !repeatTrack
+            
+            
+            if let button = sender as? UIButton {
+                if self.playbackRepeat == true {
+                    button.setImage(#imageLiteral(resourceName: "repeat-2"), for: .normal)
+                } else {
+                    button.setImage(#imageLiteral(resourceName: "repeat"), for: .normal)
+                }
+                self.playbackTransportDelegate?.playbackRepeat(shouldRepeat: self.playbackRepeat!)
             }
-            self.playbackTransportDelegate?.playbackRepeat(shouldRepeat: self.playbackRepeat!)
         }
     }
     
     @IBAction func changeVolume(_ sender: Any) {
-        let muteVolume = !self.muteVolume!
-        self.muteVolume = muteVolume
-        
-        if let button = sender as? UIButton {
-            if self.muteVolume == true {
-                button.setImage(#imageLiteral(resourceName: "speaker-2"), for: .normal)
-            } else {
-                button.setImage(#imageLiteral(resourceName: "speaker"), for: .normal)
+        if let muteVolume = self.muteVolume {
+            self.muteVolume = !muteVolume
+            
+            if let button = sender as? UIButton {
+                if self.muteVolume == true {
+                    button.setImage(#imageLiteral(resourceName: "speaker-2"), for: .normal)
+                } else {
+                    button.setImage(#imageLiteral(resourceName: "speaker"), for: .normal)
+                }
+                self.playbackTransportDelegate?.toggleVolume(shouldMute: self.muteVolume!)
             }
-            self.playbackTransportDelegate?.toggleVolume(shouldMute: self.muteVolume!)
         }
     }
     

@@ -235,6 +235,8 @@ class PlaybackService : NSObject {
             let duration : TimeInterval = CMTimeGetSeconds((self.currentPlayerItem?.duration)!)
             self.playbackDisplayDelegate?.setCurrentTime(time: currentTime, duration: duration)
             self.playbackDisplayDelegate?.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
+            self.playbackDisplayDelegate?.playbackRepeat(shouldRepeat: self.playbackRepeat)
+            self.playbackDisplayDelegate?.muteVolume(shouldMute: self.muteVolume)
         })
     }
 
