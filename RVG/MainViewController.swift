@@ -59,6 +59,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
                                 NSLocalizedString("Revelation", comment: ""),
                                 NSLocalizedString("Plan Of Salvation", comment: ""),
                                 ]
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,12 +101,15 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
                     }
                     
                 })
+            } catch SessionError.urlNotReachable {
+                print("error: \(SessionError.urlNotReachable)")
+                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
             } catch {
                 print("error: \(error)")
-                DispatchQueue.main.async {
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                }
+            }
 
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.view, animated: true)
             }
         } else {
             self.collectionView.reloadData()
@@ -267,9 +271,11 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
 }
 
 extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return bookTitles.count
     }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BookCollectionViewCellID", for: indexPath) as? BookCollectionViewCell
 
@@ -280,11 +286,22 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let bookId = bookIds[indexPath.row].bookId {
-            let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
-//            vc?.folderId = id
-            vc?.bookId = bookId
-            self.navigationController?.pushViewController(vc!, animated: true)
+        let reachability = Reachability()!
+        
+        if bookIds.count > 0 {
+            if reachability.currentReachabilityStatus != .notReachable {
+                if let bookId = bookIds[indexPath.row].bookId {
+                    let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
+                    //            vc?.folderId = id
+                    vc?.bookId = bookId
+                    self.navigationController?.pushViewController(vc!, animated: true)
+                }
+            } else {
+                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+            }
+        } else {
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters. Try restarting the app.", comment: ""))
         }
+        
     }
 }
