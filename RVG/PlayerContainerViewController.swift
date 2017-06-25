@@ -8,19 +8,18 @@
 
 import UIKit
 
-class PlayerContainerViewController: UIViewController {
+class PlayerContainerViewController: BaseClass {
 
     @IBOutlet var barRightButton: UIButton!
     @IBOutlet var barLeftButton: UIButton!
-
+    @IBOutlet weak var barTitleLabel: UILabel!
+    
     private let playerViewControllerIndex = 0
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.barTitleLabel.font = UIFont.boldSystemFont(ofSize: 17)
     }
 
     @IBAction func back(_ sender: AnyObject) {
@@ -30,8 +29,15 @@ class PlayerContainerViewController: UIViewController {
 
     @IBAction func close(_ sender: AnyObject) {
         print("close")
-        self.dismiss(animated: true) { _ in }
-        PlaybackService.sharedInstance().disposePlayback()
+        
+        self.showTwoButtonAlertWithLeftAction(title: NSLocalizedString("Do you want to close the player?", comment: ""),
+                                              buttonTitleLeft: NSLocalizedString("Yes", comment: ""),
+                                              buttonTitleRight: NSLocalizedString("No", comment: "")) { (nil) in
+                                                
+                                                self.dismiss(animated: true) { _ in }
+                                                PlaybackService.sharedInstance().disposePlayback()
+        }
+        
     }
 }
 

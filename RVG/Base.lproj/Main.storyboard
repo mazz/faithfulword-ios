@@ -962,11 +962,27 @@ Thank you!</string>
                                     <action selector="back:" destination="Q5l-xr-QSK" eventType="touchUpInside" id="IYY-1d-6RG"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hRR-rc-xeD">
+                                <rect key="frame" x="52" y="28" width="263" height="21"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="KJVRVG">
+                                        <attributes>
+                                            <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <font key="NSFont" size="17" name=".SFNSText"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.72156862749999995" green="0.050980392159999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="5cY-F5-mEB" firstAttribute="leading" secondItem="hRR-rc-xeD" secondAttribute="trailing" constant="8" id="1gB-EJ-aoj"/>
                             <constraint firstItem="9FS-ba-hiZ" firstAttribute="leading" secondItem="8Ap-yN-XXw" secondAttribute="leading" id="1u5-Sd-hPq"/>
                             <constraint firstItem="Vto-Wh-Xwh" firstAttribute="top" secondItem="K0u-k7-VfT" secondAttribute="bottom" id="KDl-X1-pDW"/>
+                            <constraint firstItem="9FS-ba-hiZ" firstAttribute="top" secondItem="hRR-rc-xeD" secondAttribute="bottom" constant="15" id="LLy-Bp-f7l"/>
+                            <constraint firstItem="hRR-rc-xeD" firstAttribute="top" secondItem="K0u-k7-VfT" secondAttribute="bottom" constant="8" id="M9N-aX-Foe"/>
                             <constraint firstAttribute="trailing" secondItem="5cY-F5-mEB" secondAttribute="trailing" constant="16" id="YnZ-eg-S4f"/>
                             <constraint firstAttribute="trailing" secondItem="9FS-ba-hiZ" secondAttribute="trailing" id="abB-y2-hXZ"/>
                             <constraint firstItem="9FS-ba-hiZ" firstAttribute="top" secondItem="Vto-Wh-Xwh" secondAttribute="bottom" constant="8" id="c2X-N1-mtV"/>
@@ -978,6 +994,7 @@ Thank you!</string>
                             <constraint firstItem="2Mn-xE-EjW" firstAttribute="leading" secondItem="8Ap-yN-XXw" secondAttribute="leading" id="jv7-kF-Wfl"/>
                             <constraint firstItem="9FS-ba-hiZ" firstAttribute="leading" secondItem="8Ap-yN-XXw" secondAttribute="leading" id="nZG-Y2-lOd"/>
                             <constraint firstItem="5cY-F5-mEB" firstAttribute="top" secondItem="K0u-k7-VfT" secondAttribute="bottom" id="sPK-KP-y90"/>
+                            <constraint firstItem="hRR-rc-xeD" firstAttribute="leading" secondItem="Vto-Wh-Xwh" secondAttribute="trailing" constant="8" id="sQG-CL-B3I"/>
                             <constraint firstAttribute="trailing" secondItem="2Mn-xE-EjW" secondAttribute="trailing" id="yHS-tc-dIO"/>
                         </constraints>
                     </view>
@@ -994,11 +1011,12 @@ Thank you!</string>
                     <connections>
                         <outlet property="barLeftButton" destination="Vto-Wh-Xwh" id="tz4-qb-vxU"/>
                         <outlet property="barRightButton" destination="5cY-F5-mEB" id="fYM-DF-zlZ"/>
+                        <outlet property="barTitleLabel" destination="hRR-rc-xeD" id="eEU-c1-dtS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xmq-X4-dNa" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3358" y="36"/>
+            <point key="canvasLocation" x="3357.5999999999999" y="35.532233883058474"/>
         </scene>
         <!--Player View Controller-->
         <scene sceneID="8k0-2M-51S">

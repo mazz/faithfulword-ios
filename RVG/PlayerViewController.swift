@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import MBProgressHUD
 
 protocol PlaybackTransportDelegate: class {
     func play()
@@ -23,7 +24,7 @@ protocol PlaybackTransportDelegate: class {
     func toggleVolume(shouldMute : Bool)
 }
 
-class PlayerViewController : UIViewController {
+class PlayerViewController : BaseClass {
 
     @IBOutlet weak var playPauseButton : UIButton!
     @IBOutlet weak var previousButton : UIButton!
@@ -44,7 +45,6 @@ class PlayerViewController : UIViewController {
         super.viewDidLoad()
         print("PlayerViewController viewDidLoad")
 
-
         scrubberSlider.value = Float(0)
         scrubberSlider.addTarget(self, action: #selector(PlayerViewController.scrubberChanged) , for: .valueChanged)
         scrubberSlider.addTarget(self, action: #selector(PlayerViewController.scrubberTouchUpInside), for: .touchUpInside)
@@ -54,11 +54,17 @@ class PlayerViewController : UIViewController {
 
         emptyUIState()
         
-//        if !PlaybackService.sharedInstance().isPlaying! {
             let mediaIndex = PlaybackService.sharedInstance().mediaIndex!
 
             if let media : [MediaChapter] = PlaybackService.sharedInstance().media {
                 if let urls : [URL] = media.map({ URL(string: $0.url!)! }) {
+                    
+                    // only show spinner if playback service is not currently playing
+                    if !PlaybackService.sharedInstance().isPlaying! {
+                        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+                        loadingNotification.mode = MBProgressHUDMode.indeterminate
+                    }
+
                     PlaybackService.sharedInstance().prepareToPlayUrls(urls: urls, playIndex: mediaIndex)
                     //            self.playerController?.playbackDisplayDelegate = self
                 }
@@ -69,20 +75,10 @@ class PlayerViewController : UIViewController {
         } else {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
         }
-//            self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
-//        } else {
-//            self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
-//        }
 
         self.playbackTransportDelegate = PlaybackService.sharedInstance()
         PlaybackService.sharedInstance().playbackDisplayDelegate = self
 
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-//        self.playbackTransportDelegate?.pause()
-//        PlaybackService.sharedInstance().disposePlayback()
     }
 
     func emptyUIState() {
@@ -202,8 +198,12 @@ class PlayerViewController : UIViewController {
                 // previousTrack() alone will eventually
                 // call playPause() and toggle play -> pause
                 // ceasing playback
-                
+
                 self.playbackTransportDelegate?.pause()
+                
+                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+                loadingNotification.mode = MBProgressHUDMode.indeterminate
+                
                 self.playbackTransportDelegate?.previousTrack()
                 
             }
@@ -222,6 +222,10 @@ class PlayerViewController : UIViewController {
                 // ceasing playback
                 
                 self.playbackTransportDelegate?.pause()
+                
+                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+                loadingNotification.mode = MBProgressHUDMode.indeterminate
+                
                 self.playbackTransportDelegate?.nextTrack()
                 
             }
@@ -233,16 +237,21 @@ class PlayerViewController : UIViewController {
 extension PlayerViewController : PlaybackDisplayDelegate {
 
     func setTitle(title : String) {
-        print("PlaybackDisplayDelegate setTitle: \(title)")
+//        print("PlaybackDisplayDelegate setTitle: \(title)")
         self.contentTitleLabel.text = title
     }
 
     func playbackReady() {
+        MBProgressHUD.hide(for: self.view, animated: true)
         print("PlaybackDisplayDelegate playbackReady")
         playPause(self.playPauseButton)
     }
 
     func playbackFailed() {
+        MBProgressHUD.hide(for: self.view, animated: true)
+        self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem getting the media.", comment: ""))
+
+        // "There was a problem getting the media." = "There was a problem getting the media.";
         print("PlaybackDisplayDelegate playbackFailed")
         emptyUIState()
 //        playPause(self.playPauseButton)
