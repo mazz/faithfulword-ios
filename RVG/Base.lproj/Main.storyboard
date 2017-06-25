@@ -135,12 +135,18 @@
                     </navigationItem>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="booksRightBarButtonItem" destination="Ikh-K7-Kl7" id="XCB-Ca-VI4"/>
                         <outlet property="collectionView" destination="AQI-ZE-89r" id="bEI-3o-BoJ"/>
                         <outlet property="leftConstraint" destination="BSe-zu-fh4" id="aao-em-XNn"/>
                         <outlet property="menuBar" destination="Z5k-v7-Iq9" id="raS-z2-Zz6"/>
                         <outlet property="tableView" destination="pbc-C0-FXo" id="zcP-o1-spA"/>
                     </connections>
                 </viewController>
+                <barButtonItem image="dots" id="Ikh-K7-Kl7">
+                    <connections>
+                        <action selector="showPlayer:" destination="BYZ-38-t0r" id="5RM-ig-oBp"/>
+                    </connections>
+                </barButtonItem>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <barButtonItem image="menu" id="Z5k-v7-Iq9">
                     <connections>
@@ -437,7 +443,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aKi-fL-0Le" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <barButtonItem image="dots" id="PEd-Oo-JMj">
                     <connections>
-                        <action selector="btnPlayer:" destination="kh0-eY-UNT" id="bJe-M6-gEo"/>
+                        <action selector="showPlayer:" destination="kh0-eY-UNT" id="ADO-Ga-5od"/>
                     </connections>
                 </barButtonItem>
             </objects>
@@ -992,7 +998,7 @@ Thank you!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xmq-X4-dNa" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3051" y="36"/>
+            <point key="canvasLocation" x="3358" y="36"/>
         </scene>
         <!--Player View Controller-->
         <scene sceneID="8k0-2M-51S">
@@ -1150,7 +1156,7 @@ Thank you!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AIs-yZ-aTT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3837.5999999999999" y="26.986506746626688"/>
+            <point key="canvasLocation" x="4138" y="46"/>
         </scene>
     </scenes>
     <resources>

@@ -12,8 +12,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
-
-//    static var shareInstance : MainViewController?
+    @IBOutlet var booksRightBarButtonItem: UIBarButtonItem!
     
     var bookIds : [Book] = []
     
@@ -114,18 +113,15 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
 
     }
     
-    @IBAction func revealPlayer(_ sender: AnyObject) {
-        print("revealPlayer: \(sender)")
-//        if let vc = PlayerViewController.shareInstance{
-//            if (self.navigationController?.viewControllers.contains(vc))!{
-//                var array = self.navigationController?.viewControllers
-//                let index = array?.index(of: vc)
-//                array?.remove(at: index!)
-//                array?.append(vc)
-//                self.navigationController?.viewControllers = array!
-//            }
-//        }
+    @IBAction func showPlayer(_ sender: AnyObject) {
+        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
+            
+            viewController.modalTransitionStyle = .crossDissolve
+            self.present(viewController, animated: true, completion: { _ in })
+        }
     }
+
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -133,17 +129,12 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-//        homeTitleLabel.text = NSLocalizedString("Books", comment: "")
-
-//        rightHomeButton.isHidden = true
-
-//        if PlayerViewController.shareInstance != nil{
-//            rightHomeButton.isHidden = false
-//        }else{
-//            rightHomeButton.isHidden = true
-//        }
-//        
-//        self.navigationController?.isNavigationBarHidden = true
+        
+        if PlaybackService.sharedInstance().isPlaying! {
+            self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -196,12 +187,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
-    
-    /*    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-     // Check the result or perform other tasks.
-     
-     // Dismiss the mail compose view controller.
-     controller.dismiss(animated: true, completion: nil) */
 
 }
 
@@ -303,4 +288,3 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         }
     }
 }
-

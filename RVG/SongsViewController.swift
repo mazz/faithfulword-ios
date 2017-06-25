@@ -15,7 +15,6 @@ class SongsViewController: BaseClass {
     @IBOutlet weak var tableVw: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.navigationController?.isNavigationBarHidden=false
         
         self.title = NSLocalizedString("Chapters", comment: "")
         
@@ -47,23 +46,21 @@ class SongsViewController: BaseClass {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-//        if PlayerViewController.shareInstance != nil{
-//            self.navigationItem.rightBarButtonItem=songsBarRightButton
-//        }else{
-//            self.navigationItem.rightBarButtonItem=nil
-//        }
-//        self.navigationController?.isNavigationBarHidden=false
+        
+        
+        if PlaybackService.sharedInstance().isPlaying! {
+            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
     }
-    @IBAction func btnPlayer(_ sender: AnyObject) {
-//        if let vc = PlayerViewController.shareInstance{
-//            if (self.navigationController?.viewControllers.contains(vc))!{
-//                var array = self.navigationController?.viewControllers
-//                let index = array?.index(of: vc)
-//                array?.remove(at: index!)
-//                array?.append(vc)
-//                self.navigationController?.viewControllers = array!
-//            }
-//        }
+    @IBAction func showPlayer(_ sender: AnyObject) {
+        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
+            
+            viewController.modalTransitionStyle = .crossDissolve
+            self.present(viewController, animated: true, completion: { _ in })
+        }
     }
     /*
     // MARK: - Navigation
@@ -75,11 +72,6 @@ class SongsViewController: BaseClass {
     }
     */
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(true)
-//        self.navigationController?.isNavigationBarHidden=true
-//    }
-
 }
 
 extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
@@ -104,7 +96,7 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
             PlaybackService.sharedInstance().disposePlayback()
             PlaybackService.sharedInstance().media = media
             PlaybackService.sharedInstance().mediaIndex = indexPath.row
-            PlaybackService.sharedInstance().playbackModeDelegate = self
+//            PlaybackService.sharedInstance().playbackModeDelegate = self
             
             viewController.modalTransitionStyle = .crossDissolve
             self.present(viewController, animated: true, completion: { _ in })
@@ -113,20 +105,3 @@ extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
         }
     }
 }
-
-extension SongsViewController : PlaybackModeDelegate {
-    
-    func playbackPlaying() {
-//        self.navigationItem.rightBarButtonItem = self.showPlayerBarButton
-    }
-    
-    func playbackPaused() {
-        
-    }
-    
-    func playbackDisposed() {
-        self.navigationItem.rightBarButtonItem = nil
-    }
-    
-}
-
