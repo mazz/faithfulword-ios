@@ -282,4 +282,14 @@ extension PlayerViewController : PlaybackDisplayDelegate {
             self.volumeButton.setImage(#imageLiteral(resourceName: "speaker-2"), for: .normal)
         }
     }
+    
+    func audioSessionInterrupted() {
+        self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
+    }
+
+    func audioSessionResumed() {
+        playPause(self.playPauseButton)
+//        self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
+    }
+    
 }

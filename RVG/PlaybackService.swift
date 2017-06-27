@@ -20,6 +20,8 @@ protocol PlaybackDisplayDelegate : class {
     func playbackComplete()
     func playbackRepeat(shouldRepeat: Bool)
     func muteVolume(shouldMute: Bool)
+    func audioSessionInterrupted()
+    func audioSessionResumed()
 }
 
 protocol PlaybackModeDelegate : class {
@@ -63,15 +65,27 @@ class PlaybackService : NSObject {
 
     let statusKeypath : String = "status"
     let refreshInterval : Double = 0.5
+    let sessionInterrupted : Int = 1
+    let sessionResumed : Int = 1
 
     var videoPlaybackStartDate : TimeInterval?
     var videoPlaybackEndDate : TimeInterval?
 
-//    init(url: URL) {
-//        self.asset = AVAsset(url: url)
-//        super.init()
-//        self.prepareToPlay()
-//    }
+    override init() {
+        super.init()
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//            selector:@selector(handleAudioSessionInterruption:)
+//            name:AVAudioSessionInterruptionNotification
+//            object:aSession];
+        
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//            selector:@selector(handleMediaServicesReset)
+//            name:AVAudioSessionMediaServicesWereResetNotification
+//            object:aSession];
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionInterruption(note:)), name:.AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleMediaServicesReset), name:.AVAudioSessionMediaServicesWereReset, object: AVAudioSession.sharedInstance())
+    }
 
     class func sharedInstance() -> PlaybackService {
 
@@ -90,6 +104,10 @@ class PlaybackService : NSObject {
             NotificationCenter.default.removeObserver(self.itemEndObserver, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem)
             self.itemEndObserver = nil
         }
+        
+        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionMediaServicesWereReset, object: AVAudioSession.sharedInstance())
+        
         self.currentPlayerItem?.removeObserver(self, forKeyPath: statusKeypath)
         self.currentPlayerItem = nil
         self.player = nil
@@ -364,6 +382,26 @@ class PlaybackService : NSObject {
         return finalString
     }
 
+    func handleAudioSessionInterruption(note : NSNotification) {
+        if let interrupted : Int = note.userInfo?["AVAudioSessionInterruptionTypeKey"] as? Int {
+            if interrupted == sessionInterrupted {
+                self.playbackDisplayDelegate?.audioSessionInterrupted()
+            }
+            
+            if let resumed : Int = note.userInfo?["AVAudioSessionInterruptionOptionKey"] as? Int  {
+                if resumed == sessionResumed {
+                    self.playbackDisplayDelegate?.audioSessionResumed()
+                }
+            }
+        }
+        print("handleAudioSessionInterruption: \(note)")
+    }
+    
+    func handleMediaServicesReset() {
+        print("handleMediaServicesReset")
+    }
+    
+    
 }
 
 extension PlaybackService : PlaybackTransportDelegate {
@@ -466,6 +504,8 @@ extension PlaybackService : PlaybackTransportDelegate {
             self.player?.volume = Float(1)
         }
     }
+    
+    
 
 }
 
