@@ -5,6 +5,7 @@
 
 import UIKit
 import IQKeyboardManagerSwift
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,6 +23,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 //        PayPalMobile.initializeWithClientIds(forEnvironments: [PayPalEnvironmentProduction: "ARSxhWtMfW3z1YHzWHm9aOfou1xCsIB9qHL8CQZN8u2bkWrt3ta3AEWL8h5XGjz0RD7kjCtk6JQQH5yF",
 //                                                               PayPalEnvironmentSandbox: "Af1eaNhnfWzH0khmBDFYiKBr8JkkCIA2Jft-X77nCPv7EHNTvhf3U7tLJQSE31hgP_9xP1eA3c0HbN8_"])
+        
+        do  {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        } catch {
+            print("setting AVAudioSessionCategoryPlayback failed")
+        }
         
         return true
     }
