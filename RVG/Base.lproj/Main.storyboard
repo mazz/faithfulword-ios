@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="7Ml-XL-Vn7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="7Ml-XL-Vn7">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Books-->
         <scene sceneID="tne-QT-ifu">
@@ -21,14 +26,14 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C40-CM-d8z">
-                                <rect key="frame" x="0.0" y="0.0" width="300" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="300" height="603"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pbc-C0-FXo">
-                                        <rect key="frame" x="0.0" y="0.0" width="300" height="667"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="603"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <view key="tableHeaderView" contentMode="scaleToFill" id="MdA-Hp-ypA">
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="94"/>
@@ -1016,7 +1021,7 @@ Thank you!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xmq-X4-dNa" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3357.5999999999999" y="35.532233883058474"/>
+            <point key="canvasLocation" x="3353" y="-66"/>
         </scene>
         <!--Player View Controller-->
         <scene sceneID="8k0-2M-51S">
@@ -1182,11 +1187,11 @@ Thank you!</string>
         <image name="Splash-screen" width="780" height="1104"/>
         <image name="boo" width="1139" height="857"/>
         <image name="check" width="84" height="75"/>
-        <image name="close" width="780" height="1104"/>
-        <image name="dots" width="167" height="167"/>
+        <image name="close" width="20" height="20"/>
+        <image name="dots" width="30" height="30"/>
         <image name="language_180" width="128" height="128"/>
         <image name="leftArrow" width="21" height="21"/>
-        <image name="menu" width="780" height="1104"/>
+        <image name="menu" width="21" height="20"/>
         <image name="player_next_180" width="180" height="180"/>
         <image name="player_play_180" width="180" height="180"/>
         <image name="player_prev_180" width="180" height="180"/>
