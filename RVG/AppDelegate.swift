@@ -25,15 +25,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //                                                               PayPalEnvironmentSandbox: "Af1eaNhnfWzH0khmBDFYiKBr8JkkCIA2Jft-X77nCPv7EHNTvhf3U7tLJQSE31hgP_9xP1eA3c0HbN8_"])
         //             try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
 
-        do  {
-            let session : AVAudioSession = AVAudioSession.sharedInstance()
-            try session.setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeDefault, options: AVAudioSessionCategoryOptions.allowBluetooth)
-            try session.setActive(true)
-//            session.setCategory(AVAudioSessionCategoryPlayback,
-//                                mode: AVAudioSessionModeDefault, options: AVAudioSessionCategoryOptions.allowBluetooth)
-        } catch {
-            print("setting AVAudioSessionCategoryPlayback failed")
-        }
+        
+        
+//        do  {
+//            let session : AVAudioSession = AVAudioSession.sharedInstance()
+//            try session.setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeDefault, options: AVAudioSessionCategoryOptions.allowBluetooth)
+//            try session.setActive(true)
+////            session.setCategory(AVAudioSessionCategoryPlayback,
+////                                mode: AVAudioSessionModeDefault, options: AVAudioSessionCategoryOptions.allowBluetooth)
+//        } catch {
+//            print("setting AVAudioSessionCategoryPlayback failed")
+//        }
         
         return true
     }

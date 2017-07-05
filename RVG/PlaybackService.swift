@@ -150,6 +150,18 @@ class PlaybackService : NSObject {
 
     func prepareToPlayUrls(urls : [URL], playIndex : Int) -> Void {
         
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers )
+            try AVAudioSession.sharedInstance().setActive(true)
+        }
+        catch {
+            print("setting AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers failed")
+
+        }
+        
+        UIApplication.shared.beginBackgroundTask {}
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
         if avoidRestartOnLoad! == false  {
             let assets : [AVAsset] = urls.map { AVAsset(url:$0) }
             let keys : Array = ["tracks", "duration", "commonMetadata", "availableMediaCharacteristicsWithMediaSelectionOptions"]

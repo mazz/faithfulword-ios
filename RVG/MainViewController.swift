@@ -104,12 +104,17 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             } catch SessionError.urlNotReachable {
                 print("error: \(SessionError.urlNotReachable)")
                 self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+                
+                DispatchQueue.main.async {
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                }
             } catch {
+                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
                 print("error: \(error)")
-            }
-
-            DispatchQueue.main.async {
-                MBProgressHUD.hide(for: self.view, animated: true)
+                
+                DispatchQueue.main.async {
+                    MBProgressHUD.hide(for: self.view, animated: true)
+                }
             }
         } else {
             self.collectionView.reloadData()
@@ -288,7 +293,7 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let reachability = Reachability()!
         
-        if bookIds.count > 0 {
+//        if bookIds.count > 0 {
             if reachability.currentReachabilityStatus != .notReachable {
                 if let bookId = bookIds[indexPath.row].bookId {
                     let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
@@ -299,9 +304,9 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
             } else {
                 self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
             }
-        } else {
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters. Try restarting the app.", comment: ""))
-        }
+//        } else {
+//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+//        }
         
     }
 }
