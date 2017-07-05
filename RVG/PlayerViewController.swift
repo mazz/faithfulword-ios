@@ -38,6 +38,7 @@ class PlayerViewController : BaseClass {
     
     weak var playbackTransportDelegate : PlaybackTransportDelegate?
     var scrubbing : Bool?
+    var playingWhileScrubbing : Bool?
     var playbackRepeat : Bool?
     var muteVolume : Bool?
     
@@ -51,6 +52,7 @@ class PlayerViewController : BaseClass {
         scrubberSlider.addTarget(self, action: #selector(PlayerViewController.scrubberTouchDown), for: .touchDown)
 
         scrubbing = false
+        playingWhileScrubbing = false
 
         emptyUIState()
         
@@ -90,8 +92,9 @@ class PlayerViewController : BaseClass {
     
     func scrubberChanged() {
         print("scrubberChanged")
-        currentTimeLabel.text = "--:--"
-        remainingTimeLabel.text = "--:--"
+//        currentTimeLabel.text = "--:--"
+//        remainingTimeLabel.text = "--:--"
+        self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
     }
 
 
@@ -100,12 +103,24 @@ class PlayerViewController : BaseClass {
         scrubbing = false;
         self.playbackTransportDelegate?.scrubbingDidEnd()
         self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
-        self.playbackTransportDelegate?.play()
+        
+        if let wasPlaying = playingWhileScrubbing {
+            if wasPlaying {
+                self.playbackTransportDelegate?.play()
+            }
+        }
     }
 
 
     func scrubberTouchDown() {
         print("scrubberTouchDown")
+        
+        if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
+            playingWhileScrubbing = true
+        } else {
+            playingWhileScrubbing = false
+        }
+
         self.playbackTransportDelegate?.pause()
         scrubbing = true;
         self.playbackTransportDelegate?.scrubbingDidStart()

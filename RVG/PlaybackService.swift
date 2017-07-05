@@ -463,7 +463,9 @@ extension PlaybackService : PlaybackTransportDelegate {
         print("PlaybackTransportDelegate scrubbedToTime: \(String(time))")
         self.currentPlayerItem?.cancelPendingSeeks()
         self.player?.seek(to: CMTimeMakeWithSeconds(time, Int32(NSEC_PER_SEC)), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
+        self.playbackDisplayDelegate?.setCurrentTime(time: time, duration: CMTimeGetSeconds((self.currentPlayerItem?.duration)!))
         isPlaying = false
+        
     }
 
     func scrubbingDidEnd() {
