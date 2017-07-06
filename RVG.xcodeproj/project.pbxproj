@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08D033F70490F54B52DA4B70 /* Pods_RVGTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */; };
+		4C6567761F0EC0A8005C8A17 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6567751F0EC0A8005C8A17 /* NetworkService.swift */; };
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
 		4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */; };
 		4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */; };
@@ -93,6 +94,7 @@
 		39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
+		4C6567751F0EC0A8005C8A17 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsModel.swift; sourceTree = "<group>"; };
 		4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
 		4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapterResponse.swift; sourceTree = "<group>"; };
@@ -388,6 +390,7 @@
 				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
 				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
 				681E11781ED1098600B028DD /* BibleService.swift */,
+				4C6567751F0EC0A8005C8A17 /* NetworkService.swift */,
 				4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */,
 				681E117A1ED110CB00B028DD /* Environment.swift */,
 				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
@@ -763,6 +766,7 @@
 			files = (
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
+				4C6567761F0EC0A8005C8A17 /* NetworkService.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
 				686233EE1EFF71FC0046D952 /* PlaybackService.swift in Sources */,
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
