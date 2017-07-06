@@ -19,6 +19,8 @@ class BibleService {
     internal let mediaChapterApi :                          String = "/v1/books/{bid}/media"
     internal let mediaGospelApi :                           String = "/v1/gospels/{gid}/media"
     
+    let timeoutInterval : TimeInterval = 30
+    
     //internal let contactUsApi :     String = "/v1/contact-us"
 
     class func sharedInstance() -> BibleService {
@@ -40,6 +42,8 @@ class BibleService {
             if let urlStr = env.baseURL?.absoluteString?.appending(bookApi) {
                 let url = NSURL(string: urlStr)
                 let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.timeoutInterval = timeoutInterval
+                
                 request.httpMethod = "GET"
                 
                 print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
@@ -55,11 +59,16 @@ class BibleService {
                     var parsedObject: BookResponse
                     
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = BookResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.books)
+                        if let _ = data {
+                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                            if let jsonObject = json as? [String:Any] {
+                                parsedObject = BookResponse(JSON: jsonObject)!
+                                print(parsedObject)
+                                success(parsedObject.books)
+                            }
+                            
+                        } else {
+                            throw SessionError.jsonParseFailed
                         }
                     } catch {
                         print("error: \(error)")
@@ -84,6 +93,7 @@ class BibleService {
             if let urlStr = env.baseURL?.absoluteString?.appending(gospelApi) {
                 let url = NSURL(string: urlStr)
                 let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.timeoutInterval = timeoutInterval
                 request.httpMethod = "GET"
                 
                 print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
@@ -99,11 +109,15 @@ class BibleService {
                     var parsedObject: GospelResponse
                     
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = GospelResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.gospels)
+                        if let _ = data {
+                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                            if let jsonObject = json as? [String:Any] {
+                                parsedObject = GospelResponse(JSON: jsonObject)!
+                                print(parsedObject)
+                                success(parsedObject.gospels)
+                            }
+                        } else {
+                            throw SessionError.jsonParseFailed
                         }
                     } catch {
                         print("error: \(error)")
@@ -131,6 +145,7 @@ class BibleService {
                 
                 let url = NSURL(string: finalUrlStr)
                 let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.timeoutInterval = timeoutInterval
                 request.httpMethod = "GET"
                 
                 print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
@@ -146,11 +161,15 @@ class BibleService {
                 let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
                     var parsedObject: MediaChapterResponse
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = MediaChapterResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.media)
+                        if let _ = data {
+                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                            if let jsonObject = json as? [String:Any] {
+                                parsedObject = MediaChapterResponse(JSON: jsonObject)!
+                                print(parsedObject)
+                                success(parsedObject.media)
+                            }
+                        } else {
+                            throw SessionError.jsonParseFailed
                         }
                     } catch {
                         print("error: \(error)")
@@ -178,6 +197,7 @@ class BibleService {
                 
                 let url = NSURL(string: finalUrlStr)
                 let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.timeoutInterval = timeoutInterval
                 request.httpMethod = "GET"
                 
                 print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
@@ -193,12 +213,17 @@ class BibleService {
                 let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
                     var parsedObject: MediaGospelResponse
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = MediaGospelResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.media)
+                        if let _ = data {
+                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                            if let jsonObject = json as? [String:Any] {
+                                parsedObject = MediaGospelResponse(JSON: jsonObject)!
+                                print(parsedObject)
+                                success(parsedObject.media)
+                            }
+                        } else {
+                            throw SessionError.jsonParseFailed
                         }
+                        
                     } catch {
                         print("error: \(error)")
                     }
@@ -226,6 +251,7 @@ class BibleService {
                 
                 let url = NSURL(string: finalUrlStr)
                 let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                request.timeoutInterval = timeoutInterval
                 request.httpMethod = "GET"
                 
                 print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
@@ -241,11 +267,15 @@ class BibleService {
                 let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
                     var parsedObject: LanguageIdentifierResponse
                     do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = LanguageIdentifierResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.languageIdentifiers)
+                        if let _ = data {
+                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                            if let jsonObject = json as? [String:Any] {
+                                parsedObject = LanguageIdentifierResponse(JSON: jsonObject)!
+                                print(parsedObject)
+                                success(parsedObject.languageIdentifiers)
+                            }
+                        } else {
+                            throw SessionError.jsonParseFailed
                         }
                     } catch {
                         print("error: \(error)")

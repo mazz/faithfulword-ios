@@ -39,6 +39,8 @@ class PlayerViewController : BaseClass {
     weak var playbackTransportDelegate : PlaybackTransportDelegate?
     var scrubbing : Bool?
     var playingWhileScrubbing : Bool?
+    var playerIsPlaying : Bool = false
+    var sessionIsResuming : Bool = false
     var playbackRepeat : Bool?
     var muteVolume : Bool?
     
@@ -129,19 +131,22 @@ class PlayerViewController : BaseClass {
 
     @IBAction func playPause(_ sender: Any) {
         print("PlayerViewController playPause")
-        var playerIsPlaying = false
         
         if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
             playerIsPlaying = true
         }
 
         if let button = sender as? UIButton {
-            if playerIsPlaying {
+            if playerIsPlaying && !sessionIsResuming {
                 self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
                 self.playbackTransportDelegate?.pause()
+                playerIsPlaying = false
+                sessionIsResuming = false
             } else {
                 self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
                 self.playbackTransportDelegate?.play()
+                playerIsPlaying = true
+                sessionIsResuming = false
             }
         }
         
@@ -303,8 +308,15 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     }
 
     func audioSessionResumed() {
-        playPause(self.playPauseButton)
-//        self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
+        self.sessionIsResuming = true
+        if self.playerIsPlaying {
+            playPause(self.playPauseButton)
+        }
+//            }
+    }
+    
+    func audioSessionRouteChange() {
+        print("audioSessionRouteChange")
     }
     
 }

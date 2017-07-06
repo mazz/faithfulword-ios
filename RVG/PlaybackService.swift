@@ -22,6 +22,7 @@ protocol PlaybackDisplayDelegate : class {
     func muteVolume(shouldMute: Bool)
     func audioSessionInterrupted()
     func audioSessionResumed()
+    func audioSessionRouteChange()
 }
 
 protocol PlaybackModeDelegate : class {
@@ -51,6 +52,7 @@ class PlaybackService : NSObject {
 
     var player : AVPlayer?
     var isPlaying : Bool?
+//    var playingWhileSessionInterrupted : Bool?
     var avoidRestartOnLoad : Bool?
 
     weak var playbackDisplayDelegate : PlaybackDisplayDelegate?
@@ -65,25 +67,15 @@ class PlaybackService : NSObject {
 
     let statusKeypath : String = "status"
     let refreshInterval : Double = 0.5
-    let sessionInterrupted : Int = 1
-    let sessionResumed : Int = 1
 
     var videoPlaybackStartDate : TimeInterval?
     var videoPlaybackEndDate : TimeInterval?
 
     override init() {
         super.init()
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//            selector:@selector(handleAudioSessionInterruption:)
-//            name:AVAudioSessionInterruptionNotification
-//            object:aSession];
-        
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//            selector:@selector(handleMediaServicesReset)
-//            name:AVAudioSessionMediaServicesWereResetNotification
-//            object:aSession];
         
         NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionInterruption(note:)), name:.AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionRouteChange(note:)), name:.AVAudioSessionRouteChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleMediaServicesReset), name:.AVAudioSessionMediaServicesWereReset, object: AVAudioSession.sharedInstance())
     }
 
@@ -149,13 +141,17 @@ class PlaybackService : NSObject {
     }
 
     func prepareToPlayUrls(urls : [URL], playIndex : Int) -> Void {
-        
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers )
+//            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [AVAudioSessionCategoryOptions.mixWithOthers] )
+            
+            // AVAudioSessionCategoryPlayback and .allowBluetooth combination will always throw an exception
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+//            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+
             try AVAudioSession.sharedInstance().setActive(true)
         }
-        catch {
-            print("setting AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers failed")
+        catch let error as NSError {
+            print("setting (AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker]) failed: \(error)")
 
         }
         
@@ -395,18 +391,41 @@ class PlaybackService : NSObject {
     }
 
     func handleAudioSessionInterruption(note : NSNotification) {
+//        print("handleAudioSessionInterruption note.userInfo: \(note.userInfo!)")
+
+        let playing : Bool = Double((self.player?.rate)!) > 0.0 ? true : false
+        var gotInterrupted : Bool = false
+        var didResume : Bool = false
+        
         if let interrupted : Int = note.userInfo?["AVAudioSessionInterruptionTypeKey"] as? Int {
-            if interrupted == sessionInterrupted {
-                self.playbackDisplayDelegate?.audioSessionInterrupted()
-            }
-            
-            if let resumed : Int = note.userInfo?["AVAudioSessionInterruptionOptionKey"] as? Int  {
-                if resumed == sessionResumed {
-                    self.playbackDisplayDelegate?.audioSessionResumed()
-                }
-            }
+            self.playbackDisplayDelegate?.audioSessionInterrupted()
+
         }
-        print("handleAudioSessionInterruption: \(note)")
+        
+        if let resumed : Int = note.userInfo?["AVAudioSessionInterruptionOptionKey"] as? Int {
+//            didResume = resumed == 1
+            self.playbackDisplayDelegate?.audioSessionResumed()
+        }
+        
+        print("playing: \(playing) gotInterrupted: \(gotInterrupted) didResume: \(didResume)")
+        
+        // playing: false gotInterrupted: true didResume: false -- interrupting
+        // playing: false gotInterrupted: false didResume: true -- resuming
+
+    }
+    
+    func handleAudioSessionRouteChange(note : NSNotification) {
+//        print("handleAudioSessionRouteChange note.userInfo: \(note.userInfo!)")
+        var playing : Bool?
+        
+        if let player = self.player {
+            playing = Double(player.rate) > 0.0 ? true : false
+        }
+        
+//        print("handleAudioSessionRouteChange playing: \(playing)")
+
+        self.playbackDisplayDelegate?.audioSessionRouteChange()
+        
     }
     
     func handleMediaServicesReset() {
