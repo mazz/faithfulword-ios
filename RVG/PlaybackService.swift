@@ -145,8 +145,18 @@ class PlaybackService : NSObject {
 //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [AVAudioSessionCategoryOptions.mixWithOthers] )
             
             // AVAudioSessionCategoryPlayback and .allowBluetooth combination will always throw an exception
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
-//            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+//            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+            
+            // .allowBluetooth lower quality audio
+            // .allowBluetoothA2DP sounds great however
+            
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
+                                                            with: [.allowBluetoothA2DP,
+                                                                   .mixWithOthers,
+                                                                   .defaultToSpeaker])
+
+            
+            //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
 
             try AVAudioSession.sharedInstance().setActive(true)
         }
