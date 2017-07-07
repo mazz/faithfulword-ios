@@ -48,7 +48,7 @@ class SongsViewController: BaseClass {
         super.viewWillAppear(true)
         
         
-        if PlaybackService.sharedInstance().isPlaying! {
+        if (PlaybackService.sharedInstance().player != nil) {
             self.navigationItem.rightBarButtonItem = self.songsBarRightButton
         } else {
             self.navigationItem.rightBarButtonItem = nil

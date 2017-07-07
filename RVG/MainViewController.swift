@@ -139,7 +139,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        if PlaybackService.sharedInstance().isPlaying! {
+        if (PlaybackService.sharedInstance().player != nil) {
             self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
         } else {
             self.navigationItem.rightBarButtonItem = nil

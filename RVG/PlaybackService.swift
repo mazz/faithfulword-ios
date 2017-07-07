@@ -141,32 +141,38 @@ class PlaybackService : NSObject {
     }
 
     func prepareToPlayUrls(urls : [URL], playIndex : Int) -> Void {
-        do {
-//            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [AVAudioSessionCategoryOptions.mixWithOthers] )
+        
+        // initialize the audio session only once
+        if self.player == nil {
+            do {
+                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [AVAudioSessionCategoryOptions.mixWithOthers] )
+                
+                // AVAudioSessionCategoryPlayback and .allowBluetooth combination will always throw an exception
+                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+                
+                // .allowBluetooth lower quality audio
+                // .allowBluetoothA2DP sounds great however
+                
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
+                                                                with: [.allowBluetoothA2DP,
+                                                                       .mixWithOthers,
+                                                                       .defaultToSpeaker])
+                
+                
+                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+                
+                try AVAudioSession.sharedInstance().setActive(true)
+            }
+            catch let error as NSError {
+                print("setting (AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker]) failed: \(error)")
+                
+            }
             
-            // AVAudioSessionCategoryPlayback and .allowBluetooth combination will always throw an exception
-//            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
-            
-            // .allowBluetooth lower quality audio
-            // .allowBluetoothA2DP sounds great however
-            
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
-                                                            with: [.allowBluetoothA2DP,
-                                                                   .mixWithOthers,
-                                                                   .defaultToSpeaker])
-
-            
-            //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
-
-            try AVAudioSession.sharedInstance().setActive(true)
-        }
-        catch let error as NSError {
-            print("setting (AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker]) failed: \(error)")
-
+            UIApplication.shared.beginBackgroundTask {}
+            UIApplication.shared.beginReceivingRemoteControlEvents()
         }
         
-        UIApplication.shared.beginBackgroundTask {}
-        UIApplication.shared.beginReceivingRemoteControlEvents()
+
         
         if avoidRestartOnLoad! == false  {
             let assets : [AVAsset] = urls.map { AVAsset(url:$0) }
