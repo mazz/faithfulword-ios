@@ -195,16 +195,21 @@ class PlaybackService : NSObject {
     }
 
     func stopObserving(playerItem : AVPlayerItem) {
-        if self.timeObserverToken != nil {
+        
+        if let timeObserverToken = self.timeObserverToken {
+//            if timeObserverToken != nil {
             print("enter")
-            self.player?.removeTimeObserver(self.timeObserverToken)
+            self.player?.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
             print("exit")
+//            }
         }
         
-        if self.itemEndObserver != nil {
-            NotificationCenter.default.removeObserver(self.itemEndObserver, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem)
-            self.itemEndObserver = nil
+        if let itemEndObserver = self.itemEndObserver {
+//            if self.itemEndObserver != nil {
+                NotificationCenter.default.removeObserver(itemEndObserver, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem)
+                self.itemEndObserver = nil
+//            }
         }
         
         playerItem.removeObserver(self, forKeyPath: statusKeypath)
@@ -301,7 +306,15 @@ class PlaybackService : NSObject {
                         
                         // stop observing the current item
                         // and play next item
-                        self.playbackToNextItem(currentItem: item, nextIndex: nextIndex, nextItem: nextItem)
+                        // queueing on main dispatch queue seems to fix
+                        // a race condition where the timeObserverToken
+                        // would outlast self.player in the case where
+                        // the user scrubs to the end of the track
+                        // but scrubs back quickly
+                        DispatchQueue.main.async { [unowned self] in
+                            self.playbackToNextItem(currentItem: item, nextIndex: nextIndex, nextItem: nextItem)
+                        }
+                        
                     }
                 } else {
                     // could not advance to next item
@@ -484,7 +497,9 @@ extension PlaybackService : PlaybackTransportDelegate {
         print("PlaybackTransportDelegate scrubbingDidStart")
         self.lastPlaybackRate = self.player?.rate;
         self.player?.pause()
-        self.player?.removeTimeObserver(self.timeObserverToken)
+        if self.timeObserverToken != nil {
+            self.player?.removeTimeObserver(self.timeObserverToken)
+        }
         isPlaying = false
     }
 

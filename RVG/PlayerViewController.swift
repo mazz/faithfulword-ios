@@ -96,7 +96,10 @@ class PlayerViewController : BaseClass {
         print("scrubberChanged")
 //        currentTimeLabel.text = "--:--"
 //        remainingTimeLabel.text = "--:--"
-        self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+        let time : Double = Double(scrubberSlider.value)
+        if !time.isNaN {
+            self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+        }
     }
 
 
@@ -104,7 +107,11 @@ class PlayerViewController : BaseClass {
         print("scrubberTouchUpInside")
         scrubbing = false;
         self.playbackTransportDelegate?.scrubbingDidEnd()
-        self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+
+        let time : Double = Double(scrubberSlider.value)
+        if !time.isNaN {
+            self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+        }
         
         if let wasPlaying = playingWhileScrubbing {
             if wasPlaying {
@@ -184,16 +191,18 @@ class PlayerViewController : BaseClass {
     }
     
     func setCurrentTime(time : TimeInterval, duration : TimeInterval) {
-        print("setCurrentTime: \(time)")
-        let currentSeconds = Int(ceil(time))
-        let remainingTime = Int(duration - time)
+        if !time.isNaN && !duration.isNaN {
 
-        currentTimeLabel?.text = formatSeconds(value: currentSeconds)
-        remainingTimeLabel?.text = formatSeconds(value: remainingTime)
-        scrubberSlider.minimumValue = Float(0.0)
-        scrubberSlider.maximumValue = Float(duration)
-        scrubberSlider.value = Float(time)
-
+            print("setCurrentTime: \(time)")
+            let currentSeconds = Int(ceil(time))
+            let remainingTime = Int(duration - time)
+            
+            currentTimeLabel?.text = formatSeconds(value: currentSeconds)
+            remainingTimeLabel?.text = formatSeconds(value: remainingTime)
+            scrubberSlider.minimumValue = Float(0.0)
+            scrubberSlider.maximumValue = Float(duration)
+            scrubberSlider.value = Float(time)
+        }
 //            print("PlaybackDisplayDelegate setCurrentTime: \(String(time)) duration: \(String(duration))")
     }
 
