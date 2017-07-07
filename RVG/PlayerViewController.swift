@@ -265,6 +265,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
 
     func playbackReady() {
         MBProgressHUD.hide(for: self.view, animated: true)
+        playerIsPlaying = false
         print("PlaybackDisplayDelegate playbackReady")
         playPause(self.playPauseButton)
     }
@@ -282,6 +283,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     func playbackComplete() {
         scrubberSlider.value = Float(0)
         emptyUIState()
+        playerIsPlaying = false
         print("PlaybackDisplayDelegate playbackComplete")
     }
     
