@@ -66,7 +66,7 @@ class PlayerViewController : BaseClass {
                 if let urls : [URL] = media.map({ URL(string: $0.url!)! }) {
                     
                     // only show spinner if playback service is not currently playing
-                    if !PlaybackService.sharedInstance().isPlaying! {
+                    if (PlaybackService.sharedInstance().player == nil) {
                         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
                         loadingNotification.mode = MBProgressHUDMode.indeterminate
                     }
