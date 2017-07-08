@@ -22,6 +22,8 @@ protocol PlaybackTransportDelegate: class {
     func previousTrack()
     func playbackRepeat(shouldRepeat : Bool)
     func toggleVolume(shouldMute : Bool)
+    func playerViewDidAppear()
+    func playerViewDidDisappear()
 }
 
 class PlayerViewController : BaseClass {
@@ -83,6 +85,22 @@ class PlayerViewController : BaseClass {
         self.playbackTransportDelegate = PlaybackService.sharedInstance()
         PlaybackService.sharedInstance().playbackDisplayDelegate = self
 
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if let transportDelegate = self.playbackTransportDelegate {
+            transportDelegate.playerViewDidDisappear()
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if let transportDelegate = self.playbackTransportDelegate {
+            transportDelegate.playerViewDidAppear()
+        }
     }
 
     func emptyUIState() {
@@ -315,10 +333,13 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     }
     
     func audioSessionInterrupted() {
+        print("audioSessionInterrupted")
+
         self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
     }
 
     func audioSessionResumed() {
+        print("audioSessionResumed")
         self.sessionIsResuming = true
         if self.playerIsPlaying {
             playPause(self.playPauseButton)

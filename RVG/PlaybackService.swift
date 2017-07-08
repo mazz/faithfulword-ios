@@ -52,9 +52,14 @@ class PlaybackService : NSObject {
 
     var player : AVPlayer?
     var isPlaying : Bool?
-//    var playingWhileSessionInterrupted : Bool?
     var avoidRestartOnLoad : Bool?
-
+    
+    /*  we need to watch visibility state of the playbackDisplayDelegate to workaround a problem where
+     if the playerviewcontroller is not modal while the user interrupts the audio session, and it is playing
+     playback will not resume on audio session resume (AVAudioSessionInterruptionTypeKey: 0) */
+    var playerViewIsVisible : Bool = false
+//    var sessionInterruptedWhilePlayerViewNotVisible : Bool = false
+    
     weak var playbackDisplayDelegate : PlaybackDisplayDelegate?
     weak var playbackModeDelegate : PlaybackModeDelegate?
     /*
@@ -241,32 +246,41 @@ class PlaybackService : NSObject {
         }
 
         if context == &playerItemStatusContext {
-            if self.currentPlayerItem?.status == .readyToPlay {
-                print(".readyToPlay")
-                addPlayerItemTimeObserver()
-                addItemEndObserverForPlayerItem(item : self.currentPlayerItem!)
-
-                // whenever we load a new track we should
-                // reset the playback position to kCMTimeZero
-                DispatchQueue.main.async { [unowned self] in self.player?.seek(to: kCMTimeZero) }
-
-                self.playbackDisplayDelegate?.setCurrentTime(time: CMTimeGetSeconds(kCMTimeZero), duration: CMTimeGetSeconds((self.currentPlayerItem?.duration)!))
-
-                self.playbackDisplayDelegate?.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
-                self.playbackDisplayDelegate?.playbackReady()
-                
-                // do not repeat track by default
-                self.playbackDisplayDelegate?.playbackRepeat(shouldRepeat: playbackRepeat)
-                
-                // do not mute by default
-                self.playbackDisplayDelegate?.muteVolume(shouldMute: muteVolume)
-
+            
+            if let currentPlayerItem = self.currentPlayerItem {
+                if currentPlayerItem.status == .readyToPlay {
+                    print(".readyToPlay")
+                    addPlayerItemTimeObserver()
+                    addItemEndObserverForPlayerItem(item : self.currentPlayerItem!)
+                    
+                    // whenever we load a new track we should
+                    // reset the playback position to kCMTimeZero
+                    DispatchQueue.main.async { [unowned self] in self.player?.seek(to: kCMTimeZero) }
+                    
+                    if let playbackDisplayDelegate = self.playbackDisplayDelegate {
+                        playbackDisplayDelegate.setCurrentTime(time: CMTimeGetSeconds(kCMTimeZero), duration: CMTimeGetSeconds(currentPlayerItem.duration))
+                        
+                        playbackDisplayDelegate.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
+                        playbackDisplayDelegate.playbackReady()
+                        
+                        // do not repeat track by default
+                        playbackDisplayDelegate.playbackRepeat(shouldRepeat: playbackRepeat)
+                        
+                        // do not mute by default
+                        playbackDisplayDelegate.muteVolume(shouldMute: muteVolume)
+                    } else {
+                        self.player?.play()
+                    }
+                    
+                    
+                }
+                else if currentPlayerItem.status == .failed  {
+                    print("failed!")
+                    self.playbackDisplayDelegate?.playbackFailed()
+                    disposePlayback()
+                }
             }
-            else if self.currentPlayerItem?.status == .failed  {
-                print("failed!")
-                self.playbackDisplayDelegate?.playbackFailed()
-                disposePlayback()
-            }
+            
 
         } else {
             print("failed to load audio!")
@@ -420,23 +434,29 @@ class PlaybackService : NSObject {
     }
 
     func handleAudioSessionInterruption(note : NSNotification) {
-//        print("handleAudioSessionInterruption note.userInfo: \(note.userInfo!)")
+        print("handleAudioSessionInterruption note.userInfo: \(note.userInfo!)")
 
-        let playing : Bool = Double((self.player?.rate)!) > 0.0 ? true : false
         var gotInterrupted : Bool = false
         var didResume : Bool = false
         
         if let interrupted : Int = note.userInfo?["AVAudioSessionInterruptionTypeKey"] as? Int {
             self.playbackDisplayDelegate?.audioSessionInterrupted()
-
+            gotInterrupted = interrupted == 1
         }
         
+        
         if let resumed : Int = note.userInfo?["AVAudioSessionInterruptionOptionKey"] as? Int {
-//            didResume = resumed == 1
+            didResume = resumed == 1
+            
+            if !playerViewIsVisible && didResume {
+                //                sessionInterruptedWhilePlayerViewNotVisible = true
+                self.player?.play()
+            }
+
             self.playbackDisplayDelegate?.audioSessionResumed()
         }
         
-        print("playing: \(playing) gotInterrupted: \(gotInterrupted) didResume: \(didResume)")
+        print("gotInterrupted: \(gotInterrupted) didResume: \(didResume)")
         
         // playing: false gotInterrupted: true didResume: false -- interrupting
         // playing: false gotInterrupted: false didResume: true -- resuming
@@ -444,14 +464,14 @@ class PlaybackService : NSObject {
     }
     
     func handleAudioSessionRouteChange(note : NSNotification) {
-//        print("handleAudioSessionRouteChange note.userInfo: \(note.userInfo!)")
+        print("handleAudioSessionRouteChange note.userInfo: \(note.userInfo!)")
         var playing : Bool?
         
         if let player = self.player {
             playing = Double(player.rate) > 0.0 ? true : false
         }
         
-//        print("handleAudioSessionRouteChange playing: \(playing)")
+        print("handleAudioSessionRouteChange playing: \(playing)")
 
         self.playbackDisplayDelegate?.audioSessionRouteChange()
         
@@ -568,8 +588,20 @@ extension PlaybackService : PlaybackTransportDelegate {
             self.player?.volume = Float(1)
         }
     }
-    
-    
+
+    func playerViewDidDisappear() {
+        print("playerViewDidDisappear")
+        self.playerViewIsVisible = false
+        // reset this flag for later
+//        self.sessionInterruptedWhilePlayerViewNotVisible = false
+    }
+
+    func playerViewDidAppear() {
+        print("playerViewDidAppear")
+        self.playerViewIsVisible = true
+        // reset this flag for later
+//        self.sessionInterruptedWhilePlayerViewNotVisible = false
+    }
 
 }
 
