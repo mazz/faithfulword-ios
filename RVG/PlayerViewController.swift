@@ -22,6 +22,8 @@ protocol PlaybackTransportDelegate: class {
     func previousTrack()
     func playbackRepeat(shouldRepeat : Bool)
     func toggleVolume(shouldMute : Bool)
+    func playerViewDidAppear()
+    func playerViewDidDisappear()
 }
 
 class PlayerViewController : BaseClass {
@@ -39,6 +41,8 @@ class PlayerViewController : BaseClass {
     weak var playbackTransportDelegate : PlaybackTransportDelegate?
     var scrubbing : Bool?
     var playingWhileScrubbing : Bool?
+    var playerIsPlaying : Bool = false
+    var sessionIsResuming : Bool = false
     var playbackRepeat : Bool?
     var muteVolume : Bool?
     
@@ -62,7 +66,7 @@ class PlayerViewController : BaseClass {
                 if let urls : [URL] = media.map({ URL(string: $0.url!)! }) {
                     
                     // only show spinner if playback service is not currently playing
-                    if !PlaybackService.sharedInstance().isPlaying! {
+                    if (PlaybackService.sharedInstance().player == nil) {
                         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
                         loadingNotification.mode = MBProgressHUDMode.indeterminate
                     }
@@ -82,6 +86,22 @@ class PlayerViewController : BaseClass {
         PlaybackService.sharedInstance().playbackDisplayDelegate = self
 
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if let transportDelegate = self.playbackTransportDelegate {
+            transportDelegate.playerViewDidDisappear()
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if let transportDelegate = self.playbackTransportDelegate {
+            transportDelegate.playerViewDidAppear()
+        }
+    }
 
     func emptyUIState() {
         currentTimeLabel.text = "--:--"
@@ -94,7 +114,10 @@ class PlayerViewController : BaseClass {
         print("scrubberChanged")
 //        currentTimeLabel.text = "--:--"
 //        remainingTimeLabel.text = "--:--"
-        self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+        let time : Double = Double(scrubberSlider.value)
+        if !time.isNaN {
+            self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+        }
     }
 
 
@@ -102,7 +125,11 @@ class PlayerViewController : BaseClass {
         print("scrubberTouchUpInside")
         scrubbing = false;
         self.playbackTransportDelegate?.scrubbingDidEnd()
-        self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+
+        let time : Double = Double(scrubberSlider.value)
+        if !time.isNaN {
+            self.playbackTransportDelegate?.scrubbedToTime(time: Double(scrubberSlider.value))
+        }
         
         if let wasPlaying = playingWhileScrubbing {
             if wasPlaying {
@@ -129,19 +156,22 @@ class PlayerViewController : BaseClass {
 
     @IBAction func playPause(_ sender: Any) {
         print("PlayerViewController playPause")
-        var playerIsPlaying = false
         
         if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
             playerIsPlaying = true
         }
 
         if let button = sender as? UIButton {
-            if playerIsPlaying {
+            if playerIsPlaying && !sessionIsResuming {
                 self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
                 self.playbackTransportDelegate?.pause()
+                playerIsPlaying = false
+                sessionIsResuming = false
             } else {
                 self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
                 self.playbackTransportDelegate?.play()
+                playerIsPlaying = true
+                sessionIsResuming = false
             }
         }
         
@@ -179,16 +209,18 @@ class PlayerViewController : BaseClass {
     }
     
     func setCurrentTime(time : TimeInterval, duration : TimeInterval) {
-        print("setCurrentTime: \(time)")
-        let currentSeconds = Int(ceil(time))
-        let remainingTime = Int(duration - time)
+        if !time.isNaN && !duration.isNaN {
 
-        currentTimeLabel?.text = formatSeconds(value: currentSeconds)
-        remainingTimeLabel?.text = formatSeconds(value: remainingTime)
-        scrubberSlider.minimumValue = Float(0.0)
-        scrubberSlider.maximumValue = Float(duration)
-        scrubberSlider.value = Float(time)
-
+            print("setCurrentTime: \(time)")
+            let currentSeconds = Int(ceil(time))
+            let remainingTime = Int(duration - time)
+            
+            currentTimeLabel?.text = formatSeconds(value: currentSeconds)
+            remainingTimeLabel?.text = formatSeconds(value: remainingTime)
+            scrubberSlider.minimumValue = Float(0.0)
+            scrubberSlider.maximumValue = Float(duration)
+            scrubberSlider.value = Float(time)
+        }
 //            print("PlaybackDisplayDelegate setCurrentTime: \(String(time)) duration: \(String(duration))")
     }
 
@@ -260,6 +292,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
 
     func playbackReady() {
         MBProgressHUD.hide(for: self.view, animated: true)
+        playerIsPlaying = false
         print("PlaybackDisplayDelegate playbackReady")
         playPause(self.playPauseButton)
     }
@@ -277,6 +310,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     func playbackComplete() {
         scrubberSlider.value = Float(0)
         emptyUIState()
+        playerIsPlaying = false
         print("PlaybackDisplayDelegate playbackComplete")
     }
     
@@ -299,12 +333,22 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     }
     
     func audioSessionInterrupted() {
+        print("audioSessionInterrupted")
+
         self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
     }
 
     func audioSessionResumed() {
-        playPause(self.playPauseButton)
-//        self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
+        print("audioSessionResumed")
+        self.sessionIsResuming = true
+        if self.playerIsPlaying {
+            playPause(self.playPauseButton)
+        }
+//            }
+    }
+    
+    func audioSessionRouteChange() {
+        print("audioSessionRouteChange")
     }
     
 }

@@ -22,6 +22,7 @@ protocol PlaybackDisplayDelegate : class {
     func muteVolume(shouldMute: Bool)
     func audioSessionInterrupted()
     func audioSessionResumed()
+    func audioSessionRouteChange()
 }
 
 protocol PlaybackModeDelegate : class {
@@ -52,7 +53,13 @@ class PlaybackService : NSObject {
     var player : AVPlayer?
     var isPlaying : Bool?
     var avoidRestartOnLoad : Bool?
-
+    
+    /*  we need to watch visibility state of the playbackDisplayDelegate to workaround a problem where
+     if the playerviewcontroller is not modal while the user interrupts the audio session, and it is playing
+     playback will not resume on audio session resume (AVAudioSessionInterruptionTypeKey: 0) */
+    var playerViewIsVisible : Bool = false
+//    var sessionInterruptedWhilePlayerViewNotVisible : Bool = false
+    
     weak var playbackDisplayDelegate : PlaybackDisplayDelegate?
     weak var playbackModeDelegate : PlaybackModeDelegate?
     /*
@@ -65,25 +72,15 @@ class PlaybackService : NSObject {
 
     let statusKeypath : String = "status"
     let refreshInterval : Double = 0.5
-    let sessionInterrupted : Int = 1
-    let sessionResumed : Int = 1
 
     var videoPlaybackStartDate : TimeInterval?
     var videoPlaybackEndDate : TimeInterval?
 
     override init() {
         super.init()
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//            selector:@selector(handleAudioSessionInterruption:)
-//            name:AVAudioSessionInterruptionNotification
-//            object:aSession];
-        
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//            selector:@selector(handleMediaServicesReset)
-//            name:AVAudioSessionMediaServicesWereResetNotification
-//            object:aSession];
         
         NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionInterruption(note:)), name:.AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionRouteChange(note:)), name:.AVAudioSessionRouteChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleMediaServicesReset), name:.AVAudioSessionMediaServicesWereReset, object: AVAudioSession.sharedInstance())
     }
 
@@ -150,17 +147,37 @@ class PlaybackService : NSObject {
 
     func prepareToPlayUrls(urls : [URL], playIndex : Int) -> Void {
         
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers )
-            try AVAudioSession.sharedInstance().setActive(true)
-        }
-        catch {
-            print("setting AVAudioSessionCategoryPlayback, with: AVAudioSessionCategoryOptions.mixWithOthers failed")
-
+        // initialize the audio session only once
+        if self.player == nil {
+            do {
+                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [AVAudioSessionCategoryOptions.mixWithOthers] )
+                
+                // AVAudioSessionCategoryPlayback and .allowBluetooth combination will always throw an exception
+                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+                
+                // .allowBluetooth lower quality audio
+                // .allowBluetoothA2DP sounds great however
+                
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
+                                                                with: [.allowBluetoothA2DP,
+                                                                       .mixWithOthers,
+                                                                       .defaultToSpeaker])
+                
+                
+                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+                
+                try AVAudioSession.sharedInstance().setActive(true)
+            }
+            catch let error as NSError {
+                print("setting (AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker]) failed: \(error)")
+                
+            }
+            
+            UIApplication.shared.beginBackgroundTask {}
+            UIApplication.shared.beginReceivingRemoteControlEvents()
         }
         
-        UIApplication.shared.beginBackgroundTask {}
-        UIApplication.shared.beginReceivingRemoteControlEvents()
+
         
         if avoidRestartOnLoad! == false  {
             let assets : [AVAsset] = urls.map { AVAsset(url:$0) }
@@ -189,16 +206,21 @@ class PlaybackService : NSObject {
     }
 
     func stopObserving(playerItem : AVPlayerItem) {
-        if self.timeObserverToken != nil {
+        
+        if let timeObserverToken = self.timeObserverToken {
+//            if timeObserverToken != nil {
             print("enter")
-            self.player?.removeTimeObserver(self.timeObserverToken)
+            self.player?.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
             print("exit")
+//            }
         }
         
-        if self.itemEndObserver != nil {
-            NotificationCenter.default.removeObserver(self.itemEndObserver, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem)
-            self.itemEndObserver = nil
+        if let itemEndObserver = self.itemEndObserver {
+//            if self.itemEndObserver != nil {
+                NotificationCenter.default.removeObserver(itemEndObserver, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: self.player?.currentItem)
+                self.itemEndObserver = nil
+//            }
         }
         
         playerItem.removeObserver(self, forKeyPath: statusKeypath)
@@ -224,32 +246,41 @@ class PlaybackService : NSObject {
         }
 
         if context == &playerItemStatusContext {
-            if self.currentPlayerItem?.status == .readyToPlay {
-                print(".readyToPlay")
-                addPlayerItemTimeObserver()
-                addItemEndObserverForPlayerItem(item : self.currentPlayerItem!)
-
-                // whenever we load a new track we should
-                // reset the playback position to kCMTimeZero
-                DispatchQueue.main.async { [unowned self] in self.player?.seek(to: kCMTimeZero) }
-
-                self.playbackDisplayDelegate?.setCurrentTime(time: CMTimeGetSeconds(kCMTimeZero), duration: CMTimeGetSeconds((self.currentPlayerItem?.duration)!))
-
-                self.playbackDisplayDelegate?.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
-                self.playbackDisplayDelegate?.playbackReady()
-                
-                // do not repeat track by default
-                self.playbackDisplayDelegate?.playbackRepeat(shouldRepeat: playbackRepeat)
-                
-                // do not mute by default
-                self.playbackDisplayDelegate?.muteVolume(shouldMute: muteVolume)
-
+            
+            if let currentPlayerItem = self.currentPlayerItem {
+                if currentPlayerItem.status == .readyToPlay {
+                    print(".readyToPlay")
+                    addPlayerItemTimeObserver()
+                    addItemEndObserverForPlayerItem(item : self.currentPlayerItem!)
+                    
+                    // whenever we load a new track we should
+                    // reset the playback position to kCMTimeZero
+                    DispatchQueue.main.async { [unowned self] in self.player?.seek(to: kCMTimeZero) }
+                    
+                    if let playbackDisplayDelegate = self.playbackDisplayDelegate {
+                        playbackDisplayDelegate.setCurrentTime(time: CMTimeGetSeconds(kCMTimeZero), duration: CMTimeGetSeconds(currentPlayerItem.duration))
+                        
+                        playbackDisplayDelegate.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
+                        playbackDisplayDelegate.playbackReady()
+                        
+                        // do not repeat track by default
+                        playbackDisplayDelegate.playbackRepeat(shouldRepeat: playbackRepeat)
+                        
+                        // do not mute by default
+                        playbackDisplayDelegate.muteVolume(shouldMute: muteVolume)
+                    } else {
+                        self.player?.play()
+                    }
+                    
+                    
+                }
+                else if currentPlayerItem.status == .failed  {
+                    print("failed!")
+                    self.playbackDisplayDelegate?.playbackFailed()
+                    disposePlayback()
+                }
             }
-            else if self.currentPlayerItem?.status == .failed  {
-                print("failed!")
-                self.playbackDisplayDelegate?.playbackFailed()
-                disposePlayback()
-            }
+            
 
         } else {
             print("failed to load audio!")
@@ -295,7 +326,15 @@ class PlaybackService : NSObject {
                         
                         // stop observing the current item
                         // and play next item
-                        self.playbackToNextItem(currentItem: item, nextIndex: nextIndex, nextItem: nextItem)
+                        // queueing on main dispatch queue seems to fix
+                        // a race condition where the timeObserverToken
+                        // would outlast self.player in the case where
+                        // the user scrubs to the end of the track
+                        // but scrubs back quickly
+                        DispatchQueue.main.async { [unowned self] in
+                            self.playbackToNextItem(currentItem: item, nextIndex: nextIndex, nextItem: nextItem)
+                        }
+                        
                     }
                 } else {
                     // could not advance to next item
@@ -395,18 +434,47 @@ class PlaybackService : NSObject {
     }
 
     func handleAudioSessionInterruption(note : NSNotification) {
+        print("handleAudioSessionInterruption note.userInfo: \(note.userInfo!)")
+
+        var gotInterrupted : Bool = false
+        var didResume : Bool = false
+        
         if let interrupted : Int = note.userInfo?["AVAudioSessionInterruptionTypeKey"] as? Int {
-            if interrupted == sessionInterrupted {
-                self.playbackDisplayDelegate?.audioSessionInterrupted()
-            }
-            
-            if let resumed : Int = note.userInfo?["AVAudioSessionInterruptionOptionKey"] as? Int  {
-                if resumed == sessionResumed {
-                    self.playbackDisplayDelegate?.audioSessionResumed()
-                }
-            }
+            self.playbackDisplayDelegate?.audioSessionInterrupted()
+            gotInterrupted = interrupted == 1
         }
-        print("handleAudioSessionInterruption: \(note)")
+        
+        
+        if let resumed : Int = note.userInfo?["AVAudioSessionInterruptionOptionKey"] as? Int {
+            didResume = resumed == 1
+            
+            if !playerViewIsVisible && didResume {
+                //                sessionInterruptedWhilePlayerViewNotVisible = true
+                self.player?.play()
+            }
+
+            self.playbackDisplayDelegate?.audioSessionResumed()
+        }
+        
+        print("gotInterrupted: \(gotInterrupted) didResume: \(didResume)")
+        
+        // playing: false gotInterrupted: true didResume: false -- interrupting
+        // playing: false gotInterrupted: false didResume: true -- resuming
+
+    }
+    
+    func handleAudioSessionRouteChange(note : NSNotification) {
+        print("handleAudioSessionRouteChange note.userInfo: \(note.userInfo!)")
+        var playing : Bool?
+        
+        if let player = self.player {
+            playing = Double(player.rate) > 0.0 ? true : false
+        }
+        
+        print("handleAudioSessionRouteChange playing: \(playing)")
+
+        self.playbackDisplayDelegate?.audioSessionRouteChange()
+        
     }
     
     func handleMediaServicesReset() {
@@ -455,7 +523,9 @@ extension PlaybackService : PlaybackTransportDelegate {
         print("PlaybackTransportDelegate scrubbingDidStart")
         self.lastPlaybackRate = self.player?.rate;
         self.player?.pause()
-        self.player?.removeTimeObserver(self.timeObserverToken)
+        if self.timeObserverToken != nil {
+            self.player?.removeTimeObserver(self.timeObserverToken)
+        }
         isPlaying = false
     }
 
@@ -518,8 +588,20 @@ extension PlaybackService : PlaybackTransportDelegate {
             self.player?.volume = Float(1)
         }
     }
-    
-    
+
+    func playerViewDidDisappear() {
+        print("playerViewDidDisappear")
+        self.playerViewIsVisible = false
+        // reset this flag for later
+//        self.sessionInterruptedWhilePlayerViewNotVisible = false
+    }
+
+    func playerViewDidAppear() {
+        print("playerViewDidAppear")
+        self.playerViewIsVisible = true
+        // reset this flag for later
+//        self.sessionInterruptedWhilePlayerViewNotVisible = false
+    }
 
 }
 
