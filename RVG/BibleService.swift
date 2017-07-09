@@ -13,11 +13,10 @@ class BibleService {
     static var bibleService :  BibleService?
     
     internal let bookApi :                                  String = "/v1/books"
-    internal let gospelApi :                                String = "/v1/gospels"
     internal let supportedLanguageIdentifierApi :           String = "/v1/languages/supported"
     internal let allLanguageIdentifierApi :                 String = "/v1/languages"
     internal let mediaChapterApi :                          String = "/v1/books/{bid}/media"
-    internal let mediaGospelApi :                           String = "/v1/gospels/{gid}/media"
+    internal let mediaGospelApi :                           String = "/v1/gospel/media"
     
     let timeoutInterval : TimeInterval = 30
     
@@ -31,212 +30,118 @@ class BibleService {
     }
     
     func getBooks(success: @escaping ([Book]?) -> ()) throws -> () {
-        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
-
-        let reachability = Reachability()!
-        
-        if (reachability.currentReachabilityStatus == .notReachable) {
-            throw SessionError.urlNotReachable
-        }
-        else {
-            if let urlStr = env.baseURL?.absoluteString?.appending(bookApi) {
-                let url = NSURL(string: urlStr)
-                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
-                request.timeoutInterval = timeoutInterval
+        do {
+            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: bookApi, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
                 
-                request.httpMethod = "GET"
+                var parsedObject: BookResponse
                 
-                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
-                print("userAgent: \(Device.userAgent())")
-                print("platform: \(Device.platform())")
-                
-                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
-                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
-                
-                let session = URLSession.shared
-                
-                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
-                    var parsedObject: BookResponse
-                    
-                    do {
-                        if let _ = data {
-                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                            if let jsonObject = json as? [String:Any] {
-                                parsedObject = BookResponse(JSON: jsonObject)!
-                                print(parsedObject)
-                                success(parsedObject.books)
-                            }
-                            
-                        } else {
-                            throw SessionError.jsonParseFailed
+                do {
+                    if let _ = data {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = BookResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.books)
                         }
-                    } catch {
-                        print("error: \(error)")
+                        
+                    } else {
+                        throw SessionError.jsonParseFailed
                     }
-                })
-                
-                task.resume()
+                } catch {
+                    print("error: \(error)")
+                }
             }
+        } catch let error {
+            print("BibleService getBooks error: \(error)")
+            throw error
         }
-        
-    }
-
-    func getGospels(success: @escaping ([Gospel]?) -> ()) throws -> () {
-        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
-        
-        let reachability = Reachability()!
-        
-        if (reachability.currentReachabilityStatus == .notReachable) {
-            throw SessionError.urlNotReachable
-        }
-        else {
-            if let urlStr = env.baseURL?.absoluteString?.appending(gospelApi) {
-                let url = NSURL(string: urlStr)
-                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
-                request.timeoutInterval = timeoutInterval
-                request.httpMethod = "GET"
-                
-                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
-                print("userAgent: \(Device.userAgent())")
-                print("platform: \(Device.platform())")
-                
-                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
-                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
-                
-                let session = URLSession.shared
-                
-                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
-                    var parsedObject: GospelResponse
-                    
-                    do {
-                        if let _ = data {
-                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                            if let jsonObject = json as? [String:Any] {
-                                parsedObject = GospelResponse(JSON: jsonObject)!
-                                print(parsedObject)
-                                success(parsedObject.gospels)
-                            }
-                        } else {
-                            throw SessionError.jsonParseFailed
-                        }
-                    } catch {
-                        print("error: \(error)")
-                    }
-                })
-                
-                task.resume()
-            }
-        }
-        
     }
 
     func getMediaChapters(forBookId bookId: (String), success: @escaping ([MediaChapter]?) -> ()) throws -> () {
-        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
-        
-        let reachability = Reachability()!
-        
-        if (reachability.currentReachabilityStatus == .notReachable) {
-            throw SessionError.urlNotReachable
-        }
-        else {
-            if let urlStr = env.baseURL?.absoluteString?.appending(mediaChapterApi) {
-                let finalUrlStr = urlStr.replacingOccurrences(of: "{bid}", with: bookId, options: .literal, range: nil)
-                print("finalUrl: \(finalUrlStr)")
+        do {
+            let finalPathString = mediaChapterApi.replacingOccurrences(of: "{bid}", with: bookId, options: .literal, range: nil)
+
+            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: finalPathString, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
                 
-                let url = NSURL(string: finalUrlStr)
-                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
-                request.timeoutInterval = timeoutInterval
-                request.httpMethod = "GET"
-                
-                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
-                print("userAgent: \(Device.userAgent())")
-                print("platform: \(Device.platform())")
-                
-                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
-                // request.setValue("es-US", forHTTPHeaderField:"Language-Id")
-                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
-                
-                let session = URLSession.shared
-                
-                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
-                    var parsedObject: MediaChapterResponse
-                    do {
-                        if let _ = data {
-                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                            if let jsonObject = json as? [String:Any] {
-                                parsedObject = MediaChapterResponse(JSON: jsonObject)!
-                                print(parsedObject)
-                                success(parsedObject.media)
-                            }
-                        } else {
-                            throw SessionError.jsonParseFailed
+                var parsedObject: MediaChapterResponse
+                do {
+                    if let _ = data {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = MediaChapterResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.media)
                         }
-                    } catch {
-                        print("error: \(error)")
+                    } else {
+                        throw SessionError.jsonParseFailed
                     }
-                })
-                
-                task.resume()
+                } catch {
+                    print("error: \(error)")
+                }
             }
+        } catch let error {
+            print("BibleService getMediaChapters error: \(error)")
+            throw error
         }
-        
     }
     
     func getMediaGospels(forGospelId gospelId: (String), success: @escaping ([MediaGospel]?) -> ()) throws -> () {
-        let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
-        
-        let reachability = Reachability()!
-        
-        if (reachability.currentReachabilityStatus == .notReachable) {
-            throw SessionError.urlNotReachable
-        }
-        else {
-            if let urlStr = env.baseURL?.absoluteString?.appending(mediaChapterApi) {
-                let finalUrlStr = urlStr.replacingOccurrences(of: "{gid}", with: gospelId, options: .literal, range: nil)
-                print("finalUrl: \(finalUrlStr)")
+        do {
+            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: mediaGospelApi, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
                 
-                let url = NSURL(string: finalUrlStr)
-                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
-                request.timeoutInterval = timeoutInterval
-                request.httpMethod = "GET"
-                
-                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
-                print("userAgent: \(Device.userAgent())")
-                print("platform: \(Device.platform())")
-                
-                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
-                // request.setValue("es-US", forHTTPHeaderField:"Language-Id")
-                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
-                
-                let session = URLSession.shared
-                
-                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
-                    var parsedObject: MediaGospelResponse
-                    do {
-                        if let _ = data {
-                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                            if let jsonObject = json as? [String:Any] {
-                                parsedObject = MediaGospelResponse(JSON: jsonObject)!
-                                print(parsedObject)
-                                success(parsedObject.media)
-                            }
-                        } else {
-                            throw SessionError.jsonParseFailed
+                var parsedObject: MediaGospelResponse
+                do {
+                    if let _ = data {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = MediaGospelResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.media)
                         }
-                        
-                    } catch {
-                        print("error: \(error)")
+                    } else {
+                        throw SessionError.jsonParseFailed
                     }
-                })
-                
-                task.resume()
+                } catch {
+                    print("error: \(error)")
+                }
             }
+        } catch let error {
+            print("BibleService getMediaGospels error: \(error)")
+            throw error
         }
         
     }
 
     
     func getSupportedLanguageIdentifiers(success: @escaping ([LanguageIdentifier]?) -> ()) throws -> () {
+        
+        do {
+            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: supportedLanguageIdentifierApi, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
+                
+                var parsedObject: LanguageIdentifierResponse
+                do {
+                    if let _ = data {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = LanguageIdentifierResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.languageIdentifiers)
+                        }
+                    } else {
+                        throw SessionError.jsonParseFailed
+                    }
+                } catch {
+                    print("error: \(error)")
+                }
+            }
+        } catch let error {
+            print("BibleService getMediaGospels error: \(error)")
+            throw error
+        }
+    }
+    
+    
+    private func makeRequest(method : String, endpointPath : String, languageIdentifier : String?, success: @escaping (Data?, URLResponse?, Error?) -> ()) throws -> () {
         let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()
         
         let reachability = Reachability()!
@@ -245,45 +150,25 @@ class BibleService {
             throw SessionError.urlNotReachable
         }
         else {
-            if let urlStr = env.baseURL?.absoluteString?.appending(supportedLanguageIdentifierApi) {
-                let finalUrlStr = urlStr
-                print("finalUrl: \(finalUrlStr)")
-                
-                let url = NSURL(string: finalUrlStr)
-                let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
-                request.timeoutInterval = timeoutInterval
-                request.httpMethod = "GET"
-                
-                print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
-                print("userAgent: \(Device.userAgent())")
-                print("platform: \(Device.platform())")
-                
-                request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
-                // request.setValue("es-US", forHTTPHeaderField:"Language-Id")
-                request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
-                
-                let session = URLSession.shared
-                
-                let task = session.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
-                    var parsedObject: LanguageIdentifierResponse
-                    do {
-                        if let _ = data {
-                            let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                            if let jsonObject = json as? [String:Any] {
-                                parsedObject = LanguageIdentifierResponse(JSON: jsonObject)!
-                                print(parsedObject)
-                                success(parsedObject.languageIdentifiers)
-                            }
-                        } else {
-                            throw SessionError.jsonParseFailed
+                        if let urlStr = env.baseURL?.absoluteString?.appending(endpointPath) {
+                            let url = NSURL(string: urlStr)
+                            let request: NSMutableURLRequest = NSMutableURLRequest(url: url! as URL)
+                            request.httpMethod = method
+                            request.timeoutInterval = timeoutInterval
+                            
+                            print("preferredLanguageIdentifier: \(Device.preferredLanguageIdentifier())")
+                            print("userAgent: \(Device.userAgent())")
+                            print("platform: \(Device.platform())")
+            
+                            request.setValue(Device.preferredLanguageIdentifier(), forHTTPHeaderField:"Language-Id")
+                            request.setValue(Device.userAgent(), forHTTPHeaderField:"User-Agent")
+            
+                            let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: { (data, urlResponse, error) in
+                                success(data, urlResponse, error)
+                            })
+            
+                            task.resume()
                         }
-                    } catch {
-                        print("error: \(error)")
-                    }
-                })
-                
-                task.resume()
-            }
         }
         
     }
