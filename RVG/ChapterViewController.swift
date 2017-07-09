@@ -6,7 +6,7 @@
 import UIKit
 import MBProgressHUD
 
-class SongsViewController: BaseClass {
+class ChapterViewController: BaseClass {
     @IBOutlet var songsBarRightButton: UIBarButtonItem!
     
     var bookId : String? = nil
@@ -40,7 +40,7 @@ class SongsViewController: BaseClass {
             print("failed getting media")
         }
         
-        tableVw.register(UINib(nibName: "SongTableViewCell", bundle: nil), forCellReuseIdentifier: "SongTableViewCellID")
+        tableVw.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
 
     }
     
@@ -74,13 +74,13 @@ class SongsViewController: BaseClass {
     
 }
 
-extension SongsViewController: UITableViewDelegate,UITableViewDataSource {
+extension ChapterViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.media.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SongTableViewCellID") as? SongTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell
         cell?.selectionStyle = .none
         cell?.songLabel?.text = self.media[indexPath.row].localizedName!
         

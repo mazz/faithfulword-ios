@@ -20,8 +20,8 @@
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
 		4CF401EB1ED391F400632272 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401EA1ED391F400632272 /* Device.swift */; };
-		68121CB21ED7D12800273342 /* SongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68121CB01ED7D12800273342 /* SongTableViewCell.swift */; };
-		68121CB31ED7D12800273342 /* SongTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68121CB11ED7D12800273342 /* SongTableViewCell.xib */; };
+		68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */; };
+		68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */; };
 		681E11791ED1098600B028DD /* BibleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E11781ED1098600B028DD /* BibleService.swift */; };
 		681E117B1ED110CB00B028DD /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117A1ED110CB00B028DD /* Environment.swift */; };
 		681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117C1ED1141100B028DD /* EnvironmentService.swift */; };
@@ -50,12 +50,16 @@
 		68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */; };
 		68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE411EBC143400FCD897 /* UIView+Debug.m */; };
 		68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE441EBD622300FCD897 /* CurrencyField.swift */; };
+		68F0F3F71F11E9A900718AFF /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3F61F11E9A900718AFF /* Music.swift */; };
+		68F0F3F91F11EC1B00718AFF /* MediaMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3F81F11EC1B00718AFF /* MediaMusic.swift */; };
+		68F0F3FB1F11EC7B00718AFF /* MediaMusicResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */; };
+		68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */; };
 		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
 		701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */; };
 		701F01551E65DA2E0010B320 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* Reachability.swift */; };
 		701F01571E65DA440010B320 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01561E65DA440010B320 /* BaseClass.swift */; };
 		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
-		703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* SongsViewController.swift */; };
+		703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* ChapterViewController.swift */; };
 		709234321E673BDE001F1621 /* classsDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709234311E673BDE001F1621 /* classsDownload.swift */; };
 		70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */; };
 		70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */; };
@@ -107,8 +111,8 @@
 		4CF401EA1ED391F400632272 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.debug.xcconfig"; sourceTree = "<group>"; };
 		5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.release.xcconfig"; sourceTree = "<group>"; };
-		68121CB01ED7D12800273342 /* SongTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongTableViewCell.swift; sourceTree = "<group>"; };
-		68121CB11ED7D12800273342 /* SongTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongTableViewCell.xib; sourceTree = "<group>"; };
+		68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterTableViewCell.swift; sourceTree = "<group>"; };
+		68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChapterTableViewCell.xib; sourceTree = "<group>"; };
 		681E11781ED1098600B028DD /* BibleService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BibleService.swift; sourceTree = "<group>"; };
 		681E117A1ED110CB00B028DD /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		681E117C1ED1141100B028DD /* EnvironmentService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentService.swift; sourceTree = "<group>"; };
@@ -155,12 +159,16 @@
 		68E2BE401EBC143400FCD897 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
 		68E2BE411EBC143400FCD897 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
 		68E2BE441EBD622300FCD897 /* CurrencyField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyField.swift; sourceTree = "<group>"; };
+		68F0F3F61F11E9A900718AFF /* Music.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Music.swift; sourceTree = "<group>"; };
+		68F0F3F81F11EC1B00718AFF /* MediaMusic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusic.swift; sourceTree = "<group>"; };
+		68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicResponse.swift; sourceTree = "<group>"; };
+		68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicResponse.swift; sourceTree = "<group>"; };
 		701F014F1E65DA000010B320 /* LoadingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceSingleTon.swift; sourceTree = "<group>"; };
 		701F01541E65DA2E0010B320 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BaseClass.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
-		703D12B81E67156D0093E1AA /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SongsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		703D12B81E67156D0093E1AA /* ChapterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ChapterViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		704CCFB68F067F176F09CA37 /* Pods-RVGUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.release.xcconfig"; sourceTree = "<group>"; };
 		708F578A1E7482B10011639A /* RVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RVG.entitlements; sourceTree = "<group>"; };
 		709234311E673BDE001F1621 /* classsDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classsDownload.swift; sourceTree = "<group>"; };
@@ -245,8 +253,8 @@
 			isa = PBXGroup;
 			children = (
 				68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */,
-				68121CB01ED7D12800273342 /* SongTableViewCell.swift */,
-				68121CB11ED7D12800273342 /* SongTableViewCell.xib */,
+				68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */,
+				68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */,
 				4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */,
 				4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */,
 				68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */,
@@ -344,7 +352,7 @@
 				686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */,
 				686233EA1EFF71FC0046D952 /* PlayerViewController.swift */,
 				686233EB1EFF71FC0046D952 /* PlaybackService.swift */,
-				703D12B81E67156D0093E1AA /* SongsViewController.swift */,
+				703D12B81E67156D0093E1AA /* ChapterViewController.swift */,
 				68BE69D31EEA3FBF0082956D /* GospelViewController.swift */,
 				68BE69D51EEA57380082956D /* LanguageViewController.swift */,
 				70CD20631E6479A800AF619F /* MainViewController.swift */,
@@ -376,13 +384,17 @@
 		70CD20971E64845A00AF619F /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				681E117E1ED138DA00B028DD /* Book.swift */,
 				681E11801ED13B1400B028DD /* BookResponse.swift */,
 				68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */,
 				68BE69D11EEA3C600082956D /* GospelResponse.swift */,
 				68BE69CD1EEA35240082956D /* MediaGospelResponse.swift */,
 				4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */,
 				689A05441ED27A9E00D3232D /* Bible.swift */,
-				681E117E1ED138DA00B028DD /* Book.swift */,
+				68F0F3F61F11E9A900718AFF /* Music.swift */,
+				68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */,
+				68F0F3F81F11EC1B00718AFF /* MediaMusic.swift */,
+				68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */,
 				68BE69CF1EEA3B730082956D /* Gospel.swift */,
 				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
 				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
@@ -589,7 +601,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				68121CB31ED7D12800273342 /* SongTableViewCell.xib in Resources */,
+				68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */,
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
@@ -768,6 +780,7 @@
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
 				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
+				68F0F3F71F11E9A900718AFF /* Music.swift in Sources */,
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
@@ -785,7 +798,7 @@
 				686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */,
 				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
-				68121CB21ED7D12800273342 /* SongTableViewCell.swift in Sources */,
+				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				68BE69D01EEA3B730082956D /* Gospel.swift in Sources */,
@@ -794,7 +807,8 @@
 				681E117B1ED110CB00B028DD /* Environment.swift in Sources */,
 				68BE69D61EEA57380082956D /* LanguageViewController.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
-				703D12B91E67156D0093E1AA /* SongsViewController.swift in Sources */,
+				703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */,
+				68F0F3FB1F11EC7B00718AFF /* MediaMusicResponse.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
@@ -805,6 +819,8 @@
 				681E11791ED1098600B028DD /* BibleService.swift in Sources */,
 				701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
+				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
+				68F0F3F91F11EC1B00718AFF /* MediaMusic.swift in Sources */,
 				6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

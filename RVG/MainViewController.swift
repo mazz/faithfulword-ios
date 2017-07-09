@@ -239,6 +239,10 @@ extension MainViewController: UITableViewDelegate,UITableViewDataSource {
             let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
+        if indexPath.row == 1 {
+            let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
         else if indexPath.row == 2 {
             shareTextButton()
         }
@@ -296,7 +300,7 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
 //        if bookIds.count > 0 {
             if reachability.currentReachabilityStatus != .notReachable {
                 if let bookId = bookIds[indexPath.row].bookId {
-                    let vc = self.pushVc(strBdName: "Main", vcName: "SongsViewController") as? SongsViewController
+                    let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
                     //            vc?.folderId = id
                     vc?.bookId = bookId
                     self.navigationController?.pushViewController(vc!, animated: true)

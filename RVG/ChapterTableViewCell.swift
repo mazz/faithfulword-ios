@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SongTableViewCell: UITableViewCell {
+class ChapterTableViewCell: UITableViewCell {
 
     @IBOutlet weak var songLabel: UILabel!
     

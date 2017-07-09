@@ -17,6 +17,8 @@ class BibleService {
     internal let allLanguageIdentifierApi :                 String = "/v1/languages"
     internal let mediaChapterApi :                          String = "/v1/books/{bid}/media"
     internal let mediaGospelApi :                           String = "/v1/gospel/media"
+    internal let musicApi :                                 String = "/v1/music"
+    internal let mediaMusicApi :                            String = "/v1/music/{mid}/media"
     
     let timeoutInterval : TimeInterval = 30
     
@@ -140,6 +142,61 @@ class BibleService {
         }
     }
     
+    func getMusic(success: @escaping ([Music]?) -> ()) throws -> () {
+        
+        do {
+            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: musicApi, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
+                
+                var parsedObject: MusicResponse
+                do {
+                    if let _ = data {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = MusicResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.music)
+                        }
+                    } else {
+                        throw SessionError.jsonParseFailed
+                    }
+                } catch {
+                    print("error: \(error)")
+                }
+            }
+        } catch let error {
+            print("BibleService getMusic error: \(error)")
+            throw error
+        }
+    }
+    
+    func getMediaMusic(forMusicId musicId: (String), success: @escaping ([MediaMusic]?) -> ()) throws -> () {
+        do {
+            let finalPathString = mediaMusicApi.replacingOccurrences(of: "{mid}", with: musicId, options: .literal, range: nil)
+            
+            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: finalPathString, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
+                
+                var parsedObject: MediaMusicResponse
+                do {
+                    if let _ = data {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
+                        if let jsonObject = json as? [String:Any] {
+                            parsedObject = MediaMusicResponse(JSON: jsonObject)!
+                            print(parsedObject)
+                            success(parsedObject.media)
+                        }
+                    } else {
+                        throw SessionError.jsonParseFailed
+                    }
+                } catch {
+                    print("error: \(error)")
+                }
+            }
+        } catch let error {
+            print("BibleService getMediaMusic error: \(error)")
+            throw error
+        }
+    }
+
     
     private func makeRequest(method : String, endpointPath : String, languageIdentifier : String?, success: @escaping (Data?, URLResponse?, Error?) -> ()) throws -> () {
         let env: Environment = EnvironmentService.sharedInstance().connectedEnvironment()

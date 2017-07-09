@@ -44,7 +44,7 @@ class GospelViewController: UIViewController {
             print("failed getting media")
         }
         
-        tableView.register(UINib(nibName: "SongTableViewCell", bundle: nil), forCellReuseIdentifier: "SongTableViewCellID")
+        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "SongTableViewCellID")
         
     }
     
