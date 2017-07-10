@@ -48,6 +48,9 @@
 		68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BE69D71EEBBB5B0082956D /* SafariServices.framework */; };
 		68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */; };
 		68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */; };
+		68BF02D41F11FC4000D7F2CA /* MusicMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D31F11FC4000D7F2CA /* MusicMainViewController.swift */; };
+		68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */; };
+		68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */; };
 		68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE411EBC143400FCD897 /* UIView+Debug.m */; };
 		68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE441EBD622300FCD897 /* CurrencyField.swift */; };
 		68F0F3F71F11E9A900718AFF /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3F61F11E9A900718AFF /* Music.swift */; };
@@ -155,6 +158,9 @@
 		68BE69E41EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifierResponse.swift; sourceTree = "<group>"; };
 		68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifier.swift; sourceTree = "<group>"; };
+		68BF02D31F11FC4000D7F2CA /* MusicMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicMainViewController.swift; sourceTree = "<group>"; };
+		68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTableViewCell.swift; sourceTree = "<group>"; };
+		68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MusicTableViewCell.xib; sourceTree = "<group>"; };
 		68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RVG-Bridging-Header.h"; sourceTree = "<group>"; };
 		68E2BE401EBC143400FCD897 /* UIView+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Debug.h"; sourceTree = "<group>"; };
 		68E2BE411EBC143400FCD897 /* UIView+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Debug.m"; sourceTree = "<group>"; };
@@ -261,6 +267,8 @@
 				687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */,
 				687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */,
 				4CDD655A1EEB3DA400C59DD5 /* LoopView.swift */,
+				68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */,
+				68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -348,6 +356,7 @@
 			isa = PBXGroup;
 			children = (
 				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
+				68BF02D31F11FC4000D7F2CA /* MusicMainViewController.swift */,
 				70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */,
 				686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */,
 				686233EA1EFF71FC0046D952 /* PlayerViewController.swift */,
@@ -606,6 +615,7 @@
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
+				68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
@@ -805,6 +815,7 @@
 				68BE69CE1EEA35240082956D /* MediaGospelResponse.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
 				681E117B1ED110CB00B028DD /* Environment.swift in Sources */,
+				68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */,
 				68BE69D61EEA57380082956D /* LanguageViewController.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
 				703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */,
@@ -812,6 +823,7 @@
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
+				68BF02D41F11FC4000D7F2CA /* MusicMainViewController.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,

@@ -986,6 +986,52 @@ Thank you!</string>
             </objects>
             <point key="canvasLocation" x="4138" y="46"/>
         </scene>
+        <!--Music-->
+        <scene sceneID="X1h-Jk-gsQ">
+            <objects>
+                <viewController storyboardIdentifier="MusicMainViewController" title="Music" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lx1-zk-lkF" customClass="MusicMainViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jJQ-0y-NHJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="nzJ-cs-7Wa"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lwi-m0-d7y">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash-screen" translatesAutoresizingMaskIntoConstraints="NO" id="a4e-ES-JPh">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qFp-cM-nsF">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="lx1-zk-lkF" id="Fk0-Pt-Ds2"/>
+                                    <outlet property="delegate" destination="lx1-zk-lkF" id="ZeD-em-gEE"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="nzJ-cs-7Wa" firstAttribute="top" secondItem="qFp-cM-nsF" secondAttribute="bottom" id="Quw-PC-8Gv"/>
+                            <constraint firstAttribute="trailing" secondItem="a4e-ES-JPh" secondAttribute="trailing" id="SQ5-0Z-PFN"/>
+                            <constraint firstItem="a4e-ES-JPh" firstAttribute="leading" secondItem="lwi-m0-d7y" secondAttribute="leading" id="acr-8h-u9W"/>
+                            <constraint firstItem="a4e-ES-JPh" firstAttribute="top" secondItem="lwi-m0-d7y" secondAttribute="top" id="fsD-Nk-W0I"/>
+                            <constraint firstItem="qFp-cM-nsF" firstAttribute="top" secondItem="lwi-m0-d7y" secondAttribute="top" id="guy-sD-TcA"/>
+                            <constraint firstItem="qFp-cM-nsF" firstAttribute="leading" secondItem="lwi-m0-d7y" secondAttribute="leading" id="iEc-cp-33D"/>
+                            <constraint firstItem="nzJ-cs-7Wa" firstAttribute="top" secondItem="a4e-ES-JPh" secondAttribute="bottom" id="lY0-aR-wJC"/>
+                            <constraint firstAttribute="trailing" secondItem="qFp-cM-nsF" secondAttribute="trailing" id="obq-TX-xRZ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="musicBarRightButton" destination="3wH-ga-xJ8" id="Ubu-D1-Kna"/>
+                        <outlet property="tableView" destination="qFp-cM-nsF" id="Qqg-th-Afp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dHt-wK-bHY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem image="dots" id="3wH-ga-xJ8"/>
+            </objects>
+            <point key="canvasLocation" x="4873" y="-90"/>
+        </scene>
     </scenes>
     <resources>
         <image name="DisplayIcon" width="256" height="256"/>

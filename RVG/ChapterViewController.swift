@@ -36,8 +36,12 @@ class ChapterViewController: BaseClass {
                 })
             }
             
-        } catch {
-            print("failed getting media")
+        } catch let error {
+            print("failed getting media: \(error)")
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.view, animated: true)
+                self.tableVw.reloadData()
+            }
         }
         
         tableVw.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
@@ -74,7 +78,7 @@ class ChapterViewController: BaseClass {
     
 }
 
-extension ChapterViewController: UITableViewDelegate,UITableViewDataSource {
+extension ChapterViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.media.count
     }
