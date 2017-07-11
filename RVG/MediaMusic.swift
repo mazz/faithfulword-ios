@@ -9,10 +9,11 @@
 import Foundation
 import ObjectMapper
 
-class MediaMusic : Mappable {
+class MediaMusic : Mappable, Playable {
     var localizedName : String?
     var url : String?
     var presenterName : String?
+    var sourceMaterial: String?
     
     required init?(map: Map) {
         
@@ -22,6 +23,7 @@ class MediaMusic : Mappable {
         localizedName  <- map["localizedName"]
         url  <- map["url"]
         presenterName  <- map["presenterName"]
+        sourceMaterial  <- map["sourceMaterial"]
     }
     
 }

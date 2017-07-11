@@ -9,7 +9,7 @@
 import Foundation
 import ObjectMapper
 
-class MediaChapter : Mappable {
+class MediaChapter : Mappable, Playable {
     var localizedName : String?
     var url : String?
     var presenterName : String?

@@ -237,7 +237,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             // no action, just close menu
         }
         if indexPath.row == 1 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "MusicMainViewController")
+            let vc = self.pushVc(strBdName: "Main", vcName: "MusicViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 2 {
@@ -298,20 +298,16 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let reachability = Reachability()!
         
-//        if bookIds.count > 0 {
-            if reachability.currentReachabilityStatus != .notReachable {
-                if let bookId = bookIds[indexPath.row].bookId {
-                    let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
-                    //            vc?.folderId = id
-                    vc?.bookId = bookId
-                    self.navigationController?.pushViewController(vc!, animated: true)
-                }
-            } else {
-                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+        if reachability.currentReachabilityStatus != .notReachable {
+            if let bookId = bookIds[indexPath.row].bookId {
+                let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
+                //            vc?.folderId = id
+                vc?.bookId = bookId
+                self.navigationController?.pushViewController(vc!, animated: true)
             }
-//        } else {
-//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
-//        }
+        } else {
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+        }
         
     }
 }

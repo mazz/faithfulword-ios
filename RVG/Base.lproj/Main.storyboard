@@ -989,7 +989,7 @@ Thank you!</string>
         <!--Music-->
         <scene sceneID="X1h-Jk-gsQ">
             <objects>
-                <viewController storyboardIdentifier="MusicMainViewController" title="Music" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lx1-zk-lkF" customClass="MusicMainViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MusicViewController" title="Music" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lx1-zk-lkF" customClass="MusicViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jJQ-0y-NHJ"/>
                         <viewControllerLayoutGuide type="bottom" id="nzJ-cs-7Wa"/>
@@ -1031,6 +1031,56 @@ Thank you!</string>
                 <barButtonItem image="dots" id="3wH-ga-xJ8"/>
             </objects>
             <point key="canvasLocation" x="4873" y="-90"/>
+        </scene>
+        <!--Music-->
+        <scene sceneID="mox-d8-9dq">
+            <objects>
+                <viewController storyboardIdentifier="MediaMusicViewController" title="Music" useStoryboardIdentifierAsRestorationIdentifier="YES" id="b8S-DK-hav" customClass="MediaMusicViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Pgd-II-7P4"/>
+                        <viewControllerLayoutGuide type="bottom" id="dbc-kp-iFo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="sge-ue-YCU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash-screen" translatesAutoresizingMaskIntoConstraints="NO" id="7Cd-9S-AwN">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ECt-xC-HZ5">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="b8S-DK-hav" id="5YY-k4-KCz"/>
+                                    <outlet property="delegate" destination="b8S-DK-hav" id="0J1-d7-wP2"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ECt-xC-HZ5" firstAttribute="top" secondItem="sge-ue-YCU" secondAttribute="top" id="0T7-bx-98j"/>
+                            <constraint firstItem="dbc-kp-iFo" firstAttribute="top" secondItem="ECt-xC-HZ5" secondAttribute="bottom" id="4mu-EM-EN3"/>
+                            <constraint firstItem="dbc-kp-iFo" firstAttribute="top" secondItem="7Cd-9S-AwN" secondAttribute="bottom" id="6hG-b2-k5H"/>
+                            <constraint firstAttribute="trailing" secondItem="ECt-xC-HZ5" secondAttribute="trailing" id="6zS-ha-seg"/>
+                            <constraint firstAttribute="trailing" secondItem="7Cd-9S-AwN" secondAttribute="trailing" id="7k0-Dh-ytE"/>
+                            <constraint firstItem="ECt-xC-HZ5" firstAttribute="leading" secondItem="sge-ue-YCU" secondAttribute="leading" id="CWe-9a-vPy"/>
+                            <constraint firstItem="7Cd-9S-AwN" firstAttribute="top" secondItem="sge-ue-YCU" secondAttribute="top" id="iI8-29-R2N"/>
+                            <constraint firstItem="7Cd-9S-AwN" firstAttribute="leading" secondItem="sge-ue-YCU" secondAttribute="leading" id="let-qp-MUh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="musicBarRightButton" destination="qOh-GE-AtN" id="xHe-5w-5oO"/>
+                        <outlet property="tableView" destination="ECt-xC-HZ5" id="z6H-YC-Grn"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UCd-u0-78g" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem image="dots" id="qOh-GE-AtN">
+                    <connections>
+                        <action selector="showPlayer:" destination="b8S-DK-hav" id="YVm-pX-Biv"/>
+                    </connections>
+                </barButtonItem>
+            </objects>
+            <point key="canvasLocation" x="5530" y="-90"/>
         </scene>
     </scenes>
     <resources>

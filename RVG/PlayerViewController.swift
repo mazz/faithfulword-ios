@@ -62,7 +62,7 @@ class PlayerViewController : BaseClass {
         
             let mediaIndex = PlaybackService.sharedInstance().mediaIndex!
 
-            if let media : [MediaChapter] = PlaybackService.sharedInstance().media {
+            if let media : [Playable] = PlaybackService.sharedInstance().media {
                 if let urls : [URL] = media.map({ URL(string: $0.url!)! }) {
                     
                     // only show spinner if playback service is not currently playing

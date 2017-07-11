@@ -35,8 +35,10 @@
 		687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6D81EC014B2002EDCC3 /* InfoPlist.strings */; };
 		687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */; };
 		687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */; };
+		689880511F147B5900CC2BC5 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689880501F147B5900CC2BC5 /* Playable.swift */; };
 		6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */; };
 		689A05451ED27A9E00D3232D /* Bible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A05441ED27A9E00D3232D /* Bible.swift */; };
+		689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */; };
 		68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */; };
 		68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */; };
 		68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69CB1EEA33C50082956D /* MediaGospel.swift */; };
@@ -48,7 +50,7 @@
 		68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BE69D71EEBBB5B0082956D /* SafariServices.framework */; };
 		68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */; };
 		68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */; };
-		68BF02D41F11FC4000D7F2CA /* MusicMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D31F11FC4000D7F2CA /* MusicMainViewController.swift */; };
+		68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */; };
 		68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */; };
 		68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */; };
 		68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE411EBC143400FCD897 /* UIView+Debug.m */; };
@@ -132,9 +134,11 @@
 		687BF6D91EC014B2002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuFooterTableViewCell.swift; sourceTree = "<group>"; };
 		687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuFooterTableViewCell.xib; sourceTree = "<group>"; };
+		689880501F147B5900CC2BC5 /* Playable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherLanguagesViewController.swift; sourceTree = "<group>"; };
 		689A05441ED27A9E00D3232D /* Bible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bible.swift; sourceTree = "<group>"; };
 		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DonateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicViewController.swift; sourceTree = "<group>"; };
 		68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuTableViewCell.swift; sourceTree = "<group>"; };
 		68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuTableViewCell.xib; sourceTree = "<group>"; };
 		68BE69CB1EEA33C50082956D /* MediaGospel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaGospel.swift; sourceTree = "<group>"; };
@@ -158,7 +162,7 @@
 		68BE69E41EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifierResponse.swift; sourceTree = "<group>"; };
 		68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifier.swift; sourceTree = "<group>"; };
-		68BF02D31F11FC4000D7F2CA /* MusicMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicMainViewController.swift; sourceTree = "<group>"; };
+		68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTableViewCell.swift; sourceTree = "<group>"; };
 		68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MusicTableViewCell.xib; sourceTree = "<group>"; };
 		68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RVG-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -356,7 +360,8 @@
 			isa = PBXGroup;
 			children = (
 				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
-				68BF02D31F11FC4000D7F2CA /* MusicMainViewController.swift */,
+				68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */,
+				689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */,
 				70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */,
 				686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */,
 				686233EA1EFF71FC0046D952 /* PlayerViewController.swift */,
@@ -414,6 +419,7 @@
 				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
 				4CF401EA1ED391F400632272 /* Device.swift */,
 				4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */,
+				689880501F147B5900CC2BC5 /* Playable.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -820,10 +826,12 @@
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
 				703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */,
 				68F0F3FB1F11EC7B00718AFF /* MediaMusicResponse.swift in Sources */,
+				689880511F147B5900CC2BC5 /* Playable.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
-				68BF02D41F11FC4000D7F2CA /* MusicMainViewController.swift in Sources */,
+				68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */,
+				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,

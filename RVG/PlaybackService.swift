@@ -36,7 +36,7 @@ private var playerItemStatusContext = 0
 class PlaybackService : NSObject {
     static var playbackService :  PlaybackService?
 
-    var media : [MediaChapter]?
+    var media : [Playable]?
     var mediaIndex : Int?
     
     var playbackRepeat : Bool = false
