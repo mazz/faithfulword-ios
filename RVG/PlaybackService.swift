@@ -9,6 +9,12 @@
 import Foundation
 import AVFoundation
 
+struct PausedState {
+    let pausedTime: TimeInterval
+    let duration: TimeInterval
+    let displayedTitle: String
+}
+
 protocol PlaybackDisplayDelegate : class {
 //    var trackCount : Int? { get }
 //    var currentIndex : Int? { get }
@@ -54,11 +60,12 @@ class PlaybackService : NSObject {
     var isPlaying : Bool?
     var avoidRestartOnLoad : Bool?
     
+    var pausedState: PausedState?
+    
     /*  we need to watch visibility state of the playbackDisplayDelegate to workaround a problem where
      if the playerviewcontroller is not modal while the user interrupts the audio session, and it is playing
      playback will not resume on audio session resume (AVAudioSessionInterruptionTypeKey: 0) */
     var playerViewIsVisible : Bool = false
-//    var sessionInterruptedWhilePlayerViewNotVisible : Bool = false
     
     weak var playbackDisplayDelegate : PlaybackDisplayDelegate?
     weak var playbackModeDelegate : PlaybackModeDelegate?
@@ -92,6 +99,7 @@ class PlaybackService : NSObject {
             
             // avoidRestartOnLoad always false on first playback
             playbackService?.avoidRestartOnLoad = false
+            playbackService?.pausedState = nil// PausedState(pausedTime: 0.0, displayedTitle: "")
         }
         return playbackService!
     }

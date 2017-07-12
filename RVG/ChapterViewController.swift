@@ -51,13 +51,13 @@ class ChapterViewController: BaseClass {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        
         if (PlaybackService.sharedInstance().player != nil) {
             self.navigationItem.rightBarButtonItem = self.songsBarRightButton
         } else {
             self.navigationItem.rightBarButtonItem = nil
         }
     }
+    
     @IBAction func showPlayer(_ sender: AnyObject) {
         PlaybackService.sharedInstance().avoidRestartOnLoad = true
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
@@ -66,16 +66,7 @@ class ChapterViewController: BaseClass {
             self.present(viewController, animated: true, completion: { _ in })
         }
     }
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
 }
 
 extension ChapterViewController: UITableViewDelegate, UITableViewDataSource {

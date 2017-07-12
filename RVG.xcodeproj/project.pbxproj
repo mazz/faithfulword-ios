@@ -36,6 +36,8 @@
 		687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */; };
 		687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */; };
 		689880511F147B5900CC2BC5 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689880501F147B5900CC2BC5 /* Playable.swift */; };
+		689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */; };
+		689880551F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */; };
 		6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */; };
 		689A05451ED27A9E00D3232D /* Bible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A05441ED27A9E00D3232D /* Bible.swift */; };
 		689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */; };
@@ -135,6 +137,8 @@
 		687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuFooterTableViewCell.swift; sourceTree = "<group>"; };
 		687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuFooterTableViewCell.xib; sourceTree = "<group>"; };
 		689880501F147B5900CC2BC5 /* Playable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
+		689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicTableViewCell.swift; sourceTree = "<group>"; };
+		689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaMusicTableViewCell.xib; sourceTree = "<group>"; };
 		6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherLanguagesViewController.swift; sourceTree = "<group>"; };
 		689A05441ED27A9E00D3232D /* Bible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bible.swift; sourceTree = "<group>"; };
 		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DonateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -263,6 +267,8 @@
 			isa = PBXGroup;
 			children = (
 				68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */,
+				689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */,
+				689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */,
 				68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */,
 				68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */,
 				4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */,
@@ -616,6 +622,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				689880551F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib in Resources */,
 				68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */,
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
@@ -831,6 +838,7 @@
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
 				68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */,
+				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,

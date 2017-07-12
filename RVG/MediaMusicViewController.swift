@@ -48,25 +48,28 @@ class MediaMusicViewController: BaseClass {
                 self.tableView.reloadData()
             }
         }
-        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
+//        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
         tableView.register(UINib(nibName: "MediaMusicTableViewCell", bundle: nil), forCellReuseIdentifier: "MediaMusicTableViewCellID")
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if (PlaybackService.sharedInstance().player != nil) {
+            self.navigationItem.rightBarButtonItem = self.musicBarRightButton
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
     }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func showPlayer(_ sender: AnyObject) {
+        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
+            
+            viewController.modalTransitionStyle = .crossDissolve
+            self.present(viewController, animated: true, completion: { _ in })
+        }
     }
-    */
 
 }
 
@@ -76,7 +79,7 @@ extension MediaMusicViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MediaMusicTableViewCellID") as? MediaMusicTableViewCell
         cell?.selectionStyle = .none
         cell?.songLabel?.text = self.music[indexPath.row].localizedName!
         

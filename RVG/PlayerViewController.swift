@@ -60,23 +60,29 @@ class PlayerViewController : BaseClass {
 
         emptyUIState()
         
-            let mediaIndex = PlaybackService.sharedInstance().mediaIndex!
+        let mediaIndex = PlaybackService.sharedInstance().mediaIndex!
 
-            if let media : [Playable] = PlaybackService.sharedInstance().media {
-                if let urls : [URL] = media.map({ URL(string: $0.url!)! }) {
-                    
-                    // only show spinner if playback service is not currently playing
-                    if (PlaybackService.sharedInstance().player == nil) {
-                        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
-                        loadingNotification.mode = MBProgressHUDMode.indeterminate
-                    }
-
-                    PlaybackService.sharedInstance().prepareToPlayUrls(urls: urls, playIndex: mediaIndex)
-                    //            self.playerController?.playbackDisplayDelegate = self
+        if let media : [Playable] = PlaybackService.sharedInstance().media {
+            if let urls : [URL] = media.map({ URL(string: $0.url!)! }) {
+                
+                // only show spinner if playback service is not currently playing
+                if (PlaybackService.sharedInstance().player == nil) {
+                    let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+                    loadingNotification.mode = MBProgressHUDMode.indeterminate
                 }
-            }
 
-        if PlaybackService.sharedInstance().isPlaying! {
+                PlaybackService.sharedInstance().prepareToPlayUrls(urls: urls, playIndex: mediaIndex)
+                //            self.playerController?.playbackDisplayDelegate = self
+            }
+        }
+
+        // if we were paused and returned via music icon, restore UI
+        if let pausedState = PlaybackService.sharedInstance().pausedState {
+            self.contentTitleLabel.text = pausedState.displayedTitle
+            setCurrentTime(time:pausedState.pausedTime, duration: pausedState.duration)
+        }
+        
+        if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
         } else {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
@@ -167,11 +173,17 @@ class PlayerViewController : BaseClass {
                 self.playbackTransportDelegate?.pause()
                 playerIsPlaying = false
                 sessionIsResuming = false
+
+                if let titleText = self.contentTitleLabel.text {
+                    PlaybackService.sharedInstance().pausedState = PausedState(pausedTime: TimeInterval(scrubberSlider.value), duration: TimeInterval(scrubberSlider.maximumValue), displayedTitle: titleText)
+                }
             } else {
                 self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
                 self.playbackTransportDelegate?.play()
                 playerIsPlaying = true
                 sessionIsResuming = false
+                
+                PlaybackService.sharedInstance().pausedState = nil
             }
         }
         
@@ -286,7 +298,6 @@ class PlayerViewController : BaseClass {
 extension PlayerViewController : PlaybackDisplayDelegate {
 
     func setTitle(title : String) {
-//        print("PlaybackDisplayDelegate setTitle: \(title)")
         self.contentTitleLabel.text = title
     }
 
@@ -301,7 +312,6 @@ extension PlayerViewController : PlaybackDisplayDelegate {
         MBProgressHUD.hide(for: self.view, animated: true)
         self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem getting the media.", comment: ""))
 
-        // "There was a problem getting the media." = "There was a problem getting the media.";
         print("PlaybackDisplayDelegate playbackFailed")
         emptyUIState()
 //        playPause(self.playPauseButton)
@@ -344,7 +354,6 @@ extension PlayerViewController : PlaybackDisplayDelegate {
         if self.playerIsPlaying {
             playPause(self.playPauseButton)
         }
-//            }
     }
     
     func audioSessionRouteChange() {
