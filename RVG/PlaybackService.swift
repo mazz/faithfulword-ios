@@ -8,6 +8,7 @@
 
 import Foundation
 import AVFoundation
+import MediaPlayer
 
 struct PausedState {
     let pausedTime: TimeInterval
@@ -100,6 +101,8 @@ class PlaybackService : NSObject {
             // avoidRestartOnLoad always false on first playback
             playbackService?.avoidRestartOnLoad = false
             playbackService?.pausedState = nil// PausedState(pausedTime: 0.0, displayedTitle: "")
+            
+            playbackService?.setupNowPlayingInfoCenter()
         }
         return playbackService!
     }
@@ -123,6 +126,7 @@ class PlaybackService : NSObject {
 
         isPlaying = false
         videoPlaybackEndDate = Date().timeIntervalSinceNow
+        UIApplication.shared.endReceivingRemoteControlEvents()
 
     }
 
@@ -158,19 +162,17 @@ class PlaybackService : NSObject {
         // initialize the audio session only once
         if self.player == nil {
             do {
-                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [AVAudioSessionCategoryOptions.mixWithOthers] )
                 
+                // to enable remote events, AVAudioSessionCategoryPlayback must be set
+                // remote events fail with AVAudioSessionCategoryPlayAndRecord
                 // AVAudioSessionCategoryPlayback and .allowBluetooth combination will always throw an exception
-                //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
-                
                 // .allowBluetooth lower quality audio
                 // .allowBluetoothA2DP sounds great however
-                
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback,
                                                                 with: [.allowBluetoothA2DP,
                                                                        .mixWithOthers,
                                                                        .defaultToSpeaker])
-                
+
                 
                 //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
                 
@@ -182,7 +184,10 @@ class PlaybackService : NSObject {
             }
             
             UIApplication.shared.beginBackgroundTask {}
-            UIApplication.shared.beginReceivingRemoteControlEvents()
+            
+
+            //UIApplication.shared.beginReceivingRemoteControlEvents()
+//            setupNowPlayingInfoCenter()
         }
         
 
@@ -209,10 +214,32 @@ class PlaybackService : NSObject {
             // avoidRestartOnLoad should be one-shot
             avoidRestartOnLoad = false
         }
-        
-
     }
 
+    private func setupNowPlayingInfoCenter() {
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        MPRemoteCommandCenter.shared().playCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
+//            self.audioPlayer.resume()
+            self.play()
+            self.updateNowPlayingInfoCenter()
+            return .success
+        }
+        MPRemoteCommandCenter.shared().pauseCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
+//            self.audioPlayer.pause()
+            self.pause()
+            return .success
+        }
+        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
+            self.nextTrack()
+            
+            return .success
+        }
+        MPRemoteCommandCenter.shared().previousTrackCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
+            self.previousTrack()
+            return .success
+        }
+    }
+    
     func stopObserving(playerItem : AVPlayerItem) {
         
         if let timeObserverToken = self.timeObserverToken {
@@ -234,7 +261,6 @@ class PlaybackService : NSObject {
         playerItem.removeObserver(self, forKeyPath: statusKeypath)
     }
     
-    
     func startObservingAndReplace(playerItem : AVPlayerItem) {
         if let currentPlayerItem : AVPlayerItem = self.currentPlayerItem {
             if playerItem == currentPlayerItem {
@@ -243,7 +269,6 @@ class PlaybackService : NSObject {
             }
         }
     }
-    
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         print("observeValue")
@@ -276,8 +301,11 @@ class PlaybackService : NSObject {
                         
                         // do not mute by default
                         playbackDisplayDelegate.muteVolume(shouldMute: muteVolume)
+                        
+//                        setupNowPlayingInfoCenter()
                     } else {
                         self.player?.play()
+//                        setupNowPlayingInfoCenter()
                     }
                     
                     
@@ -300,12 +328,16 @@ class PlaybackService : NSObject {
         let interval : CMTime = CMTimeMakeWithSeconds(refreshInterval, Int32(NSEC_PER_SEC))
 
         timeObserverToken = self.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { [unowned self] time in
-            let currentTime : TimeInterval = CMTimeGetSeconds(time)
-            let duration : TimeInterval = CMTimeGetSeconds((self.currentPlayerItem?.duration)!)
-            self.playbackDisplayDelegate?.setCurrentTime(time: currentTime, duration: duration)
-            self.playbackDisplayDelegate?.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
-            self.playbackDisplayDelegate?.playbackRepeat(shouldRepeat: self.playbackRepeat)
-            self.playbackDisplayDelegate?.muteVolume(shouldMute: self.muteVolume)
+            if let displayDelegate = self.playbackDisplayDelegate {
+                let currentTime : TimeInterval = CMTimeGetSeconds(time)
+                let duration : TimeInterval = CMTimeGetSeconds((self.currentPlayerItem?.duration)!)
+                displayDelegate.setCurrentTime(time: currentTime, duration: duration)
+                displayDelegate.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
+                displayDelegate.playbackRepeat(shouldRepeat: self.playbackRepeat)
+                displayDelegate.muteVolume(shouldMute: self.muteVolume)
+                
+                self.updateNowPlayingInfoCenter()
+            }
         })
     }
 
@@ -321,46 +353,85 @@ class PlaybackService : NSObject {
     func playerItemDidReachEnd(note : NSNotification) {
         print("playerItemDidReachEnd note: \(note)")
         
-        if playbackRepeat == true {
-            DispatchQueue.main.async { [unowned self] in
-                self.player?.seek(to: kCMTimeZero)
-                self.playbackDisplayDelegate?.playbackReady()
-            }
-        } else {
-            if let item : AVPlayerItem = note.object as? AVPlayerItem {
+        if let item : AVPlayerItem = note.object as? AVPlayerItem {
+//            playbackForward(itemEnded: item)
+            if item == self.currentPlayerItem {
                 
-                if let nextItem : AVPlayerItem = self.nextPlayerItem(currentItem: item) {
-                    if let nextIndex : Int = (self.playerItems?.index(of: nextItem)) {
-                        
-                        // stop observing the current item
-                        // and play next item
-                        // queueing on main dispatch queue seems to fix
-                        // a race condition where the timeObserverToken
-                        // would outlast self.player in the case where
-                        // the user scrubs to the end of the track
-                        // but scrubs back quickly
-                        DispatchQueue.main.async { [unowned self] in
-                            self.playbackToNextItem(currentItem: item, nextIndex: nextIndex, nextItem: nextItem)
-                        }
-                        
+                if playbackRepeat == true {
+                    DispatchQueue.main.async { [unowned self] in
+                        self.player?.seek(to: kCMTimeZero)
+                        self.playbackDisplayDelegate?.playbackReady()
                     }
                 } else {
-                    // could not advance to next item
-                    // assume we are at end of playerItem array
-                    DispatchQueue.main.async {
-                        [unowned self] in
-                        self.player?.seek(to: kCMTimeZero,
-                                          completionHandler: { (Bool) in
-                                            self.playbackDisplayDelegate?.playbackComplete()
-                        })
-                        
+                    if let nextItem : AVPlayerItem = self.nextPlayerItem(currentItem: item) {
+                        if let nextIndex : Int = (self.playerItems?.index(of: nextItem)) {
+                            
+                            // stop observing the current item
+                            // and play next item
+                            // queueing on main dispatch queue seems to fix
+                            // a race condition where the timeObserverToken
+                            // would outlast self.player in the case where
+                            // the user scrubs to the end of the track
+                            // but scrubs back quickly
+                            DispatchQueue.main.async { [unowned self] in
+                                self.playbackToNextItem(currentItem: item, nextIndex: nextIndex, nextItem: nextItem)
+                            }
+                            
+                        }
+                    } else {
+                        // could not advance to next item
+                        // assume we are at end of playerItem array
+                        DispatchQueue.main.async {
+                            [unowned self] in
+                            self.player?.seek(to: kCMTimeZero,
+                                              completionHandler: { (Bool) in
+                                                self.playbackDisplayDelegate?.playbackComplete()
+                            })
+                            
+                        }
                     }
                 }
-                
             }
         }
     }
     
+//    func playbackForward(itemEnded: AVPlayerItem) {
+//        if playbackRepeat == true {
+//            DispatchQueue.main.async { [unowned self] in
+//                self.player?.seek(to: kCMTimeZero)
+//                self.playbackDisplayDelegate?.playbackReady()
+//            }
+//        } else {
+//            if let nextItem : AVPlayerItem = self.nextPlayerItem(currentItem: itemEnded) {
+//                if let nextIndex : Int = (self.playerItems?.index(of: nextItem)) {
+//                    
+//                    // stop observing the current item
+//                    // and play next item
+//                    // queueing on main dispatch queue seems to fix
+//                    // a race condition where the timeObserverToken
+//                    // would outlast self.player in the case where
+//                    // the user scrubs to the end of the track
+//                    // but scrubs back quickly
+//                    DispatchQueue.main.async { [unowned self] in
+//                        self.playbackToNextItem(currentItem: itemEnded, nextIndex: nextIndex, nextItem: nextItem)
+//                    }
+//                    
+//                }
+//            } else {
+//                // could not advance to next item
+//                // assume we are at end of playerItem array
+//                DispatchQueue.main.async {
+//                    [unowned self] in
+//                    self.player?.seek(to: kCMTimeZero,
+//                                      completionHandler: { (Bool) in
+//                                        self.playbackDisplayDelegate?.playbackComplete()
+//                    })
+//                    
+//                }
+//            }
+//        }
+//    }
+
     func nextPlayerItem(currentItem : AVPlayerItem) -> AVPlayerItem? {
         if let currentIndex : Int = (self.playerItems?.index(of: currentItem)) {
             
@@ -421,6 +492,35 @@ class PlaybackService : NSObject {
         if let currentPlayerItem : AVPlayerItem = self.currentPlayerItem {
             startObservingAndReplace(playerItem: currentPlayerItem)
         }
+    }
+    
+    func updateNowPlayingInfoCenter() {
+        
+        guard let currentItem = self.currentPlayerItem else {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [String: AnyObject]()
+            return
+        }
+        
+        guard let media = self.media else {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [String: AnyObject]()
+            return
+        }
+        
+        guard let mediaIndex: Int = self.mediaIndex else {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [String: AnyObject]()
+            return
+        }
+        
+        guard let player = self.player  else {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [String: AnyObject]()
+            return
+        }
+//Double((self.player?.rate)!
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyTitle: media[mediaIndex].localizedName ?? "",
+                               MPMediaItemPropertyArtist: media[mediaIndex].presenterName ?? "",
+                               MPNowPlayingInfoPropertyElapsedPlaybackTime: CMTimeGetSeconds(player.currentTime()),
+                               MPMediaItemPropertyPlaybackDuration: CMTimeGetSeconds(currentItem.duration),
+                               MPNowPlayingInfoPropertyPlaybackRate: Double(player.rate)]
     }
     
     private func contentTitle(mediaIndex index: (Int)) -> String {

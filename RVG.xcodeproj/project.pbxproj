@@ -38,6 +38,7 @@
 		689880511F147B5900CC2BC5 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689880501F147B5900CC2BC5 /* Playable.swift */; };
 		689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */; };
 		689880551F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */; };
+		689880571F16F52600CC2BC5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 689880561F16F52600CC2BC5 /* MediaPlayer.framework */; };
 		6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */; };
 		689A05451ED27A9E00D3232D /* Bible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A05441ED27A9E00D3232D /* Bible.swift */; };
 		689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */; };
@@ -139,6 +140,7 @@
 		689880501F147B5900CC2BC5 /* Playable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicTableViewCell.swift; sourceTree = "<group>"; };
 		689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaMusicTableViewCell.xib; sourceTree = "<group>"; };
+		689880561F16F52600CC2BC5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherLanguagesViewController.swift; sourceTree = "<group>"; };
 		689A05441ED27A9E00D3232D /* Bible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bible.swift; sourceTree = "<group>"; };
 		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DonateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -215,6 +217,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				689880571F16F52600CC2BC5 /* MediaPlayer.framework in Frameworks */,
 				6854EED71F01F649007BB502 /* AVFoundation.framework in Frameworks */,
 				68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */,
 				4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */,
@@ -244,6 +247,7 @@
 		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				689880561F16F52600CC2BC5 /* MediaPlayer.framework */,
 				6854EED61F01F649007BB502 /* AVFoundation.framework */,
 				68BE69D71EEBBB5B0082956D /* SafariServices.framework */,
 				4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */,

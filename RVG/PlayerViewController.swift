@@ -305,7 +305,13 @@ extension PlayerViewController : PlaybackDisplayDelegate {
         MBProgressHUD.hide(for: self.view, animated: true)
         playerIsPlaying = false
         print("PlaybackDisplayDelegate playbackReady")
-        playPause(self.playPauseButton)
+        
+        // because remote events could initiate playback
+        // if we are already playing, do not hit play
+        // again because that would pause
+        if Double((PlaybackService.sharedInstance().player?.rate)!) == 0.0 {
+            playPause(self.playPauseButton)
+        }
     }
 
     func playbackFailed() {
