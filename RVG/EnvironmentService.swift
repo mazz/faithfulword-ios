@@ -11,7 +11,7 @@ import Foundation
 class EnvironmentService {
     static var environmentService :  EnvironmentService?
     
-    internal var connected : Environment?
+    internal var connected : Environment = Environment(url: NSURL(string: EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)!, name: "development")!
     
     class func sharedInstance() -> EnvironmentService {
         DispatchQueue.once(token: "com.kjvrvg.dispatch.environmentservice") {
@@ -22,11 +22,7 @@ class EnvironmentService {
     }
     
     func connectedEnvironment() -> Environment {
-        
-        if let environment = Environment(url: NSURL(string: "https://japheth.ca")!, name: "development") {
-            connected = environment
-        }
-        return connected!
+        return connected
     }
 
 }

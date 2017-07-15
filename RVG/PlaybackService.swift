@@ -183,7 +183,7 @@ class PlaybackService : NSObject {
                 
             }
             
-            UIApplication.shared.beginBackgroundTask {}
+//            UIApplication.shared.beginBackgroundTask {}
             
 
             //UIApplication.shared.beginReceivingRemoteControlEvents()

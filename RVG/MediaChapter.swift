@@ -11,7 +11,7 @@ import ObjectMapper
 
 class MediaChapter : Mappable, Playable {
     var localizedName : String?
-    var url : String?
+    var path : String?
     var presenterName : String?
     var sourceMaterial : String?
     
@@ -21,7 +21,7 @@ class MediaChapter : Mappable, Playable {
     
     func mapping(map: Map) {
         localizedName  <- map["localizedName"]
-        url  <- map["url"]
+        path  <- map["path"]
         presenterName  <- map["presenterName"]
         sourceMaterial  <- map["sourceMaterial"]
     }

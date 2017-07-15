@@ -22,7 +22,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet var menuBar: UIBarButtonItem!
     
     var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
-                                                (NSLocalizedString("Music", comment: ""), UIImage(named: "dots")!),
+                                                (NSLocalizedString("Music", comment: ""), UIImage(named: "discs_icon_white")!),
                                                 (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
                                                (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "language_menu")!),

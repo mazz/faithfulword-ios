@@ -27,6 +27,8 @@
 		681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117C1ED1141100B028DD /* EnvironmentService.swift */; };
 		681E117F1ED138DA00B028DD /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117E1ED138DA00B028DD /* Book.swift */; };
 		681E11811ED13B1400B028DD /* BookResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E11801ED13B1400B028DD /* BookResponse.swift */; };
+		683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */; };
+		683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */; };
 		6854EED71F01F649007BB502 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6854EED61F01F649007BB502 /* AVFoundation.framework */; };
 		686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */; };
 		686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233EA1EFF71FC0046D952 /* PlayerViewController.swift */; };
@@ -126,6 +128,8 @@
 		681E117C1ED1141100B028DD /* EnvironmentService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentService.swift; sourceTree = "<group>"; };
 		681E117E1ED138DA00B028DD /* Book.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		681E11801ED13B1400B028DD /* BookResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookResponse.swift; sourceTree = "<group>"; };
+		683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentUrlItemKey.swift; sourceTree = "<group>"; };
+		683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentUrlItems.swift; sourceTree = "<group>"; };
 		6854EED61F01F649007BB502 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerContainerViewController.swift; sourceTree = "<group>"; };
 		686233EA1EFF71FC0046D952 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -267,6 +271,15 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		683D5B861F1A792D0019ED0E /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				681E11781ED1098600B028DD /* BibleService.swift */,
+				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
 		68E2BE431EBC215800FCD897 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -331,6 +344,7 @@
 				4CDD655D1EEB420A00C59DD5 /* Resources */,
 				70CD20941E64842B00AF619F /* ViewControllers */,
 				68E2BE431EBC215800FCD897 /* Cells */,
+				683D5B861F1A792D0019ED0E /* Service */,
 				70CD20971E64845A00AF619F /* Models */,
 				70CD20951E64843600AF619F /* HelperClasses */,
 				708F578A1E7482B10011639A /* RVG.entitlements */,
@@ -423,10 +437,10 @@
 				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
 				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
 				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
-				681E11781ED1098600B028DD /* BibleService.swift */,
 				4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */,
 				681E117A1ED110CB00B028DD /* Environment.swift */,
-				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
+				683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */,
+				683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */,
 				4CF401EA1ED391F400632272 /* Device.swift */,
 				4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */,
 				689880501F147B5900CC2BC5 /* Playable.swift */,
@@ -810,6 +824,8 @@
 				68F0F3F71F11E9A900718AFF /* Music.swift in Sources */,
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
+				683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */,
+				683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
 				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,

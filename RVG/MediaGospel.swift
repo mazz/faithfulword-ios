@@ -11,7 +11,7 @@ import ObjectMapper
 
 class MediaGospel : Mappable {
     var localizedName : String?
-    var url : String?
+    var path : String?
     
     required init?(map: Map) {
         
@@ -19,7 +19,7 @@ class MediaGospel : Mappable {
     
     func mapping(map: Map) {
         localizedName  <- map["localizedName"]
-        url  <- map["url"]
+        path  <- map["url"]
     }
     
     

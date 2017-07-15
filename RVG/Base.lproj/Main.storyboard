@@ -841,13 +841,13 @@ Thank you!</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="wKe-LI-C8J">
-                                <rect key="frame" x="58" y="174" width="259" height="31"/>
+                                <rect key="frame" x="60" y="174" width="254" height="31"/>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4IJ-Go-clF">
-                                <rect key="frame" x="323" y="181" width="42" height="17"/>
+                                <rect key="frame" x="321" y="181" width="44" height="17"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="17" id="MBn-9Q-WT8"/>
-                                    <constraint firstAttribute="width" constant="42" id="cph-PF-uaL"/>
+                                    <constraint firstAttribute="width" constant="44" id="cph-PF-uaL"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="wPw-7p-dx5"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -855,9 +855,9 @@ Thank you!</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--:--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FoA-oh-exn">
-                                <rect key="frame" x="10" y="181" width="42" height="17"/>
+                                <rect key="frame" x="10" y="181" width="44" height="17"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="42" id="fHi-gg-cCc"/>
+                                    <constraint firstAttribute="width" constant="44" id="fHi-gg-cCc"/>
                                     <constraint firstAttribute="height" constant="17" id="jTt-Ow-4nE"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="m9e-Lg-N2a"/>
                                 </constraints>
@@ -959,13 +959,13 @@ Thank you!</string>
                             <constraint firstItem="wKe-LI-C8J" firstAttribute="top" secondItem="4AH-Io-ocj" secondAttribute="bottom" constant="8.5" id="RHG-rW-FO5"/>
                             <constraint firstAttribute="trailingMargin" secondItem="MaB-o8-Y11" secondAttribute="trailing" constant="0.5" id="RXK-1s-895"/>
                             <constraint firstAttribute="leadingMargin" secondItem="fgS-Qg-Yxy" secondAttribute="leading" id="SXg-UE-gcO"/>
-                            <constraint firstItem="4IJ-Go-clF" firstAttribute="leading" secondItem="wKe-LI-C8J" secondAttribute="trailing" constant="8" id="W0Z-V1-YjH"/>
-                            <constraint firstItem="wKe-LI-C8J" firstAttribute="leading" secondItem="FoA-oh-exn" secondAttribute="trailing" constant="8" id="Yof-Dd-xUX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="4IJ-Go-clF" secondAttribute="trailing" constant="-6" id="l0F-HS-5Ww"/>
                             <constraint firstItem="fgS-Qg-Yxy" firstAttribute="top" secondItem="FoA-oh-exn" secondAttribute="bottom" constant="14" id="liJ-3m-UQF"/>
                             <constraint firstItem="tks-wK-JDc" firstAttribute="top" secondItem="wKe-LI-C8J" secondAttribute="bottom" constant="56" id="lrp-LO-AI7"/>
+                            <constraint firstItem="4IJ-Go-clF" firstAttribute="leading" secondItem="wKe-LI-C8J" secondAttribute="trailing" constant="9" id="m8g-ij-lr4"/>
                             <constraint firstItem="4AH-Io-ocj" firstAttribute="centerX" secondItem="TBP-j1-OOw" secondAttribute="centerX" id="maL-2X-sXH"/>
                             <constraint firstItem="KvM-Yh-B7N" firstAttribute="leading" secondItem="TBP-j1-OOw" secondAttribute="leading" constant="16" id="rHb-w7-0gK"/>
+                            <constraint firstItem="wKe-LI-C8J" firstAttribute="leading" secondItem="FoA-oh-exn" secondAttribute="trailing" constant="8" id="w04-kF-nZR"/>
                             <constraint firstItem="tks-wK-JDc" firstAttribute="top" secondItem="fgS-Qg-Yxy" secondAttribute="bottom" constant="10.5" id="xmz-BU-xIf"/>
                             <constraint firstItem="KvM-Yh-B7N" firstAttribute="top" secondItem="VXd-nA-Ka8" secondAttribute="bottom" constant="16" id="zOS-yU-X4y"/>
                         </constraints>
@@ -984,7 +984,7 @@ Thank you!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AIs-yZ-aTT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4138" y="46"/>
+            <point key="canvasLocation" x="4136.8000000000002" y="45.877061469265371"/>
         </scene>
         <!--Music-->
         <scene sceneID="X1h-Jk-gsQ">
