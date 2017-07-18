@@ -81,9 +81,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
-//        loadingNotification.label.text = "Loading"
-//        objMainViewControllerBusinessLogicClass?.hitWebService(obj: self)
-
         
         if Bible.sharedInstance().books == nil {
             do {
