@@ -9,6 +9,12 @@
 import Foundation
 
 extension EnvironmentUrlItemKey {
+    static var ProductionServerRootUrl: EnvironmentUrlItemKey {
+        return EnvironmentUrlItemKey(rawValue: "https://faithfulaudio.org")
+    }
+    static var ProductionFileStorageRootUrl: EnvironmentUrlItemKey {
+        return EnvironmentUrlItemKey(rawValue: "https://d2v5mbm9qwqitj.cloudfront.net")
+    }
     static var DevelopmentFileStorageRootUrl: EnvironmentUrlItemKey {
         return EnvironmentUrlItemKey(rawValue: "https://d2v5mbm9qwqitj.cloudfront.net")
     }

@@ -74,6 +74,8 @@
 /* No comment provided by engineer. */
 "Yes" = "Sí";
 
+"No" = "No";
+
 /* No comment provided by engineer. */
 "Your donation was successful.\nThank you!" = "Su donación fue exitosa.\n¡Gracias!";
 
@@ -149,3 +151,5 @@
 "Your device is not connected to the Internet." = "Su dispositivo no está conectado a Internet.";
 
 "There was a problem loading the chapters." = "Se ha producido un problema al cargar los capítulos.";
+
+"Music" = "La musique";

@@ -74,6 +74,8 @@
 /* No comment provided by engineer. */
 "Yes" = "sim";
 
+"No" = "Não";
+
 /* No comment provided by engineer. */
 "Your donation was successful.\nThank you!" = "Sua doação foi bem sucedida.\nThank you!";
 
@@ -150,3 +152,4 @@
 
 "There was a problem loading the chapters." = "Ocorreu um problema ao carregar os capítulos.";
 
+"Music" = "Música";
