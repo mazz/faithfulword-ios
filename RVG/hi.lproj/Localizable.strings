@@ -9,141 +9,145 @@
 /* find . -name \*.swift | xargs genstrings -o . */
 
 /* No comment provided by engineer. */
-"About Us" = "Información de nosotros";
+"About Us" = "हमारे बारे में";
 
 /* No comment provided by engineer. */
-"Books" = "Libros";
+"Books" = "पुस्तकें";
 
 /* No comment provided by engineer. */
-"Change Language" = "Cambiar idioma";
+"Change Language" = "भाषा बदलो";
+
+"Other Languages" = "अन्य भाषाएँ";
 
 /* No comment provided by engineer. */
-"Chapters" = "Capítulos";
+"Chapters" = "अध्याय";
 
 /* No comment provided by engineer. */
-"Contact Us" = "Contáctenos";
+"Contact Us" = "हमसे संपर्क करें";
 
 /* No comment provided by engineer. */
-"Do you want to close the player?" = "¿Quieres cerrar el reproductor?";
+"Do you want to close the player?" = "क्या आप खिलाड़ी को बंद करना चाहते हैं?";
 
 /* No comment provided by engineer. */
-"Donate" = "Donate";
+"Donate" = "दान";
 
 /* No comment provided by engineer. */
-"Email" = "correo electrónico";
+"Email" = "खाली ईमेल";
 
 /* No comment provided by engineer. */
-"Message" = "Mensaje";
+"Message" = "खाली संदेश";
 
 /* No comment provided by engineer. */
-"Name" = "Nombre";
+"Name" = "खाली नाम";
 
 /* No comment provided by engineer. */
-"Please fill out your email address" = "Por favor, complete su dirección de correo electrónico";
+"Please fill out your email address" = "कृपया अपना ईमेल पता भरें";
 
 /* No comment provided by engineer. */
-"Please fill out your message" = "Por favor, complete su mensaje";
+"Please fill out your message" = "कृपया अपना संदेश भरें";
 
 /* No comment provided by engineer. */
-"Please fill out your name" = "Por favor escribe tu nombre";
+"Please fill out your name" = "कृपया अपना नाम भरें";
 
 /* No comment provided by engineer. */
-"Privacy Policy" = "Política de privacidad";
+"Privacy Policy" = "गोपनीयता नीति";
 
 /* No comment provided by engineer. */
-"Share" = "Compartir";
+"Share" = "शेयर";
 
 /* No comment provided by engineer. */
-"Submit" = "Enviar";
+"Submit" = "जमा कर";
 
 /* No comment provided by engineer. */
-"Thank you, we will contact you soon" = "Gracias, nos pondremos en contacto contigo pronto";
+"Thank you, we will contact you soon" = "धन्यवाद!";
 
 /* No comment provided by engineer. */
-"The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8" = "The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8";
+"The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8" = "आवश्यकता बहुत हैं और उपलब्द भी हैं और परमेश्वर का वचन सुनने के लिए इससे अच्छा समय नहीं हो सकताI Bro Dominique Davis द्वारा फायर ब्रीदिंग रीडिंग को सुनोI पहेली बार RVG के नया विधान का ऑडियो Bro Collin Schneide द्वारा सुनोI हमारे पेज को चेक करें और इस कारन हमे डोनेट करेंI\n आवश्यकता बहुत हैं और उपलब्द भी हैं और परमेश्वर का वचन सुनने के लिए इससे अच्छा समय नहीं हो सकताI\n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8";
 
 /* No comment provided by engineer. */
-"I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture." = "I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture.";
+"I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture." = "द्वार मैं हूँ, यदि कोई मेरे द्वारा भीतर प्रवेश करे तो वह बचाया जायेगा और भीतर बाहर आया जाया करेगा और चारा पाएगा।";
 
 /* No comment provided by engineer. */
-"-Jesus Christ (John 10:9)" = "-Jesus Christ (John 10:9)";
+"-Jesus Christ (John 10:9)" = "-ईसा मसीह (युहन्ना 10:9)";
 
 /* No comment provided by engineer. */
-"Yes" = "Sí";
+"Yes" = "ह";
+
+"No" = "नह";
 
 /* No comment provided by engineer. */
-"Your donation was successful.\nThank you!" = "Your donation was successful.\nThank you!";
+"Your donation was successful.\nThank you!" = "आपका दान सफल था।\nधन्यवाद!";
 
-"Matthew" = "Mateo";
+"Matthew" = "मैथ्यू";
 
-"Mark" = "Marcos";
+"Mark" = "निशान";
 
-"Luke" = "Lucas";
+"Luke" = "ल्यूक";
 
-"John" = "Juan";
+"John" = "जॉन";
 
-"Acts" = "Hechos";
+"Acts" = "अधिनियमों";
 
-"Romans" = "Romanos";
+"Romans" = "रोमनों";
 
-"1 Corinthians" = "1 Corintios";
+"1 Corinthians" = "1 कुरिन्थियों";
 
-"2 Corinthians" = "2 Corintios";
+"2 Corinthians" = "2 कुरिन्थियों";
 
-"Galatians" = "Gálatas";
+"Galatians" = "गलाटियन्स";
 
-"Ephesians" = "Efesios";
+"Ephesians" = "इफिसियों";
 
-"Philippians" = "Filipenses";
+"Philippians" = "फिलिप्पियों";
 
-"Colossians" = "Colosenses";
+"Colossians" = "कुलुस्सियों";
 
-"1 Thessalonians" = "1 Tesalonicenses";
+"1 Thessalonians" = "1 थिस्सलुनीकियों";
 
-"2 Thessalonians" = "2 Tesalonicenses";
+"2 Thessalonians" = "2 थिस्सलुनीकियों";
 
-"1 Timothy" = "1 Timoteo";
+"1 Timothy" = "1 टिमोथी";
 
-"2 Timothy" = "2 Timoteo";
+"2 Timothy" = "2 टिमोथी";
 
-"Titus" = "Tito";
+"Titus" = "टाइटस";
 
-"Philemon" = "Filemón";
+"Philemon" = "फिलेमोन";
 
-"Hebrews" = "Hebreos";
+"Hebrews" = "इब्रियों";
 
-"James" = "Santiago";
+"James" = "जेम्स";
 
-"1 Peter" = "1 Pedro";
+"1 Peter" = "1 पीटर";
 
-"2 Peter" = "2 Pedro";
+"2 Peter" = "2 पीटर";
 
-"1 John" = "1 Juan";
+"1 John" = "1 जॉन";
 
-"2 John" = "2 Juan";
+"2 John" = "2 जॉन";
 
-"3 John" = "3 Juan";
+"3 John" = "3 जॉन";
 
-"Jude" = "Judas";
+"Jude" = "जूदास";
 
-"Revelation" = "Apocalipsis";
+"Revelation" = "रहस्योद्घाटन";
 
-"Plan Of Salvation" = "Plan De Salvacion";
+"Plan Of Salvation" = "मुक्ति की योजना";
 
 /* about-us */
-"The Faithful Audio Project\n\nThe KJVRVG, hosted by the Faithful Audio Team. Funded in part by FWBC, with representation thereof by Brother Domonique Davis.\n\n This application is the beginning of a much greater global project. We currently support the Audio of the KJV New Testament and RVG New Testament. We are continuing to record other language's textus receptus Bibles, or KJV equivalents. This application will also someday house the texts of each New Testament, with the function to read several languages on the same page!\n\nThe current reader of the RVG New Testament available in this application is Collin Schneide, who is also the editor of the RVG new Testament as well as the KJV New Testament. This application is produced in accordance with the copyright on the RVG Bible.\n\nWe are always looking for likeminded believers who speak foreign languages, and can code Mobile Applications.\n\n\n\nThe KJVRVG Vision\n\nThis application is full of promise, and we hope that you enjoy what is just the beginning! We look forward to seeing this work grow more and more! Already we are reaching out to get the gospel across international boundries in any language that has a faithful Bible, but even more so someday to reach out with hard preaching. Applications are the future of technology. Someday each church will have it's own application, and this work will be just the beginning. We hope to incorporate spin-off's of FWBC preaching sections, Verity Baptist preaching sections, FWBC Hymns sections, and the like, all in one convenient place.\n\nNot only this, but we are sharpening the Sword of the Lord to see faithful New Testaments in languages all over the world. The Lord has opened the door to us to begin working with revisions in many languages, and we hope to see these versions brought into harmony with the King James Bible in English. We will edify the brethren all over the world, and give them the tools to reach the world in their language with our work. These versions once completed will be put into print.\n\nPlease contact us for more information, and check out our Youtube channels for free downloadable copies of the Audio.\n\nKJV Audio\nhttps://www.youtube.com/c/AUDIOKJV\nRVG Audio:\nhttps://www.youtube.com/c/CollinSchneide\n \nFor the glory of God and his Word Jesus Christ!\nThe Faithful Audio Team:\n\nCollin Schneide, Team Lead, RVG Reader\nDomonique Davis, KJV reader\nSean Jolley, RVG  Reader\nLuis Mendez,  RVG Editor\nJorge Ramos, 1602 Purificada Reader and Editor\nFerdinand Perez, 1865 Spanish Reader/Editor\nConrad Rutkowski, Gdansk Rutkowski Revisor, Reader and Editor\nRenato Trevisan, Almeida Corregida Fiel Reader and Editor\nPastor Joe Major, David Martin 1744 Reader and Editor\nValerian Mayega, Ostervald Reader and Editor\nInderpreet Anand, Hindi 1874 Kanhurkar Reader/ Editor\nJaiarshdeep Singh Bedi, Old Punjabi Bedi Revisor/ Reader/ Editor\nRichard Long, Apple Coding\nMichael Hanna, Coding Team Lead\nJonathan McCallister, Android Coder\nBlake Rinkin, Administrative Assistant\nShane Freeman, Administrative Assistant\nDr. Humberto Gomez, Translator RVG\nPrashant Kanhurkar,  Hindi 1874 Revisor\nSean McCrary, German Schlachter Revisor\nEstefano Leone, Graphics Designer\nTim Xing, Chinese Union Version Revisor\nNgar Ip, Chinese Revision Reader/ Editor\nPastor Steve Kambalazaza, Chechiwa Revision Team Leader (Team offline)\nHunor Kasco, Hungarian Karolia Gaspar Revision Team Leader (Team offline)\nPastor Edward Boquiren, Tagalog Ang Bagong Tipan Isinalin sa Filipino Audio" = "The Faithful Audio Project\n\nThe KJVRVG, hosted by the Faithful Audio Team. Funded in part by FWBC, with representation thereof by Brother Domonique Davis.\n\n This application is the beginning of a much greater global project. We currently support the Audio of the KJV New Testament and RVG New Testament. We are continuing to record other language's textus receptus Bibles, or KJV equivalents. This application will also someday house the texts of each New Testament, with the function to read several languages on the same page!\n\nThe current reader of the RVG New Testament available in this application is Collin Schneide, who is also the editor of the RVG new Testament as well as the KJV New Testament. This application is produced in accordance with the copyright on the RVG Bible.\n\nWe are always looking for likeminded believers who speak foreign languages, and can code Mobile Applications.\n\n\n\nThe KJVRVG Vision\n\nThis application is full of promise, and we hope that you enjoy what is just the beginning! We look forward to seeing this work grow more and more! Already we are reaching out to get the gospel across international boundries in any language that has a faithful Bible, but even more so someday to reach out with hard preaching. Applications are the future of technology. Someday each church will have it's own application, and this work will be just the beginning. We hope to incorporate spin-off's of FWBC preaching sections, Verity Baptist preaching sections, FWBC Hymns sections, and the like, all in one convenient place.\n\nNot only this, but we are sharpening the Sword of the Lord to see faithful New Testaments in languages all over the world. The Lord has opened the door to us to begin working with revisions in many languages, and we hope to see these versions brought into harmony with the King James Bible in English. We will edify the brethren all over the world, and give them the tools to reach the world in their language with our work. These versions once completed will be put into print.\n\nPlease contact us for more information, and check out our Youtube channels for free downloadable copies of the Audio.\n\nKJV Audio\nhttps://www.youtube.com/c/AUDIOKJV\nRVG Audio:\nhttps://www.youtube.com/c/CollinSchneide\n \nFor the glory of God and his Word Jesus Christ!\nThe Faithful Audio Team:\n\nCollin Schneide, Team Lead, RVG Reader\nDomonique Davis, KJV reader\nSean Jolley, RVG  Reader\nLuis Mendez,  RVG Editor\nJorge Ramos, 1602 Purificada Reader and Editor\nFerdinand Perez, 1865 Spanish Reader/Editor\nConrad Rutkowski, Gdansk Rutkowski Revisor, Reader and Editor\nRenato Trevisan, Almeida Corregida Fiel Reader and Editor\nPastor Joe Major, David Martin 1744 Reader and Editor\nValerian Mayega, Ostervald Reader and Editor\nInderpreet Anand, Hindi 1874 Kanhurkar Reader/ Editor\nJaiarshdeep Singh Bedi, Old Punjabi Bedi Revisor/ Reader/ Editor\nRichard Long, Apple Coding\nMichael Hanna, Coding Team Lead\nJonathan McCallister, Android Coder\nBlake Rinkin, Administrative Assistant\nShane Freeman, Administrative Assistant\nDr. Humberto Gomez, Translator RVG\nPrashant Kanhurkar,  Hindi 1874 Revisor\nSean McCrary, German Schlachter Revisor\nEstefano Leone, Graphics Designer\nTim Xing, Chinese Union Version Revisor\nNgar Ip, Chinese Revision Reader/ Editor\nPastor Steve Kambalazaza, Chechiwa Revision Team Leader (Team offline)\nHunor Kasco, Hungarian Karolia Gaspar Revision Team Leader (Team offline)\nPastor Edward Boquiren, Tagalog Ang Bagong Tipan Isinalin sa Filipino Audio";
+"The Faithful Audio Project\n\nThe KJVRVG, hosted by the Faithful Audio Team. Funded in part by FWBC, with representation thereof by Brother Domonique Davis.\n\n This application is the beginning of a much greater global project. We currently support the Audio of the KJV New Testament and RVG New Testament. We are continuing to record other language's textus receptus Bibles, or KJV equivalents. This application will also someday house the texts of each New Testament, with the function to read several languages on the same page!\n\nThe current reader of the RVG New Testament available in this application is Collin Schneide, who is also the editor of the RVG new Testament as well as the KJV New Testament. This application is produced in accordance with the copyright on the RVG Bible.\n\nWe are always looking for likeminded believers who speak foreign languages, and can code Mobile Applications.\n\n\n\nThe KJVRVG Vision\n\nThis application is full of promise, and we hope that you enjoy what is just the beginning! We look forward to seeing this work grow more and more! Already we are reaching out to get the gospel across international boundries in any language that has a faithful Bible, but even more so someday to reach out with hard preaching. Applications are the future of technology. Someday each church will have it's own application, and this work will be just the beginning. We hope to incorporate spin-off's of FWBC preaching sections, Verity Baptist preaching sections, FWBC Hymns sections, and the like, all in one convenient place.\n\nNot only this, but we are sharpening the Sword of the Lord to see faithful New Testaments in languages all over the world. The Lord has opened the door to us to begin working with revisions in many languages, and we hope to see these versions brought into harmony with the King James Bible in English. We will edify the brethren all over the world, and give them the tools to reach the world in their language with our work. These versions once completed will be put into print.\n\nPlease contact us for more information, and check out our Youtube channels for free downloadable copies of the Audio.\n\nKJV Audio\nhttps://www.youtube.com/c/AUDIOKJV\nRVG Audio:\nhttps://www.youtube.com/c/CollinSchneide\n \nFor the glory of God and his Word Jesus Christ!\nThe Faithful Audio Team:\n\nCollin Schneide, Team Lead, RVG Reader\nDomonique Davis, KJV reader\nSean Jolley, RVG  Reader\nLuis Mendez,  RVG Editor\nJorge Ramos, 1602 Purificada Reader and Editor\nFerdinand Perez, 1865 Spanish Reader/Editor\nConrad Rutkowski, Gdansk Rutkowski Revisor, Reader and Editor\nRenato Trevisan, Almeida Corregida Fiel Reader and Editor\nPastor Joe Major, David Martin 1744 Reader and Editor\nValerian Mayega, Ostervald Reader and Editor\nInderpreet Anand, Hindi 1874 Kanhurkar Reader/ Editor\nJaiarshdeep Singh Bedi, Old Punjabi Bedi Revisor/ Reader/ Editor\nRichard Long, Apple Coding\nMichael Hanna, Coding Team Lead\nJonathan McCallister, Android Coder\nBlake Rinkin, Administrative Assistant\nShane Freeman, Administrative Assistant\nDr. Humberto Gomez, Translator RVG\nPrashant Kanhurkar,  Hindi 1874 Revisor\nSean McCrary, German Schlachter Revisor\nEstefano Leone, Graphics Designer\nTim Xing, Chinese Union Version Revisor\nNgar Ip, Chinese Revision Reader/ Editor\nPastor Steve Kambalazaza, Chechiwa Revision Team Leader (Team offline)\nHunor Kasco, Hungarian Karolia Gaspar Revision Team Leader (Team offline)\nPastor Edward Boquiren, Tagalog Ang Bagong Tipan Isinalin sa Filipino Audio" = "KJVRVG Vision\n\nद फैथ्फुल ऑडियो प्रोजेक्ट\nKJVRVG, फैथ्फुल ऑडियो टीम द्वारा आयोजित किया गया हैंI हमने Brother Domonique Davis द्वारा भाग में FWBC द्वारा वित्त पोषित किया, जो यह एप्लीकेशन में KJV पढ़ रहे हैं और वह प्रथिनिदित्व हैंI\n\nयह एप्लीकेशन एक बहुत बड़े वैश्विक परियोजना की शुरुवात हैंI इस वक़्त हम KJV नया विधान और RVG नया विधान के ऑडियो का समर्थन कर रहे हैंI\n\nहम इसके साथ Scrivener’s १८९४ टेक्स्ट के ग्रीक ऑडियो, द फ्रेंच Ostervald युहन्ना की किताब, इसके साथ हम द Portuguese Almeida Corregida Fiel की युहन्ना की किताब और १८७४ के हिंदी भाषा में युहन्ना, रोमियो और प्रकाशित वाक्य की किताबों का समर्थन करते हैंI आखीर में हम हिंदी Kanhurkar Revision से जो पहेली मत्ती की किताब हमारे अनुवादक Prashant Kanhurkar द्वारा संशोधित की गयी हैं, उसका समर्थन करते हैंI\n\nहमारा अन्य भाषाओँ में Textus Receptus Bibles, या KJV समान Bible को रिकॉर्ड करना जारी हैंI यह एप्लीकेशन किसी दिन हर भाषाओँ में नया विधान का घर होगा, और एक ही पेज पर कई भाषाओँ में नया विधान पढने का कार्य करेगाI\n\nRVG नया विधान जो इस एप्लीकेशन में उपलब्ध हैं, उनके वर्त्तमान पाठक Collin Schneide जो KJV नया विधान के ऑडियो एडिटर भी हैं और साथ ही RVG नया विधान के भी एडिटर हैंI यह एप्लीकेशन RVG Bible पर कॉपीराइट के अनुसार तैयार किया गया हैंI\n\nहम हमेशा समान सोच वाले विश्वासियों की तलाश में हैं जोह विदेशी भाषा बोलते हैं, और मोबाइल एप्लीकेशन कोड कर सकते हैंI\n\n\nद KJVRVG Vision\n\nयह एप्लीकेशन वादों से भरा हैं, और हमें आशा हैं की आप इसका लुफ्त उठाएंगे जो अभी बस शुरुवात ही हैंI हम इस कार्य को ज्यादा से ज्यादा बडाने के लिए तत्पर हैंI पहले से ही हम किसी भी भाषा में अंतर्राष्ट्रीय सीमाओं में सुसमाचार प्राप्त करने के लिए बाहर निकल रहे हैं, जिसमें एक विश्वसनीय बाइबल है,लेकिन किसी दिन और ज्यादा कठिन प्रचार के साथ पोहोचेंगेI एप्लीकेशन प्रोद्योगि का भविष्य हैं और किसी दिन हर एक चर्च में अपना खुदका एप्लीकेशन होगा और यह काम तो बस शुरुवात होगीI हम आशा करते हैं की फैथ्फुल वर्ड बैप्टिस्ट चर्च का स्पिन ऑफ प्रचार भाग, वेरिटी बैप्टिस्ट चर्च का प्रचार भाग, फैथ्फुल वर्ड बैप्टिस्ट चर्च के भजन भाग और ऐसे ही सारे समान भाग एक ही जगह पे शामिल हो जाऐI\n\nबस यही नहीं, पर हम परमेश्वर की तलवार को और ज्यादा तेज़ कर रहे हैं ताकि हम पूरी दुनिया में विश्वसनीय नया विधान बहुत से भाषाओँ में देख सकेI प्रभु ने हमारे लिए दरवाज़ा खोला हैं ताकि कही भाषाओँ में बाइबिल हैं उन्हें हम पुनःअवलोकन कर सके और उन्हें किंग जेम्स बाइबिल के समान बनाये जो अंग्रेजी में हैं I हम पूरी दुनिया में हमारे भाई-बन्धुओंको को संवर्धित करेंगे और उन्हें अपने काम के साथ अपनी भाषा में दुनिया तक पहुचने के लिए साधन  उपलब्ध करेंगेI जैसे ही यह संस्करण पुरे होते हैं यह छापने के लिए दिए जाएँगे I\n\nअधिक जानकारी के लिए हमे संपर्क करे और ऑडियो को मुफ्त डाउनलोड करने योग्य प्रतियों के लिए हमारा YouTube चैनल देखे I\n\nKJV ऑडियो:";
 
 /* privacy-policy */
 "Use of Information\n\nPlease be aware that any information shared through the option \"Contact Us\" is handled solely at the discretion of the owner of the application. This application is produced in according with the Copyright of the RVG. This copyright outlines the free distribution of the literature barring the profiting off of the venture, and has the expressed consent of Dr. Gomez. Any electronic property produced by this application is freely given. In addition, all files may be freely downloaded for distribution from our youtube channels listed in the about us section.\n\nHere is a link to the license for use of the RVG text: http://www.reinavaleragomez.com/sites/default/files/image/RVG-License.pdf\n\nLikewise, our source code is freely available for anyone who is willing to use it for the Kingdom of God. We grant permission to use our source code for the base of a church application involving biblically correct preaching, and sound doctrine. Contact us for a copy of our source code to create a free app for your church preaching, or the music produced by your church.\n\nFor the glory of God and his Word Jesus Christ!\nThe Faithful AudioTeam\n\nMailing Address\n\np.o box 9114\nBeaufort, Sc 29904\ninfo@kjvrvg.com" = "Use of Information\n\nPlease be aware that any information shared through the option \"Contact Us\" is handled solely at the discretion of the owner of the application. This application is produced in according with the Copyright of the RVG. This copyright outlines the free distribution of the literature barring the profiting off of the venture, and has the expressed consent of Dr. Gomez. Any electronic property produced by this application is freely given. In addition, all files may be freely downloaded for distribution from our youtube channels listed in the about us section.\n\nHere is a link to the license for use of the RVG text: http://www.reinavaleragomez.com/sites/default/files/image/RVG-License.pdf\n\nLikewise, our source code is freely available for anyone who is willing to use it for the Kingdom of God. We grant permission to use our source code for the base of a church application involving biblically correct preaching, and sound doctrine. Contact us for a copy of our source code to create a free app for your church preaching, or the music produced by your church.\n\nFor the glory of God and his Word Jesus Christ!\nThe Faithful AudioTeam\n\nMailing Address\n\np.o box 9114\nBeaufort, Sc 29904\ninfo@kjvrvg.com";
 
 
-"Donate to KJVRVG" = "Donate to KJVRVG";
+"Donate to KJVRVG" = "को दान दें KJVRVG";
 
-"Donate via PayPal" = "Donate via PayPal";
+"Donate via PayPal" = "पेपैल द्वारा दान करें";
 
-"There was a problem getting the media." = "There was a problem getting the media.";
+"There was a problem getting the media." = "मीडिया को प्राप्त करने में एक समस्या थी";
 
-"Your device is not connected to the Internet." = "Your device is not connected to the Internet.";
+"Your device is not connected to the Internet." = "आपका डिवाइस इंटरनेट से कनेक्ट नहीं है";
 
-"There was a problem loading the chapters." = "There was a problem loading the chapters.";
+"There was a problem loading the chapters." = "अध्यायों को लोड करने में एक समस्या थी";
 
