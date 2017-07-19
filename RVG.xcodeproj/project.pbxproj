@@ -130,6 +130,10 @@
 		681E11801ED13B1400B028DD /* BookResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookResponse.swift; sourceTree = "<group>"; };
 		683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentUrlItemKey.swift; sourceTree = "<group>"; };
 		683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentUrlItems.swift; sourceTree = "<group>"; };
+		683D5B8B1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		683D5B8C1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
+		683D5B8D1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
+		683D5B8E1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6854EED61F01F649007BB502 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerContainerViewController.swift; sourceTree = "<group>"; };
 		686233EA1EFF71FC0046D952 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -622,6 +626,7 @@
 				fr,
 				"pt-BR",
 				hi,
+				el,
 			);
 			mainGroup = 70CD20551E6479A800AF619F;
 			productRefGroup = 70CD205F1E6479A800AF619F /* Products */;
@@ -912,6 +917,7 @@
 				68BE69DB1EEBBED20082956D /* fr */,
 				68BE69DF1EEBBF090082956D /* pt-BR */,
 				68BE69E31EEBBF240082956D /* hi */,
+				683D5B8D1F1EE89C0019ED0E /* el */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -923,6 +929,7 @@
 				68BE69DC1EEBBED30082956D /* fr */,
 				68BE69E01EEBBF090082956D /* pt-BR */,
 				68BE69E41EEBBF240082956D /* hi */,
+				683D5B8E1F1EE89C0019ED0E /* el */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -935,6 +942,7 @@
 				68BE69DA1EEBBED20082956D /* fr */,
 				68BE69DE1EEBBF090082956D /* pt-BR */,
 				68BE69E21EEBBF240082956D /* hi */,
+				683D5B8C1F1EE89C0019ED0E /* el */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -947,6 +955,7 @@
 				68BE69D91EEBBED20082956D /* fr */,
 				68BE69DD1EEBBF090082956D /* pt-BR */,
 				68BE69E11EEBBF240082956D /* hi */,
+				683D5B8B1F1EE89C0019ED0E /* el */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
