@@ -161,7 +161,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
      func shareTextButton() {
         
         // text to share
-        let text = NSLocalizedString("The need is great, the means are available, and there could be no greater time needed to hear this powerful reading of the Word of God. Listen to Bro Domonique Davis' Fire Breathing Reading (coming soon!) Listen to Bro Collin Schneide in the first ever RVG Audio NT Check our page out and donate to our cause! The need is great, the means are available, and there could be no greater time needed to hear the powerful reading of the Word of God. \n https://itunes.apple.com/us/app/rvg/id1217019384?ls=1&mt=8", comment: "")
+        let text = NSLocalizedString("KJVRVG: https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "")
         
         // set up activity view controller
         let textToShare = [ text ]
