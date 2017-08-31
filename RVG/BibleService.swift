@@ -12,13 +12,14 @@ import ObjectMapper
 class BibleService {
     static var bibleService :  BibleService?
     
-    internal let bookApi :                                  String = "/v1/books"
-    internal let supportedLanguageIdentifierApi :           String = "/v1/languages/supported"
-    internal let allLanguageIdentifierApi :                 String = "/v1/languages"
-    internal let mediaChapterApi :                          String = "/v1/books/{bid}/media"
-    internal let mediaGospelApi :                           String = "/v1/gospel/media"
-    internal let musicApi :                                 String = "/v1/music"
-    internal let mediaMusicApi :                            String = "/v1/music/{mid}/media"
+    internal let bookApi :                                  String = "/v1.1/books"
+    internal let supportedLanguageIdentifierApi :           String = "/v1.1/languages/supported"
+    internal let allLanguageIdentifierApi :                 String = "/v1.1/languages"
+    internal let mediaChapterApi :                          String = "/v1.1/books/{bid}/media"
+    internal let mediaGospelApi :                           String = "/v1.1/gospel/media"
+    internal let musicApi :                                 String = "/v1.1/music"
+    internal let mediaMusicApi :                            String = "/v1.1/music/{mid}/media"
+    internal let bookLocalizedTitlesApi:                    String = "/v1.1/books/localizedtitles"
     
     let timeoutInterval : TimeInterval = 30
     

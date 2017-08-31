@@ -7,14 +7,16 @@ import UIKit
 import MBProgressHUD
 import MessageUI
 import SafariServices
+import Moya
 
 class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
-
+    
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
     @IBOutlet var booksRightBarButtonItem: UIBarButtonItem!
     
     var bookIds : [Book] = []
+    var bookTitles : [BookTitle] = []
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
@@ -22,99 +24,146 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet var menuBar: UIBarButtonItem!
     
     var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
+                                                (NSLocalizedString("Gospel", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                 (NSLocalizedString("Music", comment: ""), UIImage(named: "discs_icon_white")!),
                                                 (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
-                                               (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
-                                               (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "language_menu")!),
-                                               (NSLocalizedString("Donate", comment: ""), UIImage(named: "donate")!),
-                                               (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
-                                               (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
-                                               ]
-    
-    var bookTitles: [String] = [NSLocalizedString("Matthew", comment: ""),
-                                NSLocalizedString("Mark", comment: ""),
-                                NSLocalizedString("Luke", comment: ""),
-                                NSLocalizedString("John", comment: ""),
-                                NSLocalizedString("Acts", comment: ""),
-                                NSLocalizedString("Romans", comment: ""),
-                                NSLocalizedString("1 Corinthians", comment: ""),
-                                NSLocalizedString("2 Corinthians", comment: ""),
-                                NSLocalizedString("Galatians", comment: ""),
-                                NSLocalizedString("Ephesians", comment: ""),
-                                NSLocalizedString("Philippians", comment: ""),
-                                NSLocalizedString("Colossians", comment: ""),
-                                NSLocalizedString("1 Thessalonians", comment: ""),
-                                NSLocalizedString("2 Thessalonians", comment: ""),
-                                NSLocalizedString("1 Timothy", comment: ""),
-                                NSLocalizedString("2 Timothy", comment: ""),
-                                NSLocalizedString("Titus", comment: ""),
-                                NSLocalizedString("Philemon", comment: ""),
-                                NSLocalizedString("Hebrews", comment: ""),
-                                NSLocalizedString("James", comment: ""),
-                                NSLocalizedString("1 Peter", comment: ""),
-                                NSLocalizedString("2 Peter", comment: ""),
-                                NSLocalizedString("1 John", comment: ""),
-                                NSLocalizedString("2 John", comment: ""),
-                                NSLocalizedString("3 John", comment: ""),
-                                NSLocalizedString("Jude", comment: ""),
-                                NSLocalizedString("Revelation", comment: ""),
-                                NSLocalizedString("Plan Of Salvation", comment: ""),
-                                ]
-    
-        
+                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
+                                                (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "language_menu")!),
+                                                (NSLocalizedString("Donate", comment: ""), UIImage(named: "donate")!),
+                                                (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
+                                                (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
+                                                ]
     override func viewDidLoad() {
         super.viewDidLoad()
         // MenuFooterTableViewCell
-
+        
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 40
-
+        
         tableView.register(UINib(nibName: "MainMenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuTableViewCellID")
         tableView.register(UINib(nibName: "MainMenuFooterTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuFooterTableViewCellID")
-
+        
         collectionView.register(UINib(nibName: "BookCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "BookCollectionViewCellID")
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
         
         self.navigationItem.leftBarButtonItem = menuBar
-
+        
         self.navigationItem.title = NSLocalizedString("Books", comment: "")
         
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
-        if Bible.sharedInstance().books == nil {
-            do {
-                try BibleService.sharedInstance().getBooks(success: { (books) in
-                    Bible.sharedInstance().books = books
-                    
-                    print(Bible.sharedInstance().books! as [Book])
-                    
-                    DispatchQueue.main.async {
-                        MBProgressHUD.hide(for: self.view, animated: true)
-                        self.bookIds = Bible.sharedInstance().books!
-                        self.collectionView.reloadData()
-                    }
-                    
-                })
-            } catch SessionError.urlNotReachable {
-                print("error: \(SessionError.urlNotReachable)")
-                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
-                
-                DispatchQueue.main.async {
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                }
-            } catch {
-                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
-                print("error: \(error)")
-                
-                DispatchQueue.main.async {
-                    MBProgressHUD.hide(for: self.view, animated: true)
-                }
+        let provider = MoyaProvider<KJVRVGService>()
+        
+        let errorClosure = { (error: Swift.Error) -> Void in
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+            print("error: \(error)")
+            
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.view, animated: true)
             }
-        } else {
-            self.collectionView.reloadData()
         }
+        
+        provider.request(.booksLocalizedTitles(languageId: Device.preferredLanguageIdentifier())) { result in
+            print("moya booksLocalizedTitles(): \(result)")
+            switch result {
+            case let .success(moyaResponse):
+                do {
+                    let data = moyaResponse.data
+                    var parsedObject: BookTitleResponse
 
+                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                    if let jsonObject = json as? [String:Any] {
+                        parsedObject = BookTitleResponse(JSON: jsonObject)!
+                        print(parsedObject)
+                        self.bookTitles = parsedObject.bookTitles!
+                        
+                        DispatchQueue.main.async {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.collectionView.reloadData()
+                        }
+                    }
+                }
+                catch {
+                    errorClosure(error)
+                }
+                
+            case let .failure(error):
+                // this means there was a network failure - either the request
+                // wasn't sent (connectivity), or no response was received (server
+                // timed out).  If the server responds with a 4xx or 5xx error, that
+                // will be sent as a ".success"-ful response.
+                errorClosure(error)
+            }
+            
+        }
+    
+        
+        provider.request(.books) { result in
+            print("moya books: \(result)")
+            switch result {
+            case let .success(moyaResponse):
+                do {
+                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                    let data = moyaResponse.data
+                    var parsedObject: BookResponse
+                    
+                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                    if let jsonObject = json as? [String:Any] {
+                        parsedObject = BookResponse(JSON: jsonObject)!
+                        print(parsedObject)
+                        self.bookIds = parsedObject.books!
+
+                        
+                    }
+                }
+                catch {
+                    errorClosure(error)
+                }
+                
+            case let .failure(error):
+                // this means there was a network failure - either the request
+                // wasn't sent (connectivity), or no response was received (server
+                // timed out).  If the server responds with a 4xx or 5xx error, that
+                // will be sent as a ".success"-ful response.
+                errorClosure(error)
+            }
+        }
+        
+        
+        //        if Bible.sharedInstance().books == nil {
+        //            do {
+        //                try BibleService.sharedInstance().getBooks(success: { (books) in
+        //                    Bible.sharedInstance().books = books
+        //
+        //                    print(Bible.sharedInstance().books! as [Book])
+        //
+        //                    DispatchQueue.main.async {
+        //                        MBProgressHUD.hide(for: self.view, animated: true)
+        //                        self.bookIds = Bible.sharedInstance().books!
+        //                        self.collectionView.reloadData()
+        //                    }
+        //
+        //                })
+        //            } catch SessionError.urlNotReachable {
+        //                print("error: \(SessionError.urlNotReachable)")
+        //                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+        //
+        //                DispatchQueue.main.async {
+        //                    MBProgressHUD.hide(for: self.view, animated: true)
+        //                }
+        //            } catch {
+        //                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+        //                print("error: \(error)")
+        //
+        //                DispatchQueue.main.async {
+        //                    MBProgressHUD.hide(for: self.view, animated: true)
+        //                }
+        //            }
+        //        } else {
+        //            self.collectionView.reloadData()
+        //        }
+        
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
@@ -125,7 +174,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             self.present(viewController, animated: true, completion: { _ in })
         }
     }
-
+    
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -154,11 +203,11 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         }
         UIView.animate(withDuration: 0.2, animations: {
             self.view.layoutIfNeeded()
-            }) { (nil) in
+        }) { (nil) in
         }
     }
     
-     func shareTextButton() {
+    func shareTextButton() {
         
         // text to share
         let text = NSLocalizedString("KJVRVG: https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "")
@@ -188,10 +237,10 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     }
     
     // MARK: MFMailComposeViewControllerDelegate Method
-    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Swift.Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
-
+    
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
@@ -206,7 +255,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             cell?.backgroundColor = UIColor.clear
             cell?.verseBodyLabel.text = NSLocalizedString("I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture.", comment: "")
             cell?.chapterAndVerseLabel.text = NSLocalizedString("-Jesus Christ (John 10:9)", comment: "")
-
+            
             return cell!
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuTableViewCellID") as? MainMenuTableViewCell
@@ -222,12 +271,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.row == (tableRowsArray?.count)! {
             return
         }
-/*        if indexPath.row == 0 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "LanguageViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
-        else */
-            if indexPath.row == 0 {
+        /*        if indexPath.row == 0 {
+         let vc = self.pushVc(strBdName: "Main", vcName: "LanguageViewController")
+         self.navigationController?.pushViewController(vc, animated: true)
+         }
+         else */
+        if indexPath.row == 0 {
             // no action, just close menu
         }
         if indexPath.row == 1 {
@@ -249,13 +298,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 5 {
-
+            
             UIApplication.shared.open(NSURL(string:"http://kjvrvg.com/donate/")! as URL, options: [:], completionHandler: nil)
-//            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/donate/")! as URL)
-//            self.present(svc, animated: true, completion: nil)
-          
-//            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
-//            self.navigationController?.pushViewController(vc, animated: true)
+            //            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/donate/")! as URL)
+            //            self.present(svc, animated: true, completion: nil)
+            
+            //            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
+            //            self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 6 {
             let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/privacy-policy/")! as URL)
@@ -275,17 +324,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
-
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return bookTitles.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BookCollectionViewCellID", for: indexPath) as? BookCollectionViewCell
-
-        cell?.label.text = bookTitles[indexPath.row]
         
-        print("book at index: \(indexPath.row) \(self.bookTitles[indexPath.row])")
+        cell?.label.text = bookTitles[indexPath.row].localizedName!
+        
+        print("book at index: \(indexPath.row) \(bookTitles[indexPath.row].localizedName!)")
         return cell!
     }
     

@@ -10,6 +10,7 @@ target 'KJVRVG' do
 #    pod 'PayPal-iOS-SDK'
     pod 'ObjectMapper', '~> 2.2'
     pod 'MBProgressHUD', '~> 1.0.0'
+    pod 'Moya/RxSwift'
     target 'RVGTests' do
         inherit! :search_paths
         # Pods for testing
