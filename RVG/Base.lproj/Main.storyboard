@@ -442,7 +442,7 @@
                     </view>
                     <connections>
                         <outlet property="songsBarRightButton" destination="PEd-Oo-JMj" id="RHJ-Tj-Vv7"/>
-                        <outlet property="tableVw" destination="azJ-RM-zkJ" id="Oqr-c7-Cl9"/>
+                        <outlet property="tableView" destination="azJ-RM-zkJ" id="zgP-8Z-B0o"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aKi-fL-0Le" userLabel="First Responder" sceneMemberID="firstResponder"/>

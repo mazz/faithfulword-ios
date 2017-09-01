@@ -5,6 +5,7 @@
 
 import UIKit
 import MBProgressHUD
+import Moya
 
 class ChapterViewController: BaseClass {
     @IBOutlet var songsBarRightButton: UIBarButtonItem!
@@ -12,39 +13,58 @@ class ChapterViewController: BaseClass {
     var bookId : String? = nil
     var media : [Playable] = []
 
-    @IBOutlet weak var tableVw: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = NSLocalizedString("Chapters", comment: "")
-        
-        do {
-            if let _ = bookId {
-                // "e931ea58-080f-46ee-ae21-3bbec0365ddc"
-                
-                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
-                loadingNotification.mode = MBProgressHUDMode.indeterminate
-                //        loadingNotification.label.text = "Loading"
+        let provider = MoyaProvider<KJVRVGService>()
 
-                try BibleService.sharedInstance().getMediaChapters(forBookId: bookId!, success: { (media) in
-                    print("got media: \(String(describing: media))")
-                    self.media = media!
-                    DispatchQueue.main.async {
-                        MBProgressHUD.hide(for: self.view, animated: true)
-                        self.tableVw.reloadData()
-                    }
-                })
-            }
+        let errorClosure = { (error: Swift.Error) -> Void in
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+            print("error: \(error)")
             
-        } catch let error {
-            print("failed getting media: \(error)")
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
-                self.tableVw.reloadData()
             }
         }
         
-        tableVw.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
+        provider.request(.booksChapterMedia(bid: self.bookId!, languageId: Device.preferredLanguageIdentifier())) {
+            result in
+            print("booksChapterMedia: \(result)")
+            switch result {
+            case let .success(moyaResponse):
+                do {
+                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                    let data = moyaResponse.data
+                    var parsedObject: MediaChapterResponse
+                    
+                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                    if let jsonObject = json as? [String:Any] {
+                        parsedObject = MediaChapterResponse(JSON: jsonObject)!
+                        print(parsedObject)
+                        self.media = parsedObject.media!
+                        DispatchQueue.main.async {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.tableView.reloadData()
+                        }
+                        
+                    }
+                }
+                catch {
+                    errorClosure(error)
+                }
+                
+            case let .failure(error):
+                // this means there was a network failure - either the request
+                // wasn't sent (connectivity), or no response was received (server
+                // timed out).  If the server responds with a 4xx or 5xx error, that
+                // will be sent as a ".success"-ful response.
+                errorClosure(error)
+            }
+        }
+        
+        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
 
     }
     

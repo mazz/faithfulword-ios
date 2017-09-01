@@ -19,7 +19,6 @@ class BibleService {
     internal let mediaGospelApi :                           String = "/v1.1/gospel/media"
     internal let musicApi :                                 String = "/v1.1/music"
     internal let mediaMusicApi :                            String = "/v1.1/music/{mid}/media"
-    internal let bookLocalizedTitlesApi:                    String = "/v1.1/books/localizedtitles"
     
     let timeoutInterval : TimeInterval = 30
     

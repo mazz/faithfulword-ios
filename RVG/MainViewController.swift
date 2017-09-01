@@ -15,8 +15,8 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var rightHomeButton: UIButton!
     @IBOutlet var booksRightBarButtonItem: UIBarButtonItem!
     
-    var bookIds : [Book] = []
-    var bookTitles : [BookTitle] = []
+//    var bookIds : [Book] = []
+    var books : [Book] = []
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
@@ -64,42 +64,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             }
         }
         
-        provider.request(.booksLocalizedTitles(languageId: Device.preferredLanguageIdentifier())) { result in
-            print("moya booksLocalizedTitles(): \(result)")
-            switch result {
-            case let .success(moyaResponse):
-                do {
-                    let data = moyaResponse.data
-                    var parsedObject: BookTitleResponse
-
-                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                    if let jsonObject = json as? [String:Any] {
-                        parsedObject = BookTitleResponse(JSON: jsonObject)!
-                        print(parsedObject)
-                        self.bookTitles = parsedObject.bookTitles!
-                        
-                        DispatchQueue.main.async {
-                            MBProgressHUD.hide(for: self.view, animated: true)
-                            self.collectionView.reloadData()
-                        }
-                    }
-                }
-                catch {
-                    errorClosure(error)
-                }
-                
-            case let .failure(error):
-                // this means there was a network failure - either the request
-                // wasn't sent (connectivity), or no response was received (server
-                // timed out).  If the server responds with a 4xx or 5xx error, that
-                // will be sent as a ".success"-ful response.
-                errorClosure(error)
-            }
-            
-        }
-    
-        
-        provider.request(.books) { result in
+        provider.request(.books(languageId: Device.preferredLanguageIdentifier())) { result in
             print("moya books: \(result)")
             switch result {
             case let .success(moyaResponse):
@@ -112,8 +77,11 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
                     if let jsonObject = json as? [String:Any] {
                         parsedObject = BookResponse(JSON: jsonObject)!
                         print(parsedObject)
-                        self.bookIds = parsedObject.books!
-
+                        self.books = parsedObject.books!
+                        DispatchQueue.main.async {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.collectionView.reloadData()
+                        }
                         
                     }
                 }
@@ -326,15 +294,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return bookTitles.count
+        return books.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BookCollectionViewCellID", for: indexPath) as? BookCollectionViewCell
         
-        cell?.label.text = bookTitles[indexPath.row].localizedName!
-        
-        print("book at index: \(indexPath.row) \(bookTitles[indexPath.row].localizedName!)")
+        if let localizedTitle = books[indexPath.row].localizedTitle {
+            cell?.label.text = localizedTitle
+            print("book at index: \(indexPath.row) \(localizedTitle)")
+        }
+
         return cell!
     }
     
@@ -342,7 +312,7 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
         let reachability = Reachability()!
         
         if reachability.currentReachabilityStatus != .notReachable {
-            if let bookId = bookIds[indexPath.row].bookId {
+            if let bookId = books[indexPath.row].bookId {
                 let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
                 //            vc?.folderId = id
                 vc?.bookId = bookId
