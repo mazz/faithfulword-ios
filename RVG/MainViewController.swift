@@ -24,7 +24,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet var menuBar: UIBarButtonItem!
     
     var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
-                                                (NSLocalizedString("Plan of Salvation", comment: ""), UIImage(named: "books-stack-of-three")!),
+                                                (NSLocalizedString("Plan Of Salvation", comment: ""), UIImage(named: "feetprint")!),
                                                 (NSLocalizedString("Music", comment: ""), UIImage(named: "discs_icon_white")!),
                                                 (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                 (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
@@ -164,8 +164,10 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self
         
+        let appVersionString: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+
         mailComposerVC.setToRecipients(["info@kjvrvg.com"])
-        mailComposerVC.setSubject("KJVRVG iOS App Feedback")
+        mailComposerVC.setSubject("KJVRVG iOS \(appVersionString) App Feedback")
         
         return mailComposerVC
     }

@@ -29,6 +29,9 @@ class ChapterViewController: BaseClass {
             }
         }
         
+        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        loadingNotification.mode = MBProgressHUDMode.indeterminate
+
         provider.request(.booksChapterMedia(bid: self.bookId!, languageId: Device.preferredLanguageIdentifier())) {
             result in
             print("booksChapterMedia: \(result)")
@@ -106,17 +109,13 @@ extension ChapterViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
-//            let media = tableRows.map({$0.url})
-            
             PlaybackService.sharedInstance().disposePlayback()
             PlaybackService.sharedInstance().media = media
             PlaybackService.sharedInstance().mediaIndex = indexPath.row
-//            PlaybackService.sharedInstance().playbackModeDelegate = self
             
             viewController.modalTransitionStyle = .crossDissolve
             self.present(viewController, animated: true, completion: { _ in })
             
-            //            self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
 }

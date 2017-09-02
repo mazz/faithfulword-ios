@@ -19,8 +19,6 @@ class GospelViewController: BaseClass {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.navigationController?.isNavigationBarHidden=false
-        
         self.title = NSLocalizedString("Plan of Salvation", comment: "")
 
         let provider = MoyaProvider<KJVRVGService>()
@@ -34,6 +32,9 @@ class GospelViewController: BaseClass {
             }
         }
         
+        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        loadingNotification.mode = MBProgressHUDMode.indeterminate
+
         provider.request(.gospelMedia) { result in
             print("gospelMedia: \(result)")
             switch result {
@@ -101,6 +102,7 @@ extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
             cell.selectionStyle = .none
             cell.songLabel?.text = self.media[indexPath.row].localizedName!
+            cell.imageIconView.image = UIImage(named:"candlelight")!
             return cell
         }
         return UITableViewCell()
@@ -110,17 +112,12 @@ extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
         
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
-            //            let media = tableRows.map({$0.url})
-            
             PlaybackService.sharedInstance().disposePlayback()
             PlaybackService.sharedInstance().media = media
             PlaybackService.sharedInstance().mediaIndex = indexPath.row
-            //            PlaybackService.sharedInstance().playbackModeDelegate = self
             
             viewController.modalTransitionStyle = .crossDissolve
             self.present(viewController, animated: true, completion: { _ in })
-            
-            //            self.navigationController?.pushViewController(viewController, animated: true)
         }
     }
 }
