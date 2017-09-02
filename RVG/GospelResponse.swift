@@ -10,7 +10,7 @@ import Foundation
 import ObjectMapper
 
 class GospelResponse : Mappable {
-    var gospels : [Gospel]?
+    var gospels : [MediaGospel]?
     
     required init?(map: Map) {
         

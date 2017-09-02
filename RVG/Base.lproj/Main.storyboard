@@ -362,48 +362,6 @@
             </objects>
             <point key="canvasLocation" x="3269.5999999999999" y="1433.433283358321"/>
         </scene>
-        <!--Gospel View Controller-->
-        <scene sceneID="avN-n6-oeO">
-            <objects>
-                <viewController storyboardIdentifier="GospelViewController" id="46M-Ck-P5z" customClass="GospelViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="liw-OW-4Vt"/>
-                        <viewControllerLayoutGuide type="bottom" id="FC0-Pk-5U3"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="lyv-Vc-nS8">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash-screen" translatesAutoresizingMaskIntoConstraints="NO" id="XmV-IX-5Wl">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gh9-tn-fcs">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="gh9-tn-fcs" firstAttribute="leading" secondItem="lyv-Vc-nS8" secondAttribute="leading" id="BJY-CP-ucI"/>
-                            <constraint firstItem="gh9-tn-fcs" firstAttribute="top" secondItem="lyv-Vc-nS8" secondAttribute="top" id="BbL-n8-vAJ"/>
-                            <constraint firstItem="FC0-Pk-5U3" firstAttribute="top" secondItem="gh9-tn-fcs" secondAttribute="bottom" id="SDD-V5-Pps"/>
-                            <constraint firstItem="XmV-IX-5Wl" firstAttribute="top" secondItem="lyv-Vc-nS8" secondAttribute="top" id="TRa-aw-gDQ"/>
-                            <constraint firstItem="FC0-Pk-5U3" firstAttribute="top" secondItem="XmV-IX-5Wl" secondAttribute="bottom" id="djQ-Xi-mNB"/>
-                            <constraint firstItem="XmV-IX-5Wl" firstAttribute="leading" secondItem="lyv-Vc-nS8" secondAttribute="leading" id="gRi-xN-c08"/>
-                            <constraint firstAttribute="trailing" secondItem="XmV-IX-5Wl" secondAttribute="trailing" id="vjb-R3-Da7"/>
-                            <constraint firstAttribute="trailing" secondItem="gh9-tn-fcs" secondAttribute="trailing" id="x4e-ne-fm1"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="rightButtonPlayer" destination="HvA-qu-xGL" id="6IT-g7-a8f"/>
-                        <outlet property="tableView" destination="gh9-tn-fcs" id="nxw-Ed-QFK"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oE8-18-s8a" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <barButtonItem title="Item" id="HvA-qu-xGL"/>
-            </objects>
-            <point key="canvasLocation" x="3940" y="1433.433283358321"/>
-        </scene>
         <!--Chapters-->
         <scene sceneID="IB0-f5-IC3">
             <objects>
@@ -1085,6 +1043,56 @@ Thank you!</string>
                 </barButtonItem>
             </objects>
             <point key="canvasLocation" x="5530" y="-90"/>
+        </scene>
+        <!--Gospel-->
+        <scene sceneID="UlS-Zg-Pwc">
+            <objects>
+                <viewController storyboardIdentifier="GospelViewController" title="Chapters" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1nv-Zj-Fvc" userLabel="Gospel" customClass="GospelViewController" customModule="KJVRVG" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1mC-HF-bNk"/>
+                        <viewControllerLayoutGuide type="bottom" id="4xp-N7-0vM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pVV-pA-pWS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash-screen" translatesAutoresizingMaskIntoConstraints="NO" id="wWb-nG-W1w">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Gs-38-nb9">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="1nv-Zj-Fvc" id="iX5-xi-eFJ"/>
+                                    <outlet property="delegate" destination="1nv-Zj-Fvc" id="UgO-qI-aFc"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4Gs-38-nb9" firstAttribute="top" secondItem="pVV-pA-pWS" secondAttribute="top" id="72C-0C-0yC"/>
+                            <constraint firstItem="4Gs-38-nb9" firstAttribute="leading" secondItem="pVV-pA-pWS" secondAttribute="leading" id="LG0-yK-gLj"/>
+                            <constraint firstItem="wWb-nG-W1w" firstAttribute="top" secondItem="pVV-pA-pWS" secondAttribute="top" id="NH8-DH-VE1"/>
+                            <constraint firstItem="4xp-N7-0vM" firstAttribute="top" secondItem="wWb-nG-W1w" secondAttribute="bottom" id="RBa-3O-Ner"/>
+                            <constraint firstItem="4xp-N7-0vM" firstAttribute="top" secondItem="4Gs-38-nb9" secondAttribute="bottom" id="bJP-wg-50l"/>
+                            <constraint firstItem="wWb-nG-W1w" firstAttribute="leading" secondItem="pVV-pA-pWS" secondAttribute="leading" id="bNU-S2-qiq"/>
+                            <constraint firstAttribute="trailing" secondItem="4Gs-38-nb9" secondAttribute="trailing" id="tds-Pe-fQo"/>
+                            <constraint firstAttribute="trailing" secondItem="wWb-nG-W1w" secondAttribute="trailing" id="w6O-dB-lp7"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="songsBarRightButton" destination="pbP-Wq-i95" id="mfJ-zs-4aO"/>
+                        <outlet property="tableView" destination="4Gs-38-nb9" id="395-hA-fmg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f2j-gv-JlU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem image="dots" id="pbP-Wq-i95">
+                    <connections>
+                        <action selector="showPlayer:" destination="1nv-Zj-Fvc" id="gnN-Kz-DOC"/>
+                    </connections>
+                </barButtonItem>
+            </objects>
+            <point key="canvasLocation" x="3042" y="-419"/>
         </scene>
     </scenes>
     <resources>

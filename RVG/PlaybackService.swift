@@ -532,11 +532,13 @@ class PlaybackService : NSObject {
         }
         
         if let presenterName = self.media?[self.mediaIndex!].presenterName {
-            finalString = finalString.appending("\(presenterName) • ")
+            finalString = finalString.appending("\(presenterName)")
         }
         
         if let sourceMaterial = self.media?[self.mediaIndex!].sourceMaterial {
-            finalString = finalString.appending(sourceMaterial)
+            if sourceMaterial != "" {
+                finalString = finalString.appending(" • \(sourceMaterial)")
+            }
         }
         return finalString
     }

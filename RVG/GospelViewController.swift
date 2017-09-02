@@ -8,55 +8,120 @@
 
 import UIKit
 import MBProgressHUD
+import Moya
 
-class GospelViewController: UIViewController {
-    @IBOutlet var rightButtonPlayer: UIBarButtonItem!
+class GospelViewController: BaseClass {
     @IBOutlet weak var tableView: UITableView!
-    
+    @IBOutlet var songsBarRightButton: UIBarButtonItem!
+
     var gospelId : String? = nil
-    var media : [MediaGospel] = []
+    var media : [Playable] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 //        self.navigationController?.isNavigationBarHidden=false
         
-        self.title = NSLocalizedString("Gospel", comment: "")
+        self.title = NSLocalizedString("Plan of Salvation", comment: "")
+
+        let provider = MoyaProvider<KJVRVGService>()
         
-        do {
-            if let _ = gospelId {
-                // "e931ea58-080f-46ee-ae21-3bbec0365ddc"
-                
-                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
-                loadingNotification.mode = MBProgressHUDMode.indeterminate
-                //        loadingNotification.label.text = "Loading"
-                
-                try BibleService.sharedInstance().getMediaGospels(forGospelId: gospelId!, success: { (media) in
-                    print("got media gospel: \(String(describing: media))")
-                    self.media = media!
-                    DispatchQueue.main.async {
-                        MBProgressHUD.hide(for: self.view, animated: true)
-                        self.tableView.reloadData()
-                    }
-                })
-            }
+        let errorClosure = { (error: Swift.Error) -> Void in
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+            print("error: \(error)")
             
-        } catch {
-            print("failed getting media")
+            DispatchQueue.main.async {
+                MBProgressHUD.hide(for: self.view, animated: true)
+            }
         }
         
-        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "SongTableViewCellID")
+        provider.request(.gospelMedia) { result in
+            print("gospelMedia: \(result)")
+            switch result {
+            case let .success(moyaResponse):
+                do {
+                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                    let data = moyaResponse.data
+                    var parsedObject: GospelResponse
+                    
+                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                    if let jsonObject = json as? [String:Any] {
+                        parsedObject = GospelResponse(JSON: jsonObject)!
+                        print(parsedObject)
+                        
+                        self.media = parsedObject.gospels!
+                        DispatchQueue.main.async {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.tableView.reloadData()
+                        }
+                        
+                    }
+                }
+                catch {
+                    errorClosure(error)
+                }
+                
+            case let .failure(error):
+                // this means there was a network failure - either the request
+                // wasn't sent (connectivity), or no response was received (server
+                // timed out).  If the server responds with a 4xx or 5xx error, that
+                // will be sent as a ".success"-ful response.
+                errorClosure(error)
+            }
+        }
+        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
         
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if (PlaybackService.sharedInstance().player != nil) {
+            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
     }
-    */
-
+    
+    @IBAction func showPlayer(_ sender: AnyObject) {
+        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
+            
+            viewController.modalTransitionStyle = .crossDissolve
+            self.present(viewController, animated: true, completion: { _ in })
+        }
+    }
 }
+
+extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.media.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
+            cell.selectionStyle = .none
+            cell.songLabel?.text = self.media[indexPath.row].localizedName!
+            return cell
+        }
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
+            
+            //            let media = tableRows.map({$0.url})
+            
+            PlaybackService.sharedInstance().disposePlayback()
+            PlaybackService.sharedInstance().media = media
+            PlaybackService.sharedInstance().mediaIndex = indexPath.row
+            //            PlaybackService.sharedInstance().playbackModeDelegate = self
+            
+            viewController.modalTransitionStyle = .crossDissolve
+            self.present(viewController, animated: true, completion: { _ in })
+            
+            //            self.navigationController?.pushViewController(viewController, animated: true)
+        }
+    }
+}
+

@@ -24,7 +24,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet var menuBar: UIBarButtonItem!
     
     var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
-                                                (NSLocalizedString("Gospel", comment: ""), UIImage(named: "books-stack-of-three")!),
+                                                (NSLocalizedString("Plan of Salvation", comment: ""), UIImage(named: "books-stack-of-three")!),
                                                 (NSLocalizedString("Music", comment: ""), UIImage(named: "discs_icon_white")!),
                                                 (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                 (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
@@ -97,40 +97,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
                 errorClosure(error)
             }
         }
-        
-        
-        //        if Bible.sharedInstance().books == nil {
-        //            do {
-        //                try BibleService.sharedInstance().getBooks(success: { (books) in
-        //                    Bible.sharedInstance().books = books
-        //
-        //                    print(Bible.sharedInstance().books! as [Book])
-        //
-        //                    DispatchQueue.main.async {
-        //                        MBProgressHUD.hide(for: self.view, animated: true)
-        //                        self.bookIds = Bible.sharedInstance().books!
-        //                        self.collectionView.reloadData()
-        //                    }
-        //
-        //                })
-        //            } catch SessionError.urlNotReachable {
-        //                print("error: \(SessionError.urlNotReachable)")
-        //                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
-        //
-        //                DispatchQueue.main.async {
-        //                    MBProgressHUD.hide(for: self.view, animated: true)
-        //                }
-        //            } catch {
-        //                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
-        //                print("error: \(error)")
-        //
-        //                DispatchQueue.main.async {
-        //                    MBProgressHUD.hide(for: self.view, animated: true)
-        //                }
-        //            }
-        //        } else {
-        //            self.collectionView.reloadData()
-        //        }
         
     }
     
@@ -248,24 +214,28 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             // no action, just close menu
         }
         if indexPath.row == 1 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "MusicViewController")
+            let vc = self.pushVc(strBdName: "Main", vcName: "GospelViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 2 {
+            let vc = self.pushVc(strBdName: "Main", vcName: "MusicViewController")
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        if indexPath.row == 3 {
             let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 3 {
+        else if indexPath.row == 4 {
             shareTextButton()
         }
-        else if indexPath.row == 4 {
+        else if indexPath.row == 5 {
             let vc = self.pushVc(strBdName: "Main", vcName: "OtherLanguagesViewController") as! OtherLanguagesViewController
             let videoURL = URL(fileURLWithPath:Bundle.main.path(forResource: "other-languages-sm", ofType: "m4v")!)
             vc.looper = QueuePlayerLooper(videoURL: videoURL, loopCount: -1)
             
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 5 {
+        else if indexPath.row == 6 {
             
             UIApplication.shared.open(NSURL(string:"http://kjvrvg.com/donate/")! as URL, options: [:], completionHandler: nil)
             //            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/donate/")! as URL)
@@ -274,11 +244,11 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             //            let vc = self.pushVc(strBdName: "Main", vcName: "DonateViewController")
             //            self.navigationController?.pushViewController(vc, animated: true)
         }
-        else if indexPath.row == 6 {
+        else if indexPath.row == 7 {
             let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/privacy-policy/")! as URL)
             self.present(svc, animated: true, completion: nil)
         }
-        else if indexPath.row == 7 {
+        else if indexPath.row == 8 {
             let mailComposeViewController = configuredMailComposeViewController()
             if MFMailComposeViewController.canSendMail() {
                 self.present(mailComposeViewController, animated: true, completion: nil)

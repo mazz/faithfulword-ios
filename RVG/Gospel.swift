@@ -10,17 +10,19 @@ import Foundation
 import ObjectMapper
 
 class Gospel : Mappable {
-    var gospelId : String?
-    var title : String?
+    var localizedName : String?
+    var path : String?
+    var languageIdentifier : String?
+    var presenterName : String?
     
     required init?(map: Map) {
         
     }
     
     func mapping(map: Map) {
-        gospelId  <- map["gid"]
-        title  <- map["title"]
+        localizedName <- map["localizedName"]
+        path <- map["path"]
+        languageIdentifier <- map["languageIdentifier"]
+        presenterName <- map["presenterName"]
     }
-    
-    
 }

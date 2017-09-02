@@ -3,7 +3,8 @@ import Moya
 
 enum KJVRVGService {
     case pushTokenUpdate(fcmToken: String)
-    case booksChapterMedia(bid: String, languageId: String) // "/v1.1/books/{bid}/media"
+    case gospelMedia // v1.1/gospel/media
+    case booksChapterMedia(bid: String, languageId: String) // v1.1/books/{bid}/media
     case books(languageId: String)
     case zen
     case showUser(id: Int)
@@ -22,6 +23,8 @@ extension KJVRVGService: TargetType {
         switch self {
         case .pushTokenUpdate(_):
             return "/device/pushtoken/set"
+        case .gospelMedia:
+            return "/gospel/media"
         case .booksChapterMedia(let bid, _):
             return "/books/\(bid)/media"
         case .books(_):
@@ -39,7 +42,7 @@ extension KJVRVGService: TargetType {
     
     var method: Moya.Method {
         switch self {
-        case .booksChapterMedia, .books, .zen, .showUser, .showAccounts:
+        case .booksChapterMedia, .gospelMedia, .books, .zen, .showUser, .showAccounts:
             return .get
         case .pushTokenUpdate, .createUser, .updateUser:
             return .post
@@ -51,7 +54,7 @@ extension KJVRVGService: TargetType {
             return ["language-id": languageId]
         case .books(let languageId):
             return ["language-id": languageId]
-        case .zen, .showUser, .showAccounts:
+        case .gospelMedia, .zen, .showUser, .showAccounts:
             return nil
         case .createUser(let firstName, let lastName), .updateUser(_, let firstName, let lastName):
             return ["first_name": firstName, "last_name": lastName]
@@ -61,7 +64,7 @@ extension KJVRVGService: TargetType {
     }
     var parameterEncoding: ParameterEncoding {
         switch self {
-        case .booksChapterMedia, .books, .zen, .showUser, .showAccounts:
+        case .booksChapterMedia, .gospelMedia, .books, .zen, .showUser, .showAccounts:
             return URLEncoding.default // Send parameters in URL for GET, DELETE and HEAD. For other HTTP methods, parameters will be sent in request body
         case .updateUser:
             return URLEncoding.queryString // Always sends parameters in URL, regardless of which HTTP method is used
@@ -78,6 +81,8 @@ extension KJVRVGService: TargetType {
             return jsonSerializedUTF8(json: pushTokenJson)
         case .booksChapterMedia(let bid, let languageId):
             return "{\"bid\": \(bid), \"language-id\": \"\(languageId)\"}".utf8Encoded
+        case .gospelMedia:
+            return "Half measures are as bad as nothing at all.".utf8Encoded
         case .books(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .zen:
@@ -99,7 +104,7 @@ extension KJVRVGService: TargetType {
     }
     var task: Task {
         switch self {
-        case .pushTokenUpdate, .booksChapterMedia, .books, .zen, .showUser, .createUser, .updateUser, .showAccounts:
+        case .pushTokenUpdate, .booksChapterMedia, .gospelMedia, .books, .zen, .showUser, .createUser, .updateUser, .showAccounts:
             return .request
         }
     }
