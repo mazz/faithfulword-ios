@@ -19,7 +19,7 @@ class GospelViewController: BaseClass {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = NSLocalizedString("Plan of Salvation", comment: "")
+        self.title = NSLocalizedString("Plan Of Salvation", comment: "")
 
         let provider = MoyaProvider<KJVRVGService>()
         
