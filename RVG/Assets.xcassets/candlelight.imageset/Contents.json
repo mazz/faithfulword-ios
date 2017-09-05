@@ -2,12 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "candlelight.jpg",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "candlelight@2x.jpg",
+      "filename" : "candlelight@2x.png",
       "scale" : "2x"
     },
     {
