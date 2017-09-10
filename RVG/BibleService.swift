@@ -87,34 +87,6 @@ class BibleService {
         }
     }
     
-    func getMediaGospels(forGospelId gospelId: (String), success: @escaping ([MediaGospel]?) -> ()) throws -> () {
-        do {
-            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: mediaGospelApi, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
-                
-                var parsedObject: MediaGospelResponse
-                do {
-                    if let _ = data {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = MediaGospelResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.media)
-                        }
-                    } else {
-                        throw SessionError.jsonParseFailed
-                    }
-                } catch {
-                    print("error: \(error)")
-                }
-            }
-        } catch let error {
-            print("BibleService getMediaGospels error: \(error)")
-            throw error
-        }
-        
-    }
-
-    
     func getSupportedLanguageIdentifiers(success: @escaping ([LanguageIdentifier]?) -> ()) throws -> () {
         
         do {

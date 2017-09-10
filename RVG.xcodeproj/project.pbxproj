@@ -44,6 +44,7 @@
 		6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */; };
 		689A05451ED27A9E00D3232D /* Bible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A05441ED27A9E00D3232D /* Bible.swift */; };
 		689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */; };
+		68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */; };
 		68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1011F56486C00D986D4 /* KJVRVGService.swift */; };
 		68B2B1051F57B70600D986D4 /* BookTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1031F57B70600D986D4 /* BookTitle.swift */; };
 		68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */; };
@@ -156,6 +157,7 @@
 		689A05441ED27A9E00D3232D /* Bible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bible.swift; sourceTree = "<group>"; };
 		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DonateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicViewController.swift; sourceTree = "<group>"; };
+		68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaGospelViewController.swift; sourceTree = "<group>"; };
 		68B2B1011F56486C00D986D4 /* KJVRVGService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KJVRVGService.swift; sourceTree = "<group>"; };
 		68B2B1031F57B70600D986D4 /* BookTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTitle.swift; sourceTree = "<group>"; };
 		68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTitleResponse.swift; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 		683D5B861F1A792D0019ED0E /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				68B2B1011F56486C00D986D4 /* KJVRVGService.swift */,
 				681E11781ED1098600B028DD /* BibleService.swift */,
 				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
 			);
@@ -368,7 +371,6 @@
 				687BF6CD1EC00AE3002EDCC3 /* Localizable.strings */,
 				687BF6D81EC014B2002EDCC3 /* InfoPlist.strings */,
 				687BF6D61EC013CA002EDCC3 /* Info.plist */,
-				68B2B1011F56486C00D986D4 /* KJVRVGService.swift */,
 			);
 			path = RVG;
 			sourceTree = "<group>";
@@ -403,6 +405,7 @@
 				686233EB1EFF71FC0046D952 /* PlaybackService.swift */,
 				703D12B81E67156D0093E1AA /* ChapterViewController.swift */,
 				68BE69D31EEA3FBF0082956D /* GospelViewController.swift */,
+				68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */,
 				68BE69D51EEA57380082956D /* LanguageViewController.swift */,
 				70CD20631E6479A800AF619F /* MainViewController.swift */,
 				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
@@ -879,6 +882,7 @@
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
+				68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */,
 				681E11791ED1098600B028DD /* BibleService.swift in Sources */,

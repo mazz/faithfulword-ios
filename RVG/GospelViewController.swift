@@ -1,25 +1,22 @@
-//
-//  GospelViewController.swift
-//  RVG
-//
-//  Created by maz on 2017-06-08.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
-
 import UIKit
 import MBProgressHUD
 import Moya
+
+enum GospelType {
+    case planOfSalvation
+    case soulwinningMotivation
+}
 
 class GospelViewController: BaseClass {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var songsBarRightButton: UIBarButtonItem!
 
     var gospelId : String? = nil
-    var media : [Playable] = []
+    var gospels : [Gospel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = NSLocalizedString("Plan Of Salvation", comment: "")
+        self.title = NSLocalizedString("Gospel", comment: "")
 
         let provider = MoyaProvider<KJVRVGService>()
         
@@ -35,8 +32,8 @@ class GospelViewController: BaseClass {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
 
-        provider.request(.gospelMedia) { result in
-            print("gospelMedia: \(result)")
+        provider.request(.gospels(languageId: Device.preferredLanguageIdentifier())) { result in
+            print("gospels: \(result)")
             switch result {
             case let .success(moyaResponse):
                 do {
@@ -49,7 +46,7 @@ class GospelViewController: BaseClass {
                         parsedObject = GospelResponse(JSON: jsonObject)!
                         print(parsedObject)
                         
-                        self.media = parsedObject.gospels!
+                        self.gospels = parsedObject.gospels!
                         DispatchQueue.main.async {
                             MBProgressHUD.hide(for: self.view, animated: true)
                             self.tableView.reloadData()
@@ -95,29 +92,31 @@ class GospelViewController: BaseClass {
 
 extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.media.count
+        return self.gospels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
             cell.selectionStyle = .none
-            cell.songLabel?.text = self.media[indexPath.row].localizedName!
-            cell.imageIconView.image = UIImage(named:"candlelight")!
+            cell.songLabel?.text = self.gospels[indexPath.row].localizedTitle!
+            cell.imageIconView.image = (indexPath.row == 0) ? UIImage(named:"candlelight")! : UIImage(named:"feetprint")! 
             return cell
         }
         return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let reachability = Reachability()!
         
-        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
-            
-            PlaybackService.sharedInstance().disposePlayback()
-            PlaybackService.sharedInstance().media = media
-            PlaybackService.sharedInstance().mediaIndex = indexPath.row
-            
-            viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+        if reachability.currentReachabilityStatus != .notReachable {
+            if let gospelId = gospels[indexPath.row].gospelId {
+                let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
+                vc?.gospelId = gospelId
+                vc?.gospelType = (indexPath.row == 0) ? .planOfSalvation : .soulwinningMotivation
+                self.navigationController?.pushViewController(vc!, animated: true)
+            }
+        } else {
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
         }
     }
 }

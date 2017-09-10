@@ -24,7 +24,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet var menuBar: UIBarButtonItem!
     
     var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
-                                                (NSLocalizedString("Plan Of Salvation", comment: ""), UIImage(named: "feetprint")!),
+                                                (NSLocalizedString("Gospel", comment: ""), UIImage(named: "feetprint")!),
                                                 (NSLocalizedString("Music", comment: ""), UIImage(named: "discs_icon_white")!),
                                                 (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
                                                 (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
@@ -82,7 +82,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
                             MBProgressHUD.hide(for: self.view, animated: true)
                             self.collectionView.reloadData()
                         }
-                        
                     }
                 }
                 catch {
