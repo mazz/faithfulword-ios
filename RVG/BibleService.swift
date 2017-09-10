@@ -12,11 +12,7 @@ import ObjectMapper
 class BibleService {
     static var bibleService :  BibleService?
     
-    internal let bookApi :                                  String = "/v1.1/books"
     internal let supportedLanguageIdentifierApi :           String = "/v1.1/languages/supported"
-    internal let allLanguageIdentifierApi :                 String = "/v1.1/languages"
-    internal let mediaChapterApi :                          String = "/v1.1/books/{bid}/media"
-    internal let mediaGospelApi :                           String = "/v1.1/gospel/media"
     internal let musicApi :                                 String = "/v1.1/music"
     internal let mediaMusicApi :                            String = "/v1.1/music/{mid}/media"
     
@@ -29,62 +25,6 @@ class BibleService {
             bibleService = BibleService()
         }
         return bibleService!
-    }
-    
-    func getBooks(success: @escaping ([Book]?) -> ()) throws -> () {
-        do {
-            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: bookApi, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
-                
-                var parsedObject: BookResponse
-                
-                do {
-                    if let _ = data {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = BookResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.books)
-                        }
-                        
-                    } else {
-                        throw SessionError.jsonParseFailed
-                    }
-                } catch {
-                    print("error: \(error)")
-                }
-            }
-        } catch let error {
-            print("BibleService getBooks error: \(error)")
-            throw error
-        }
-    }
-
-    func getMediaChapters(forBookId bookId: (String), success: @escaping ([MediaChapter]?) -> ()) throws -> () {
-        do {
-            let finalPathString = mediaChapterApi.replacingOccurrences(of: "{bid}", with: bookId, options: .literal, range: nil)
-
-            try BibleService.sharedInstance().makeRequest(method: "GET", endpointPath: finalPathString, languageIdentifier: Device.preferredLanguageIdentifier()) { (data, urlResponse, error) in
-                
-                var parsedObject: MediaChapterResponse
-                do {
-                    if let _ = data {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = MediaChapterResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            success(parsedObject.media)
-                        }
-                    } else {
-                        throw SessionError.jsonParseFailed
-                    }
-                } catch {
-                    print("error: \(error)")
-                }
-            }
-        } catch let error {
-            print("BibleService getMediaChapters error: \(error)")
-            throw error
-        }
     }
     
     func getSupportedLanguageIdentifiers(success: @escaping ([LanguageIdentifier]?) -> ()) throws -> () {
