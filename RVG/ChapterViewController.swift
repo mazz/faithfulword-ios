@@ -6,6 +6,7 @@
 import UIKit
 import MBProgressHUD
 import Moya
+import L10n_swift
 
 class ChapterViewController: BaseClass {
     @IBOutlet var songsBarRightButton: UIBarButtonItem!
@@ -17,11 +18,73 @@ class ChapterViewController: BaseClass {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = NSLocalizedString("Chapters", comment: "")
-        let provider = MoyaProvider<KJVRVGService>()
+        self.title = NSLocalizedString("Chapters", comment: "").l10n()
+//        let provider = MoyaProvider<KJVRVGService>()
+//
+//        let errorClosure = { (error: Swift.Error) -> Void in
+//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
+//            print("error: \(error)")
+//            
+//            DispatchQueue.main.async {
+//                MBProgressHUD.hide(for: self.view, animated: true)
+//            }
+//        }
+//        
+//        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+//        loadingNotification.mode = MBProgressHUDMode.indeterminate
+//
+//        provider.request(.booksChapterMedia(bid: self.bookId!, languageId: Device.preferredLanguageIdentifier())) {
+//            result in
+//            print("booksChapterMedia: \(result)")
+//            switch result {
+//            case let .success(moyaResponse):
+//                do {
+//                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+//                    let data = moyaResponse.data
+//                    var parsedObject: MediaChapterResponse
+//                    
+//                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+//                    if let jsonObject = json as? [String:Any] {
+//                        parsedObject = MediaChapterResponse(JSON: jsonObject)!
+//                        print(parsedObject)
+//                        self.media = parsedObject.media!
+//                        DispatchQueue.main.async {
+//                            MBProgressHUD.hide(for: self.view, animated: true)
+//                            self.tableView.reloadData()
+//                        }
+//                        
+//                    }
+//                }
+//                catch {
+//                    errorClosure(error)
+//                }
+//                
+//            case let .failure(error):
+//                // this means there was a network failure - either the request
+//                // wasn't sent (connectivity), or no response was received (server
+//                // timed out).  If the server responds with a 4xx or 5xx error, that
+//                // will be sent as a ".success"-ful response.
+//                errorClosure(error)
+//            }
+//        }
+        
+        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if (PlaybackService.sharedInstance().player != nil) {
+            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+        
+        let provider = MoyaProvider<KJVRVGService>()
+        
         let errorClosure = { (error: Swift.Error) -> Void in
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
             print("error: \(error)")
             
             DispatchQueue.main.async {
@@ -31,8 +94,8 @@ class ChapterViewController: BaseClass {
         
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
-
-        provider.request(.booksChapterMedia(bid: self.bookId!, languageId: Device.preferredLanguageIdentifier())) {
+        
+        provider.request(.booksChapterMedia(bid: self.bookId!, languageId: L10n.shared.language)) {
             result in
             print("booksChapterMedia: \(result)")
             switch result {
@@ -65,19 +128,6 @@ class ChapterViewController: BaseClass {
                 // will be sent as a ".success"-ful response.
                 errorClosure(error)
             }
-        }
-        
-        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
-
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        if (PlaybackService.sharedInstance().player != nil) {
-            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
-        } else {
-            self.navigationItem.rightBarButtonItem = nil
         }
     }
     

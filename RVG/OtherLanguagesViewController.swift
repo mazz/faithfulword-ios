@@ -9,6 +9,7 @@
 import UIKit
 import Moya
 import MBProgressHUD
+import L10n_swift
 
 class OtherLanguagesViewController: BaseClass {
     
@@ -19,8 +20,76 @@ class OtherLanguagesViewController: BaseClass {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = NSLocalizedString("Other Languages", comment: "")
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(self.onLanguageChanged), name: .L10nLanguageChanged, object: nil
+        )
+
+//        self.title = NSLocalizedString("Other Languages", comment: "").l10n()
+//        
+//        let provider = MoyaProvider<KJVRVGService>()
+//        
+//        let errorClosure = { (error: Swift.Error) -> Void in
+//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the media.", comment: ""))
+//            print("error: \(error)")
+//            
+//            DispatchQueue.main.async {
+//                MBProgressHUD.hide(for: self.view, animated: true)
+//            }
+//        }
+//        
+//        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+//        loadingNotification.mode = MBProgressHUDMode.indeterminate
+//        
+//        provider.request(.languagesSupported) { result in
+//            print("languagesSupported: \(result)")
+//            switch result {
+//            case let .success(moyaResponse):
+//                do {
+//                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+//                    let data = moyaResponse.data
+//                    var parsedObject: LanguagesSupportedResponse
+//                    
+//                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+//                    if let jsonObject = json as? [String:Any] {
+//                        parsedObject = LanguagesSupportedResponse(JSON: jsonObject)!
+//                        print(parsedObject)
+//                        
+//                        self.languages = parsedObject.languageIdentifiers!
+//                        DispatchQueue.main.async {
+//                            MBProgressHUD.hide(for: self.view, animated: true)
+//                            self.tableView.reloadData()
+//                        }
+//                        
+//                    }
+//                }
+//                catch {
+//                    errorClosure(error)
+//                }
+//                
+//            case let .failure(error):
+//                // this means there was a network failure - either the request
+//                // wasn't sent (connectivity), or no response was received (server
+//                // timed out).  If the server responds with a 4xx or 5xx error, that
+//                // will be sent as a ".success"-ful response.
+//                errorClosure(error)
+//            }
+//        }
+        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if (PlaybackService.sharedInstance().player != nil) {
+            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+        
+        self.title = NSLocalizedString("Other Languages", comment: "").l10n()
+        self.navigationItem.title = NSLocalizedString("Other Languages", comment: "").l10n()
+
         let provider = MoyaProvider<KJVRVGService>()
         
         let errorClosure = { (error: Swift.Error) -> Void in
@@ -69,18 +138,8 @@ class OtherLanguagesViewController: BaseClass {
                 errorClosure(error)
             }
         }
-        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
+
         
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        if (PlaybackService.sharedInstance().player != nil) {
-            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
-        } else {
-            self.navigationItem.rightBarButtonItem = nil
-        }
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
@@ -102,20 +161,66 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
             cell.selectionStyle = .none
             
-            let languageID = Bundle.main.preferredLocalizations[0]// [[NSBundle mainBundle] preferredLocalizations].firstObject;
-            let locale = NSLocale(localeIdentifier: languageID)
-            let localizedString = locale.displayName(forKey: NSLocale.Key.identifier, value: self.languages[indexPath.row].languageIdentifier!)
-            cell.songLabel?.text = localizedString
-            cell.imageIconView.image = UIImage(named: "language_menu")!
-            cell.disclosure.isHidden = true
+//            let languageID = Bundle.main.preferredLocalizations[0]// [[NSBundle mainBundle] preferredLocalizations].firstObject;
+//            let locale = NSLocale(localeIdentifier: languageID)
+//            let localizedString = locale.displayName(forKey: NSLocale.Key.identifier, value: self.languages[indexPath.row].languageIdentifier!)
+            if let languageIdentifier = self.languages[indexPath.row].languageIdentifier {
+                cell.songLabel?.text = self.localizedString(identifier: languageIdentifier)
+                cell.imageIconView.image = UIImage(named: "language_menu")!
+                
+                if L10n.shared.language == languageIdentifier {
+                    cell.customAccessory.isHidden = false
+                    cell.customAccessory.image = UIImage(named: "check")
+                } else {
+                    cell.customAccessory.isHidden = true
+                }
+            }
+            
             return cell
         }
         return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if let languageIdentifier = self.languages[indexPath.row].languageIdentifier {
+            print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
+            print("L10n.supportedLanguages: \(L10n.supportedLanguages)")
+            print("Bundle.main.preferredLocalizations: \(Bundle.main.preferredLocalizations)")
+
+            L10n.shared.language = languageIdentifier
+//            L10n.preferredLanguage = languageIdentifier
+            
+            print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
+            print("L10n.shared.language: \(L10n.shared.language)")
+            print("languageIdentifier: \(languageIdentifier)")
+
+            if languageIdentifier != Bundle.main.preferredLocalizations[0] {
+                let suffix: String = "\(self.localizedString(identifier: languageIdentifier))? "
+                let alertString: String = NSLocalizedString("Do you want to change the language to ", comment: "")
+                let restartMessage: String = NSLocalizedString("The app will need to exit.", comment: "")
+                //            DispatchQueue.main.async {
+                //                self.showTwoButtonAlertWithLeftAction(title: alertString.appending(suffix).appending(restartMessage),
+                //                                                      buttonTitleLeft: NSLocalizedString("Yes", comment: ""),
+                //                                                      buttonTitleRight: NSLocalizedString("No", comment: "")) { (nil) in
+                //
+                //                                                        self.dismiss(animated: true) { _ in }
+                ////                                                        UserDefaults.standard.set(self.languages[indexPath.row].languageIdentifier!, forKey: "AppleLanguages")
+                ////                                                        UserDefaults.standard.synchronize()
+                //                                                        exit(0)
+                //                }
+                //                
+                //            }
+
+        }
+        
+    }
+        
+
+//
+        
 //        let reachability = Reachability()!
-//        
+//
 //        if reachability.currentReachabilityStatus != .notReachable {
 //            if let gospelId = languages[indexPath.row].gospelId {
 //                let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
@@ -126,6 +231,26 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
 //        } else {
 //            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
 //        }
+    }
+    
+    func localizedString(identifier: String) -> String {
+        let languageID = Bundle.main.preferredLocalizations[0]// [[NSBundle mainBundle] preferredLocalizations].firstObject;
+        let locale = NSLocale(localeIdentifier: languageID)
+        return locale.displayName(forKey: NSLocale.Key.identifier, value: identifier)!
+    }
+    
+    func onLanguageChanged() {
+        self.navigationController?.setViewControllers(
+            self.navigationController?.viewControllers.map {
+                if let storyboard = $0.storyboard, let identifier = $0.restorationIdentifier {
+                    self.navigationItem.title = NSLocalizedString("Other Languages", comment: "").l10n()
+                    self.title = NSLocalizedString("Other Languages", comment: "").l10n()
+                    return storyboard.instantiateViewController(withIdentifier: identifier)
+                }
+                return $0
+                } ?? [],
+            animated: false
+        )
     }
 }
 

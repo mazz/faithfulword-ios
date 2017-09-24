@@ -70,7 +70,7 @@
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
-                <outlet property="disclosure" destination="eci-bR-gps" id="cUK-je-VIz"/>
+                <outlet property="customAccessory" destination="eci-bR-gps" id="J3A-ic-qM6"/>
                 <outlet property="imageIconView" destination="L29-aB-1u1" id="W5E-5o-gDf"/>
                 <outlet property="songLabel" destination="lsp-l0-Qlg" id="Z6h-1U-ES0"/>
             </connections>

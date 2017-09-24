@@ -8,6 +8,7 @@ import MBProgressHUD
 import MessageUI
 import SafariServices
 import Moya
+import L10n_swift
 
 class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
@@ -23,20 +24,16 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet var menuBar: UIBarButtonItem!
     
-    var tableRowsArray: [(String, UIImage)]? = [(NSLocalizedString("Books", comment: ""), UIImage(named: "books-stack-of-three")!),
-                                                (NSLocalizedString("Gospel", comment: ""), UIImage(named: "feetprint")!),
-                                                (NSLocalizedString("Music", comment: ""), UIImage(named: "discs_icon_white")!),
-                                                (NSLocalizedString("About Us", comment: ""), UIImage(named: "about_ic")!),
-                                                (NSLocalizedString("Share", comment: ""), UIImage(named: "share_ic")!),
-                                                (NSLocalizedString("Other Languages", comment: ""), UIImage(named: "language_menu")!),
-                                                (NSLocalizedString("Donate", comment: ""), UIImage(named: "donate")!),
-                                                (NSLocalizedString("Privacy Policy", comment: ""), UIImage(named: "privacy_ic")!),
-                                                (NSLocalizedString("Contact Us", comment: ""), UIImage(named: "mail")!),
-                                                ]
+    var tableRowsArray: [(String, UIImage)]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // MenuFooterTableViewCell
         
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(self.onLanguageChanged), name: .L10nLanguageChanged, object: nil
+        )
+
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 40
         
@@ -48,7 +45,99 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         
         self.navigationItem.leftBarButtonItem = menuBar
         
-        self.navigationItem.title = NSLocalizedString("Books", comment: "")
+//        self.navigationItem.title = NSLocalizedString("Books", comment: "").l10n()
+//        
+//        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+//        loadingNotification.mode = MBProgressHUDMode.indeterminate
+//        
+//        let provider = MoyaProvider<KJVRVGService>()
+//        
+//        let errorClosure = { (error: Swift.Error) -> Void in
+//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+//            print("error: \(error)")
+//            
+//            DispatchQueue.main.async {
+//                MBProgressHUD.hide(for: self.view, animated: true)
+//            }
+//        }
+//        let languageIdentifier: String = Device.preferredLanguageIdentifier().l10n()
+//        print("main languageIdentifier \(languageIdentifier)")
+//        print("main L10n.shared.language \(L10n.shared.language)")
+//
+//        provider.request(.books(languageId: L10n.shared.language)) { result in
+//            print("moya books: \(result)")
+//            switch result {
+//            case let .success(moyaResponse):
+//                do {
+//                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+//                    let data = moyaResponse.data
+//                    var parsedObject: BookResponse
+//                    
+//                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+//                    if let jsonObject = json as? [String:Any] {
+//                        parsedObject = BookResponse(JSON: jsonObject)!
+//                        print(parsedObject)
+//                        self.books = parsedObject.books!
+//                        DispatchQueue.main.async {
+//                            MBProgressHUD.hide(for: self.view, animated: true)
+//                            self.collectionView.reloadData()
+//                        }
+//                    }
+//                }
+//                catch {
+//                    errorClosure(error)
+//                }
+//                
+//            case let .failure(error):
+//                // this means there was a network failure - either the request
+//                // wasn't sent (connectivity), or no response was received (server
+//                // timed out).  If the server responds with a 4xx or 5xx error, that
+//                // will be sent as a ".success"-ful response.
+//                errorClosure(error)
+//            }
+//        }
+        
+    }
+    
+    @IBAction func showPlayer(_ sender: AnyObject) {
+        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
+            
+            viewController.modalTransitionStyle = .crossDissolve
+            self.present(viewController, animated: true, completion: { _ in })
+        }
+    }
+    
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        self.tableRowsArray = [(NSLocalizedString("Books", comment: "").l10n(), UIImage(named: "books-stack-of-three")!),
+         (NSLocalizedString("Gospel", comment: "").l10n(), UIImage(named: "feetprint")!),
+         (NSLocalizedString("Music", comment: "").l10n(), UIImage(named: "discs_icon_white")!),
+         (NSLocalizedString("About Us", comment: "").l10n(), UIImage(named: "about_ic")!),
+         (NSLocalizedString("Share", comment: "").l10n(), UIImage(named: "share_ic")!),
+         (NSLocalizedString("Other Languages", comment: "").l10n(), UIImage(named: "language_menu")!),
+         (NSLocalizedString("Donate", comment: "").l10n(), UIImage(named: "donate")!),
+         (NSLocalizedString("Privacy Policy", comment: "").l10n(), UIImage(named: "privacy_ic")!),
+         (NSLocalizedString("Contact Us", comment: "").l10n(), UIImage(named: "mail")!),
+         ]
+        
+        self.tableView.reloadData()
+        
+        self.refreshTitles()
+        
+        if (PlaybackService.sharedInstance().player != nil) {
+            self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+        
+        self.navigationItem.title = NSLocalizedString("Books", comment: "").l10n()
         
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
@@ -64,7 +153,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             }
         }
         
-        provider.request(.books(languageId: Device.preferredLanguageIdentifier())) { result in
+        provider.request(.books(languageId: L10n.shared.language)) { result in
             print("moya books: \(result)")
             switch result {
             case let .success(moyaResponse):
@@ -96,36 +185,32 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
                 errorClosure(error)
             }
         }
+    }
+    
+    func refreshTitles() {
+        self.tableRowsArray = [(NSLocalizedString("Books", comment: "").l10n(), UIImage(named: "books-stack-of-three")!),
+                               (NSLocalizedString("Gospel", comment: "").l10n(), UIImage(named: "feetprint")!),
+                               (NSLocalizedString("Music", comment: "").l10n(), UIImage(named: "discs_icon_white")!),
+                               (NSLocalizedString("About Us", comment: "").l10n(), UIImage(named: "about_ic")!),
+                               (NSLocalizedString("Share", comment: "").l10n(), UIImage(named: "share_ic")!),
+                               (NSLocalizedString("Other Languages", comment: "").l10n(), UIImage(named: "language_menu")!),
+                               (NSLocalizedString("Donate", comment: "").l10n(), UIImage(named: "donate")!),
+                               (NSLocalizedString("Privacy Policy", comment: "").l10n(), UIImage(named: "privacy_ic")!),
+                               (NSLocalizedString("Contact Us", comment: "").l10n(), UIImage(named: "mail")!),
+        ]
         
-    }
-    
-    @IBAction func showPlayer(_ sender: AnyObject) {
-        PlaybackService.sharedInstance().avoidRestartOnLoad = true
-        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
-            
-            viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
-        }
-    }
-    
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        if (PlaybackService.sharedInstance().player != nil) {
-            self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
-        } else {
-            self.navigationItem.rightBarButtonItem = nil
-        }
+        self.tableView.reloadData()
+
+        self.navigationItem.title = NSLocalizedString("Books", comment: "").l10n()
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let layouts = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
         layouts?.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
+    }
+    
+    func onLanguageChanged() {
+        self.refreshTitles()
     }
     
     @IBAction func toggleMenu(_ sender: UIButton) {
@@ -188,8 +273,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
-            cell?.verseBodyLabel.text = NSLocalizedString("I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture.", comment: "")
-            cell?.chapterAndVerseLabel.text = NSLocalizedString("-Jesus Christ (John 10:9)", comment: "")
+            cell?.verseBodyLabel.text = NSLocalizedString("I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture.", comment: "").l10n()
+            cell?.chapterAndVerseLabel.text = NSLocalizedString("-Jesus Christ (John 10:9)", comment: "").l10n()
             
             return cell!
         } else {
@@ -254,7 +339,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             if MFMailComposeViewController.canSendMail() {
                 self.present(mailComposeViewController, animated: true, completion: nil)
             } else {
-                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: ""))
+                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: "").l10n())
             }
         }
         toggleMenu(UIButton())

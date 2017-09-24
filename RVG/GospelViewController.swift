@@ -1,6 +1,7 @@
 import UIKit
 import MBProgressHUD
 import Moya
+import L10n_swift
 
 enum GospelType {
     case planOfSalvation
@@ -16,8 +17,71 @@ class GospelViewController: BaseClass {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = NSLocalizedString("Gospel", comment: "")
-
+//        self.title = NSLocalizedString("Gospel", comment: "").l10n()
+//
+//        let provider = MoyaProvider<KJVRVGService>()
+//        
+//        let errorClosure = { (error: Swift.Error) -> Void in
+//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+//            print("error: \(error)")
+//            
+//            DispatchQueue.main.async {
+//                MBProgressHUD.hide(for: self.view, animated: true)
+//            }
+//        }
+//        
+//        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+//        loadingNotification.mode = MBProgressHUDMode.indeterminate
+//
+//        provider.request(.gospels(languageId: Device.preferredLanguageIdentifier())) { result in
+//            print("gospels: \(result)")
+//            switch result {
+//            case let .success(moyaResponse):
+//                do {
+//                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+//                    let data = moyaResponse.data
+//                    var parsedObject: GospelResponse
+//                    
+//                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+//                    if let jsonObject = json as? [String:Any] {
+//                        parsedObject = GospelResponse(JSON: jsonObject)!
+//                        print(parsedObject)
+//                        
+//                        self.gospels = parsedObject.gospels!
+//                        DispatchQueue.main.async {
+//                            MBProgressHUD.hide(for: self.view, animated: true)
+//                            self.tableView.reloadData()
+//                        }
+//                        
+//                    }
+//                }
+//                catch {
+//                    errorClosure(error)
+//                }
+//                
+//            case let .failure(error):
+//                // this means there was a network failure - either the request
+//                // wasn't sent (connectivity), or no response was received (server
+//                // timed out).  If the server responds with a 4xx or 5xx error, that
+//                // will be sent as a ".success"-ful response.
+//                errorClosure(error)
+//            }
+//        }
+        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if (PlaybackService.sharedInstance().player != nil) {
+            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
+        } else {
+            self.navigationItem.rightBarButtonItem = nil
+        }
+        
+        self.title = NSLocalizedString("Gospel", comment: "").l10n()
+        
         let provider = MoyaProvider<KJVRVGService>()
         
         let errorClosure = { (error: Swift.Error) -> Void in
@@ -31,8 +95,8 @@ class GospelViewController: BaseClass {
         
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
-
-        provider.request(.gospels(languageId: Device.preferredLanguageIdentifier())) { result in
+        
+        provider.request(.gospels(languageId: L10n.shared.language)) { result in
             print("gospels: \(result)")
             switch result {
             case let .success(moyaResponse):
@@ -66,18 +130,7 @@ class GospelViewController: BaseClass {
                 errorClosure(error)
             }
         }
-        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-        if (PlaybackService.sharedInstance().player != nil) {
-            self.navigationItem.rightBarButtonItem = self.songsBarRightButton
-        } else {
-            self.navigationItem.rightBarButtonItem = nil
-        }
+
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {

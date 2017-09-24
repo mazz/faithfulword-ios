@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import L10n_swift
 
 class PlayerContainerViewController: BaseClass {
 
@@ -30,9 +31,9 @@ class PlayerContainerViewController: BaseClass {
     @IBAction func close(_ sender: AnyObject) {
         print("close")
         
-        self.showTwoButtonAlertWithLeftAction(title: NSLocalizedString("Do you want to close the player?", comment: ""),
-                                              buttonTitleLeft: NSLocalizedString("Yes", comment: ""),
-                                              buttonTitleRight: NSLocalizedString("No", comment: "")) { (nil) in
+        self.showTwoButtonAlertWithLeftAction(title: NSLocalizedString("Do you want to close the player?", comment: "").l10n(),
+                                              buttonTitleLeft: NSLocalizedString("Yes", comment: "").l10n(),
+                                              buttonTitleRight: NSLocalizedString("No", comment: "").l10n()) { (nil) in
                                                 
                                                 self.dismiss(animated: true) { _ in }
                                                 PlaybackService.sharedInstance().disposePlayback()
