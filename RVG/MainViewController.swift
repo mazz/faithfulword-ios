@@ -231,8 +231,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
         else if indexPath.row == 5 {
             let vc = self.pushVc(strBdName: "Main", vcName: "OtherLanguagesViewController") as! OtherLanguagesViewController
-            let videoURL = URL(fileURLWithPath:Bundle.main.path(forResource: "other-languages-sm", ofType: "m4v")!)
-            vc.looper = QueuePlayerLooper(videoURL: videoURL, loopCount: -1)
+//            let videoURL = URL(fileURLWithPath:Bundle.main.path(forResource: "other-languages-sm", ofType: "m4v")!)
+//            vc.looper = QueuePlayerLooper(videoURL: videoURL, loopCount: -1)
             
             self.navigationController?.pushViewController(vc, animated: true)
         }

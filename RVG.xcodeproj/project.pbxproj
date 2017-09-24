@@ -87,6 +87,7 @@
 		70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD209F1E64857D00AF619F /* ExtentionsAll.swift */; };
 		70CD20A71E6486CC00AF619F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20A61E6486CC00AF619F /* Constants.swift */; };
 		C4BABE1A6FF4627E9945C10B /* Pods_RVGUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */; };
+		F463A90D1F68DAD00012CFEB /* LanguagesSupportedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */; };
 		F4EAE455D8A9B4AFF89DDE65 /* Pods_KJVRVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF186C60E7CB0762EA6444C2 /* Pods_KJVRVG.framework */; };
 /* End PBXBuildFile section */
 
@@ -224,6 +225,7 @@
 		9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF36FF2BC753A1E5EDF5D392 /* Pods-RVGTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguagesSupportedResponse.swift; sourceTree = "<group>"; };
 		F7107FE8D01A02FBD84C45CD /* Pods-KJVRVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KJVRVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-KJVRVG/Pods-KJVRVG.release.xcconfig"; sourceTree = "<group>"; };
 		FF186C60E7CB0762EA6444C2 /* Pods_KJVRVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KJVRVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -450,6 +452,7 @@
 				68F0F3F81F11EC1B00718AFF /* MediaMusic.swift */,
 				68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */,
 				68BE69CF1EEA3B730082956D /* Gospel.swift */,
+				F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */,
 				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
 				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
 				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
@@ -710,9 +713,24 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-KJVRVG/Pods-KJVRVG-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -725,9 +743,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RVGTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -755,9 +776,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KJVRVG-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -785,9 +809,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RVGUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -834,6 +861,7 @@
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
+				F463A90D1F68DAD00012CFEB /* LanguagesSupportedResponse.swift in Sources */,
 				686233EE1EFF71FC0046D952 /* PlaybackService.swift in Sources */,
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,

@@ -12,6 +12,7 @@ class ChapterTableViewCell: UITableViewCell {
 
     @IBOutlet weak var songLabel: UILabel!
     @IBOutlet weak var imageIconView: UIImageView!
+    @IBOutlet weak var disclosure: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

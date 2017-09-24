@@ -5,7 +5,7 @@
 
 import UIKit
 
-class PrivacyPolicy: BaseClass{
+class PrivacyPolicy: BaseClass {
     
     @IBOutlet weak var textView: UITextView!
     override func viewDidLoad() {

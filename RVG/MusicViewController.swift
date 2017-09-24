@@ -13,7 +13,7 @@ class MusicViewController: BaseClass {
     @IBOutlet var musicBarRightButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
 
-    var musicIds : [Music] = []
+    var musicIds: [Music] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
