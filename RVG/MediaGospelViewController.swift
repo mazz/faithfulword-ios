@@ -105,7 +105,15 @@ extension MediaGospelViewController: UITableViewDelegate, UITableViewDataSource 
             cell.songLabel?.text = self.media[indexPath.row].localizedName!
             
             if let gospelType = self.gospelType {
-                cell.imageIconView.image = (gospelType == .planOfSalvation) ? UIImage(named:"candlelight")! : UIImage(named:"feetprint")!
+
+                switch gospelType {
+                case .planOfSalvation:
+                    cell.imageIconView.image = UIImage(named:"feetprint")!
+                case .soulwinningMotivation:
+                    cell.imageIconView.image = UIImage(named:"fire_icon_white")!
+                case .soulwinningTutorial:
+                    cell.imageIconView.image = UIImage(named:"feetprint")!
+                }
             }
             return cell
         }

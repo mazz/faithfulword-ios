@@ -6,6 +6,7 @@ import L10n_swift
 enum GospelType {
     case planOfSalvation
     case soulwinningMotivation
+    case soulwinningTutorial
 }
 
 class GospelViewController: BaseClass {
@@ -179,7 +180,17 @@ extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
             if let gospelId = gospels[indexPath.row].gospelId {
                 let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
                 vc?.gospelId = gospelId
-                vc?.gospelType = (indexPath.row == 0) ? .planOfSalvation : .soulwinningMotivation
+                
+                switch indexPath.row {
+                case 0:
+                    vc?.gospelType = .planOfSalvation
+                case 1:
+                    vc?.gospelType = .soulwinningMotivation
+                case 2:
+                    vc?.gospelType = .soulwinningTutorial
+                default:
+                    vc?.gospelType = .planOfSalvation
+                }
                 self.navigationController?.pushViewController(vc!, animated: true)
             }
         } else {
