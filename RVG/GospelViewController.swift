@@ -156,7 +156,17 @@ extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
             cell.selectionStyle = .none
             cell.songLabel?.text = self.gospels[indexPath.row].localizedTitle!
-            cell.imageIconView.image = (indexPath.row == 0) ? UIImage(named:"candlelight")! : UIImage(named:"feetprint")! 
+            
+            switch indexPath.row {
+            case 0:
+                cell.imageIconView.image = UIImage(named:"feetprint")!
+            case 1:
+                cell.imageIconView.image = UIImage(named:"fire_icon_white")!
+            case 2:
+                cell.imageIconView.image = UIImage(named:"feetprint")!
+            default:
+                cell.imageIconView.image = UIImage(named:"feetprint")!
+            }
             return cell
         }
         return UITableViewCell()

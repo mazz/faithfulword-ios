@@ -176,7 +176,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     func refreshTitles() {
         self.tableRowsArray = [(NSLocalizedString("Books", comment: "").l10n(), UIImage(named: "books-stack-of-three")!),
-                               (NSLocalizedString("Gospel", comment: "").l10n(), UIImage(named: "feetprint")!),
+                               (NSLocalizedString("Gospel", comment: "").l10n(), UIImage(named: "candlelight")!),
                                (NSLocalizedString("Music", comment: "").l10n(), UIImage(named: "discs_icon_white")!),
                                (NSLocalizedString("About Us", comment: "").l10n(), UIImage(named: "about_ic")!),
                                (NSLocalizedString("Share", comment: "").l10n(), UIImage(named: "share_ic")!),
