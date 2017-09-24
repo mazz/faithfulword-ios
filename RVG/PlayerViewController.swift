@@ -317,7 +317,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
 
     func playbackFailed() {
         MBProgressHUD.hide(for: self.view, animated: true)
-        self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem getting the media.", comment: ""))
+        self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem getting the media.", comment: "").l10n())
 
         print("PlaybackDisplayDelegate playbackFailed")
         emptyUIState()

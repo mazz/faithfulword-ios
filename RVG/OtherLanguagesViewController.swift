@@ -93,7 +93,7 @@ class OtherLanguagesViewController: BaseClass {
         let provider = MoyaProvider<KJVRVGService>()
         
         let errorClosure = { (error: Swift.Error) -> Void in
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the media.", comment: ""))
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the media.", comment: "").l10n())
             print("error: \(error)")
             
             DispatchQueue.main.async {
@@ -194,26 +194,6 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
             print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
             print("L10n.shared.language: \(L10n.shared.language)")
             print("languageIdentifier: \(languageIdentifier)")
-
-            if languageIdentifier != Bundle.main.preferredLocalizations[0] {
-                let suffix: String = "\(self.localizedString(identifier: languageIdentifier))? "
-                let alertString: String = NSLocalizedString("Do you want to change the language to ", comment: "")
-                let restartMessage: String = NSLocalizedString("The app will need to exit.", comment: "")
-                //            DispatchQueue.main.async {
-                //                self.showTwoButtonAlertWithLeftAction(title: alertString.appending(suffix).appending(restartMessage),
-                //                                                      buttonTitleLeft: NSLocalizedString("Yes", comment: ""),
-                //                                                      buttonTitleRight: NSLocalizedString("No", comment: "")) { (nil) in
-                //
-                //                                                        self.dismiss(animated: true) { _ in }
-                ////                                                        UserDefaults.standard.set(self.languages[indexPath.row].languageIdentifier!, forKey: "AppleLanguages")
-                ////                                                        UserDefaults.standard.synchronize()
-                //                                                        exit(0)
-                //                }
-                //                
-                //            }
-
-        }
-        
     }
         
 

@@ -17,7 +17,7 @@ class LanguageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = NSLocalizedString("Language", comment: "")
+        self.title = NSLocalizedString("Language", comment: "").l10n()
 //        self.navigationController?.isNavigationBarHidden=false
         
         do {

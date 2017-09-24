@@ -17,6 +17,10 @@ class GospelViewController: BaseClass {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 40
+
 //        self.title = NSLocalizedString("Gospel", comment: "").l10n()
 //
 //        let provider = MoyaProvider<KJVRVGService>()
@@ -85,7 +89,7 @@ class GospelViewController: BaseClass {
         let provider = MoyaProvider<KJVRVGService>()
         
         let errorClosure = { (error: Swift.Error) -> Void in
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
             print("error: \(error)")
             
             DispatchQueue.main.async {
@@ -169,7 +173,7 @@ extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
                 self.navigationController?.pushViewController(vc!, animated: true)
             }
         } else {
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: "").l10n())
         }
     }
 }

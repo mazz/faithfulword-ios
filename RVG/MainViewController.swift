@@ -116,20 +116,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        self.tableRowsArray = [(NSLocalizedString("Books", comment: "").l10n(), UIImage(named: "books-stack-of-three")!),
-         (NSLocalizedString("Gospel", comment: "").l10n(), UIImage(named: "feetprint")!),
-         (NSLocalizedString("Music", comment: "").l10n(), UIImage(named: "discs_icon_white")!),
-         (NSLocalizedString("About Us", comment: "").l10n(), UIImage(named: "about_ic")!),
-         (NSLocalizedString("Share", comment: "").l10n(), UIImage(named: "share_ic")!),
-         (NSLocalizedString("Other Languages", comment: "").l10n(), UIImage(named: "language_menu")!),
-         (NSLocalizedString("Donate", comment: "").l10n(), UIImage(named: "donate")!),
-         (NSLocalizedString("Privacy Policy", comment: "").l10n(), UIImage(named: "privacy_ic")!),
-         (NSLocalizedString("Contact Us", comment: "").l10n(), UIImage(named: "mail")!),
-         ]
-        
-        self.tableView.reloadData()
-        
-        self.refreshTitles()
+        refreshTitles()
         
         if (PlaybackService.sharedInstance().player != nil) {
             self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
@@ -145,7 +132,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         let provider = MoyaProvider<KJVRVGService>()
         
         let errorClosure = { (error: Swift.Error) -> Void in
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
             print("error: \(error)")
             
             DispatchQueue.main.async {
@@ -228,7 +215,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     func shareTextButton() {
         
         // text to share
-        let text = NSLocalizedString("KJVRVG: https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "")
+        let text = NSLocalizedString("KJVRVG: https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "").l10n()
         
         // set up activity view controller
         let textToShare = [ text ]
@@ -308,8 +295,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 3 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "AboutUsViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
+            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/")! as URL)
+            self.present(svc, animated: true, completion: nil)
         }
         else if indexPath.row == 4 {
             shareTextButton()
@@ -375,7 +362,7 @@ extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSourc
                 self.navigationController?.pushViewController(vc!, animated: true)
             }
         } else {
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: "").l10n())
         }
         
     }

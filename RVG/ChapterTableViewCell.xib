@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M4g-nl-xjA">
@@ -44,7 +45,7 @@
                             <constraint firstAttribute="height" constant="50" id="gcl-co-kF9"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lsp-l0-Qlg">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lsp-l0-Qlg">
                         <rect key="frame" x="46" y="16" width="283" height="18"/>
                         <constraints>
                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="18" id="jdo-kU-744"/>
@@ -56,12 +57,14 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 <constraints>
+                    <constraint firstAttribute="bottomMargin" secondItem="lsp-l0-Qlg" secondAttribute="bottom" constant="8" id="0f7-eD-BkH"/>
                     <constraint firstAttribute="trailing" secondItem="M4g-nl-xjA" secondAttribute="trailing" id="Ag3-aK-Wzw"/>
                     <constraint firstItem="lsp-l0-Qlg" firstAttribute="leading" secondItem="L29-aB-1u1" secondAttribute="trailing" constant="8" id="BFY-rq-Ah1"/>
                     <constraint firstAttribute="trailing" secondItem="eci-bR-gps" secondAttribute="trailing" constant="8" id="E4D-Vb-h1X"/>
                     <constraint firstAttribute="bottom" secondItem="M4g-nl-xjA" secondAttribute="bottom" id="IqT-dF-2m2"/>
                     <constraint firstItem="lsp-l0-Qlg" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="QFx-b8-dPd"/>
                     <constraint firstItem="L29-aB-1u1" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Rfo-yl-TYp"/>
+                    <constraint firstItem="lsp-l0-Qlg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="SEi-ZZ-FI6"/>
                     <constraint firstItem="M4g-nl-xjA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Wd7-oH-tsG"/>
                     <constraint firstItem="eci-bR-gps" firstAttribute="leading" secondItem="lsp-l0-Qlg" secondAttribute="trailing" constant="8" id="kZG-6W-QxR"/>
                     <constraint firstItem="eci-bR-gps" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="oOL-wb-Umm"/>

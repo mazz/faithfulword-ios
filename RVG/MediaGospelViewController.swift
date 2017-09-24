@@ -12,12 +12,14 @@ class MediaGospelViewController: BaseClass {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = NSLocalizedString("Gospel", comment: "")
+        
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 40
 
         let provider = MoyaProvider<KJVRVGService>()
         
         let errorClosure = { (error: Swift.Error) -> Void in
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
             print("error: \(error)")
             
             DispatchQueue.main.async {
@@ -77,6 +79,9 @@ class MediaGospelViewController: BaseClass {
         } else {
             self.navigationItem.rightBarButtonItem = nil
         }
+        
+        self.title = NSLocalizedString("Gospel", comment: "").l10n()
+        
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
