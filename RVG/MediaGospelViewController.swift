@@ -80,7 +80,7 @@ class MediaGospelViewController: BaseClass {
             self.navigationItem.rightBarButtonItem = nil
         }
         
-        self.title = NSLocalizedString("Gospel", comment: "").l10n()
+        self.title = NSLocalizedString("Soul-winning", comment: "").l10n()
         
     }
     
@@ -103,18 +103,9 @@ extension MediaGospelViewController: UITableViewDelegate, UITableViewDataSource 
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
             cell.selectionStyle = .none
             cell.songLabel?.text = self.media[indexPath.row].localizedName!
-            
-            if let gospelType = self.gospelType {
 
-                switch gospelType {
-                case .planOfSalvation:
-                    cell.imageIconView.image = UIImage(named:"feetprint")!
-                case .soulwinningMotivation:
-                    cell.imageIconView.image = UIImage(named:"fire_icon_white")!
-                case .soulwinningTutorial:
-                    cell.imageIconView.image = UIImage(named:"feetprint")!
-                }
-            }
+            cell.imageIconView.image = UIImage(named:"double_feetprint_icon_white")!
+
             return cell
         }
         return UITableViewCell()

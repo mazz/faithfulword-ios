@@ -7,6 +7,7 @@ enum GospelType {
     case planOfSalvation
     case soulwinningMotivation
     case soulwinningTutorial
+    case gospelDefault
 }
 
 class GospelViewController: BaseClass {
@@ -85,7 +86,7 @@ class GospelViewController: BaseClass {
             self.navigationItem.rightBarButtonItem = nil
         }
         
-        self.title = NSLocalizedString("Gospel", comment: "").l10n()
+        self.title = NSLocalizedString("Soul-winning", comment: "").l10n()
         
         let provider = MoyaProvider<KJVRVGService>()
         
@@ -158,16 +159,8 @@ extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
             cell.selectionStyle = .none
             cell.songLabel?.text = self.gospels[indexPath.row].localizedTitle!
             
-            switch indexPath.row {
-            case 0:
-                cell.imageIconView.image = UIImage(named:"feetprint")!
-            case 1:
-                cell.imageIconView.image = UIImage(named:"fire_icon_white")!
-            case 2:
-                cell.imageIconView.image = UIImage(named:"feetprint")!
-            default:
-                cell.imageIconView.image = UIImage(named:"feetprint")!
-            }
+            cell.imageIconView.image = UIImage(named:"feetprint")!
+
             return cell
         }
         return UITableViewCell()
@@ -189,7 +182,7 @@ extension GospelViewController: UITableViewDelegate, UITableViewDataSource {
                 case 2:
                     vc?.gospelType = .soulwinningTutorial
                 default:
-                    vc?.gospelType = .planOfSalvation
+                    vc?.gospelType = .gospelDefault
                 }
                 self.navigationController?.pushViewController(vc!, animated: true)
             }
