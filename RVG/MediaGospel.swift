@@ -16,13 +16,13 @@ class MediaGospel : Mappable, Playable {
     var presenterName: String?
     
     required init?(map: Map) {
-        sourceMaterial = ""
     }
     
     func mapping(map: Map) {
         localizedName <- map["localizedName"]
         path <- map["path"]
         presenterName <- map["presenterName"]
+        sourceMaterial  <- map["sourceMaterial"]
     }
     
     

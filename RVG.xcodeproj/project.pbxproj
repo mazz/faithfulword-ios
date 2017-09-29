@@ -13,7 +13,6 @@
 		4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */; };
 		4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */; };
 		4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD655A1EEB3DA400C59DD5 /* LoopView.swift */; };
-		4CDD655F1EEB423F00C59DD5 /* other-languages-sm.m4v in Resources */ = {isa = PBXBuildFile; fileRef = 4CDD655E1EEB423F00C59DD5 /* other-languages-sm.m4v */; };
 		4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65601EEB42B600C59DD5 /* Looper.swift */; };
 		4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */; };
 		4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */; };
@@ -117,7 +116,6 @@
 		4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapterResponse.swift; sourceTree = "<group>"; };
 		4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapter.swift; sourceTree = "<group>"; };
 		4CDD655A1EEB3DA400C59DD5 /* LoopView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoopView.swift; sourceTree = "<group>"; };
-		4CDD655E1EEB423F00C59DD5 /* other-languages-sm.m4v */ = {isa = PBXFileReference; lastKnownFileType = file; path = "other-languages-sm.m4v"; sourceTree = "<group>"; };
 		4CDD65601EEB42B600C59DD5 /* Looper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Looper.swift; sourceTree = "<group>"; };
 		4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuePlayerLooper.swift; sourceTree = "<group>"; };
 		4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -277,14 +275,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4CDD655D1EEB420A00C59DD5 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				4CDD655E1EEB423F00C59DD5 /* other-languages-sm.m4v */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
 		683D5B861F1A792D0019ED0E /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -298,17 +288,17 @@
 		68E2BE431EBC215800FCD897 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */,
-				689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */,
-				689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */,
-				68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */,
-				68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */,
 				4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */,
 				4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */,
-				68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */,
+				68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */,
+				68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */,
+				4CDD655A1EEB3DA400C59DD5 /* LoopView.swift */,
 				687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */,
 				687BF6DC1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib */,
-				4CDD655A1EEB3DA400C59DD5 /* LoopView.swift */,
+				68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */,
+				68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */,
+				689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */,
+				689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */,
 				68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */,
 				68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */,
 			);
@@ -356,7 +346,6 @@
 		70CD20601E6479A800AF619F /* RVG */ = {
 			isa = PBXGroup;
 			children = (
-				4CDD655D1EEB420A00C59DD5 /* Resources */,
 				70CD20941E64842B00AF619F /* ViewControllers */,
 				68E2BE431EBC215800FCD897 /* Cells */,
 				683D5B861F1A792D0019ED0E /* Service */,
@@ -398,21 +387,21 @@
 		70CD20941E64842B00AF619F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
-				68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */,
-				689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */,
 				70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */,
+				703D12B81E67156D0093E1AA /* ChapterViewController.swift */,
+				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
+				68BE69D31EEA3FBF0082956D /* GospelViewController.swift */,
+				68BE69D51EEA57380082956D /* LanguageViewController.swift */,
+				4CDD65601EEB42B600C59DD5 /* Looper.swift */,
+				70CD20631E6479A800AF619F /* MainViewController.swift */,
+				68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */,
+				689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */,
+				68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */,
+				6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */,
+				686233EB1EFF71FC0046D952 /* PlaybackService.swift */,
 				686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */,
 				686233EA1EFF71FC0046D952 /* PlayerViewController.swift */,
-				686233EB1EFF71FC0046D952 /* PlaybackService.swift */,
-				703D12B81E67156D0093E1AA /* ChapterViewController.swift */,
-				68BE69D31EEA3FBF0082956D /* GospelViewController.swift */,
-				68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */,
-				68BE69D51EEA57380082956D /* LanguageViewController.swift */,
-				70CD20631E6479A800AF619F /* MainViewController.swift */,
-				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
-				6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */,
-				4CDD65601EEB42B600C59DD5 /* Looper.swift */,
+				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
 				4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */,
 			);
 			name = ViewControllers;
@@ -438,31 +427,31 @@
 		70CD20971E64845A00AF619F /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				68B2B1031F57B70600D986D4 /* BookTitle.swift */,
-				68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */,
+				689A05441ED27A9E00D3232D /* Bible.swift */,
 				681E117E1ED138DA00B028DD /* Book.swift */,
 				681E11801ED13B1400B028DD /* BookResponse.swift */,
-				68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */,
-				68BE69D11EEA3C600082956D /* GospelResponse.swift */,
-				68BE69CD1EEA35240082956D /* MediaGospelResponse.swift */,
-				4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */,
-				689A05441ED27A9E00D3232D /* Bible.swift */,
-				68F0F3F61F11E9A900718AFF /* Music.swift */,
-				68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */,
-				68F0F3F81F11EC1B00718AFF /* MediaMusic.swift */,
-				68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */,
-				68BE69CF1EEA3B730082956D /* Gospel.swift */,
-				F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */,
-				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
-				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
-				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
+				68B2B1031F57B70600D986D4 /* BookTitle.swift */,
+				68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */,
 				4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */,
+				4CF401EA1ED391F400632272 /* Device.swift */,
 				681E117A1ED110CB00B028DD /* Environment.swift */,
 				683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */,
 				683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */,
-				4CF401EA1ED391F400632272 /* Device.swift */,
-				4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */,
+				68BE69CF1EEA3B730082956D /* Gospel.swift */,
+				68BE69D11EEA3C600082956D /* GospelResponse.swift */,
+				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
+				68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */,
+				F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */,
+				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
+				4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */,
+				68BE69CB1EEA33C50082956D /* MediaGospel.swift */,
+				68BE69CD1EEA35240082956D /* MediaGospelResponse.swift */,
+				68F0F3F81F11EC1B00718AFF /* MediaMusic.swift */,
+				68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */,
+				68F0F3F61F11E9A900718AFF /* Music.swift */,
+				68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */,
 				689880501F147B5900CC2BC5 /* Playable.swift */,
+				4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -670,7 +659,6 @@
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
-				4CDD655F1EEB423F00C59DD5 /* other-languages-sm.m4v in Resources */,
 				70CD20671E6479A800AF619F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
