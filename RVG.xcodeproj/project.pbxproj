@@ -137,6 +137,7 @@
 		683D5B8C1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		683D5B8D1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
 		683D5B8E1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		684C50271F80B51900E243BB /* KJVRVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KJVRVG.entitlements; sourceTree = "<group>"; };
 		6854EED61F01F649007BB502 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerContainerViewController.swift; sourceTree = "<group>"; };
 		686233EA1EFF71FC0046D952 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -324,6 +325,7 @@
 		70CD20551E6479A800AF619F = {
 			isa = PBXGroup;
 			children = (
+				684C50271F80B51900E243BB /* KJVRVG.entitlements */,
 				70CD20601E6479A800AF619F /* RVG */,
 				70CD20751E6479A800AF619F /* RVGTests */,
 				70CD20801E6479A800AF619F /* RVGUITests */,
@@ -604,6 +606,9 @@
 							};
 							com.apple.InterAppAudio = {
 								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 1;
 							};
 						};
 					};
@@ -1098,6 +1103,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KJVRVG.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
@@ -1120,6 +1126,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = KJVRVG.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
