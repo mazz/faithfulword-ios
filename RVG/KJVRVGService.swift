@@ -19,7 +19,7 @@ enum KJVRVGService {
 
 // MARK: - TargetType Protocol Implementation
 extension KJVRVGService: TargetType {
-    var baseURL: URL { return URL(string: "https://japheth.ca/v1.1")! }
+    var baseURL: URL { return URL(string: "https://faithfulaudio.org/v1.1")! }
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
     var path: String {
         switch self {
