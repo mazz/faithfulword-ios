@@ -8,6 +8,9 @@ target 'KJVRVG' do
     pod 'IQKeyboardManagerSwift'
     pod 'ObjectMapper', '~> 2.2'
     pod 'MBProgressHUD', '~> 1.0.0'
+    pod 'Firebase/Core'
+    pod 'Firebase/Messaging'
+    pod 'Firebase/Crash'
     pod 'Moya/RxSwift'
     pod 'L10n-swift'
     target 'RVGTests' do
