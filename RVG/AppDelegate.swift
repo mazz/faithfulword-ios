@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     // Called when APNs has assigned the device a unique token
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         // Convert token to string
-        let str = deviceToken.map { String(format: "%02hhx", $0) }.joined()
+        let str = deviceToken.map { String(format: "%02X", $0) }.joined()
 //        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
         // Print it to console
         print("APNs device token: \(str)")
