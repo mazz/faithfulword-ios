@@ -4,6 +4,7 @@ import AVFoundation
 import Firebase
 import Moya
 import UserNotifications
+import L10n_swift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -30,22 +31,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     // Called when APNs has assigned the device a unique token
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         // Convert token to string
-        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        let str = deviceToken.map { String(format: "%02hhx", $0) }.joined()
+//        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
         // Print it to console
-        print("APNs device token: \(deviceTokenString)")
+        print("APNs device token: \(str)")
         
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
         print("APNs device token: \(Messaging.messaging().apnsToken)")
         if let firebaseToken = Messaging.messaging().fcmToken {
             print("FCM token: \(firebaseToken)")
-//            self.updatePushToken(fcmToken: firebaseToken)
+
+            if let apnsToken = Messaging.messaging().apnsToken {
+                let apnsTokenString = apnsToken.map { String(format: "%02hhx", $0) }.joined()
+//                self.updatePushToken(fcmToken: firebaseToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
+            }
+//            guard let apnsToken = Messaging.messaging().apnsToken,
+//            guard let apnsTokenString = apnsToken.reduce("", {$0 + String(format: "%02X", $1)}) {
+//
+//            } else {
+//
+//            }
+            
+//            if let apnsToken = Messaging.messaging().apnsToken,
+//            if let apnsTokenString = apnsToken.reduce("", {$0 + String(format: "%02X", $1)}) {
+//                self.updatePushToken(fcmToken: firebaseToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
+//            }
+            
+            //            self.updatePushToken(fcmToken: firebaseToken)
         }
     }
-/*
-    func updatePushToken(fcmToken: String) {
+
+    func updatePushToken(fcmToken: String, apnsToken: String, preferredLanguage: String) {
         let provider = MoyaProvider<KJVRVGService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
-        provider.request(.pushTokenUpdate(fcmToken: fcmToken)) { result in
+        provider.request(.pushTokenUpdate(fcmToken: fcmToken, apnsToken: apnsToken, preferredLanguage: preferredLanguage)) { result in
             switch result {
             case let .success(moyaResponse):
                 do {
@@ -72,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
     }
-*/
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Swift.Error) {
         // Print the error to console (you should alert the user that registration failed)
         print("APNs registration failed: \(error)")
@@ -117,7 +136,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 extension AppDelegate {
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         print("Firebase didRefreshRegistrationToken token: \(fcmToken)")
-//        self.updatePushToken(fcmToken: fcmToken)
+        if let apnsToken = Messaging.messaging().apnsToken {
+            let apnsTokenString = apnsToken.map { String(format: "%02hhx", $0) }.joined()
+            self.updatePushToken(fcmToken: fcmToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
+        }
     }
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {

@@ -2,7 +2,7 @@ import Foundation
 import Moya
 
 enum KJVRVGService {
-    case pushTokenUpdate(fcmToken: String)
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String)
     case languagesSupported
     case gospels(languageId: String) // v1.1/gospels?language-id=en
     case gospelsMedia(gid: String) // v1.1/gospels/{gid}/media
@@ -19,12 +19,12 @@ enum KJVRVGService {
 
 // MARK: - TargetType Protocol Implementation
 extension KJVRVGService: TargetType {
-    var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.ProductionServerRootUrl.rawValue)/v1.1")! }
+    var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)/v1.2")! }
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
     var path: String {
         switch self {
-        case .pushTokenUpdate(_):
-            return "/device/pushtoken/set"
+        case .pushTokenUpdate(_, _, _):
+            return "/device/pushtoken/update"
         case .languagesSupported:
             return "/languages/supported"
         case .gospels(_):
@@ -68,8 +68,8 @@ extension KJVRVGService: TargetType {
             return nil
         case .createUser(let firstName, let lastName), .updateUser(_, let firstName, let lastName):
             return ["first_name": firstName, "last_name": lastName]
-        case .pushTokenUpdate(let fcmToken):
-            return ["fcmToken": fcmToken]
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage):
+            return ["fcmToken": fcmToken, "apnsToken": apnsToken, "preferredLanguage": preferredLanguage]
         }
     }
     var parameterEncoding: ParameterEncoding {
@@ -84,9 +84,11 @@ extension KJVRVGService: TargetType {
     }
     var sampleData: Data {
         switch self {
-        case .pushTokenUpdate(let fcmToken):
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage):
             let pushTokenJson = [
-                "fcmToken": fcmToken
+                "fcmToken": fcmToken,
+                "apnsToken": apnsToken,
+                "preferredLanguage": preferredLanguage
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
         case .booksChapterMedia(let bid, let languageId):
