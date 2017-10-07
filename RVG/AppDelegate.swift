@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
             if let apnsToken = Messaging.messaging().apnsToken {
                 let apnsTokenString = apnsToken.map { String(format: "%02hhx", $0) }.joined()
-//                self.updatePushToken(fcmToken: firebaseToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
+                self.updatePushToken(fcmToken: firebaseToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
             }
 //            guard let apnsToken = Messaging.messaging().apnsToken,
 //            guard let apnsTokenString = apnsToken.reduce("", {$0 + String(format: "%02X", $1)}) {
