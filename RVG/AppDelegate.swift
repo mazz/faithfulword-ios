@@ -73,15 +73,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                     //                    var parsedObject: BookResponse
      
                     let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                    print("json: \(json)")
                     if let jsonObject = json as? [String:Any] {
-                        //                            print("jsonObject: \(jsonObject)")
+                        print("jsonObject: \(jsonObject)")
                     }
                 }
                 catch {
-                    //                    errorClosure(error)
+                    print("error: \(error)")
                 }
      
             case let .failure(error):
+                print(".failure: \(error)")
                 // this means there was a network failure - either the request
                 // wasn't sent (connectivity), or no response was received (server
                 // timed out).  If the server responds with a 4xx or 5xx error, that
