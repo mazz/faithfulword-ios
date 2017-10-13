@@ -25,7 +25,7 @@ class PlayerContainerViewController: BaseClass {
 
     @IBAction func back(_ sender: AnyObject) {
         print("back")
-        self.dismiss(animated: true) { _ in }
+        self.dismiss(animated: true) {   }
     }
 
     @IBAction func close(_ sender: AnyObject) {
@@ -33,9 +33,9 @@ class PlayerContainerViewController: BaseClass {
         
         self.showTwoButtonAlertWithLeftAction(title: NSLocalizedString("Do you want to close the player?", comment: "").l10n(),
                                               buttonTitleLeft: NSLocalizedString("Yes", comment: "").l10n(),
-                                              buttonTitleRight: NSLocalizedString("No", comment: "").l10n()) { (nil) in
+                                              buttonTitleRight: NSLocalizedString("No", comment: "").l10n()) {
                                                 
-                                                self.dismiss(animated: true) { _ in }
+                                                self.dismiss(animated: true) { }
                                                 PlaybackService.sharedInstance().disposePlayback()
         }
         

@@ -147,7 +147,7 @@ class OtherLanguagesViewController: BaseClass {
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+            self.present(viewController, animated: true, completion: nil)
         }
     }
 }
@@ -219,7 +219,7 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
         return locale.displayName(forKey: NSLocale.Key.identifier, value: identifier)!
     }
     
-    func onLanguageChanged() {
+    @objc func onLanguageChanged() {
         self.navigationController?.setViewControllers(
             self.navigationController?.viewControllers.map {
                 if let storyboard = $0.storyboard, let identifier = $0.restorationIdentifier {

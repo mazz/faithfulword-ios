@@ -67,7 +67,7 @@ class MediaMusicViewController: BaseClass {
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+            self.present(viewController, animated: true, completion: nil)
         }
     }
 
@@ -98,7 +98,7 @@ extension MediaMusicViewController: UITableViewDelegate, UITableViewDataSource {
             //            PlaybackService.sharedInstance().playbackModeDelegate = self
             
             viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+            self.present(viewController, animated: true, completion: nil)
             
             //            self.navigationController?.pushViewController(viewController, animated: true)
         }

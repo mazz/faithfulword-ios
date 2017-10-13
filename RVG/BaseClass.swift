@@ -31,7 +31,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     //show alert with Single Button action
-    func showSingleButtonAlertWithAction (title:String,buttonTitle:String,completionHandler:@escaping (Void) -> ()) {
+    func showSingleButtonAlertWithAction (title:String,buttonTitle:String,completionHandler:@escaping () -> ()) {
         let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: buttonTitle, style: UIAlertActionStyle.default, handler: { action in
             completionHandler()
@@ -40,7 +40,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     //show alert with right action button
-    func showTwoButtonAlertWithRightAction (title:String,buttonTitleLeft:String,buttonTitleRight:String,completionHandler:@escaping (Void) -> ()) {
+    func showTwoButtonAlertWithRightAction (title:String,buttonTitleLeft:String,buttonTitleRight:String,completionHandler:@escaping () -> ()) {
         let alert = UIAlertController(title: "", message: title, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: buttonTitleLeft, style: UIAlertActionStyle.default, handler: nil))
         alert.addAction(UIAlertAction(title: buttonTitleRight, style: UIAlertActionStyle.default, handler: { action in
@@ -50,7 +50,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     //show alert with left action button
-    func showTwoButtonAlertWithLeftAction (title:String,buttonTitleLeft:String,buttonTitleRight:String,completionHandler:@escaping (Void) -> ()) {
+    func showTwoButtonAlertWithLeftAction (title:String,buttonTitleLeft:String,buttonTitleRight:String,completionHandler:@escaping () -> ()) {
         let alert = UIAlertController(title: "KJVRVG", message: title, preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: buttonTitleLeft, style: UIAlertActionStyle.default, handler: { action in
@@ -61,7 +61,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     //show alert with two action button
-    func showTwoButtonAlertWithTwoAction (title:String,buttonTitleLeft:String,buttonTitleRight:String,completionHandlerLeft:@escaping (Void) -> (),completionHandlerRight:@escaping (Void) -> ()) {
+    func showTwoButtonAlertWithTwoAction (title:String,buttonTitleLeft:String,buttonTitleRight:String,completionHandlerLeft:@escaping () -> (),completionHandlerRight:@escaping () -> ()) {
         let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: buttonTitleLeft, style: UIAlertActionStyle.default, handler: { action in
             completionHandlerLeft()

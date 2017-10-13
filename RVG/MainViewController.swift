@@ -104,7 +104,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+            self.present(viewController, animated: true, completion: nil)
         }
     }
     
@@ -196,7 +196,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         layouts?.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 50)
     }
     
-    func onLanguageChanged() {
+    @objc func onLanguageChanged() {
         self.refreshTitles()
     }
     

@@ -350,7 +350,7 @@ class PlaybackService : NSObject {
         
     }
 
-    func playerItemDidReachEnd(note : NSNotification) {
+    @objc func playerItemDidReachEnd(note : NSNotification) {
         print("playerItemDidReachEnd note: \(note)")
         
         if let item : AVPlayerItem = note.object as? AVPlayerItem {
@@ -543,7 +543,7 @@ class PlaybackService : NSObject {
         return finalString
     }
 
-    func handleAudioSessionInterruption(note : NSNotification) {
+    @objc func handleAudioSessionInterruption(note : NSNotification) {
         print("handleAudioSessionInterruption note.userInfo: \(note.userInfo!)")
 
         var gotInterrupted : Bool = false
@@ -573,7 +573,7 @@ class PlaybackService : NSObject {
 
     }
     
-    func handleAudioSessionRouteChange(note : NSNotification) {
+    @objc func handleAudioSessionRouteChange(note : NSNotification) {
         print("handleAudioSessionRouteChange note.userInfo: \(note.userInfo!)")
         var playing : Bool?
         
@@ -587,7 +587,7 @@ class PlaybackService : NSObject {
         
     }
     
-    func handleMediaServicesReset() {
+    @objc func handleMediaServicesReset() {
         print("handleMediaServicesReset")
     }
     
@@ -719,7 +719,7 @@ extension AVAsset {
     func title() -> String? {
         let status : AVKeyValueStatus = self.statusOfValue(forKey: "commonMetadata", error: nil)
         if status == .loaded {
-            let items = AVMetadataItem.metadataItems(from: self.commonMetadata, withKey: AVMetadataCommonKeyTitle, keySpace: AVMetadataKeySpaceCommon)
+            let items = AVMetadataItem.metadataItems(from: self.commonMetadata, withKey: AVMetadataKey.commonKeyTitle, keySpace: AVMetadataKeySpace.common)
 
             if items.count > 0 {
                 let titleItem : AVMetadataItem = items.first!
