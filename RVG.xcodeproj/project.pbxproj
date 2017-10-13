@@ -46,7 +46,7 @@
 		68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1011F56486C00D986D4 /* KJVRVGService.swift */; };
 		68B2B1051F57B70600D986D4 /* BookTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1031F57B70600D986D4 /* BookTitle.swift */; };
 		68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */; };
-		68B5F3BB1F8871D20044D74C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68BA0A871F87128900D3B57D /* GoogleService-Info.plist */; };
+		68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68BA0A871F87128900D3B57D /* GoogleService-Info.plist */; };
 		68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */; };
 		68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */; };
 		68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69CB1EEA33C50082956D /* MediaGospel.swift */; };
@@ -569,7 +569,7 @@
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
-				68B5F3BB1F8871D20044D74C /* GoogleService-Info.plist in Resources */,
+				68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */,
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
 				68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
