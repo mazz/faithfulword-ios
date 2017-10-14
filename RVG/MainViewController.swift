@@ -124,7 +124,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             self.navigationItem.rightBarButtonItem = nil
         }
         
-        self.navigationItem.title = NSLocalizedString("Books", comment: "").l10n()
+        self.navigationItem.title = NSLocalizedString("Bible", comment: "").l10n()
         
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
@@ -175,7 +175,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     }
     
     func refreshTitles() {
-        self.tableRowsArray = [(NSLocalizedString("Books", comment: "").l10n(), UIImage(named: "books-stack-of-three")!),
+        self.tableRowsArray = [(NSLocalizedString("Bible", comment: "").l10n(), UIImage(named: "books-stack-of-three")!),
                                (NSLocalizedString("Soul-winning", comment: "").l10n(), UIImage(named: "candlelight")!),
                                (NSLocalizedString("Music", comment: "").l10n(), UIImage(named: "discs_icon_white")!),
                                (NSLocalizedString("About Us", comment: "").l10n(), UIImage(named: "about_ic")!),
@@ -188,7 +188,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         
         self.tableView.reloadData()
 
-        self.navigationItem.title = NSLocalizedString("Books", comment: "").l10n()
+        self.navigationItem.title = NSLocalizedString("Bible", comment: "").l10n()
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

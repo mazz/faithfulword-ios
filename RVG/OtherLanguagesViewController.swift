@@ -24,56 +24,6 @@ class OtherLanguagesViewController: BaseClass {
             self, selector: #selector(self.onLanguageChanged), name: .L10nLanguageChanged, object: nil
         )
 
-//        self.title = NSLocalizedString("Other Languages", comment: "").l10n()
-//        
-//        let provider = MoyaProvider<KJVRVGService>()
-//        
-//        let errorClosure = { (error: Swift.Error) -> Void in
-//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the media.", comment: ""))
-//            print("error: \(error)")
-//            
-//            DispatchQueue.main.async {
-//                MBProgressHUD.hide(for: self.view, animated: true)
-//            }
-//        }
-//        
-//        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
-//        loadingNotification.mode = MBProgressHUDMode.indeterminate
-//        
-//        provider.request(.languagesSupported) { result in
-//            print("languagesSupported: \(result)")
-//            switch result {
-//            case let .success(moyaResponse):
-//                do {
-//                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-//                    let data = moyaResponse.data
-//                    var parsedObject: LanguagesSupportedResponse
-//                    
-//                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-//                    if let jsonObject = json as? [String:Any] {
-//                        parsedObject = LanguagesSupportedResponse(JSON: jsonObject)!
-//                        print(parsedObject)
-//                        
-//                        self.languages = parsedObject.languageIdentifiers!
-//                        DispatchQueue.main.async {
-//                            MBProgressHUD.hide(for: self.view, animated: true)
-//                            self.tableView.reloadData()
-//                        }
-//                        
-//                    }
-//                }
-//                catch {
-//                    errorClosure(error)
-//                }
-//                
-//            case let .failure(error):
-//                // this means there was a network failure - either the request
-//                // wasn't sent (connectivity), or no response was received (server
-//                // timed out).  If the server responds with a 4xx or 5xx error, that
-//                // will be sent as a ".success"-ful response.
-//                errorClosure(error)
-//            }
-//        }
         tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
         
     }

@@ -2,7 +2,7 @@ import Foundation
 import Moya
 
 enum KJVRVGService {
-    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String)
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, platform: String)
     case languagesSupported
     case gospels(languageId: String) // v1.1/gospels?language-id=en
     case gospelsMedia(gid: String) // v1.1/gospels/{gid}/media
@@ -24,7 +24,7 @@ extension KJVRVGService: TargetType {
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
     var path: String {
         switch self {
-        case .pushTokenUpdate(_, _, _):
+        case .pushTokenUpdate(_, _, _, _):
             return "/device/pushtoken/update"
         case .languagesSupported:
             return "/languages/supported"
@@ -69,8 +69,8 @@ extension KJVRVGService: TargetType {
             return nil
         case .createUser(let firstName, let lastName), .updateUser(_, let firstName, let lastName):
             return ["first_name": firstName, "last_name": lastName]
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage):
-            return ["fcmToken": fcmToken, "apnsToken": apnsToken, "preferredLanguage": preferredLanguage]
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let platform):
+            return ["fcmToken": fcmToken, "apnsToken": apnsToken, "preferredLanguage": preferredLanguage, "platform": platform]
         }
     }
     var parameterEncoding: ParameterEncoding {
@@ -85,11 +85,12 @@ extension KJVRVGService: TargetType {
     }
     var sampleData: Data {
         switch self {
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage):
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let platform):
             let pushTokenJson = [
                 "fcmToken": fcmToken,
                 "apnsToken": apnsToken,
-                "preferredLanguage": preferredLanguage
+                "preferredLanguage": preferredLanguage,
+                "platform": platform
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
         case .booksChapterMedia(let bid, let languageId):
@@ -119,7 +120,17 @@ extension KJVRVGService: TargetType {
     }
     var task: Task {
         switch self {
-        case .pushTokenUpdate, .languagesSupported, .booksChapterMedia, .gospels, .gospelsMedia, .books, .zen, .showUser, .createUser, .updateUser, .showAccounts:
+        case .pushTokenUpdate,
+             .languagesSupported,
+             .booksChapterMedia,
+             .gospels,
+             .gospelsMedia,
+             .books,
+             .zen,
+             .showUser,
+             .createUser,
+             .updateUser,
+             .showAccounts:
             return .request
         }
     }

@@ -45,7 +45,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
             if let apnsToken = Messaging.messaging().apnsToken {
                 let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
-                self.updatePushToken(fcmToken: firebaseToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
+                self.updatePushToken(fcmToken: firebaseToken,
+                                     apnsToken: apnsTokenString,
+                                     preferredLanguage: L10n.shared.preferredLanguage,
+                                     platform: Device.platform())
             }
 //            guard let apnsToken = Messaging.messaging().apnsToken,
 //            guard let apnsTokenString = apnsToken.reduce("", {$0 + String(format: "%02X", $1)}) {
@@ -63,10 +66,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
     }
 
-    func updatePushToken(fcmToken: String, apnsToken: String, preferredLanguage: String) {
+    func updatePushToken(fcmToken: String,
+                         apnsToken: String,
+                         preferredLanguage: String,
+                         platform: String) {
         let provider = MoyaProvider<KJVRVGService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
-        provider.request(.pushTokenUpdate(fcmToken: fcmToken, apnsToken: apnsToken, preferredLanguage: preferredLanguage)) { result in
+        provider.request(.pushTokenUpdate(fcmToken: fcmToken,
+                                          apnsToken: apnsToken,
+                                          preferredLanguage: preferredLanguage,
+                                          platform: platform)) { result in
             switch result {
             case let .success(moyaResponse):
                 do {
@@ -152,7 +161,10 @@ extension AppDelegate {
         print("Firebase didRefreshRegistrationToken token: \(fcmToken)")
         if let apnsToken = Messaging.messaging().apnsToken {
             let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
-            self.updatePushToken(fcmToken: fcmToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
+            self.updatePushToken(fcmToken: fcmToken,
+                                 apnsToken: apnsTokenString,
+                                 preferredLanguage: L10n.shared.preferredLanguage,
+                                 platform: Device.platform())
         }
     }
     

@@ -529,7 +529,11 @@ Thank you!</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bvn-11-0uW" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <barButtonItem title="Item" id="vQN-sB-VYn"/>
+                <barButtonItem image="dots" id="vQN-sB-VYn">
+                    <connections>
+                        <action selector="showPlayer:" destination="XNS-Js-NKc" id="2hz-N5-Cnf"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="1125.5999999999999" y="1368.6656671664168"/>
         </scene>
