@@ -6,13 +6,14 @@ target 'KJVRVG' do
     use_frameworks!
 
     pod 'IQKeyboardManagerSwift'
-    pod 'ObjectMapper', '~> 2.2'
+    pod 'ObjectMapper'
     pod 'MBProgressHUD', '~> 1.0.0'
     pod 'FirebaseInstanceID'
     pod 'Firebase/Core'
     pod 'Firebase/Messaging'
     pod 'Firebase/Crash'
-    pod 'Moya/RxSwift', '=8.0.4'
+#    pod 'Moya/RxSwift'
+    pod 'Moya/RxSwift', :git => 'https://github.com/Moya/Moya.git', :branch => '10.0.0-dev'
     pod 'L10n-swift'
 
 end

@@ -20,7 +20,6 @@
 		4CF401EB1ED391F400632272 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401EA1ED391F400632272 /* Device.swift */; };
 		68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */; };
 		68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */; };
-		681E11791ED1098600B028DD /* BibleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E11781ED1098600B028DD /* BibleService.swift */; };
 		681E117B1ED110CB00B028DD /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117A1ED110CB00B028DD /* Environment.swift */; };
 		681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117C1ED1141100B028DD /* EnvironmentService.swift */; };
 		681E117F1ED138DA00B028DD /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117E1ED138DA00B028DD /* Book.swift */; };
@@ -54,7 +53,6 @@
 		68BE69D01EEA3B730082956D /* Gospel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69CF1EEA3B730082956D /* Gospel.swift */; };
 		68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D11EEA3C600082956D /* GospelResponse.swift */; };
 		68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D31EEA3FBF0082956D /* GospelViewController.swift */; };
-		68BE69D61EEA57380082956D /* LanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D51EEA57380082956D /* LanguageViewController.swift */; };
 		68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BE69D71EEBBB5B0082956D /* SafariServices.framework */; };
 		68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */; };
 		68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */; };
@@ -106,7 +104,6 @@
 		5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.release.xcconfig"; sourceTree = "<group>"; };
 		68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChapterTableViewCell.swift; sourceTree = "<group>"; };
 		68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChapterTableViewCell.xib; sourceTree = "<group>"; };
-		681E11781ED1098600B028DD /* BibleService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BibleService.swift; sourceTree = "<group>"; };
 		681E117A1ED110CB00B028DD /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		681E117C1ED1141100B028DD /* EnvironmentService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentService.swift; sourceTree = "<group>"; };
 		681E117E1ED138DA00B028DD /* Book.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
@@ -149,7 +146,6 @@
 		68BE69CF1EEA3B730082956D /* Gospel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Gospel.swift; sourceTree = "<group>"; };
 		68BE69D11EEA3C600082956D /* GospelResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GospelResponse.swift; sourceTree = "<group>"; };
 		68BE69D31EEA3FBF0082956D /* GospelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GospelViewController.swift; sourceTree = "<group>"; };
-		68BE69D51EEA57380082956D /* LanguageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageViewController.swift; sourceTree = "<group>"; };
 		68BE69D71EEBBB5B0082956D /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		68BE69D91EEBBED20082956D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		68BE69DA1EEBBED20082956D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -243,7 +239,6 @@
 			isa = PBXGroup;
 			children = (
 				68B2B1011F56486C00D986D4 /* KJVRVGService.swift */,
-				681E11781ED1098600B028DD /* BibleService.swift */,
 				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
 			);
 			name = Service;
@@ -355,7 +350,6 @@
 				703D12B81E67156D0093E1AA /* ChapterViewController.swift */,
 				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
 				68BE69D31EEA3FBF0082956D /* GospelViewController.swift */,
-				68BE69D51EEA57380082956D /* LanguageViewController.swift */,
 				4CDD65601EEB42B600C59DD5 /* Looper.swift */,
 				70CD20631E6479A800AF619F /* MainViewController.swift */,
 				68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */,
@@ -697,7 +691,6 @@
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
 				681E117B1ED110CB00B028DD /* Environment.swift in Sources */,
 				68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */,
-				68BE69D61EEA57380082956D /* LanguageViewController.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
 				703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */,
 				68F0F3FB1F11EC7B00718AFF /* MediaMusicResponse.swift in Sources */,
@@ -715,7 +708,6 @@
 				68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */,
-				681E11791ED1098600B028DD /* BibleService.swift in Sources */,
 				701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
