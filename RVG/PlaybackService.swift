@@ -55,7 +55,6 @@ class PlaybackService : NSObject {
     var currentPlayerItem : AVPlayerItem?
 
     var assets : [AVAsset]?
-    var playerItems : [AVPlayerItem]?
 
     var player : AVPlayer?
     var isPlaying : Bool?
@@ -83,6 +82,11 @@ class PlaybackService : NSObject {
 
     var videoPlaybackStartDate : TimeInterval?
     var videoPlaybackEndDate : TimeInterval?
+
+    let defaultAssetKeys : Array = ["tracks",
+                                    "duration",
+                                    "commonMetadata",
+                                    "availableMediaCharacteristicsWithMediaSelectionOptions"]
 
     override init() {
         super.init()
@@ -122,7 +126,6 @@ class PlaybackService : NSObject {
         self.currentAsset = nil
 
         self.assets = nil
-        self.playerItems = nil
 
         isPlaying = false
         videoPlaybackEndDate = Date().timeIntervalSinceNow
@@ -151,7 +154,6 @@ class PlaybackService : NSObject {
         self.currentAsset = nil
 
         self.assets = nil
-        self.playerItems = nil
 
         isPlaying = false
         videoPlaybackEndDate = Date().timeIntervalSinceNow
@@ -194,20 +196,16 @@ class PlaybackService : NSObject {
         
         if avoidRestartOnLoad! == false  {
             let assets : [AVAsset] = urls.map { AVAsset(url:$0) }
-            let keys : Array = ["tracks", "duration", "commonMetadata", "availableMediaCharacteristicsWithMediaSelectionOptions"]
-            
-            let playerItems : [AVPlayerItem] = assets.map { AVPlayerItem(asset: $0, automaticallyLoadedAssetKeys: keys) }
-            
             self.assets = assets
-            self.playerItems = playerItems
             
             if let playAsset = self.assets?[playIndex] {
                 self.currentAsset = playAsset
-                self.currentPlayerItem = self.playerItems?[playIndex]
-                //         playerItem.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: .new, context: nil)
-                
-                self.currentPlayerItem?.addObserver(self, forKeyPath: statusKeypath, options: NSKeyValueObservingOptions(rawValue: 0), context: &playerItemStatusContext)
-                self.player = AVPlayer.init(playerItem: self.currentPlayerItem)
+                if let asset = self.currentAsset {
+                    self.currentPlayerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: self.defaultAssetKeys)
+                    //         playerItem.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: .new, context: nil)
+                    self.currentPlayerItem?.addObserver(self, forKeyPath: statusKeypath, options: NSKeyValueObservingOptions(rawValue: 0), context: &playerItemStatusContext)
+                    self.player = AVPlayer.init(playerItem: self.currentPlayerItem)
+                }
                 
             }
         } else {
@@ -353,7 +351,7 @@ class PlaybackService : NSObject {
     @objc func playerItemDidReachEnd(note : NSNotification) {
         print("playerItemDidReachEnd note: \(note)")
         
-        if let item : AVPlayerItem = note.object as? AVPlayerItem {
+        if let item: AVPlayerItem = note.object as? AVPlayerItem {
 //            playbackForward(itemEnded: item)
             if item == self.currentPlayerItem {
                 
@@ -363,8 +361,11 @@ class PlaybackService : NSObject {
                         self.playbackDisplayDelegate?.playbackReady()
                     }
                 } else {
-                    if let nextItem : AVPlayerItem = self.nextPlayerItem(currentItem: item) {
-                        if let nextIndex : Int = (self.playerItems?.index(of: nextItem)) {
+                    if let nextAsset: AVAsset = self.fetchNextAsset(currentAsset: self.currentAsset!) {
+                        
+//                        self.currentPlayerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: keys)
+
+                        if let nextIndex: Int = (self.assets?.index(of: nextAsset)) {
                             
                             // stop observing the current item
                             // and play next item
@@ -374,7 +375,7 @@ class PlaybackService : NSObject {
                             // the user scrubs to the end of the track
                             // but scrubs back quickly
                             DispatchQueue.main.async { [unowned self] in
-                                self.playbackToNextItem(currentItem: item, nextIndex: nextIndex, nextItem: nextItem)
+                                self.playbackToNextItem(currentAsset: self.currentAsset!, nextIndex: nextIndex)
                             }
                             
                         }
@@ -395,68 +396,31 @@ class PlaybackService : NSObject {
         }
     }
     
-//    func playbackForward(itemEnded: AVPlayerItem) {
-//        if playbackRepeat == true {
-//            DispatchQueue.main.async { [unowned self] in
-//                self.player?.seek(to: kCMTimeZero)
-//                self.playbackDisplayDelegate?.playbackReady()
-//            }
-//        } else {
-//            if let nextItem : AVPlayerItem = self.nextPlayerItem(currentItem: itemEnded) {
-//                if let nextIndex : Int = (self.playerItems?.index(of: nextItem)) {
-//                    
-//                    // stop observing the current item
-//                    // and play next item
-//                    // queueing on main dispatch queue seems to fix
-//                    // a race condition where the timeObserverToken
-//                    // would outlast self.player in the case where
-//                    // the user scrubs to the end of the track
-//                    // but scrubs back quickly
-//                    DispatchQueue.main.async { [unowned self] in
-//                        self.playbackToNextItem(currentItem: itemEnded, nextIndex: nextIndex, nextItem: nextItem)
-//                    }
-//                    
-//                }
-//            } else {
-//                // could not advance to next item
-//                // assume we are at end of playerItem array
-//                DispatchQueue.main.async {
-//                    [unowned self] in
-//                    self.player?.seek(to: kCMTimeZero,
-//                                      completionHandler: { (Bool) in
-//                                        self.playbackDisplayDelegate?.playbackComplete()
-//                    })
-//                    
-//                }
-//            }
-//        }
-//    }
-
-    func nextPlayerItem(currentItem : AVPlayerItem) -> AVPlayerItem? {
-        if let currentIndex : Int = (self.playerItems?.index(of: currentItem)) {
+    func fetchNextAsset(currentAsset: AVAsset) -> AVAsset? {
+        if let currentIndex: Int = (self.assets?.index(of: currentAsset)) {
             
-            if currentIndex >= 0 && currentIndex == (self.playerItems?.count)! - 1 {
+            if currentIndex >= 0 && currentIndex == (self.assets?.count)! - 1 {
                 return nil
             }
             // not at end
-            if let nextItem : AVPlayerItem = (self.playerItems?[currentIndex + 1]) {
+            
+            if let nextItem: AVAsset = (self.assets?[currentIndex + 1]) {
                 return nextItem
             }
-
         }
         return nil
     }
     
-    func previousPlayerItem(currentItem : AVPlayerItem) -> AVPlayerItem? {
-        if let currentIndex : Int = (self.playerItems?.index(of: currentItem)) {
-            
+    func fetchPreviousAsset(currentAsset : AVAsset) -> AVAsset? {
+        if let currentIndex: Int = (self.assets?.index(of: currentAsset)) {
+
             if currentIndex == 0 {
                 // we are at the first item already
                 // cannot obtain previous item
                 return nil
             }
             // not at first item
-            if let previousItem : AVPlayerItem = (self.playerItems?[currentIndex - 1]) {
+            if let previousItem: AVAsset = (self.assets?[currentIndex - 1]) {
                 return previousItem
             }
             
@@ -464,32 +428,32 @@ class PlaybackService : NSObject {
         return nil
     }
     
-    func playbackToNextItem(currentItem : AVPlayerItem, nextIndex : Int, nextItem : AVPlayerItem) {
+    func playbackToNextItem(currentAsset: AVAsset, nextIndex: Int) {
         
-        stopObserving(playerItem: currentItem)
+        stopObserving(playerItem: self.currentPlayerItem!)
         
-        print("nextItem: \(nextItem) nextIndex: \(nextIndex)")
+//        print("nextItem: \(nextItem) nextIndex: \(nextIndex)")
         self.currentAsset = self.assets?[nextIndex]
-        self.currentPlayerItem = self.playerItems?[nextIndex]
-        
+        // TODO
+        self.currentPlayerItem = AVPlayerItem(asset: self.currentAsset!, automaticallyLoadedAssetKeys: self.defaultAssetKeys)
         self.mediaIndex? = nextIndex
         
-        if let currentPlayerItem : AVPlayerItem = self.currentPlayerItem {
+        if let currentPlayerItem: AVPlayerItem = self.currentPlayerItem {
             startObservingAndReplace(playerItem: currentPlayerItem)
         }
     }
 
-    func playbackToPreviousItem(currentItem : AVPlayerItem, previousIndex : Int, previousItem : AVPlayerItem) {
+    func playbackToPreviousItem(currentAsset: AVAsset, previousIndex: Int) {
         
-        stopObserving(playerItem: currentItem)
-        
-        print("previousItem: \(previousItem) previousIndex: \(previousIndex)")
+        stopObserving(playerItem: self.currentPlayerItem!)
+
+//        print("previousItem: \(previousItem) previousIndex: \(previousIndex)")
         self.currentAsset = self.assets?[previousIndex]
-        self.currentPlayerItem = self.playerItems?[previousIndex]
         
+        self.currentPlayerItem = AVPlayerItem(asset: self.currentAsset!, automaticallyLoadedAssetKeys: self.defaultAssetKeys)
         self.mediaIndex? = previousIndex
         
-        if let currentPlayerItem : AVPlayerItem = self.currentPlayerItem {
+        if let currentPlayerItem: AVPlayerItem = self.currentPlayerItem {
             startObservingAndReplace(playerItem: currentPlayerItem)
         }
     }
@@ -658,13 +622,13 @@ extension PlaybackService : PlaybackTransportDelegate {
     }
     
     func nextTrack() {
-        if let currentPlayerItem : AVPlayerItem = self.currentPlayerItem {
-            if let nextItem : AVPlayerItem = self.nextPlayerItem(currentItem: currentPlayerItem) {
-                if let nextIndex : Int = (self.playerItems?.index(of: nextItem)) {
+        if let currentAsset : AVAsset = self.currentAsset {
+            if let nextAsset: AVAsset = self.fetchNextAsset(currentAsset: currentAsset) {
+                if let nextIndex: Int = (self.assets?.index(of: nextAsset)) {
                     // stop observing the current item
                     // play next item
 
-                    self.playbackToNextItem(currentItem: currentPlayerItem, nextIndex: nextIndex, nextItem: nextItem)
+                    self.playbackToNextItem(currentAsset: currentAsset, nextIndex: nextIndex)
                 }
 
             }
@@ -673,12 +637,12 @@ extension PlaybackService : PlaybackTransportDelegate {
     }
     
     func previousTrack() {
-        if let currentPlayerItem : AVPlayerItem = self.currentPlayerItem {
-            if let previousItem : AVPlayerItem = self.previousPlayerItem(currentItem: currentPlayerItem) {
-                if let previousIndex : Int = (self.playerItems?.index(of: previousItem)) {
+        if let currentAsset : AVAsset = self.currentAsset {
+            if let previousAsset : AVAsset = self.fetchPreviousAsset(currentAsset: currentAsset) {
+                if let previousIndex : Int = (self.assets?.index(of: previousAsset)) {
                     // stop observing the current item
                     // play next item
-                    self.playbackToPreviousItem(currentItem: currentPlayerItem, previousIndex : previousIndex, previousItem : previousItem)
+                    self.playbackToPreviousItem(currentAsset: currentAsset, previousIndex: previousIndex)
                 }
                 
             }
@@ -729,5 +693,4 @@ extension AVAsset {
         return nil
     }
 }
-
 
