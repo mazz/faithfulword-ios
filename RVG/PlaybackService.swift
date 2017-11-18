@@ -175,7 +175,9 @@ class PlaybackService : NSObject {
                                                                        .mixWithOthers,
                                                                        .defaultToSpeaker])
 
-                
+//                    .interruptSpokenAudioAndMixWithOthers,
+//                .duckOthers,
+
                 //            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
                 
                 try AVAudioSession.sharedInstance().setActive(true)
