@@ -13,6 +13,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        UINavigationBar.appearance().tintColor = UIColor.black
+        
         application.registerForRemoteNotifications()
         
         IQKeyboardManager.sharedManager().enable = true

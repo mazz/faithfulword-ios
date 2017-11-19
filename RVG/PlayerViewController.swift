@@ -50,6 +50,7 @@ class PlayerViewController : BaseClass {
         super.viewDidLoad()
         print("PlayerViewController viewDidLoad")
 
+        scrubberSlider.thumbTintColor = .black
         scrubberSlider.value = Float(0)
         scrubberSlider.addTarget(self, action: #selector(PlayerViewController.scrubberChanged) , for: .valueChanged)
         scrubberSlider.addTarget(self, action: #selector(PlayerViewController.scrubberTouchUpInside), for: .touchUpInside)
