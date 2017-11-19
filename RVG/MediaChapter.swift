@@ -1,10 +1,3 @@
-//
-//  Media.swift
-//  RVG
-//
-//  Created by michael on 2017-05-23.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
 
 import Foundation
 import ObjectMapper

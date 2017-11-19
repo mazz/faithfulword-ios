@@ -1,10 +1,3 @@
-//
-//  Bible.swift
-//  RVG
-//
-//  Created by maz on 2017-05-21.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
 
 import Foundation
 

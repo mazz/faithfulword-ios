@@ -1,10 +1,3 @@
-//
-//  LoopView.swift
-//  RVG
-//
-//  Created by michael on 2017-06-09.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
 
 import UIKit
 
