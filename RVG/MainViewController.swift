@@ -13,6 +13,7 @@ import L10n_swift
 class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var homeTitleLabel: UILabel!
+    @IBOutlet weak var menuTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
     @IBOutlet var booksRightBarButtonItem: UIBarButtonItem!
     
@@ -34,6 +35,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             self, selector: #selector(self.onLanguageChanged), name: .L10nLanguageChanged, object: nil
         )
 
+        menuTitleLabel.text = NSLocalizedString("All Scripture", comment: "")
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 40
         
