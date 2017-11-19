@@ -51,7 +51,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     
     //show alert with left action button
     func showTwoButtonAlertWithLeftAction (title:String,buttonTitleLeft:String,buttonTitleRight:String,completionHandler:@escaping () -> ()) {
-        let alert = UIAlertController(title: "KJVRVG", message: title, preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: NSLocalizedString("All Scripture", comment: ""), message: title, preferredStyle: UIAlertControllerStyle.alert)
         
         alert.addAction(UIAlertAction(title: buttonTitleLeft, style: UIAlertActionStyle.default, handler: { action in
             completionHandler()
