@@ -172,7 +172,8 @@ class PlaybackService : NSObject {
                 // .allowBluetoothA2DP sounds great however
                 try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback,
                                                                 with: [.allowBluetoothA2DP,
-                                                                       .mixWithOthers,
+                                                                       .interruptSpokenAudioAndMixWithOthers,
+                                                                       .duckOthers,
                                                                        .defaultToSpeaker])
 
 //                    .interruptSpokenAudioAndMixWithOthers,

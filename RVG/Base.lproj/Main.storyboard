@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -35,40 +34,6 @@
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pbc-C0-FXo">
                                         <rect key="frame" x="0.0" y="0.0" width="300" height="667"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <view key="tableHeaderView" contentMode="scaleToFill" id="MdA-Hp-ypA">
-                                            <rect key="frame" x="0.0" y="0.0" width="300" height="94"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="KJVRVG-Circle-Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Plm-Zo-Yw7">
-                                                    <rect key="frame" x="10" y="8" width="78" height="78"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="Plm-Zo-Yw7" secondAttribute="height" multiplier="1:1" id="Pus-Zn-VYd"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XgS-3i-ZEx">
-                                                    <rect key="frame" x="96" y="30" width="204" height="35"/>
-                                                    <attributedString key="attributedText">
-                                                        <fragment content="KJVRVG">
-                                                            <attributes>
-                                                                <color key="NSColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                                                <font key="NSFont" size="30" name=".SFNSDisplay"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="XgS-3i-ZEx" secondAttribute="trailing" id="3we-db-MOE"/>
-                                                <constraint firstAttribute="bottom" secondItem="Plm-Zo-Yw7" secondAttribute="bottom" constant="8" id="7cd-76-2ym"/>
-                                                <constraint firstItem="XgS-3i-ZEx" firstAttribute="leading" secondItem="Plm-Zo-Yw7" secondAttribute="trailing" constant="8" id="CJj-B3-fXg"/>
-                                                <constraint firstItem="XgS-3i-ZEx" firstAttribute="centerY" secondItem="Plm-Zo-Yw7" secondAttribute="centerY" id="q3c-k2-aWW"/>
-                                                <constraint firstItem="Plm-Zo-Yw7" firstAttribute="top" secondItem="MdA-Hp-ypA" secondAttribute="top" constant="8" id="tXi-QK-WHS"/>
-                                                <constraint firstItem="Plm-Zo-Yw7" firstAttribute="leading" secondItem="MdA-Hp-ypA" secondAttribute="leading" constant="10" id="tha-jY-jrj"/>
-                                            </constraints>
-                                        </view>
                                         <connections>
                                             <outlet property="dataSource" destination="BYZ-38-t0r" id="Rn1-XV-Gkm"/>
                                             <outlet property="delegate" destination="BYZ-38-t0r" id="Etu-iD-f6H"/>
@@ -132,7 +97,6 @@
                         <outlet property="collectionView" destination="AQI-ZE-89r" id="bEI-3o-BoJ"/>
                         <outlet property="leftConstraint" destination="BSe-zu-fh4" id="aao-em-XNn"/>
                         <outlet property="menuBar" destination="Z5k-v7-Iq9" id="raS-z2-Zz6"/>
-                        <outlet property="menuTitleLabel" destination="XgS-3i-ZEx" id="UJ5-KU-y87"/>
                         <outlet property="tableView" destination="pbc-C0-FXo" id="zcP-o1-spA"/>
                     </connections>
                 </viewController>
@@ -930,7 +894,6 @@ Thank you!</string>
     </scenes>
     <resources>
         <image name="DisplayIcon" width="256" height="256"/>
-        <image name="KJVRVG-Circle-Logo" width="128" height="128"/>
         <image name="boo" width="1139" height="857"/>
         <image name="check" width="84" height="75"/>
         <image name="close" width="20" height="20"/>

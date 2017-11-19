@@ -13,7 +13,6 @@ import L10n_swift
 class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var homeTitleLabel: UILabel!
-    @IBOutlet weak var menuTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
     @IBOutlet var booksRightBarButtonItem: UIBarButtonItem!
     
@@ -35,7 +34,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
             self, selector: #selector(self.onLanguageChanged), name: .L10nLanguageChanged, object: nil
         )
 
-        menuTitleLabel.text = NSLocalizedString("All Scripture", comment: "")
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 40
         
@@ -46,59 +44,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
         
         self.navigationItem.leftBarButtonItem = menuBar
-        
-//        self.navigationItem.title = NSLocalizedString("Books", comment: "").l10n()
-//        
-//        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
-//        loadingNotification.mode = MBProgressHUDMode.indeterminate
-//        
-//        let provider = MoyaProvider<KJVRVGService>()
-//        
-//        let errorClosure = { (error: Swift.Error) -> Void in
-//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: ""))
-//            print("error: \(error)")
-//            
-//            DispatchQueue.main.async {
-//                MBProgressHUD.hide(for: self.view, animated: true)
-//            }
-//        }
-//        let languageIdentifier: String = Device.preferredLanguageIdentifier().l10n()
-//        print("main languageIdentifier \(languageIdentifier)")
-//        print("main L10n.shared.language \(L10n.shared.language)")
-//
-//        provider.request(.books(languageId: L10n.shared.language)) { result in
-//            print("moya books: \(result)")
-//            switch result {
-//            case let .success(moyaResponse):
-//                do {
-//                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-//                    let data = moyaResponse.data
-//                    var parsedObject: BookResponse
-//                    
-//                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-//                    if let jsonObject = json as? [String:Any] {
-//                        parsedObject = BookResponse(JSON: jsonObject)!
-//                        print(parsedObject)
-//                        self.books = parsedObject.books!
-//                        DispatchQueue.main.async {
-//                            MBProgressHUD.hide(for: self.view, animated: true)
-//                            self.collectionView.reloadData()
-//                        }
-//                    }
-//                }
-//                catch {
-//                    errorClosure(error)
-//                }
-//                
-//            case let .failure(error):
-//                // this means there was a network failure - either the request
-//                // wasn't sent (connectivity), or no response was received (server
-//                // timed out).  If the server responds with a 4xx or 5xx error, that
-//                // will be sent as a ".success"-ful response.
-//                errorClosure(error)
-//            }
-//        }
-        
+                
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
@@ -239,7 +185,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         
         let appVersionString: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
 
-        mailComposerVC.setToRecipients(["info@kjvrvg.com"])
+        mailComposerVC.setToRecipients(["allscripturebaptist@gmail.com"])
         mailComposerVC.setSubject("KJVRVG iOS \(appVersionString) App Feedback")
         
         return mailComposerVC
@@ -262,8 +208,8 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
-            cell?.verseBodyLabel.text = NSLocalizedString("I am the door: by me if any man enter in, he shall be saved, and shall go in and out, and find pasture.", comment: "").l10n()
-            cell?.chapterAndVerseLabel.text = NSLocalizedString("-Jesus Christ (John 10:9)", comment: "").l10n()
+            cell?.verseBodyLabel.text = NSLocalizedString("All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness: That the man of God may be perfect, thoroughly furnished unto all good works.", comment: "").l10n()
+            cell?.chapterAndVerseLabel.text = NSLocalizedString("2 TIMOTHY 3:16-17", comment: "").l10n()
             
             return cell!
         } else {
@@ -297,7 +243,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 3 {
-            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/")! as URL)
+            let svc = SFSafariViewController(url: NSURL(string: "http://allscripturebaptist.com/")! as URL)
             self.present(svc, animated: true, completion: nil)
         }
         else if indexPath.row == 4 {
@@ -312,7 +258,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         }
         else if indexPath.row == 6 {
             
-            UIApplication.shared.open(NSURL(string:"http://kjvrvg.com/donate/")! as URL, options: [:], completionHandler: nil)
+            UIApplication.shared.open(NSURL(string:"http://allscripturebaptist.com/donate/")! as URL, options: [:], completionHandler: nil)
             //            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/donate/")! as URL)
             //            self.present(svc, animated: true, completion: nil)
             
@@ -320,7 +266,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             //            self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 7 {
-            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/privacy-policy/")! as URL)
+            let svc = SFSafariViewController(url: NSURL(string: "http://allscripturebaptist.com/privacy-policy/")! as URL)
             self.present(svc, animated: true, completion: nil)
         }
         else if indexPath.row == 8 {
