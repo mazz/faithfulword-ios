@@ -11,24 +11,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func optInForPushNotifications(application: UIApplication) {
         
-        UINavigationBar.appearance().tintColor = UIColor.black
-        
+        // Keep up with new sermons and content regularly! Press here
         application.registerForRemoteNotifications()
         
         IQKeyboardManager.sharedManager().enable = true
         UNUserNotificationCenter.current().delegate = self
-    
+        
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: {_, _ in })
-
+        
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         Messaging.messaging().shouldEstablishDirectChannel = true
+    }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        optInForPushNotifications(application: application)
+        
+        UINavigationBar.appearance().tintColor = UIColor.black
+        
+//        let alert: UIAlertController = UIAlertController(title: NSLocalizedString("Notifications", comment: ""), message: "", preferredStyle: <#T##UIAlertControllerStyle#>)
         return true
     }
 
