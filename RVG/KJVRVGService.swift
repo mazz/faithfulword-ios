@@ -2,9 +2,12 @@ import Foundation
 import Moya
 
 enum KJVRVGService {
+    case churches
+    case churchesMediaSermons(cid: String)
+    case appVersions
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, platform: String)
     case musicMedia(mid: String) // "/music/{mid}/media"
     case music
-    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, platform: String)
     case languagesSupported
     case gospels(languageId: String) // v1.1/gospels?language-id=en
     case gospelsMedia(gid: String) // v1.1/gospels/{gid}/media
@@ -21,12 +24,18 @@ extension KJVRVGService: TargetType {
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
     var path: String {
         switch self {
+        case .churches:
+            return "/churches"
+        case .churchesMediaSermons(let cid):
+            return "/churches/\(cid)/media/sermon"
+        case .pushTokenUpdate(_, _, _, _):
+            return "/device/pushtoken/update"
+        case .appVersions:
+            return "/app/versions"
         case .musicMedia(let mid):
             return "/music/\(mid)/media"
         case .music:
             return "/music"
-        case .pushTokenUpdate(_, _, _, _):
-            return "/device/pushtoken/update"
         case .languagesSupported:
             return "/languages/supported"
         case .gospels(_):
@@ -42,10 +51,13 @@ extension KJVRVGService: TargetType {
     
     var method: Moya.Method {
         switch self {
-        case .musicMedia,
+        case .churches,
+             .churchesMediaSermons,
+             .appVersions,
+             .languagesSupported,
+             .musicMedia,
              .music,
              .booksChapterMedia,
-             .languagesSupported,
              .gospels,
              .gospelsMedia,
              .books:
@@ -56,6 +68,14 @@ extension KJVRVGService: TargetType {
     }
     var parameters: [String: Any]? {
         switch self {
+        case .churches:
+            return nil
+        case .churchesMediaSermons(_):
+            return nil
+        case .appVersions:
+            return nil
+        case .languagesSupported:
+            return nil
         case .musicMedia(_):
             return nil
         case .music:
@@ -68,8 +88,6 @@ extension KJVRVGService: TargetType {
             return nil
         case .gospels(let languageId):
             return ["language-id": languageId]
-        case .languagesSupported:
-            return nil
         case .pushTokenUpdate(let fcmToken,
                               let apnsToken,
                               let preferredLanguage,
@@ -82,10 +100,13 @@ extension KJVRVGService: TargetType {
     }
     var parameterEncoding: ParameterEncoding {
         switch self {
-        case .musicMedia,
+        case .churches,
+             .churchesMediaSermons,
+             .appVersions,
+             .languagesSupported,
+             .musicMedia,
              .music,
              .booksChapterMedia,
-             .languagesSupported,
              .gospels,
              .gospelsMedia,
              .books:
@@ -96,10 +117,12 @@ extension KJVRVGService: TargetType {
     }
     var sampleData: Data {
         switch self {
-        case .musicMedia(let mid):
-            return "{\"mid\": \(mid),\"}".utf8Encoded
-        case .music:
-            return "foobar".utf8Encoded
+        case .churches:
+            return "churches 1up".utf8Encoded
+        case .churchesMediaSermons(let cid):
+            return "{\"cid\": \(cid),\"}".utf8Encoded
+        case .appVersions:
+            return "app versions 1up".utf8Encoded
         case .pushTokenUpdate(let fcmToken,
                               let apnsToken,
                               let preferredLanguage,
@@ -117,6 +140,12 @@ extension KJVRVGService: TargetType {
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .gospelsMedia(let gid):
             return "{\"gid\": \(gid),\"}".utf8Encoded
+        case .musicMedia(let mid):
+            return "{\"mid\": \(mid),\"}".utf8Encoded
+        case .music:
+            return "foobar".utf8Encoded
+        case .booksChapterMedia(let bid, let languageId):
+            return "{\"bid\": \(bid), \"language-id\": \"\(languageId)\"}".utf8Encoded
         case .books(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .languagesSupported:
@@ -125,6 +154,13 @@ extension KJVRVGService: TargetType {
     }
     var task: Task {
         switch self {
+        case .churches:
+            return .requestPlain
+        case .churchesMediaSermons(let cid):
+            return .requestParameters(parameters:  ["cid": cid],
+                                      encoding: URLEncoding.default)
+        case .appVersions:
+            return .requestPlain
         case .musicMedia(let mid):
             return .requestParameters(parameters:  ["mid": mid],
                                       encoding: URLEncoding.default)

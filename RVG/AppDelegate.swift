@@ -10,6 +10,45 @@ import L10n_swift
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
     var window: UIWindow?
+    var appVersions: [AppVersion]?
+
+    func appVersionCheck() {
+        let provider = MoyaProvider<KJVRVGService>()
+        
+        provider.request(.appVersions) { result in
+            switch result {
+            case let .success(moyaResponse):
+                do {
+                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                    let data = moyaResponse.data
+                    
+                    let appVersionsResponse: AppVersionResponse = try moyaResponse.map(AppVersionResponse.self)
+                    print("mapped to appVersionsResponse: \(appVersionsResponse)")
+                    self.appVersions = appVersionsResponse.result
+                    
+                    if let appVersions = self.appVersions, (self.appVersions?.count)! > Int(0) {
+                        if let latestAppVersion = appVersions.last?.versionNumber {
+                            let version = Float(latestAppVersion)
+                            
+                            let bundleVersion = Float(Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String)
+                            print("latestAppVersion: \(version) bundleVersion: \(bundleVersion)")
+                        }
+                    }
+                }
+                catch {
+                    print("error: \(error)")
+                }
+                
+            case let .failure(error):
+                // this means there was a network failure - either the request
+                // wasn't sent (connectivity), or no response was received (server
+                // timed out).  If the server responds with a 4xx or 5xx error, that
+                // will be sent as a ".success"-ful response.
+                print("error: \(error)")
+            }
+        }
+    }
+    
 
     func optInForPushNotifications(application: UIApplication) {
         
@@ -30,7 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+
+        appVersionCheck()
         optInForPushNotifications(application: application)
         
         UINavigationBar.appearance().tintColor = UIColor.black
