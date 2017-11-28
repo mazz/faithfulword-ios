@@ -9,6 +9,7 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
+import Firebase
 
 struct PausedState {
     let pausedTime: TimeInterval
@@ -216,6 +217,13 @@ class PlaybackService : NSObject {
         }
     }
 
+    func logPlaybackEvent(_ title: String) {
+        Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
+            AnalyticsParameterItemID: "id-\(title)" as NSObject,
+            AnalyticsParameterItemName: title as NSObject,
+            AnalyticsParameterContentType: "audio" as NSObject
+            ])
+    }
     private func setupNowPlayingInfoCenter() {
         UIApplication.shared.beginReceivingRemoteControlEvents()
         MPRemoteCommandCenter.shared().playCommand.addTarget { (event) -> MPRemoteCommandHandlerStatus in
@@ -292,7 +300,7 @@ class PlaybackService : NSObject {
                     
                     if let playbackDisplayDelegate = self.playbackDisplayDelegate {
                         playbackDisplayDelegate.setCurrentTime(time: CMTimeGetSeconds(kCMTimeZero), duration: CMTimeGetSeconds(currentPlayerItem.duration))
-                        
+
                         playbackDisplayDelegate.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
                         playbackDisplayDelegate.playbackReady()
                         
@@ -441,6 +449,7 @@ class PlaybackService : NSObject {
         self.mediaIndex? = nextIndex
         
         if let currentPlayerItem: AVPlayerItem = self.currentPlayerItem {
+            logPlaybackEvent(self.contentTitle(mediaIndex: self.mediaIndex!))
             startObservingAndReplace(playerItem: currentPlayerItem)
         }
     }
@@ -456,6 +465,7 @@ class PlaybackService : NSObject {
         self.mediaIndex? = previousIndex
         
         if let currentPlayerItem: AVPlayerItem = self.currentPlayerItem {
+            logPlaybackEvent(self.contentTitle(mediaIndex: self.mediaIndex!))
             startObservingAndReplace(playerItem: currentPlayerItem)
         }
     }
