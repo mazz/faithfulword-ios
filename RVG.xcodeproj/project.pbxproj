@@ -25,7 +25,6 @@
 		681E117F1ED138DA00B028DD /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117E1ED138DA00B028DD /* Book.swift */; };
 		681E11811ED13B1400B028DD /* BookResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E11801ED13B1400B028DD /* BookResponse.swift */; };
 		6833CBC71FC9F9DA001FEFD5 /* AppVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833CBC61FC9F9DA001FEFD5 /* AppVersion.swift */; };
-		6833CBC91FC9FA19001FEFD5 /* AppVersionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6833CBC81FC9FA19001FEFD5 /* AppVersionResponse.swift */; };
 		683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */; };
 		683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */; };
 		6854EED71F01F649007BB502 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6854EED61F01F649007BB502 /* AVFoundation.framework */; };
@@ -48,6 +47,8 @@
 		68B2B1051F57B70600D986D4 /* BookTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1031F57B70600D986D4 /* BookTitle.swift */; };
 		68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */; };
 		68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68BA0A871F87128900D3B57D /* GoogleService-Info.plist */; };
+		68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BBC8821FCCFD290008962B /* AppVersionResponse.swift */; };
+		68BBC8851FCD12400008962B /* AppVersioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BBC8841FCD12400008962B /* AppVersioning.swift */; };
 		68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */; };
 		68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */; };
 		68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69CB1EEA33C50082956D /* MediaGospel.swift */; };
@@ -113,7 +114,6 @@
 		681E117E1ED138DA00B028DD /* Book.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		681E11801ED13B1400B028DD /* BookResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookResponse.swift; sourceTree = "<group>"; };
 		6833CBC61FC9F9DA001FEFD5 /* AppVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersion.swift; sourceTree = "<group>"; };
-		6833CBC81FC9FA19001FEFD5 /* AppVersionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppVersionResponse.swift; path = /Users/maz/src/faithfulaudio/RVG/RVG/AppVersionResponse.swift; sourceTree = "<absolute>"; };
 		683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentUrlItemKey.swift; sourceTree = "<group>"; };
 		683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnvironmentUrlItems.swift; sourceTree = "<group>"; };
 		683D5B8B1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -145,6 +145,8 @@
 		68B2B1031F57B70600D986D4 /* BookTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTitle.swift; sourceTree = "<group>"; };
 		68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTitleResponse.swift; sourceTree = "<group>"; };
 		68BA0A871F87128900D3B57D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		68BBC8821FCCFD290008962B /* AppVersionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppVersionResponse.swift; path = /Users/maz/src/faithfulaudio/RVG/RVG/AppVersionResponse.swift; sourceTree = "<absolute>"; };
+		68BBC8841FCD12400008962B /* AppVersioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersioning.swift; sourceTree = "<group>"; };
 		68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuTableViewCell.swift; sourceTree = "<group>"; };
 		68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuTableViewCell.xib; sourceTree = "<group>"; };
 		68BE69CB1EEA33C50082956D /* MediaGospel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaGospel.swift; sourceTree = "<group>"; };
@@ -325,6 +327,7 @@
 				70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */,
 				70CD20651E6479A800AF619F /* Main.storyboard */,
 				70CD20611E6479A800AF619F /* AppDelegate.swift */,
+				68BBC8841FCD12400008962B /* AppVersioning.swift */,
 				68E2BE401EBC143400FCD897 /* UIView+Debug.h */,
 				68E2BE411EBC143400FCD897 /* UIView+Debug.m */,
 				68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */,
@@ -423,7 +426,7 @@
 				689880501F147B5900CC2BC5 /* Playable.swift */,
 				4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */,
 				6833CBC61FC9F9DA001FEFD5 /* AppVersion.swift */,
-				6833CBC81FC9FA19001FEFD5 /* AppVersionResponse.swift */,
+				68BBC8821FCCFD290008962B /* AppVersionResponse.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -691,6 +694,7 @@
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
+				68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */,
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,
 				68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */,
 				70CD20641E6479A800AF619F /* MainViewController.swift in Sources */,
@@ -719,12 +723,12 @@
 				68B2B1051F57B70600D986D4 /* BookTitle.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
 				68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */,
-				6833CBC91FC9FA19001FEFD5 /* AppVersionResponse.swift in Sources */,
 				68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
+				68BBC8851FCD12400008962B /* AppVersioning.swift in Sources */,
 				68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */,
