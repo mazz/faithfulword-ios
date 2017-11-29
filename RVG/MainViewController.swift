@@ -28,6 +28,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     
     func appVersionCheck() {
         let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
+        // 2 == Monday
         if dayNumberOfWeek % 2 == 0 {
             let provider = MoyaProvider<KJVRVGService>()
             
@@ -69,7 +70,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                             let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: ""),
                                                           message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
                                                           preferredStyle: .alert)
-                            let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: nil)
+                            let laterAction = UIAlertAction(title: NSLocalizedString("Upgrade Later", comment: ""), style: .cancel, handler: nil)
                             
                             let appStore = UIAlertAction(title: NSLocalizedString("Go To App Store", comment: ""), style: .default, handler: { (action) -> Void in
                                 UIApplication.shared.open(URL(string: "https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8")!, options: [:], completionHandler: nil)
@@ -203,7 +204,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                                (NSLocalizedString("Music", comment: "").l10n(), UIImage(named: "discs_icon_white")!),
                                (NSLocalizedString("About Us", comment: "").l10n(), UIImage(named: "about_ic")!),
                                (NSLocalizedString("Share", comment: "").l10n(), UIImage(named: "share_ic")!),
-                               (NSLocalizedString("Other Languages", comment: "").l10n(), UIImage(named: "language_menu")!),
+                               (NSLocalizedString("Set Bible Language", comment: "").l10n(), UIImage(named: "language_menu")!),
                                (NSLocalizedString("Donate", comment: "").l10n(), UIImage(named: "donate")!),
                                (NSLocalizedString("Privacy Policy", comment: "").l10n(), UIImage(named: "privacy_ic")!),
                                (NSLocalizedString("Contact Us", comment: "").l10n(), UIImage(named: "mail")!),
@@ -238,7 +239,9 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     func shareTextButton() {
         
         // text to share
-        let text = NSLocalizedString("KJVRVG: https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "").l10n()
+        let allScripture = NSLocalizedString("All Scripture", comment: "")
+        
+        let text = NSLocalizedString("\(allScripture): https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "").l10n()
         
         // set up activity view controller
         let textToShare = [ text ]
@@ -261,7 +264,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
         let appVersionString: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
 
         mailComposerVC.setToRecipients(["allscripturebaptist@gmail.com"])
-        mailComposerVC.setSubject("KJVRVG iOS \(appVersionString) App Feedback")
+        mailComposerVC.setSubject("All Scripture iOS \(appVersionString) App Feedback")
         
         return mailComposerVC
     }
@@ -284,7 +287,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
             cell?.verseBodyLabel.text = NSLocalizedString("All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness: That the man of God may be perfect, thoroughly furnished unto all good works.", comment: "").l10n()
-            cell?.chapterAndVerseLabel.text = NSLocalizedString("2 TIMOTHY 3:16-17", comment: "").l10n()
+            cell?.chapterAndVerseLabel.text = NSLocalizedString("2 Timothy 3:16-17", comment: "").l10n()
             
             return cell!
         } else {

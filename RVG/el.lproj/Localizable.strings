@@ -13,6 +13,8 @@
 /* No comment provided by engineer. */
 "Other Languages" = "Αλλες γλώσσες";
 
+"Set Bible Language" = "Ορίστε την Αγία Γραφή";
+
 /* No comment provided by engineer. */
 "Chapters" = "Κεφάλαια";
 
@@ -62,7 +64,7 @@
 "All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness: That the man of God may be perfect, thoroughly furnished unto all good works." = "πασα γραφη θεοπνευστος και ωφελιμος προς διδασκαλιαν προς ελεγχον προς επανορθωσιν προς παιδειαν την εν δικαιοσυνη ινα αρτιος η ο του θεου ανθρωπος προς παν εργον αγαθον εξηρτισμενος";
 
 /* No comment provided by engineer. */
-"2 TIMOTHY 3:16-17" = "2 TIMOTHY 3:16-17";
+"2 Timothy 3:16-17" = "ΠΡΟΣ ΤΙΜΟΘΕΟΝ Β΄ 3:16-17";
 
 /* No comment provided by engineer. */
 "Yes" = "Ναί";
@@ -153,4 +155,12 @@
 "Soul-winning" = "Ευαγγέλιο";
 
 "All Scripture" = "πασα γραφη";
+
+"Upgrade to New Version" = "Upgrade to New Version";
+
+"Keep up with new sermons and content regularly!" = "Keep up with new sermons and content regularly!";
+
+"Upgrade Later" = "Upgrade Later";
+
+"Go To App Store" = "Go To App Store";
 

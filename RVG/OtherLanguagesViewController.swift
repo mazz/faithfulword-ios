@@ -30,8 +30,8 @@ class OtherLanguagesViewController: BaseClass {
             self.navigationItem.rightBarButtonItem = nil
         }
         
-        self.title = NSLocalizedString("Other Languages", comment: "").l10n()
-        self.navigationItem.title = NSLocalizedString("Other Languages", comment: "").l10n()
+        self.title = NSLocalizedString("Set Bible Language", comment: "").l10n()
+        self.navigationItem.title = NSLocalizedString("Set Bible Language", comment: "").l10n()
 
         let provider = MoyaProvider<KJVRVGService>()
         
@@ -166,8 +166,8 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
         self.navigationController?.setViewControllers(
             self.navigationController?.viewControllers.map {
                 if let storyboard = $0.storyboard, let identifier = $0.restorationIdentifier {
-                    self.navigationItem.title = NSLocalizedString("Other Languages", comment: "").l10n()
-                    self.title = NSLocalizedString("Other Languages", comment: "").l10n()
+                    self.navigationItem.title = NSLocalizedString("Set Bible Language", comment: "").l10n()
+                    self.title = NSLocalizedString("Set Bible Language", comment: "").l10n()
                     return storyboard.instantiateViewController(withIdentifier: identifier)
                 }
                 return $0

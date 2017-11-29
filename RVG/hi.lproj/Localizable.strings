@@ -12,6 +12,8 @@
 
 "Other Languages" = "अन्य भाषाएँ";
 
+"Set Bible Language" = "बाइबल भाषा सेट करें";
+
 /* No comment provided by engineer. */
 "Chapters" = "अध्याय";
 
@@ -61,7 +63,7 @@
 "All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness: That the man of God may be perfect, thoroughly furnished unto all good works." = "बुद्धिमान कर सकता है। सारा धर्म पुस्तक ईश्वर की प्रेरणा से रचा गया और उपदेश के लिये और समझाने के लिये और सुधारने के लिये और धर्म की शिक्षा के लिये फलदाई है। जिससे ईश्वर का जन सिद्ध अर्थात हर एक उतम करम के लिये सिद्ध किया हुआ होवे";
 
 /* No comment provided by engineer. */
-"2 TIMOTHY 3:16-17" = "2 TIMOTHY 3:16-17";
+"2 Timothy 3:16-17" = "2 तीमुथियुस 3:16-17";
 
 /* No comment provided by engineer. */
 "Yes" = "ह";
@@ -151,5 +153,13 @@
 "Soul-winning" = "इंजील";
 
 "All Scripture" = "सभी शास्त्र";
+
+"Upgrade to New Version" = "Upgrade to New Version";
+
+"Keep up with new sermons and content regularly!" = "Keep up with new sermons and content regularly!";
+
+"Upgrade Later" = "Upgrade Later";
+
+"Go To App Store" = "Go To App Store";
 
 
