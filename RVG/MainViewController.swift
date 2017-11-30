@@ -10,7 +10,7 @@ import SafariServices
 import Moya
 import L10n_swift
 
-class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVersioning {
+class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
     
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
@@ -25,77 +25,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     @IBOutlet var menuBar: UIBarButtonItem!
     
     var tableRowsArray: [(String, UIImage)]?
-    
-    func appVersionCheck() {
-        let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
-        // 2 == Monday
-        if dayNumberOfWeek % 2 == 0 {
-            let provider = MoyaProvider<KJVRVGService>()
-            
-            provider.request(.appVersions) { result in
-                switch result {
-                case let .success(moyaResponse):
-                    do {
-                        try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-                        let data = moyaResponse.data
-                        
-                        let appVersionsResponse: AppVersionResponse = try moyaResponse.map(AppVersionResponse.self)
-                        print("mapped to appVersionsResponse: \(appVersionsResponse)")
-                        
-                        var amISupported = false
-                        var amICurrent = false
-                        
-                        let appVersions = appVersionsResponse.result
-                        guard appVersions.count > 0 else {
-                            return
-                        }
-                        
-                        let bundleVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
-                        
-                        for (_, v) in appVersions.enumerated() {
-                            if v.versionNumber == bundleVersion {
-                                amISupported = v.supported
-                            }
-                        }
-                        print("amISupported: \(amISupported)")
-                        
-                        if let latestAppVersion = appVersions.last?.versionNumber {
-                            if latestAppVersion == bundleVersion {
-                                amICurrent = true
-                            }
-                        }
-                        print("amICurrent: \(amICurrent)")
-                        
-                        if amICurrent == false {
-                            let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: ""),
-                                                          message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
-                                                          preferredStyle: .alert)
-                            let laterAction = UIAlertAction(title: NSLocalizedString("Upgrade Later", comment: ""), style: .cancel, handler: nil)
-                            
-                            let appStore = UIAlertAction(title: NSLocalizedString("Go To App Store", comment: ""), style: .default, handler: { (action) -> Void in
-                                UIApplication.shared.open(URL(string: "https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8")!, options: [:], completionHandler: nil)
-                            })
-                            if amISupported == true {
-                                alert.addAction(laterAction)
-                            }
-                            alert.addAction(appStore)
-                            self.present(alert, animated: false, completion: nil)
-                        }
-                    }
-                    catch {
-                        print("error: \(error)")
-                    }
-                    
-                case let .failure(error):
-                    // this means there was a network failure - either the request
-                    // wasn't sent (connectivity), or no response was received (server
-                    // timed out).  If the server responds with a 4xx or 5xx error, that
-                    // will be sent as a ".success"-ful response.
-                    print("error: \(error)")
-                }
-            }
-        }
-    }
     
     func okAlert(action: UIAlertAction, _ alert:UIAlertController) {
         UIApplication.shared.open(URL(string: "https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8")!, options: [:], completionHandler: nil)
@@ -119,8 +48,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
         
         self.navigationItem.leftBarButtonItem = menuBar
-
-        appVersionCheck()
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {

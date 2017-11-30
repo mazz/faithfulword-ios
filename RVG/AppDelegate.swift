@@ -5,12 +5,93 @@ import Firebase
 import Moya
 import UserNotifications
 import L10n_swift
+import RxSwift
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate, AppVersioning {
 
     var window: UIWindow?
 //    var appVersions: [AppVersion]?
+    private var didVersionCheck = PublishSubject<Bool>()
+    private let disposeBag = DisposeBag()
+    
+    func appVersionCheck() {
+        let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
+        // 2 == Monday
+        if dayNumberOfWeek % 2 == 0 {
+            let provider = MoyaProvider<KJVRVGService>()
+            
+            provider.request(.appVersions) { result in
+                switch result {
+                case let .success(moyaResponse):
+                    do {
+                        try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                        let data = moyaResponse.data
+                        
+                        let appVersionsResponse: AppVersionResponse = try moyaResponse.map(AppVersionResponse.self)
+                        print("mapped to appVersionsResponse: \(appVersionsResponse)")
+                        
+                        var amISupported = false
+                        var amICurrent = false
+                        
+                        let appVersions = appVersionsResponse.result
+                        guard appVersions.count > 0 else {
+                            return
+                        }
+                        
+                        let bundleVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+                        
+                        for (_, v) in appVersions.enumerated() {
+                            if v.versionNumber == bundleVersion {
+                                amISupported = v.supported
+                            }
+                        }
+                        print("amISupported: \(amISupported)")
+                        
+                        if let latestAppVersion = appVersions.last?.versionNumber {
+                            if latestAppVersion == bundleVersion {
+                                amICurrent = true
+                            }
+                        }
+                        print("amICurrent: \(amICurrent)")
+                        
+                        if amICurrent == false {
+                            let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: ""),
+                                                          message: NSLocalizedString("There is a new version available", comment: ""),
+                                                          preferredStyle: .alert)
+                            let laterAction = UIAlertAction(title: NSLocalizedString("Upgrade Later", comment: ""), style: .cancel, handler: { (action) -> Void in
+                                self.didVersionCheck.onNext(true)
+                            })
+                            
+                            let appStore = UIAlertAction(title: NSLocalizedString("Go To App Store", comment: ""), style: .default, handler: { (action) -> Void in
+                                UIApplication.shared.open(URL(string: "https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8")!, options: [:], completionHandler: nil)
+                            })
+                            if amISupported == true {
+                                alert.addAction(laterAction)
+                            }
+                            alert.addAction(appStore)
+                            self.window!.rootViewController!.present(alert, animated: false, completion: nil)
+                        } else {
+                            self.didVersionCheck.onNext(true)
+                        }
+                    }
+                    catch {
+                        print("error: \(error)")
+                    }
+                    
+                case let .failure(error):
+                    // this means there was a network failure - either the request
+                    // wasn't sent (connectivity), or no response was received (server
+                    // timed out).  If the server responds with a 4xx or 5xx error, that
+                    // will be sent as a ".success"-ful response.
+                    print("error: \(error)")
+                }
+            }
+        } else {
+            self.didVersionCheck.onNext(false)
+        }
+    }
+    
     func optInForPushNotifications(application: UIApplication) {
         
         // Keep up with new sermons and content regularly! Press here
@@ -30,10 +111,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        didVersionCheck.subscribe { [unowned self] didCheck in
+            let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
+            let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
+            // 5 == Thursday
+            if !isRegisteredForRemoteNotifications && dayNumberOfWeek % 5 == 0 {
+                let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
+                                              message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
+                                              preferredStyle: .alert)
+                let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: nil)
+                let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: ""), style: .default, handler: { (action) -> Void in
+                    self.optInForPushNotifications(application: application)
+                })
 
-//        appVersionCheck()
-        optInForPushNotifications(application: application)
-        
+                alert.addAction(laterAction)
+                alert.addAction(getNotifications)
+                
+                self.window!.rootViewController!.present(alert, animated: false, completion: nil)
+            }
+        }.disposed(by: disposeBag)
         UINavigationBar.appearance().tintColor = UIColor.black
         
         return true
