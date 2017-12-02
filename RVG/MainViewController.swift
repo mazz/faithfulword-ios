@@ -9,15 +9,28 @@ import MessageUI
 import SafariServices
 import Moya
 import L10n_swift
+import RxSwift
+import UserNotifications
+import Firebase
 
-class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
+class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVersioning, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
     @IBOutlet var booksRightBarButtonItem: UIBarButtonItem!
-    
+
 //    var bookIds : [Book] = []
     var books : [Book] = []
+    
+    private var didVersionCheck = PublishSubject<Bool>()
+    private let disposeBag = DisposeBag()
+    private static var secondsInAWeek: TimeInterval {
+        return TimeInterval(((60 * 24) * 60) * 7)
+    }
+    private static var lastVersionCheck = "lastVersionCheck"
+    private static var lastPushNotificationCheck = "lastPushNotificationCheck"
+    private static var monday = 1
+    private static var saturday = 6
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var leftConstraint: NSLayoutConstraint!
@@ -48,6 +61,55 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         UIApplication.shared.keyWindow?.backgroundColor = UIColor.init(displayP3Red: 195.0/255, green: 3.0/255, blue: 33.0/255, alpha: 1.0)
         
         self.navigationItem.leftBarButtonItem = menuBar
+        
+
+        didVersionCheck.subscribe { [unowned self] didCheck in
+            let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
+            let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
+            
+//            UserDefaults.standard.set(Date(), forKey: MainViewController.lastPushNotificationCheck)
+            let lastPushNotificationCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastPushNotificationCheck) as? Date
+            
+            // if we never checked for push notifications opt-in yet, OR it's been at least a week since we last checked AND today is Saturday
+            if lastPushNotificationCheck == nil || ((Date().timeIntervalSince1970 - (lastPushNotificationCheck?.timeIntervalSince1970)!) >  MainViewController.secondsInAWeek && dayNumberOfWeek == MainViewController.saturday) {
+                if !isRegisteredForRemoteNotifications {
+                    let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
+                                                  message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
+                                                  preferredStyle: .alert)
+                    let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: nil)
+                    let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: ""), style: .default, handler: { (action) -> Void in
+                        self.optInForPushNotifications(application: UIApplication.shared)
+                    })
+                    
+                    alert.addAction(laterAction)
+                    alert.addAction(getNotifications)
+                    
+                    self.present(alert, animated: false, completion: nil)
+                }
+            }
+
+            }.disposed(by: disposeBag)
+        
+        appVersionCheck()
+    }
+    
+    func optInForPushNotifications(application: UIApplication) {
+        UserDefaults.standard.set(Date(), forKey: MainViewController.lastPushNotificationCheck)
+
+        // Keep up with new sermons and content regularly! Press here
+        application.registerForRemoteNotifications()
+        
+//        IQKeyboardManager.sharedManager().enable = true
+        UNUserNotificationCenter.current().delegate = self
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        Messaging.messaging().shouldEstablishDirectChannel = true
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
@@ -201,7 +263,158 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate {
         controller.dismiss(animated: true, completion: nil)
     }
     
+    func appVersionCheck() {
+        let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
+        // 2 == Monday
+
+        let lastVersionCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastVersionCheck) as? Date
+        
+        print("lastCheck: \(lastVersionCheck)")
+        print("Date().timeIntervalSince1970: \(Date().timeIntervalSince1970)")
+//        print("(lastCheck?.timeIntervalSince1970)!: \((lastCheck?.timeIntervalSince1970)!)")
+
+        if lastVersionCheck == nil || ((Date().timeIntervalSince1970 - (lastVersionCheck?.timeIntervalSince1970)!) >  MainViewController.secondsInAWeek && dayNumberOfWeek == MainViewController.monday) {
+            let provider = MoyaProvider<KJVRVGService>()
+            
+            provider.request(.appVersions) { result in
+                switch result {
+                case let .success(moyaResponse):
+                    do {
+                        UserDefaults.standard.set(Date(), forKey: MainViewController.lastVersionCheck)
+
+                        try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                        let data = moyaResponse.data
+                        
+                        let appVersionsResponse: AppVersionResponse = try moyaResponse.map(AppVersionResponse.self)
+                        print("mapped to appVersionsResponse: \(appVersionsResponse)")
+                        
+                        var amISupported = false
+                        var amICurrent = false
+                        
+                        let appVersions = appVersionsResponse.result
+                        guard appVersions.count > 0 else {
+                            return
+                        }
+                        
+                        let bundleVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
+                        
+                        for (_, v) in appVersions.enumerated() {
+                            if v.versionNumber == bundleVersion {
+                                amISupported = v.iosSupported
+                            }
+                        }
+                        print("amISupported: \(amISupported)")
+                        
+                        if let latestAppVersion = appVersions.last?.versionNumber {
+                            if latestAppVersion == bundleVersion {
+                                amICurrent = true
+                            }
+                        }
+                        print("amICurrent: \(amICurrent)")
+                        
+                        if amICurrent == false {
+                            let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: ""),
+                                                          message: NSLocalizedString("There is a new version available", comment: ""),
+                                                          preferredStyle: .alert)
+                            let laterAction = UIAlertAction(title: NSLocalizedString("Upgrade Later", comment: ""), style: .cancel, handler: { (action) -> Void in
+                                self.didVersionCheck.onNext(true)
+                            })
+                            
+                            let appStore = UIAlertAction(title: NSLocalizedString("Go To App Store", comment: ""), style: .default, handler: { (action) -> Void in
+                                UIApplication.shared.open(URL(string: "https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8")!, options: [:], completionHandler: nil)
+                            })
+                            if amISupported == true {
+                                alert.addAction(laterAction)
+                            }
+                            alert.addAction(appStore)
+                            self.present(alert, animated: false, completion: nil)
+                        } else {
+                            self.didVersionCheck.onNext(true)
+                        }
+                    }
+                    catch {
+                        print("error: \(error)")
+                    }
+                    
+                case let .failure(error):
+                    // this means there was a network failure - either the request
+                    // wasn't sent (connectivity), or no response was received (server
+                    // timed out).  If the server responds with a 4xx or 5xx error, that
+                    // will be sent as a ".success"-ful response.
+                    print("error: \(error)")
+                }
+            }
+        } else {
+            self.didVersionCheck.onNext(false)
+        }
+    }
+    
+    func updatePushToken(fcmToken: String,
+                         apnsToken: String,
+                         preferredLanguage: String,
+                         userAgent: String) {
+        let provider = MoyaProvider<KJVRVGService>()
+        // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
+        provider.request(.pushTokenUpdate(fcmToken: fcmToken,
+                                          apnsToken: apnsToken,
+                                          preferredLanguage: preferredLanguage,
+                                          userAgent: userAgent)) { result in
+                                            switch result {
+                                            case let .success(moyaResponse):
+                                                do {
+                                                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                                                    let data = moyaResponse.data
+                                                    //                    var parsedObject: BookResponse
+                                                    
+                                                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                                                    print("json: \(json)")
+                                                    if let jsonObject = json as? [String:Any] {
+                                                        print("jsonObject: \(jsonObject)")
+                                                    }
+                                                }
+                                                catch {
+                                                    print("error: \(error)")
+                                                }
+                                                
+                                            case let .failure(error):
+                                                print(".failure: \(error)")
+                                                // this means there was a network failure - either the request
+                                                // wasn't sent (connectivity), or no response was received (server
+                                                // timed out).  If the server responds with a 4xx or 5xx error, that
+                                                // will be sent as a ".success"-ful response.
+                                                //                errorClosure(error)
+                                                print(".failure")
+                                            }
+        }
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
+        print("response.actionIdentifier: \(response.actionIdentifier)")
+        //        Messaging.messaging().appDidReceiveMessage()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(UNNotificationPresentationOptions.alert)
+    }
 }
+
+extension MainViewController {
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        print("Firebase didRefreshRegistrationToken token: \(fcmToken)")
+        if let apnsToken = Messaging.messaging().apnsToken {
+            let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
+            self.updatePushToken(fcmToken: fcmToken,
+                                 apnsToken: apnsTokenString,
+                                 preferredLanguage: L10n.shared.preferredLanguage,
+                                 userAgent: Device.userAgent())
+        }
+    }
+    
+    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+        print("messaging remoteMessage.appData: \(remoteMessage.appData)")
+    }
+}
+
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

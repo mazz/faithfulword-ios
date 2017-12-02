@@ -5,7 +5,7 @@ enum KJVRVGService {
     case churches
     case churchesMediaSermons(cid: String)
     case appVersions
-    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, platform: String)
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String)
     case musicMedia(mid: String) // "/music/{mid}/media"
     case music
     case languagesSupported
@@ -91,11 +91,11 @@ extension KJVRVGService: TargetType {
         case .pushTokenUpdate(let fcmToken,
                               let apnsToken,
                               let preferredLanguage,
-                              let platform):
+                              let userAgent):
             return ["fcmToken": fcmToken,
                     "apnsToken": apnsToken,
                     "preferredLanguage": preferredLanguage,
-                    "platform": platform]
+                    "userAgent": userAgent]
         }
     }
     var parameterEncoding: ParameterEncoding {
@@ -126,12 +126,12 @@ extension KJVRVGService: TargetType {
         case .pushTokenUpdate(let fcmToken,
                               let apnsToken,
                               let preferredLanguage,
-                              let platform):
+                              let userAgent):
             let pushTokenJson = [
                 "fcmToken": fcmToken,
                 "apnsToken": apnsToken,
                 "preferredLanguage": preferredLanguage,
-                "platform": platform
+                "userAgent": userAgent
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
         case .booksChapterMedia(let bid, let languageId):
@@ -169,11 +169,11 @@ extension KJVRVGService: TargetType {
         case .books(let languageId):
             return .requestParameters(parameters:  ["language-id": languageId],
                                       encoding: URLEncoding.default)
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let platform):
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent):
             return .requestParameters(parameters:  ["fcmToken": fcmToken,
                                                     "apnsToken": apnsToken,
                                                     "preferredLanguage": preferredLanguage,
-                                                    "platform": platform],
+                                                    "userAgent": userAgent],
                                       encoding: JSONEncoding.default)
         case .languagesSupported:
             return .requestPlain

@@ -8,128 +8,13 @@ import L10n_swift
 import RxSwift
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate, AppVersioning {
+class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
 
     var window: UIWindow?
 //    var appVersions: [AppVersion]?
-    private var didVersionCheck = PublishSubject<Bool>()
-    private let disposeBag = DisposeBag()
-    
-    func appVersionCheck() {
-        let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
-        // 2 == Monday
-        if dayNumberOfWeek % 2 == 0 {
-            let provider = MoyaProvider<KJVRVGService>()
-            
-            provider.request(.appVersions) { result in
-                switch result {
-                case let .success(moyaResponse):
-                    do {
-                        try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-                        let data = moyaResponse.data
-                        
-                        let appVersionsResponse: AppVersionResponse = try moyaResponse.map(AppVersionResponse.self)
-                        print("mapped to appVersionsResponse: \(appVersionsResponse)")
-                        
-                        var amISupported = false
-                        var amICurrent = false
-                        
-                        let appVersions = appVersionsResponse.result
-                        guard appVersions.count > 0 else {
-                            return
-                        }
-                        
-                        let bundleVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
-                        
-                        for (_, v) in appVersions.enumerated() {
-                            if v.versionNumber == bundleVersion {
-                                amISupported = v.supported
-                            }
-                        }
-                        print("amISupported: \(amISupported)")
-                        
-                        if let latestAppVersion = appVersions.last?.versionNumber {
-                            if latestAppVersion == bundleVersion {
-                                amICurrent = true
-                            }
-                        }
-                        print("amICurrent: \(amICurrent)")
-                        
-                        if amICurrent == false {
-                            let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: ""),
-                                                          message: NSLocalizedString("There is a new version available", comment: ""),
-                                                          preferredStyle: .alert)
-                            let laterAction = UIAlertAction(title: NSLocalizedString("Upgrade Later", comment: ""), style: .cancel, handler: { (action) -> Void in
-                                self.didVersionCheck.onNext(true)
-                            })
-                            
-                            let appStore = UIAlertAction(title: NSLocalizedString("Go To App Store", comment: ""), style: .default, handler: { (action) -> Void in
-                                UIApplication.shared.open(URL(string: "https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8")!, options: [:], completionHandler: nil)
-                            })
-                            if amISupported == true {
-                                alert.addAction(laterAction)
-                            }
-                            alert.addAction(appStore)
-                            self.window!.rootViewController!.present(alert, animated: false, completion: nil)
-                        } else {
-                            self.didVersionCheck.onNext(true)
-                        }
-                    }
-                    catch {
-                        print("error: \(error)")
-                    }
-                    
-                case let .failure(error):
-                    // this means there was a network failure - either the request
-                    // wasn't sent (connectivity), or no response was received (server
-                    // timed out).  If the server responds with a 4xx or 5xx error, that
-                    // will be sent as a ".success"-ful response.
-                    print("error: \(error)")
-                }
-            }
-        } else {
-            self.didVersionCheck.onNext(false)
-        }
-    }
-    
-    func optInForPushNotifications(application: UIApplication) {
-        
-        // Keep up with new sermons and content regularly! Press here
-        application.registerForRemoteNotifications()
-        
-        IQKeyboardManager.sharedManager().enable = true
-        UNUserNotificationCenter.current().delegate = self
-        
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
-        
-        FirebaseApp.configure()
-        Messaging.messaging().delegate = self
-        Messaging.messaging().shouldEstablishDirectChannel = true
-    }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        didVersionCheck.subscribe { [unowned self] didCheck in
-            let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
-            let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
-            // 5 == Thursday
-            if !isRegisteredForRemoteNotifications && dayNumberOfWeek % 5 == 0 {
-                let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
-                                              message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
-                                              preferredStyle: .alert)
-                let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: nil)
-                let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: ""), style: .default, handler: { (action) -> Void in
-                    self.optInForPushNotifications(application: application)
-                })
-
-                alert.addAction(laterAction)
-                alert.addAction(getNotifications)
-                
-                self.window!.rootViewController!.present(alert, animated: false, completion: nil)
-            }
-        }.disposed(by: disposeBag)
+        
         UINavigationBar.appearance().tintColor = UIColor.black
         
         return true
@@ -153,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 self.updatePushToken(fcmToken: firebaseToken,
                                      apnsToken: apnsTokenString,
                                      preferredLanguage: L10n.shared.preferredLanguage,
-                                     platform: Device.platform())
+                                     userAgent: Device.userAgent())
             }
 //            guard let apnsToken = Messaging.messaging().apnsToken,
 //            guard let apnsTokenString = apnsToken.reduce("", {$0 + String(format: "%02X", $1)}) {
@@ -174,13 +59,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func updatePushToken(fcmToken: String,
                          apnsToken: String,
                          preferredLanguage: String,
-                         platform: String) {
+                         userAgent: String) {
         let provider = MoyaProvider<KJVRVGService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
         provider.request(.pushTokenUpdate(fcmToken: fcmToken,
                                           apnsToken: apnsToken,
                                           preferredLanguage: preferredLanguage,
-                                          platform: platform)) { result in
+                                          userAgent: userAgent)) { result in
             switch result {
             case let .success(moyaResponse):
                 do {
@@ -269,7 +154,7 @@ extension AppDelegate {
             self.updatePushToken(fcmToken: fcmToken,
                                  apnsToken: apnsTokenString,
                                  preferredLanguage: L10n.shared.preferredLanguage,
-                                 platform: Device.platform())
+                                 userAgent: Device.userAgent())
         }
     }
     
