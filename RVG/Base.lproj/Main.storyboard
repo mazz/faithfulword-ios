@@ -717,7 +717,7 @@ Thank you!</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AIs-yZ-aTT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3993" y="-39"/>
+            <point key="canvasLocation" x="4145" y="-122"/>
         </scene>
         <!--Music-->
         <scene sceneID="X1h-Jk-gsQ">
@@ -893,8 +893,8 @@ Thank you!</string>
         </scene>
     </scenes>
     <resources>
-        <image name="DisplayIcon" width="256" height="256"/>
-        <image name="boo" width="1139" height="857"/>
+        <image name="DisplayIcon" width="512" height="512"/>
+        <image name="boo" width="1024" height="665"/>
         <image name="check" width="84" height="75"/>
         <image name="close" width="20" height="20"/>
         <image name="dots" width="30" height="30"/>
