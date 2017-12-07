@@ -1,15 +1,7 @@
 import Foundation
-import ObjectMapper
 
-class LanguagesSupportedResponse : Mappable {
-    var languageIdentifiers : [LanguageIdentifier]?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        languageIdentifiers  <- map["result"]
-    }
-    
+public struct LanguagesSupportedResponse: Codable {
+    let result: [LanguageIdentifier]
+    let version: String
+    let status: String
 }

@@ -19,7 +19,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     @IBOutlet weak var rightHomeButton: UIButton!
     @IBOutlet var booksRightBarButtonItem: UIBarButtonItem!
 
-//    var bookIds : [Book] = []
     var books : [Book] = []
     
     private var didVersionCheck = PublishSubject<Bool>()
@@ -45,7 +44,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // MenuFooterTableViewCell
         
         NotificationCenter.default.addObserver(
             self, selector: #selector(self.onLanguageChanged), name: .L10nLanguageChanged, object: nil
@@ -66,7 +64,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
             let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
             let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
             
-//            UserDefaults.standard.set(Date(), forKey: MainViewController.lastPushNotificationCheck)
             let lastPushNotificationCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastPushNotificationCheck) as? Date
             
             // if we never checked for push notifications opt-in yet, OR it's been at least a week since we last checked AND today is Saturday
@@ -75,7 +72,9 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                     let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
                                                   message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
                                                   preferredStyle: .alert)
-                    let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: nil)
+                    let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: { (action) -> Void in
+                        UserDefaults.standard.set(Date(), forKey: MainViewController.lastPushNotificationCheck)
+                    })
                     let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: ""), style: .default, handler: { (action) -> Void in
                         self.optInForPushNotifications(application: UIApplication.shared)
                     })
@@ -95,10 +94,8 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     func optInForPushNotifications(application: UIApplication) {
         UserDefaults.standard.set(Date(), forKey: MainViewController.lastPushNotificationCheck)
 
-        // Keep up with new sermons and content regularly! Press here
         application.registerForRemoteNotifications()
         
-//        IQKeyboardManager.sharedManager().enable = true
         UNUserNotificationCenter.current().delegate = self
         
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]

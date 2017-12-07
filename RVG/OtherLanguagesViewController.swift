@@ -18,7 +18,9 @@ class OtherLanguagesViewController: BaseClass {
         )
 
         tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
-        
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 40
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,20 +56,23 @@ class OtherLanguagesViewController: BaseClass {
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                     let data = moyaResponse.data
-                    var parsedObject: LanguagesSupportedResponse
+//                    var parsedObject: LanguagesSupportedResponse
                     
-                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                    if let jsonObject = json as? [String:Any] {
-                        parsedObject = LanguagesSupportedResponse(JSON: jsonObject)!
-                        print(parsedObject)
-                        
-                        self.languages = parsedObject.languageIdentifiers!
-                        DispatchQueue.main.async {
-                            MBProgressHUD.hide(for: self.view, animated: true)
-                            self.tableView.reloadData()
-                        }
-                        
+                    let supportedLanguages: LanguagesSupportedResponse = try moyaResponse.map(LanguagesSupportedResponse.self)
+                    self.languages = supportedLanguages.result
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.tableView.reloadData()
                     }
+//                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+//                    if let jsonObject = json as? [String:Any] {
+//                        parsedObject = LanguagesSupportedResponse(JSON: jsonObject)!
+//                        print(parsedObject)
+//
+//                        self.languages = parsedObject.languageIdentifiers!
+//                        }
+//
+//                    }
                 }
                 catch {
                     errorClosure(error)
@@ -104,19 +109,15 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
             cell.selectionStyle = .none
             
-//            let languageID = Bundle.main.preferredLocalizations[0]// [[NSBundle mainBundle] preferredLocalizations].firstObject;
-//            let locale = NSLocale(localeIdentifier: languageID)
-//            let localizedString = locale.displayName(forKey: NSLocale.Key.identifier, value: self.languages[indexPath.row].languageIdentifier!)
-            if let languageIdentifier = self.languages[indexPath.row].languageIdentifier {
-                cell.songLabel?.text = self.localizedString(identifier: languageIdentifier)
-                cell.imageIconView.image = UIImage(named: "language_menu")!
-                
-                if L10n.shared.language == languageIdentifier {
-                    cell.customAccessory.isHidden = false
-                    cell.customAccessory.image = UIImage(named: "check")
-                } else {
-                    cell.customAccessory.isHidden = true
-                }
+            let languageIdentifier = self.languages[indexPath.row].languageIdentifier
+            cell.songLabel?.text = "\(self.languages[indexPath.row].sourceMaterial) (\(self.localizedString(identifier: languageIdentifier)))"
+            cell.imageIconView.image = UIImage(named: "language_menu")!
+            
+            if L10n.shared.language == languageIdentifier {
+                cell.customAccessory.isHidden = false
+                cell.customAccessory.image = UIImage(named: "check")
+            } else {
+                cell.customAccessory.isHidden = true
             }
             
             return cell
@@ -125,35 +126,17 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let languageIdentifier = self.languages[indexPath.row].languageIdentifier
+        print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
+        print("L10n.supportedLanguages: \(L10n.supportedLanguages)")
+        print("Bundle.main.preferredLocalizations: \(Bundle.main.preferredLocalizations)")
         
-        if let languageIdentifier = self.languages[indexPath.row].languageIdentifier {
-            print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
-            print("L10n.supportedLanguages: \(L10n.supportedLanguages)")
-            print("Bundle.main.preferredLocalizations: \(Bundle.main.preferredLocalizations)")
-
-            L10n.shared.language = languageIdentifier
-//            L10n.preferredLanguage = languageIdentifier
-            
-            print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
-            print("L10n.shared.language: \(L10n.shared.language)")
-            print("languageIdentifier: \(languageIdentifier)")
-    }
+        L10n.shared.language = languageIdentifier
+        //            L10n.preferredLanguage = languageIdentifier
         
-
-//
-        
-//        let reachability = Reachability()!
-//
-//        if reachability.currentReachabilityStatus != .notReachable {
-//            if let gospelId = languages[indexPath.row].gospelId {
-//                let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
-//                vc?.gospelId = gospelId
-//                vc?.gospelType = (indexPath.row == 0) ? .planOfSalvation : .soulwinningMotivation
-//                self.navigationController?.pushViewController(vc!, animated: true)
-//            }
-//        } else {
-//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
-//        }
+        print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
+        print("L10n.shared.language: \(L10n.shared.language)")
+        print("languageIdentifier: \(languageIdentifier)")
     }
     
     func localizedString(identifier: String) -> String {
