@@ -66,9 +66,10 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
             let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
             
             let lastPushNotificationCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastPushNotificationCheck) as? Date
-            
+            print("lastPushNotificationCheck: \(lastPushNotificationCheck)")
             // if we never checked for push notifications opt-in yet, OR it's been at least a week since we last checked AND today is Saturday
             if lastPushNotificationCheck == nil || ((Date().timeIntervalSince1970 - (lastPushNotificationCheck?.timeIntervalSince1970)!) >  MainViewController.secondsInAWeek && dayNumberOfWeek == MainViewController.saturday) {
+                print("isRegisteredForRemoteNotifications: \(isRegisteredForRemoteNotifications)")
                 if !isRegisteredForRemoteNotifications {
                     let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
                                                   message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
@@ -243,7 +244,6 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
         
     }
     
-    
     func configuredMailComposeViewController() -> MFMailComposeViewController {
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self
@@ -267,9 +267,8 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
 
         let lastVersionCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastVersionCheck) as? Date
         
-        print("lastCheck: \(lastVersionCheck)")
         print("Date().timeIntervalSince1970: \(Date().timeIntervalSince1970)")
-//        print("(lastCheck?.timeIntervalSince1970)!: \((lastCheck?.timeIntervalSince1970)!)")
+        print("lastVersionCheck: \(lastVersionCheck)")
 
         if lastVersionCheck == nil || ((Date().timeIntervalSince1970 - (lastVersionCheck?.timeIntervalSince1970)!) >  MainViewController.secondsInAWeek && dayNumberOfWeek == MainViewController.monday) {
             let provider = MoyaProvider<KJVRVGService>()
@@ -291,6 +290,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                         
                         let appVersions = appVersionsResponse.result
                         guard appVersions.count > 0 else {
+                            self.didVersionCheck.onNext(false)
                             return
                         }
                         
@@ -327,10 +327,12 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                             alert.addAction(appStore)
                             self.present(alert, animated: false, completion: nil)
                         } else {
+                            print("amICurrent true, didVersionCheck.onNext(true)")
                             self.didVersionCheck.onNext(true)
                         }
                     }
                     catch {
+                        self.didVersionCheck.onNext(false)
                         print("error: \(error)")
                     }
                     
@@ -340,9 +342,11 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                     // timed out).  If the server responds with a 4xx or 5xx error, that
                     // will be sent as a ".success"-ful response.
                     print("error: \(error)")
+                    self.didVersionCheck.onNext(false)
                 }
             }
         } else {
+            print("didVersionCheck.onNext(false)")
             self.didVersionCheck.onNext(false)
         }
     }
