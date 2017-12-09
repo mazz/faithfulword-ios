@@ -67,9 +67,9 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
             
             let lastPushNotificationCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastPushNotificationCheck) as? Date
             print("lastPushNotificationCheck: \(lastPushNotificationCheck)")
+            print("isRegisteredForRemoteNotifications: \(isRegisteredForRemoteNotifications)")
             // if we never checked for push notifications opt-in yet, OR it's been at least a week since we last checked AND today is Saturday
             if lastPushNotificationCheck == nil || ((Date().timeIntervalSince1970 - (lastPushNotificationCheck?.timeIntervalSince1970)!) >  MainViewController.secondsInAWeek && dayNumberOfWeek == MainViewController.saturday) {
-                print("isRegisteredForRemoteNotifications: \(isRegisteredForRemoteNotifications)")
                 if !isRegisteredForRemoteNotifications {
                     let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
                                                   message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
