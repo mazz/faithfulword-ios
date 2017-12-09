@@ -145,7 +145,7 @@
 		68B2B1031F57B70600D986D4 /* BookTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTitle.swift; sourceTree = "<group>"; };
 		68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookTitleResponse.swift; sourceTree = "<group>"; };
 		68BA0A871F87128900D3B57D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		68BBC8821FCCFD290008962B /* AppVersionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppVersionResponse.swift; path = /Users/maz/src/faithfulaudio/RVG/RVG/AppVersionResponse.swift; sourceTree = "<absolute>"; };
+		68BBC8821FCCFD290008962B /* AppVersionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionResponse.swift; sourceTree = "<group>"; };
 		68BBC8841FCD12400008962B /* AppVersioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersioning.swift; sourceTree = "<group>"; };
 		68BC8AE41EC5662A00FBC7C2 /* MainMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuTableViewCell.swift; sourceTree = "<group>"; };
 		68BC8AE51EC5662A00FBC7C2 /* MainMenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenuTableViewCell.xib; sourceTree = "<group>"; };

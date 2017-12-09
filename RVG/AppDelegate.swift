@@ -40,19 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
                                      preferredLanguage: L10n.shared.preferredLanguage,
                                      userAgent: Device.userAgent())
             }
-//            guard let apnsToken = Messaging.messaging().apnsToken,
-//            guard let apnsTokenString = apnsToken.reduce("", {$0 + String(format: "%02X", $1)}) {
-//
-//            } else {
-//
-//            }
-            
-//            if let apnsToken = Messaging.messaging().apnsToken,
-//            if let apnsTokenString = apnsToken.reduce("", {$0 + String(format: "%02X", $1)}) {
-//                self.updatePushToken(fcmToken: firebaseToken, apnsToken: apnsTokenString, preferredLanguage: L10n.shared.preferredLanguage)
-//            }
-            
-            //            self.updatePushToken(fcmToken: firebaseToken)
         }
     }
 
@@ -133,33 +120,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
-        print("response.actionIdentifier: \(response.actionIdentifier)")
-//        Messaging.messaging().appDidReceiveMessage()
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler(UNNotificationPresentationOptions.alert)
-    }
-
-}
-
-extension AppDelegate {
-    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        print("Firebase didRefreshRegistrationToken token: \(fcmToken)")
-        if let apnsToken = Messaging.messaging().apnsToken {
-            let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
-            self.updatePushToken(fcmToken: fcmToken,
-                                 apnsToken: apnsTokenString,
-                                 preferredLanguage: L10n.shared.preferredLanguage,
-                                 userAgent: Device.userAgent())
-        }
-    }
-    
-    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-        print("messaging remoteMessage.appData: \(remoteMessage.appData)")
     }
 }
 

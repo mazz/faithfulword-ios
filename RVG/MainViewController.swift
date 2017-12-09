@@ -59,8 +59,9 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
         
         self.navigationItem.leftBarButtonItem = menuBar
         
-
-        didVersionCheck.subscribe { [unowned self] didCheck in
+        didVersionCheck
+            .observeOn(MainScheduler.instance)
+            .subscribe { [unowned self] didCheck in
             let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
             let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
             
@@ -86,7 +87,8 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                 }
             }
 
-            }.disposed(by: disposeBag)
+            }
+            .disposed(by: disposeBag)
         
         appVersionCheck()
     }
