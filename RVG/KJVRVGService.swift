@@ -190,7 +190,8 @@ extension KJVRVGService: TargetType {
     }
     
     var headers: [String: String]? {
-        return ["Content-type": "application/json"]
+        return ["Content-type": "application/json",
+                "User-Agent": Device.userAgent()]
     }
     
     // Helper
