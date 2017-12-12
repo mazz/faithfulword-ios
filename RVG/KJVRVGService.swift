@@ -15,12 +15,11 @@ enum KJVRVGService {
     case books(languageId: String) // v1.1/books?language-id=en
 }
 
-// echo '{"deviceUniqueIdentifier": "device-unique-identifier-value", "apnsToken": "apns-token-value", "fcmToken": "firebase-cloud-messaging-token-value", "nonce": "nonce-value"}' | http localhost:6543/v1/device/pushtoken/add
 
 // MARK: - TargetType Protocol Implementation
 extension KJVRVGService: TargetType {
     
-    var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)/v1.2")! }
+    var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.ProductionServerRootUrl.rawValue)/v1.2")! }
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
     var path: String {
         switch self {
