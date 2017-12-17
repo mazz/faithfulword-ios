@@ -297,14 +297,16 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
                         let bundleVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
                         
                         for (_, v) in appVersions.enumerated() {
-                            if v.versionNumber == bundleVersion {
+                            if bundleVersion.hasPrefix(v.versionNumber) {
                                 amISupported = v.iosSupported
+                                break
                             }
                         }
                         print("amISupported: \(amISupported)")
                         
                         if let latestAppVersion = appVersions.last?.versionNumber {
-                            if latestAppVersion == bundleVersion {
+                            // "1.2.1" beginswith "1.2" and is still considered `current`
+                            if bundleVersion.hasPrefix(latestAppVersion) {
                                 amICurrent = true
                             }
                         }
