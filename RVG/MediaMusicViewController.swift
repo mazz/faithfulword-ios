@@ -1,13 +1,7 @@
-//
-//  MusicMediaViewController.swift
-//  RVG
-//
-//  Created by maz on 2017-07-10.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
 
 import UIKit
 import MBProgressHUD
+import Moya
 
 class MediaMusicViewController: BaseClass {
 
@@ -21,35 +15,57 @@ class MediaMusicViewController: BaseClass {
         super.viewDidLoad()
 
         self.title = (musicTitle! != nil) ? musicTitle! : NSLocalizedString("Music", comment: "")
-
-        do {
-            if let _ = musicId {
-                
-                let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
-                loadingNotification.mode = MBProgressHUDMode.indeterminate
-                
-                try BibleService.sharedInstance().getMediaMusic(forMusicId: musicId!, success: { (music) in
-                    print("got media: \(String(describing: music))")
-                    self.music = music!
-                    DispatchQueue.main.async {
-                        MBProgressHUD.hide(for: self.view, animated: true)
-                        self.tableView.reloadData()
-                    }
-                })
-            }
+        
+        let provider = MoyaProvider<KJVRVGService>()
+        
+        let errorClosure = { (error: Swift.Error) -> Void in
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
+            print("error: \(error)")
             
-        } catch let error {
-            print("failed getting media: \(error)")
-//            let errorMessage: String = NSLocalizedString("There was a problem getting the media.", comment: "") //.appending(" \(error)")
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem getting the media.", comment: ""))
-
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
-                self.tableView.reloadData()
             }
         }
-//        tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
-        tableView.register(UINib(nibName: "MediaMusicTableViewCell", bundle: nil), forCellReuseIdentifier: "MediaMusicTableViewCellID")
+        
+        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        loadingNotification.mode = MBProgressHUDMode.indeterminate
+        
+        provider.request(.musicMedia(mid: musicId!)) { result in
+            print("gospels: \(result)")
+            switch result {
+            case let .success(moyaResponse):
+                do {
+                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                    let data = moyaResponse.data
+                    var parsedObject: MediaMusicResponse
+                    
+                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                    if let jsonObject = json as? [String:Any] {
+                        parsedObject = MediaMusicResponse(JSON: jsonObject)!
+                        print(parsedObject)
+                        
+                        self.music = parsedObject.media!
+                        DispatchQueue.main.async {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.tableView.reloadData()
+                        }
+                        
+                    }
+                }
+                catch {
+                    errorClosure(error)
+                }
+                
+            case let .failure(error):
+                // this means there was a network failure - either the request
+                // wasn't sent (connectivity), or no response was received (server
+                // timed out).  If the server responds with a 4xx or 5xx error, that
+                // will be sent as a ".success"-ful response.
+                errorClosure(error)
+            }
+        }
+        
+                tableView.register(UINib(nibName: "MediaMusicTableViewCell", bundle: nil), forCellReuseIdentifier: "MediaMusicTableViewCellID")
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -67,7 +83,7 @@ class MediaMusicViewController: BaseClass {
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+            self.present(viewController, animated: true, completion: nil)
         }
     }
 
@@ -98,7 +114,7 @@ extension MediaMusicViewController: UITableViewDelegate, UITableViewDataSource {
             //            PlaybackService.sharedInstance().playbackModeDelegate = self
             
             viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+            self.present(viewController, animated: true, completion: nil)
             
             //            self.navigationController?.pushViewController(viewController, animated: true)
         }

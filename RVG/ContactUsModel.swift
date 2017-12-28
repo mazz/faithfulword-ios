@@ -1,10 +1,3 @@
-//
-//  ContactUsModel.swift
-//  RVG
-//
-//  Created by michael on 2017-05-28.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
 
 import Foundation
 

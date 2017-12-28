@@ -1,18 +1,11 @@
-//
-//  CurrencyField.swift
-//  RVG
-//
-//  Created by maz on 2017-05-05.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
 
 import UIKit
 
 class CurrencyField: UITextField {
     
     var string: String { return text ?? "" }
-    open var amount: Double { return Double(string.digits.integer)
-        .divided(by: pow(10, Double(Formatter.currency.maximumFractionDigits)))
+    open var amount: Double { return Double(string.digits.integer)/pow(10, Double(Formatter.currency.maximumFractionDigits))
+//        .divided(by: pow(10, Double(Formatter.currency.maximumFractionDigits)))
     }
     
     private var lastValue: String = ""
@@ -25,7 +18,7 @@ class CurrencyField: UITextField {
         editingChanged()
     }
     
-    func editingChanged() {
+    @objc func editingChanged() {
         guard amount <= 2147483647 else {
             text = lastValue
             return

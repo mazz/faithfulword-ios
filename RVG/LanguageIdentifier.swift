@@ -1,18 +1,7 @@
 import Foundation
-import ObjectMapper
 
-class LanguageIdentifier : Mappable {
-    var languageIdentifier : String?
-    var supported : Bool?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        languageIdentifier  <- map["languageIdentifier"]
-        supported <- map["supported"]
-    }
-    
-    
+public struct LanguageIdentifier: Codable {
+    let sourceMaterial: String
+    let languageIdentifier: String
+    let supported: Bool
 }

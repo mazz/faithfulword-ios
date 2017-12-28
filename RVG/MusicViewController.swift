@@ -1,13 +1,7 @@
-//
-//  MusicViewController.swift
-//  RVG
-//
-//  Created by maz on 2017-07-09.
-//  Copyright © 2017 KJVRVG. All rights reserved.
-//
 
 import UIKit
 import MBProgressHUD
+import Moya
 
 class MusicViewController: BaseClass {
     @IBOutlet var musicBarRightButton: UIBarButtonItem!
@@ -19,33 +13,53 @@ class MusicViewController: BaseClass {
         super.viewDidLoad()
 
         self.title = NSLocalizedString("Music", comment: "")
+
+        let provider = MoyaProvider<KJVRVGService>()
         
-        do {
-//            if let _ = bookId {
-                // "e931ea58-080f-46ee-ae21-3bbec0365ddc"
-                
-            let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
-            loadingNotification.mode = MBProgressHUDMode.indeterminate
-            //        loadingNotification.label.text = "Loading"
+        let errorClosure = { (error: Swift.Error) -> Void in
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
+            print("error: \(error)")
             
-            try BibleService.sharedInstance().getMusic(success: { (music) in
-                if let returnedMusic = music {
-                    self.musicIds = returnedMusic
-                    print("got musicIds: \(self.musicIds)")
-                    DispatchQueue.main.async {
-                        MBProgressHUD.hide(for: self.view, animated: true)
-                        self.tableView.reloadData()
-                    }
-                }
-            })
-//            }
-            
-        } catch let error {
-            print("failed getting music: \(error)")
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem getting the media.", comment: ""))
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
-                self.tableView.reloadData()
+            }
+        }
+        
+        let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
+        loadingNotification.mode = MBProgressHUDMode.indeterminate
+        
+        provider.request(.music) { result in
+            print("gospels: \(result)")
+            switch result {
+            case let .success(moyaResponse):
+                do {
+                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                    let data = moyaResponse.data
+                    var parsedObject: MusicResponse
+                    
+                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                    if let jsonObject = json as? [String:Any] {
+                        parsedObject = MusicResponse(JSON: jsonObject)!
+                        print(parsedObject)
+                        
+                        self.musicIds = parsedObject.music!
+                        DispatchQueue.main.async {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.tableView.reloadData()
+                        }
+                        
+                    }
+                }
+                catch {
+                    errorClosure(error)
+                }
+                
+            case let .failure(error):
+                // this means there was a network failure - either the request
+                // wasn't sent (connectivity), or no response was received (server
+                // timed out).  If the server responds with a 4xx or 5xx error, that
+                // will be sent as a ".success"-ful response.
+                errorClosure(error)
             }
         }
         
@@ -67,7 +81,7 @@ class MusicViewController: BaseClass {
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: { _ in })
+            self.present(viewController, animated: true, completion: nil)
         }
     }
 

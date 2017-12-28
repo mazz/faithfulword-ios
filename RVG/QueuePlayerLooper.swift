@@ -61,7 +61,7 @@ class QueuePlayerLooper : NSObject, Looper {
         guard let playerLayer = playerLayer else { fatalError("Error creating player layer") }
 //        playerLayer.videoGravity = AVLayerVideoGravityResizeAspect
         playerLayer.frame = parentLayer.bounds
-        playerLayer.videoGravity = AVLayerVideoGravityResizeAspect // AVLayerVideoGravityResizeAspectFill //AVLayerVideoGravityResizeAspect
+        playerLayer.videoGravity = AVLayerVideoGravity.resizeAspect // AVLayerVideoGravityResizeAspectFill //AVLayerVideoGravityResizeAspect
         parentLayer.addSublayer(playerLayer)
 
         let videoAsset = AVURLAsset(url: videoURL)
