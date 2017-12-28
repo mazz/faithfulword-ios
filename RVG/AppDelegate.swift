@@ -11,11 +11,22 @@ import RxSwift
 class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
 
     var window: UIWindow?
+    private let dependencyModule = AppDependencyModule()
+    private lazy var appCoordinator: AppCoordinator = { [unowned self] in
+        self.dependencyModule.resolver.resolve(AppCoordinator.self)!
+        }()
 //    var appVersions: [AppVersion]?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         UINavigationBar.appearance().tintColor = UIColor.black
+        
+        appCoordinator.flow(with: { initialViewController in
+            window = UIWindow(frame: UIScreen.main.bounds)
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+        }, completion: { _ in },
+           context: .other)
         
         return true
     }

@@ -1,0 +1,66 @@
+excluded:
+  - Pods
+
+disabled_rules:
+  - trailing_whitespace
+  - vertical_whitespace
+  - line_length
+
+custom_rules:
+  no_snake_case: 
+    name: "Do not use snake case."
+    included: ".*.swift" 
+    regex: " func [a-z,A-Z]*_"
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: error
+
+  capitalize_protocols: 
+    name: "Protocols must be capitalized."
+    included: ".*.swift" 
+    regex: "^( *)protocol [a-z]"
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: error
+
+  method_no_newline: 
+    name: "There should be one blank newline between methods."
+    included: ".*.swift" 
+    regex: "\\}\n^( *)func ([^\\(]*)\\("
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: error
+
+  method_multiple_newline: 
+    name: "There should be one blank newline between methods."
+    included: ".*.swift" 
+    regex: "\\}\n\n\n(\n*)^( *)func ([^\\(]*)\\("
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: error
+
+  empty_array_type_annotation:
+    name: "Use type annotation for empty arrays."
+    included: ".*.swift" 
+    regex: "=( *)\\[([a-z,A-Z]*)\\]\\("
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: error
+
+  no_references_to_codenames: 
+    name: "Do not reference codenames."
+    included: ".*.swift" 
+    regex: "([E,e]iffel|[M,m]arge|[M,m]adrid)"
+    match_kinds:
+      - identifier 
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: error
+
+  no_uikit_in_viewmodel:
+    name: "Do not use UIKit in ViewModel."
+    included: ".*ViewModel.swift"
+    regex: "(import UIKit)"
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: warning
+
+  no_logging_with_print:
+    name: "Do not use print statements for logging."
+    included: ".*.swift"
+    regex: "print\\("
+    message: "This is a custom lint error. See .swiftlint.yml file in the root of the project directory for a list of custom lint errors and their conditions."
+    severity: warning

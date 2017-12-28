@@ -13,7 +13,7 @@ import RxSwift
 import UserNotifications
 import Firebase
 
-class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVersioning, UNUserNotificationCenterDelegate, MessagingDelegate {
+class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVersioning, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
@@ -65,17 +65,17 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
             let isRegisteredForRemoteNotifications = UIApplication.shared.isRegisteredForRemoteNotifications
             let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
             
-            let lastPushNotificationCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastPushNotificationCheck) as? Date
+            let lastPushNotificationCheck: Date? = UserDefaults.standard.object(forKey: OriginViewController.lastPushNotificationCheck) as? Date
             print("lastPushNotificationCheck: \(lastPushNotificationCheck)")
             print("isRegisteredForRemoteNotifications: \(isRegisteredForRemoteNotifications)")
             // if we never checked for push notifications opt-in yet, OR it's been at least a week since we last checked AND today is Saturday
-            if lastPushNotificationCheck == nil || ((Date().timeIntervalSince1970 - (lastPushNotificationCheck?.timeIntervalSince1970)!) >  MainViewController.secondsInAWeek && dayNumberOfWeek == MainViewController.saturday) {
+            if lastPushNotificationCheck == nil || ((Date().timeIntervalSince1970 - (lastPushNotificationCheck?.timeIntervalSince1970)!) >  OriginViewController.secondsInAWeek && dayNumberOfWeek == OriginViewController.saturday) {
                 if !isRegisteredForRemoteNotifications {
                     let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
                                                   message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
                                                   preferredStyle: .alert)
                     let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: { (action) -> Void in
-                        UserDefaults.standard.set(Date(), forKey: MainViewController.lastPushNotificationCheck)
+                        UserDefaults.standard.set(Date(), forKey: OriginViewController.lastPushNotificationCheck)
                     })
                     let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: ""), style: .default, handler: { (action) -> Void in
                         self.optInForPushNotifications(application: UIApplication.shared)
@@ -95,7 +95,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     }
     
     func optInForPushNotifications(application: UIApplication) {
-        UserDefaults.standard.set(Date(), forKey: MainViewController.lastPushNotificationCheck)
+        UserDefaults.standard.set(Date(), forKey: OriginViewController.lastPushNotificationCheck)
 
         application.registerForRemoteNotifications()
         
@@ -265,19 +265,19 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
         let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
         // 2 == Monday
 
-        let lastVersionCheck: Date? = UserDefaults.standard.object(forKey: MainViewController.lastVersionCheck) as? Date
+        let lastVersionCheck: Date? = UserDefaults.standard.object(forKey: OriginViewController.lastVersionCheck) as? Date
         
         print("Date().timeIntervalSince1970: \(Date().timeIntervalSince1970)")
         print("lastVersionCheck: \(lastVersionCheck)")
 
-        if lastVersionCheck == nil || ((Date().timeIntervalSince1970 - (lastVersionCheck?.timeIntervalSince1970)!) >  MainViewController.secondsInAWeek && dayNumberOfWeek == MainViewController.monday) {
+        if lastVersionCheck == nil || ((Date().timeIntervalSince1970 - (lastVersionCheck?.timeIntervalSince1970)!) >  OriginViewController.secondsInAWeek && dayNumberOfWeek == OriginViewController.monday) {
             let provider = MoyaProvider<KJVRVGService>()
             
             provider.request(.appVersions) { result in
                 switch result {
                 case let .success(moyaResponse):
                     do {
-                        UserDefaults.standard.set(Date(), forKey: MainViewController.lastVersionCheck)
+                        UserDefaults.standard.set(Date(), forKey: OriginViewController.lastVersionCheck)
 
                         try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                         let data = moyaResponse.data
@@ -402,7 +402,7 @@ class MainViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVer
     }
 }
 
-extension MainViewController {
+extension OriginViewController {
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
         print("Firebase didRefreshRegistrationToken token: \(fcmToken)")
         if let apnsToken = Messaging.messaging().apnsToken {
@@ -420,7 +420,7 @@ extension MainViewController {
 }
 
 
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (tableRowsArray?.count)! + 1
     }
@@ -504,7 +504,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
-extension MainViewController: UICollectionViewDelegate,UICollectionViewDataSource{
+extension OriginViewController: UICollectionViewDelegate,UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return books.count

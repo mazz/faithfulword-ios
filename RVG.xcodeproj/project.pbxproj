@@ -8,6 +8,27 @@
 
 /* Begin PBXBuildFile section */
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
+		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
+		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
+		4CCE8C6B1FF4B2A000AFBAF2 /* UIMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C6A1FF4B29F00AFBAF2 /* UIMaking.swift */; };
+		4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */; };
+		4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */; };
+		4CCE8C7B1FF4B5CA00AFBAF2 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */; };
+		4CCE8C7D1FF4B60400AFBAF2 /* RxReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */; };
+		4CCE8C7F1FF4B6D000AFBAF2 /* AppAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */; };
+		4CCE8C831FF4B7C600AFBAF2 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */; };
+		4CCE8C841FF4B7C600AFBAF2 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C811FF4B7C500AFBAF2 /* MainViewController.swift */; };
+		4CCE8C851FF4B7C600AFBAF2 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */; };
+		4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */; };
+		4CCE8C891FF4B88C00AFBAF2 /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C881FF4B88B00AFBAF2 /* UIBarButtonItem+BaseMaking.swift */; };
+		4CCE8C8B1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */; };
+		4CCE8C8D1FF4B96400AFBAF2 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */; };
+		4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */; };
+		4CCE8C931FF4BC8200AFBAF2 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */; };
+		4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */; };
+		4CCE8C981FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */; };
+		4CCE8C9A1FF5579200AFBAF2 /* AppInfoProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */; };
+		4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */; };
 		4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */; };
 		4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */; };
 		4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */; };
@@ -78,7 +99,7 @@
 		70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */; };
 		70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */; };
 		70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20611E6479A800AF619F /* AppDelegate.swift */; };
-		70CD20641E6479A800AF619F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* MainViewController.swift */; };
+		70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* OriginViewController.swift */; };
 		70CD20671E6479A800AF619F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20651E6479A800AF619F /* Main.storyboard */; };
 		70CD20691E6479A800AF619F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20681E6479A800AF619F /* Assets.xcassets */; };
 		70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */; };
@@ -94,6 +115,27 @@
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
 		4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsModel.swift; sourceTree = "<group>"; };
+		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
+		4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIFactory.swift; sourceTree = "<group>"; };
+		4CCE8C6A1FF4B29F00AFBAF2 /* UIMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIMaking.swift; sourceTree = "<group>"; };
+		4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resettable.swift; sourceTree = "<group>"; };
+		4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Transitioning.swift"; sourceTree = "<group>"; };
+		4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxReachability.swift; sourceTree = "<group>"; };
+		4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppAnimations.swift; sourceTree = "<group>"; };
+		4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		4CCE8C811FF4B7C500AFBAF2 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinating.swift; sourceTree = "<group>"; };
+		4CCE8C881FF4B88B00AFBAF2 /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
+		4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableType+Utilities.swift"; sourceTree = "<group>"; };
+		4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
+		4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurAnimationController.swift; sourceTree = "<group>"; };
+		4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Instantiating.swift"; sourceTree = "<group>"; };
+		4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppInfoProviding.swift; sourceTree = "<group>"; };
+		4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
 		4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapterResponse.swift; sourceTree = "<group>"; };
 		4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapter.swift; sourceTree = "<group>"; };
@@ -193,7 +235,7 @@
 		70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyPolicy.swift; sourceTree = "<group>"; };
 		70CD205E1E6479A800AF619F /* All Scripture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "All Scripture.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20611E6479A800AF619F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		70CD20631E6479A800AF619F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		70CD20631E6479A800AF619F /* OriginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginViewController.swift; sourceTree = "<group>"; };
 		70CD20661E6479A800AF619F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		70CD20681E6479A800AF619F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		70CD206B1E6479A800AF619F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -247,6 +289,34 @@
 				E19D7E0E7BB6180846C55487 /* Pods_AllScripture.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4CCE8C631FF4AD7B00AFBAF2 /* AppDependencyInjection */ = {
+			isa = PBXGroup;
+			children = (
+				4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */,
+				4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */,
+				4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */,
+				4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */,
+				4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */,
+				4CCE8C811FF4B7C500AFBAF2 /* MainViewController.swift */,
+				4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */,
+				4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */,
+				4CCE8C6A1FF4B29F00AFBAF2 /* UIMaking.swift */,
+				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
+				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
+				4CCE8C881FF4B88B00AFBAF2 /* UIBarButtonItem+BaseMaking.swift */,
+				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
+				4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */,
+				4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */,
+				4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */,
+				4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */,
+				4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */,
+				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
+				4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */,
+				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
+			);
+			path = AppDependencyInjection;
 			sourceTree = "<group>";
 		};
 		683D5B861F1A792D0019ED0E /* Service */ = {
@@ -318,6 +388,7 @@
 		70CD20601E6479A800AF619F /* RVG */ = {
 			isa = PBXGroup;
 			children = (
+				4CCE8C631FF4AD7B00AFBAF2 /* AppDependencyInjection */,
 				70CD20941E64842B00AF619F /* ViewControllers */,
 				68E2BE431EBC215800FCD897 /* Cells */,
 				683D5B861F1A792D0019ED0E /* Service */,
@@ -366,7 +437,7 @@
 				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
 				68BE69D31EEA3FBF0082956D /* GospelViewController.swift */,
 				4CDD65601EEB42B600C59DD5 /* Looper.swift */,
-				70CD20631E6479A800AF619F /* MainViewController.swift */,
+				70CD20631E6479A800AF619F /* OriginViewController.swift */,
 				68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */,
 				689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */,
 				68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */,
@@ -613,7 +684,9 @@
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -627,7 +700,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swinject.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -681,36 +756,52 @@
 				F463A90D1F68DAD00012CFEB /* LanguagesSupportedResponse.swift in Sources */,
 				686233EE1EFF71FC0046D952 /* PlaybackService.swift in Sources */,
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
+				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
+				4CCE8C931FF4BC8200AFBAF2 /* AppConstants.swift in Sources */,
 				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
 				68F0F3F71F11E9A900718AFF /* Music.swift in Sources */,
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
+				4CCE8C851FF4B7C600AFBAF2 /* MainCoordinator.swift in Sources */,
+				4CCE8C8B1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift in Sources */,
+				4CCE8C981FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift in Sources */,
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
 				683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */,
 				683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
 				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
+				4CCE8C841FF4B7C600AFBAF2 /* MainViewController.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
+				4CCE8C7B1FF4B5CA00AFBAF2 /* RootViewController.swift in Sources */,
+				4CCE8C7F1FF4B6D000AFBAF2 /* AppAnimations.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
 				68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */,
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,
+				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
+				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
 				68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */,
-				70CD20641E6479A800AF619F /* MainViewController.swift in Sources */,
+				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
+				70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */,
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
+				4CCE8C831FF4B7C600AFBAF2 /* MainViewModel.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
+				4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */,
 				68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */,
+				4CCE8C9A1FF5579200AFBAF2 /* AppInfoProviding.swift in Sources */,
 				686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */,
 				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
 				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,
+				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				68BE69D01EEA3B730082956D /* Gospel.swift in Sources */,
 				68BE69CE1EEA35240082956D /* MediaGospelResponse.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
+				4CCE8C8D1FF4B96400AFBAF2 /* Optional.swift in Sources */,
 				681E117B1ED110CB00B028DD /* Environment.swift in Sources */,
 				68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
@@ -718,14 +809,18 @@
 				68F0F3FB1F11EC7B00718AFF /* MediaMusicResponse.swift in Sources */,
 				689880511F147B5900CC2BC5 /* Playable.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
+				4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */,
+				4CCE8C7D1FF4B60400AFBAF2 /* RxReachability.swift in Sources */,
 				6833CBC71FC9F9DA001FEFD5 /* AppVersion.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
 				68B2B1051F57B70600D986D4 /* BookTitle.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
 				68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */,
+				4CCE8C6B1FF4B2A000AFBAF2 /* UIMaking.swift in Sources */,
 				68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
+				4CCE8C891FF4B88C00AFBAF2 /* UIBarButtonItem+BaseMaking.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
 				68BBC8851FCD12400008962B /* AppVersioning.swift in Sources */,
@@ -736,6 +831,7 @@
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
 				68F0F3F91F11EC1B00718AFF /* MediaMusic.swift in Sources */,
+				4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */,
 				6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

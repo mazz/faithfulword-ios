@@ -13,7 +13,10 @@ target 'AllScripture' do
     pod 'Firebase/Messaging'
     pod 'Firebase/Crash'
     pod 'Moya/RxSwift'
-#    pod 'Moya/RxSwift', :git => 'https://github.com/Moya/Moya.git', :branch => '10.0.0-dev'
+    pod 'RxCocoa'
     pod 'L10n-swift'
+    pod 'SwiftLint'
+    pod 'Swinject'
+
 
 end
