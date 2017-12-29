@@ -29,15 +29,15 @@ internal class AppCoordinator {
     private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
 //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
 //    private let accountService: AccountServicing
-//    private let productService: ProductServicing
+    private let productService: ProductServicing
     
     internal init(uiFactory: AppUIMaking,
 //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
                   resettableMainCoordinator: Resettable<MainCoordinator>,
-                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
+                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
 //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
 //                  accountService: AccountServicing,
-//                  productService: ProductServicing
+                  productService: ProductServicing
         ) {
         self.uiFactory = uiFactory
 //        self.resettableInitialCoordinator = resettableInitialCoordinator
@@ -45,7 +45,7 @@ internal class AppCoordinator {
         self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
 //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
 //        self.accountService = accountService
-//        self.productService = productService
+        self.productService = productService
     }
 }
 
@@ -82,18 +82,19 @@ extension AppCoordinator: NavigationCoordinating {
 
         // TODO: fetch books from bible service here
         // just swap in main flow for now
-        self.swapInMainFlow()
+//        self.swapInMainFlow()
 
-//        self.productService.fetchProducts().subscribe(onSuccess: { [unowned self] in
-//            if self.productService.userProducts.value.count > 0 {
-//                self.swapInMainFlow()
-//            } else {
-//                self.swapInAccountSetupFlow()
-//            }
-//        }, onError: { [unowned self] error in
-//            BoseLog.error("Check user products failed with error: \(error.localizedDescription)")
-//            self.swapInMainFlow()
-//        }).disposed(by: self.bag)
+        self.productService.fetchProducts().subscribe(onSuccess: { [unowned self] in
+            if self.productService.userProducts.value.count > 0 {
+                print("self.productService.userProducts.value: \(self.productService.userProducts.value)")
+                self.swapInMainFlow()
+            } else {
+                self.swapInAccountSetupFlow()
+            }
+        }, onError: { [unowned self] error in
+            print("Check user products failed with error: \(error.localizedDescription)")
+            self.swapInMainFlow()
+        }).disposed(by: self.bag)
     }
     
     /// Puts the initial flow (unauthenticated state) on top of the rootViewController,

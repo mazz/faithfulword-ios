@@ -1,7 +1,7 @@
 import Foundation
 import Moya
 
-enum KJVRVGService {
+public enum KJVRVGService {
     case churches
     case churchesMediaSermons(cid: String)
     case appVersions
@@ -19,9 +19,9 @@ enum KJVRVGService {
 // MARK: - TargetType Protocol Implementation
 extension KJVRVGService: TargetType {
     
-    var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.ProductionServerRootUrl.rawValue)/v1.2")! }
+    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.ProductionServerRootUrl.rawValue)/v1.2")! }
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
-    var path: String {
+    public var path: String {
         switch self {
         case .churches:
             return "/churches"
@@ -48,7 +48,7 @@ extension KJVRVGService: TargetType {
         }
     }
     
-    var method: Moya.Method {
+    public var method: Moya.Method {
         switch self {
         case .churches,
              .churchesMediaSermons,
@@ -65,7 +65,7 @@ extension KJVRVGService: TargetType {
             return .post
         }
     }
-    var parameters: [String: Any]? {
+    public var parameters: [String: Any]? {
         switch self {
         case .churches:
             return nil
@@ -97,7 +97,7 @@ extension KJVRVGService: TargetType {
                     "userAgent": userAgent]
         }
     }
-    var parameterEncoding: ParameterEncoding {
+    public var parameterEncoding: ParameterEncoding {
         switch self {
         case .churches,
              .churchesMediaSermons,
@@ -114,7 +114,7 @@ extension KJVRVGService: TargetType {
             return JSONEncoding.default // Send parameters as JSON in request body
         }
     }
-    var sampleData: Data {
+    public var sampleData: Data {
         switch self {
         case .churches:
             return "churches 1up".utf8Encoded
@@ -151,7 +151,7 @@ extension KJVRVGService: TargetType {
             return "Half measures are as bad as nothing at all.".utf8Encoded
         }
     }
-    var task: Task {
+    public var task: Task {
         switch self {
         case .churches:
             return .requestPlain
@@ -189,7 +189,7 @@ extension KJVRVGService: TargetType {
         }
     }
     
-    var headers: [String: String]? {
+    public var headers: [String: String]? {
         return ["Content-type": "application/json",
                 "User-Agent": Device.userAgent()]
     }

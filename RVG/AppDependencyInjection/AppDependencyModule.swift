@@ -1,5 +1,6 @@
 import Foundation
 import Swinject
+import Moya
 //import BoseMobileCore
 //import BoseMobileUI
 //import BoseMobileCommunication
@@ -31,6 +32,27 @@ internal final class AppDependencyModule {
         // create a new container
         let container = Container()
         
+        container.register(DataService.self) { resolver in
+            return DataService(kjvrvgNetworking: MoyaProvider<KJVRVGService>())
+        }.inObjectScope(.container)
+        
+        container.register(ProductServicing.self) { resolver in
+            return ProductService(dataService: resolver.resolve(DataService.self)!)
+            }.inObjectScope(.container)
+
+//        container.register(GospelServicing.self) { resolver in
+//            return GospelService(dataService: resolver.resolve(DataService.self)!)
+//        }.inObjectScope(.container)
+        
+//        container.register(DataService.self) { resolver in
+//            All_Scripture.DataService(kjvrvgNetworking: MoyaProvider<KJVRVGService>())
+//            }.inObjectScope(.container)
+        
+//        container.register(GospelServicing.self) { resolver in
+//            return GospelService(dataService: GospelDataServicing.self as! GospelDataServicing)
+//            }.inObjectScope(.container)
+
+        
 //        container.register(GigyaBridging.self) { _ in
 //            GigyaBridge()
 //        }
@@ -51,6 +73,8 @@ internal final class AppDependencyModule {
         container.register(AppInfoProviding.self) { _ in
             AppInfoProvider()
         }
+        
+
         container.register(AppCoordinator.self) { resolver in
             AppCoordinator(
                 uiFactory: resolver.resolve(AppUIMaking.self)!,
@@ -62,14 +86,15 @@ internal final class AppDependencyModule {
                 },
                 resettableSplashScreenCoordinator: Resettable {
                     resolver.resolve(SplashScreenCoordinator.self)!
-                }
+                },
 //                resettableAccountSetupCoordinator: Resettable {
 //                    resolver.resolve(AccountSetupCoordinator.self)!
 //                },
 //                accountService: resolver.resolve(AccountServicing.self)!,
-//                productService: resolver.resolve(ProductServicing.self)!
+                productService: resolver.resolve(ProductServicing.self)!
             )
         }
+
         container.register(AppUIMaking.self) { resolver in
             UIFactory(resolver: resolver)
         }

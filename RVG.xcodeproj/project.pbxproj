@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */; };
-		4C8EE8BA1FF5D99C003F483A /* GospelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B91FF5D99C003F483A /* GospelService.swift */; };
+		4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */; };
+		4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */; };
+		4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8C11FF60105003F483A /* ProductService.swift */; };
+		4C8EE8C41FF6010F003F483A /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8C31FF6010F003F483A /* DataService.swift */; };
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
 		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
 		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
@@ -119,7 +122,10 @@
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
 		4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
-		4C8EE8B91FF5D99C003F483A /* GospelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GospelService.swift; sourceTree = "<group>"; };
+		4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Single+Utilities.swift"; sourceTree = "<group>"; };
+		4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Parsing.swift"; sourceTree = "<group>"; };
+		4C8EE8C11FF60105003F483A /* ProductService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductService.swift; sourceTree = "<group>"; };
+		4C8EE8C31FF6010F003F483A /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsModel.swift; sourceTree = "<group>"; };
 		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
@@ -318,6 +324,8 @@
 				4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */,
 				4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */,
 				4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */,
+				4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */,
+				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
 				4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */,
 				4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */,
 				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
@@ -325,7 +333,8 @@
 				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
 				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
 				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
-				4C8EE8B91FF5D99C003F483A /* GospelService.swift */,
+				4C8EE8C31FF6010F003F483A /* DataService.swift */,
+				4C8EE8C11FF60105003F483A /* ProductService.swift */,
 				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
 			);
 			path = AppDependencyInjection;
@@ -764,6 +773,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
+				4C8EE8C41FF6010F003F483A /* DataService.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
 				4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */,
@@ -784,7 +794,6 @@
 				683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
 				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
-				4C8EE8BA1FF5D99C003F483A /* GospelService.swift in Sources */,
 				4CCE8C841FF4B7C600AFBAF2 /* MainViewController.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
@@ -796,6 +805,7 @@
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,
 				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
+				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
 				68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */,
@@ -816,6 +826,7 @@
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				68BE69D01EEA3B730082956D /* Gospel.swift in Sources */,
 				68BE69CE1EEA35240082956D /* MediaGospelResponse.swift in Sources */,
+				4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
 				4CCE8C8D1FF4B96400AFBAF2 /* Optional.swift in Sources */,
 				681E117B1ED110CB00B028DD /* Environment.swift in Sources */,
@@ -849,6 +860,7 @@
 				68F0F3F91F11EC1B00718AFF /* MediaMusic.swift in Sources */,
 				4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */,
 				6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */,
+				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
