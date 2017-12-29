@@ -29,7 +29,7 @@ public enum ProductServiceError: Error {
 public protocol ProductServicing {
     
     /// List of products registered to the user's Passport account
-    var userProducts: Field<[Book]> { get }
+    var userBooks: Field<[Book]> { get }
     
     /// Adds a device to a user's account.
     ///
@@ -52,7 +52,7 @@ public protocol ProductServicing {
     /// Updates the products associated with the bose user account
     ///
     /// - Returns: Returns Success or Error
-    func fetchProducts() -> Single<Void>
+    func fetchBooks() -> Single<Void>
     
     /// Updates the attributes of a user's product.
     ///
@@ -70,7 +70,7 @@ public protocol ProductServicing {
 }
 
 public final class ProductService {
-    public let userProducts: Field<[Book]>
+    public let userBooks: Field<[Book]>
     
     // MARK: Dependencies & instantiation
     private let dataService: ProductDataServicing
@@ -79,7 +79,7 @@ public final class ProductService {
     
     public init(dataService: ProductDataServicing) {
         self.dataService = dataService
-        userProducts = Field(value: [], observable: dataService.products)
+        userBooks = Field(value: [], observable: dataService.books)
     }
 }
 
@@ -111,8 +111,8 @@ extension ProductService: ProductServicing {
 //            }
 //    }
 
-    public func fetchProducts() -> Single<Void> {
-        return dataService.fetchAndObserveProducts().take(1).asSingle().toVoid()
+    public func fetchBooks() -> Single<Void> {
+        return dataService.fetchAndObserveBooks().take(1).asSingle().toVoid()
     }
         
 //    public func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void> {

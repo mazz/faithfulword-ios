@@ -84,9 +84,9 @@ extension AppCoordinator: NavigationCoordinating {
         // just swap in main flow for now
 //        self.swapInMainFlow()
 
-        self.productService.fetchProducts().subscribe(onSuccess: { [unowned self] in
-            if self.productService.userProducts.value.count > 0 {
-                print("self.productService.userProducts.value: \(self.productService.userProducts.value)")
+        self.productService.fetchBooks().subscribe(onSuccess: { [unowned self] in
+            if self.productService.userBooks.value.count > 0 {
+                print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
                 self.swapInMainFlow()
             } else {
                 self.swapInAccountSetupFlow()

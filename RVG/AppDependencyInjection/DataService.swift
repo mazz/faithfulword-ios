@@ -1,5 +1,7 @@
 import RxSwift
 import Moya
+import L10n_swift
+
 //import BoseMobileModels
 //import BoseMobileData
 //import BoseMobileUtilities
@@ -75,12 +77,12 @@ import Moya
 /// Provides product related data to the app
 public protocol ProductDataServicing {
     /// Permanent observable emitting product arrays
-    var products: Observable<[Book]> { get }
+    var books: Observable<[Book]> { get }
     
     /// Fetches the latest products from the cloud.arrays
     ///
     /// - Returns: Permanent observable emitting product arrays
-    func fetchAndObserveProducts() -> Observable<[Book]>
+    func fetchAndObserveBooks() -> Observable<[Book]>
     
     /// Updates the settings of a user's product.
     ///
@@ -142,7 +144,7 @@ public final class DataService {
     
     // MARK: Product
     
-    private var _products = Field<[Book]>([])
+    private var _books = Field<[Book]>([])
     
     // MARK: BMX
     
@@ -357,13 +359,14 @@ public final class DataService {
 
 extension DataService: ProductDataServicing {
     
-    public var products: Observable<[Book]> {
-        return _products.asObservable()
+    public var books: Observable<[Book]> {
+        return _books.asObservable()
     }
     
-    public func fetchAndObserveProducts() -> Observable<[Book]> {
+    public func fetchAndObserveBooks() -> Observable<[Book]> {
 
-        let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: "en"))
+        let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
+//        let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: "el"))
         let bookResponse: Single<BookResponse> = moyaResponse.map { response -> BookResponse in
             try! response.map(BookResponse.self)
         }
@@ -371,7 +374,7 @@ extension DataService: ProductDataServicing {
             Single.just(bookResponse.result)
         }
         .do(onNext: { products in
-            self._products.value = products
+            self._books.value = products
         })
         .asObservable()
         return books
@@ -386,7 +389,7 @@ extension DataService: ProductDataServicing {
         
 //            .flatMap { bookResponse in bookResponse.result }
 //            .do(onNext: { products in
-//                self._products.value = products
+//                self._books.value = products
 //            })
 //            .asObservable()
         
