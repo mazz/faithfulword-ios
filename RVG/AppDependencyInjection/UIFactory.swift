@@ -9,7 +9,7 @@ internal protocol AppUIMaking {
     func makeRoot() -> RootViewController
 //    func makeInitial() -> InitialViewController
     func makeMain() -> MainViewController
-//    func makeSplashScreen() -> SplashScreenViewController
+    func makeSplashScreen() -> SplashScreenViewController
 }
 
 /// Protocol facade for factory making all settings related UI.
@@ -51,11 +51,11 @@ extension UIFactory: AppUIMaking {
             .resolve(MainViewModel.self)
         return controller
     }
-//
-//    internal func makeSplashScreen() -> SplashScreenViewController {
-//        return SplashScreenViewController
-//            .make(storyboardName: StoryboardName.main)
-//    }
+
+    internal func makeSplashScreen() -> SplashScreenViewController {
+        return SplashScreenViewController
+            .make(storyboardName: StoryboardName.splashScreen)
+    }
 }
 
 // MARK: <SettingsUIMaking>

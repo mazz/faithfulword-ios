@@ -40,7 +40,7 @@ internal final class AppDependencyModule {
         
 //        attachInitialFlowDependencies(to: container)
         attachMainFlowDependencies(to: container)
-//        attachSplashScreenFlowDependencies(to: container)
+        attachSplashScreenFlowDependencies(to: container)
 //        attachSettingsFlowDependencies(to: container)
 //        attachAccountSetupDependencies(to: container)
         
@@ -59,10 +59,10 @@ internal final class AppDependencyModule {
 //                },
                 resettableMainCoordinator: Resettable {
                     resolver.resolve(MainCoordinator.self)!
+                },
+                resettableSplashScreenCoordinator: Resettable {
+                    resolver.resolve(SplashScreenCoordinator.self)!
                 }
-//                resettableSplashScreenCoordinator: Resettable {
-//                    resolver.resolve(SplashScreenCoordinator.self)!
-//                },
 //                resettableAccountSetupCoordinator: Resettable {
 //                    resolver.resolve(AccountSetupCoordinator.self)!
 //                },
@@ -126,13 +126,13 @@ internal final class AppDependencyModule {
         }
     }
     
-//    private static func attachSplashScreenFlowDependencies(to container: Container) {
-//        container.register(SplashScreenCoordinator.self) { resolver in
-//            SplashScreenCoordinator(
-//                uiFactory: resolver.resolve(AppUIMaking.self)!
-//            )
-//        }
-//    }
+    private static func attachSplashScreenFlowDependencies(to container: Container) {
+        container.register(SplashScreenCoordinator.self) { resolver in
+            SplashScreenCoordinator(
+                uiFactory: resolver.resolve(AppUIMaking.self)!
+            )
+        }
+    }
     
 //    private static func attachSettingsFlowDependencies(to container: Container) {
 //        container.register(SettingsUIMaking.self) { resolver in

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */; };
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
 		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
 		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
@@ -29,6 +30,8 @@
 		4CCE8C981FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */; };
 		4CCE8C9A1FF5579200AFBAF2 /* AppInfoProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */; };
 		4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */; };
+		4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */; };
+		4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */; };
 		4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */; };
 		4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */; };
 		4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */; };
@@ -114,6 +117,7 @@
 		39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
+		4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsModel.swift; sourceTree = "<group>"; };
 		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
@@ -136,6 +140,8 @@
 		4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Instantiating.swift"; sourceTree = "<group>"; };
 		4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppInfoProviding.swift; sourceTree = "<group>"; };
 		4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenCoordinator.swift; sourceTree = "<group>"; };
+		4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
 		4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapterResponse.swift; sourceTree = "<group>"; };
 		4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapter.swift; sourceTree = "<group>"; };
@@ -315,6 +321,9 @@
 				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
 				4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */,
 				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
+				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
+				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
+				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
 			);
 			path = AppDependencyInjection;
 			sourceTree = "<group>";
@@ -658,6 +667,7 @@
 				68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */,
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
 				68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */,
+				4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
@@ -753,6 +763,7 @@
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
+				4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */,
 				F463A90D1F68DAD00012CFEB /* LanguagesSupportedResponse.swift in Sources */,
 				686233EE1EFF71FC0046D952 /* PlaybackService.swift in Sources */,
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
@@ -787,6 +798,7 @@
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				4CCE8C831FF4B7C600AFBAF2 /* MainViewModel.swift in Sources */,
+				4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
 				4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */,
 				68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */,

@@ -26,15 +26,15 @@ internal class AppCoordinator {
     private let uiFactory: AppUIMaking
 //    private let resettableInitialCoordinator: Resettable<InitialCoordinator>
     private let resettableMainCoordinator: Resettable<MainCoordinator>
-//    private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
+    private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
 //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
 //    private let accountService: AccountServicing
 //    private let productService: ProductServicing
     
     internal init(uiFactory: AppUIMaking,
 //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
-                  resettableMainCoordinator: Resettable<MainCoordinator>
-//                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
+                  resettableMainCoordinator: Resettable<MainCoordinator>,
+                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
 //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
 //                  accountService: AccountServicing,
 //                  productService: ProductServicing
@@ -42,7 +42,7 @@ internal class AppCoordinator {
         self.uiFactory = uiFactory
 //        self.resettableInitialCoordinator = resettableInitialCoordinator
         self.resettableMainCoordinator = resettableMainCoordinator
-//        self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
+        self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
 //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
 //        self.accountService = accountService
 //        self.productService = productService
@@ -120,12 +120,12 @@ extension AppCoordinator: NavigationCoordinating {
     /// Puts the splash screen flow on top of the rootViewController, and animates the
     /// splash screen sequence. Authorization handling is called when complete.
     private func swapInSplashScreenFlow() {
-//        resettableSplashScreenCoordinator.value.flow(with: { [unowned self] splashScreenFlowViewController in
-//            self.rootViewController.plant(splashScreenFlowViewController)
-//        }, completion: { [unowned self] _ in
+        resettableSplashScreenCoordinator.value.flow(with: { [unowned self] splashScreenFlowViewController in
+            self.rootViewController.plant(splashScreenFlowViewController)
+        }, completion: { [unowned self] _ in
             self.startHandlingAuthEvents()
 //            self.accountService.start()
-//        }, context: .other)
+        }, context: .other)
     }
     
     private func swapInAccountSetupFlow() {
