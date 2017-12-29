@@ -158,18 +158,13 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
             case let .success(moyaResponse):
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-                    let data = moyaResponse.data
-                    var parsedObject: BookResponse
-                    
-                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                    if let jsonObject = json as? [String:Any] {
-                        parsedObject = BookResponse(JSON: jsonObject)!
-                        print(parsedObject)
-                        self.books = parsedObject.books!
-                        DispatchQueue.main.async {
-                            MBProgressHUD.hide(for: self.view, animated: true)
-                            self.collectionView.reloadData()
-                        }
+                    let bookResponse: BookResponse = try moyaResponse.map(BookResponse.self)
+                    print("mapped to bookResponse: \(bookResponse)")
+
+                    self.books = bookResponse.result
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.collectionView.reloadData()
                     }
                 }
                 catch {
@@ -513,10 +508,9 @@ extension OriginViewController: UICollectionViewDelegate,UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BookCollectionViewCellID", for: indexPath) as? BookCollectionViewCell
         
-        if let localizedTitle = books[indexPath.row].localizedTitle {
-            cell?.label.text = localizedTitle
-            print("book at index: \(indexPath.row) \(localizedTitle)")
-        }
+        let localizedTitle = books[indexPath.row].localizedTitle
+        cell?.label.text = localizedTitle
+        print("book at index: \(indexPath.row) \(localizedTitle)")
 
         return cell!
     }
@@ -525,12 +519,11 @@ extension OriginViewController: UICollectionViewDelegate,UICollectionViewDataSou
         let reachability = Reachability()!
         
         if reachability.currentReachabilityStatus != .notReachable {
-            if let bookId = books[indexPath.row].bookId {
-                let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
-                //            vc?.folderId = id
-                vc?.bookId = bookId
-                self.navigationController?.pushViewController(vc!, animated: true)
-            }
+            let bookId = books[indexPath.row].bid
+            let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
+            //            vc?.folderId = id
+            vc?.bookId = bookId
+            self.navigationController?.pushViewController(vc!, animated: true)
         } else {
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: "").l10n())
         }

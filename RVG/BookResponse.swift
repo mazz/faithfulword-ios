@@ -1,16 +1,8 @@
 
 import Foundation
-import ObjectMapper
 
-class BookResponse : Mappable {
-    var books : [Book]?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        books  <- map["result"]
-    }
-    
+public struct BookResponse: Codable {
+    public var result: [Book]
+    public var status: String
+    public var version: String
 }

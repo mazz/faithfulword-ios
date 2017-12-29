@@ -15,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
     private lazy var appCoordinator: AppCoordinator = { [unowned self] in
         self.dependencyModule.resolver.resolve(AppCoordinator.self)!
         }()
-//    var appVersions: [AppVersion]?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
