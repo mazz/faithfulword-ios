@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
+		4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3E87291FFDAFAF0037C22E /* DataStore.swift */; };
 		4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */; };
 		4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */; };
 		4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */; };
@@ -46,6 +48,16 @@
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
 		4CF401EB1ED391F400632272 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401EA1ED391F400632272 /* Device.swift */; };
+		4CFB84F92005AE1A00FEBB53 /* SettingDrillInCellStacked.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */; };
+		4CFB84FA2005AE1A00FEBB53 /* SettingDrillInCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */; };
+		4CFB84FC2005AEB400FEBB53 /* SettingDrillInCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */; };
+		4CFB84FE2005AEEB00FEBB53 /* Root.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */; };
+		4CFB85002005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB84FF2005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift */; };
+		4CFB85022005B66300FEBB53 /* CellContentLayoutStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */; };
+		4CFB85042005B92E00FEBB53 /* UIView+Instantiating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB85032005B92E00FEBB53 /* UIView+Instantiating.swift */; };
+		4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB85052005BA1F00FEBB53 /* UIView+NibInstantiating.swift */; };
+		4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */; };
+		4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */; };
 		68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */; };
 		68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */; };
 		681E117B1ED110CB00B028DD /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117A1ED110CB00B028DD /* Environment.swift */; };
@@ -121,6 +133,8 @@
 		39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
+		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
+		4C3E87291FFDAFAF0037C22E /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Single+Utilities.swift"; sourceTree = "<group>"; };
 		4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Parsing.swift"; sourceTree = "<group>"; };
@@ -160,6 +174,16 @@
 		4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookCollectionViewCell.swift; sourceTree = "<group>"; };
 		4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookCollectionViewCell.xib; sourceTree = "<group>"; };
 		4CF401EA1ED391F400632272 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
+		4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDrillInCellStacked.xib; sourceTree = "<group>"; };
+		4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingDrillInCell.xib; sourceTree = "<group>"; };
+		4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingDrillInCell.swift; sourceTree = "<group>"; };
+		4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Root.storyboard; sourceTree = "<group>"; };
+		4CFB84FF2005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+UIViewManaging.swift"; sourceTree = "<group>"; };
+		4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellContentLayoutStyle.swift; sourceTree = "<group>"; };
+		4CFB85032005B92E00FEBB53 /* UIView+Instantiating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Instantiating.swift"; sourceTree = "<group>"; };
+		4CFB85052005BA1F00FEBB53 /* UIView+NibInstantiating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+NibInstantiating.swift"; sourceTree = "<group>"; };
+		4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooksSectionViewModel.swift; sourceTree = "<group>"; };
+		4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Sizing.swift"; sourceTree = "<group>"; };
 		54F8BA39933CAF7E54C002E1 /* Pods-RVG.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.debug.xcconfig"; sourceTree = "<group>"; };
 		570D267FA69AF4736FCE33B9 /* Pods-AllScripture.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AllScripture.release.xcconfig"; path = "Pods/Target Support Files/Pods-AllScripture/Pods-AllScripture.release.xcconfig"; sourceTree = "<group>"; };
 		5A833608D6B0C40C7B99434A /* Pods-RVGTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -315,10 +339,17 @@
 				4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */,
 				4CCE8C811FF4B7C500AFBAF2 /* MainViewController.swift */,
 				4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */,
+				4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */,
 				4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */,
 				4CCE8C6A1FF4B29F00AFBAF2 /* UIMaking.swift */,
+				4CFB84FF2005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift */,
+				4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */,
+				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
 				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
 				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
+				4CFB85032005B92E00FEBB53 /* UIView+Instantiating.swift */,
+				4CFB85052005BA1F00FEBB53 /* UIView+NibInstantiating.swift */,
+				4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */,
 				4CCE8C881FF4B88B00AFBAF2 /* UIBarButtonItem+BaseMaking.swift */,
 				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
 				4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */,
@@ -333,9 +364,14 @@
 				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
 				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
 				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
+				4C3E87291FFDAFAF0037C22E /* DataStore.swift */,
 				4C8EE8C31FF6010F003F483A /* DataService.swift */,
 				4C8EE8C11FF60105003F483A /* ProductService.swift */,
 				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
+				4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */,
+				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
+				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
+				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
 			);
 			path = AppDependencyInjection;
 			sourceTree = "<group>";
@@ -680,7 +716,10 @@
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
 				68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */,
 				4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */,
+				4CFB84F92005AE1A00FEBB53 /* SettingDrillInCellStacked.xib in Resources */,
+				4CFB84FE2005AEEB00FEBB53 /* Root.storyboard in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
+				4CFB84FA2005AE1A00FEBB53 /* SettingDrillInCell.xib in Resources */,
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
 				70CD20671E6479A800AF619F /* Main.storyboard in Resources */,
@@ -698,6 +737,8 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-AllScripture/Pods-AllScripture-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
+				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/L10n-swift/L10n_swift.framework",
@@ -707,6 +748,8 @@
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
+				"${BUILT_PRODUCTS_DIR}/RxGRDB/RxGRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -714,6 +757,8 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/L10n_swift.framework",
@@ -723,6 +768,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swinject.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -783,6 +830,7 @@
 				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
 				4CCE8C931FF4BC8200AFBAF2 /* AppConstants.swift in Sources */,
+				4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */,
 				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
 				68F0F3F71F11E9A900718AFF /* Music.swift in Sources */,
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
@@ -792,8 +840,10 @@
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
 				683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */,
 				683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */,
+				4CFB85042005B92E00FEBB53 /* UIView+Instantiating.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
 				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
+				4CFB85022005B66300FEBB53 /* CellContentLayoutStyle.swift in Sources */,
 				4CCE8C841FF4B7C600AFBAF2 /* MainViewController.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
@@ -803,6 +853,7 @@
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
 				68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */,
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,
+				4CFB85002005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift in Sources */,
 				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
@@ -813,14 +864,19 @@
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				4CCE8C831FF4B7C600AFBAF2 /* MainViewModel.swift in Sources */,
 				4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */,
+				4CFB84FC2005AEB400FEBB53 /* SettingDrillInCell.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
 				4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */,
+				4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */,
 				68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */,
 				4CCE8C9A1FF5579200AFBAF2 /* AppInfoProviding.swift in Sources */,
 				686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */,
+				4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */,
 				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
+				4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */,
 				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,
+				4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */,
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,

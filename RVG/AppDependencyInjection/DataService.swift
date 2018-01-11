@@ -78,7 +78,8 @@ import L10n_swift
 public protocol ProductDataServicing {
     /// Permanent observable emitting product arrays
     var books: Observable<[Book]> { get }
-    
+    var persistedBooks: Observable<[Book]> { get }
+
     /// Fetches the latest products from the cloud.arrays
     ///
     /// - Returns: Permanent observable emitting product arrays
@@ -106,7 +107,7 @@ public final class DataService {
     
     // MARK: Dependencies
     
-//    private let dataStore: DataStoring
+    private let dataStore: DataStoring
 //    private let passportNetworking: MoyaProvider<PassportAPI>!
 //    private let bmxNetworking: MoyaProvider<BMXMusicServiceAPI>!
     private let kjvrvgNetworking: MoyaProvider<KJVRVGService>!
@@ -145,6 +146,7 @@ public final class DataService {
     // MARK: Product
     
     private var _books = Field<[Book]>([])
+    private var _persistedBooks = Field<[Book]>([])
     
     // MARK: BMX
     
@@ -152,11 +154,11 @@ public final class DataService {
 //    private var _musicServiceAvailabilities = Field<[MusicServiceAvailabilities.Availability]>([])
     
     public init(
-//        dataStore: DataStoring,
+        dataStore: DataStoring,
 //                passportNetworking: MoyaProvider<PassportAPI>,
 //                bmxNetworking: MoyaProvider<BMXMusicServiceAPI>,
                 kjvrvgNetworking: MoyaProvider<KJVRVGService>) {
-//        self.dataStore = dataStore
+        self.dataStore = dataStore
 //        self.passportNetworking = passportNetworking
 //        self.bmxNetworking = bmxNetworking
         self.kjvrvgNetworking = kjvrvgNetworking
@@ -358,14 +360,20 @@ public final class DataService {
 //}
 
 extension DataService: ProductDataServicing {
-    
     public var books: Observable<[Book]> {
         return _books.asObservable()
     }
-    
+
+    public var persistedBooks: Observable<[Book]> {
+        return _persistedBooks.asObservable()
+    }
+
     public func fetchAndObserveBooks() -> Observable<[Book]> {
 
+//        let moyaResponse = self.kjvrvgNetworking.rx.request()
         let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
+
+        
 //        let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: "el"))
         let bookResponse: Single<BookResponse> = moyaResponse.map { response -> BookResponse in
             try! response.map(BookResponse.self)
@@ -375,6 +383,7 @@ extension DataService: ProductDataServicing {
         }
         .do(onNext: { products in
             self._books.value = products
+            self.dataStore.addProducts(products: products)
         })
         .asObservable()
         return books

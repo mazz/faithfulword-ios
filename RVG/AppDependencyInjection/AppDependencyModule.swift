@@ -33,7 +33,8 @@ internal final class AppDependencyModule {
         let container = Container()
         
         container.register(DataService.self) { resolver in
-            return DataService(kjvrvgNetworking: MoyaProvider<KJVRVGService>())
+            return DataService(dataStore: DataStore(),
+                kjvrvgNetworking: MoyaProvider<KJVRVGService>())
         }.inObjectScope(.container)
         
         container.register(ProductServicing.self) { resolver in
@@ -146,7 +147,7 @@ internal final class AppDependencyModule {
         }
         container.register(MainViewModel.self) { resolver in
             MainViewModel(
-//                deviceManager: resolver.resolve(DeviceManaging.self)!
+                productService: resolver.resolve(ProductServicing.self)!
             )
         }
     }

@@ -79,11 +79,6 @@ extension AppCoordinator: NavigationCoordinating {
     }
     
     private func checkUserBooks() {
-
-        // TODO: fetch books from bible service here
-        // just swap in main flow for now
-//        self.swapInMainFlow()
-
         self.productService.fetchBooks().subscribe(onSuccess: { [unowned self] in
             if self.productService.userBooks.value.count > 0 {
                 print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
