@@ -17,6 +17,8 @@ internal final class MainViewModel {
 
     public private(set) var sections = Field<[BooksSectionViewModel]>([])
 
+    public let selectItemEvent = PublishSubject<IndexPath>()
+
     //    internal var deviceName: Observable<String> {
     //        return deviceManager.selectedDevice.asObservable()
     //            .map { $0.displayName }
