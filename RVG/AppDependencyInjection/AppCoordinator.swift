@@ -79,17 +79,21 @@ extension AppCoordinator: NavigationCoordinating {
     }
     
     private func checkUserBooks() {
-        self.productService.fetchBooks().subscribe(onSuccess: { [unowned self] in
-            if self.productService.userBooks.value.count > 0 {
-                print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
-                self.swapInMainFlow()
-            } else {
-                self.swapInAccountSetupFlow()
-            }
-        }, onError: { [unowned self] error in
-            print("Check user products failed with error: \(error.localizedDescription)")
-            self.swapInMainFlow()
-        }).disposed(by: self.bag)
+        self.productService.deleteBooks()
+            .subscribe( { [unowned self] _ in
+                self.productService.fetchBooks().subscribe(onSuccess: { [unowned self] in
+                    if self.productService.userBooks.value.count > 0 {
+                        print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
+                        self.swapInMainFlow()
+                    } else {
+                        self.swapInAccountSetupFlow()
+                    }
+                    }, onError: { [unowned self] error in
+                        print("Check user products failed with error: \(error.localizedDescription)")
+                        self.swapInMainFlow()
+                }).disposed(by: self.bag)
+            }).disposed(by: self.bag)
+    
     }
     
     /// Puts the initial flow (unauthenticated state) on top of the rootViewController,

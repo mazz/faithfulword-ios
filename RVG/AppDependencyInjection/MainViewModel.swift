@@ -52,8 +52,8 @@ internal final class MainViewModel {
     private func setupDatasource() {
         // TODO: CASTLE-4739 - JT/RL Figure out proper mapping between connection type, product, and regime (Rio or Riv)
 //        let productType: ProductType = device.discoveredDevice.connectionType == .webSocket ? .eddie : .goodyear
-        productService.userBooks.asObservable()
-            .map { $0.map { BookItemType.action(name: $0.localizedTitle) } }
+        productService.persistedUserBooks.asObservable()
+            .map { $0.map { BooksItemType.drillIn(type: .defaultType, iconName: "book", title: $0.localizedTitle, showBottomSeparator: true) } }
             .next { [unowned self] names in
                 self.sections.value = [
                     BooksSectionViewModel(type: .book, items: names)

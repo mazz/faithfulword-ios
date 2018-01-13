@@ -33,7 +33,10 @@ public protocol DataStoring {
 //    func fetchAccountDevices(bosePersonId: String) -> Single<[UserProduct]>
     
     /// Write a list of products to Realm database
-    func addProducts(products: [Book]) -> Single<[Book]>
+    func addBooks(books: [Book]) -> Single<[Book]>
+    
+    func deleteAllBooks() -> Single<Void>
+    
     /// Add or update a bose person to Realm database
 //    func addPerson(boseSession: BoseSession) -> Single<BoseSession>
     /// Delete bose persons from Realm database
@@ -183,8 +186,27 @@ extension DataStore: DataStoring {
 //            return Disposables.create {}
 //        }
 //    }
+
+    public func deleteAllBooks() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    let books = try Book.fetchAll(db)
+                    for book in books {
+                        try book.delete(db)
+                    }
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
     
-    public func addProducts(products: [Book]) -> Single<[Book]> {
+    public func addBooks(books: [Book]) -> Single<[Book]> {
         // database write happens in 3 steps
         // 1) get a bose person from database or add one if it doesn't exist
         // 2) get products from bose person
@@ -195,20 +217,20 @@ extension DataStore: DataStoring {
         
         return Single.create { [unowned self] single in
             do {
-                for product in products {
-                    print("product: \(product)")
+                for book in books {
+                    print("book: \(book)")
                     //            try! self.dbQueue.inDatabase { db in
                     try self.dbPool.writeInTransaction { db in
                         var book = Book(id: nil,
-                                        bid: product.bid,
-                                        title: product.title,
-                                        languageId: product.languageId,
-                                        localizedTitle: product.localizedTitle)
+                                        bid: book.bid,
+                                        title: book.title,
+                                        languageId: book.languageId,
+                                        localizedTitle: book.localizedTitle)
                         try book.insert(db)
                         return .commit
                     }
                 }
-                single(.success(products))
+                single(.success(books))
             } catch {
                 print(error)
                 single(.error(error))

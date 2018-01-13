@@ -85,6 +85,8 @@ public protocol ProductDataServicing {
     /// - Returns: Permanent observable emitting product arrays
     func fetchAndObserveBooks() -> Observable<[Book]>
     
+    func deletePersistedBooks() -> Single<Void>
+    
     /// Updates the settings of a user's product.
     ///
     /// - Parameters:
@@ -383,7 +385,12 @@ extension DataService: ProductDataServicing {
         }
         .do(onNext: { products in
             self._books.value = products
-            self.dataStore.addProducts(products: products)
+            self.dataStore.addBooks(books: products)
+                .subscribe(onSuccess: { persisted in
+                    self._persistedBooks.value = persisted
+                }, onError: { error in
+                    print("something bad happened: \(error)")
+                }).disposed(by: self.bag)
         })
         .asObservable()
         return books
@@ -416,6 +423,9 @@ extension DataService: ProductDataServicing {
             
     }
     
+    public func deletePersistedBooks() -> Single<Void> {
+        return self.dataStore.deleteAllBooks()
+    }
 //    public func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void> {
 //        return passportNetworking.rx
 //            .request(.updateProductSettings(productId: productId, settings: settings))

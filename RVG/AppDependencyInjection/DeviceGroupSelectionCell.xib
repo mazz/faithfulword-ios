@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DeviceGroupSelectionCell" customModule="All_Scripture" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="287" height="74"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qqa-0v-ajY" userLabel="iconImage">
+                    <rect key="frame" x="10" y="17" width="40" height="40"/>
+                    <accessibility key="accessibilityConfiguration" identifier="iconImage"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="i5t-tx-I9d"/>
+                        <constraint firstAttribute="height" constant="40" id="wv4-Ul-nXS"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icRightChevron" translatesAutoresizingMaskIntoConstraints="NO" id="CCy-3z-JRs" userLabel="chevronImage">
+                    <rect key="frame" x="256" y="28" width="11" height="17"/>
+                    <accessibility key="accessibilityConfiguration" identifier="chevronImage"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="17" id="HhJ-hX-xq3"/>
+                        <constraint firstAttribute="width" constant="11" id="wln-lM-xBj"/>
+                    </constraints>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n8w-3S-pox" userLabel="Separator View">
+                    <rect key="frame" x="60" y="73" width="227" height="1"/>
+                    <color key="backgroundColor" red="0.89411764709999997" green="0.89411764709999997" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="Thx-ET-Xrc"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="_GroupSelection_" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B64-Nu-IJo" userLabel="groupSelection">
+                    <rect key="frame" x="60" y="15" width="188" height="45"/>
+                    <accessibility key="accessibilityConfiguration" identifier="groupSelection"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="188" id="y34-RC-g0H"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="CCy-3z-JRs" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="83Y-3P-MHk"/>
+                <constraint firstItem="n8w-3S-pox" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="60" id="9ku-VA-t8q"/>
+                <constraint firstItem="Qqa-0v-ajY" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Ayg-tM-ILB"/>
+                <constraint firstItem="n8w-3S-pox" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="IeC-Nk-fhq"/>
+                <constraint firstItem="B64-Nu-IJo" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="J3J-4a-3um"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="CCy-3z-JRs" secondAttribute="trailing" constant="20" id="JjV-VT-UYU"/>
+                <constraint firstItem="B64-Nu-IJo" firstAttribute="leading" secondItem="Qqa-0v-ajY" secondAttribute="trailing" constant="10" id="Mur-cw-1IO"/>
+                <constraint firstItem="B64-Nu-IJo" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="15" id="Mwv-ad-ixW"/>
+                <constraint firstItem="CCy-3z-JRs" firstAttribute="leading" secondItem="B64-Nu-IJo" secondAttribute="trailing" constant="8" id="SIK-vl-XM2"/>
+                <constraint firstAttribute="trailing" secondItem="n8w-3S-pox" secondAttribute="trailing" id="lWN-YN-gz0"/>
+                <constraint firstItem="Qqa-0v-ajY" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="vA1-AL-9hR"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="groupSelectionLabel" destination="B64-Nu-IJo" id="8Tz-jc-u1F"/>
+                <outlet property="iconImageView" destination="Qqa-0v-ajY" id="wcv-nd-WCY"/>
+                <outlet property="separatorView" destination="n8w-3S-pox" id="01q-vf-iOZ"/>
+            </connections>
+            <point key="canvasLocation" x="-194.5" y="251"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icRightChevron" width="11" height="17"/>
+    </resources>
+</document>

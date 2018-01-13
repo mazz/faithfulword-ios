@@ -56,6 +56,8 @@ public protocol ProductServicing {
     /// - Returns: Returns Success or Error
     func fetchBooks() -> Single<Void>
     
+    func deleteBooks() -> Single<Void>
+    
     /// Updates the attributes of a user's product.
     ///
     /// - Parameters:
@@ -89,6 +91,7 @@ public final class ProductService {
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
+    
 //    public func addProduct(productName: String,
 //                           productId: String,
 //                           productType: String,
@@ -118,7 +121,10 @@ extension ProductService: ProductServicing {
     public func fetchBooks() -> Single<Void> {
         return dataService.fetchAndObserveBooks().take(1).asSingle().toVoid()
     }
-        
+    
+    public func deleteBooks() -> Single<Void> {
+        return dataService.deletePersistedBooks()
+    }
 //    public func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void> {
 //        return dataService.updateSettings(settings, for: productId)
 //    }

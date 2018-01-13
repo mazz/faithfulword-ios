@@ -1,17 +1,28 @@
 import Foundation
 import RxDataSources
 
+internal struct BooksSectionViewModel {
+    internal let type: BooksSectionType
+    internal let items: [BooksItemType]
+}
+
 internal enum BooksSectionType {
     case book
     case debug
 }
 
-internal enum BookItemType {
+internal enum BooksItemType {
 //    case field(String, String)
 //    case option(SettingOptionType)
-    case action(name: String)
+//    case action(name: String)
+    case drillIn(type: BooksDrillInType, iconName: String, title: String, showBottomSeparator: Bool)
 //    case info(String)
 }
+
+public enum BooksDrillInType {
+    case defaultType
+}
+
 
 //public enum DeviceGroupItemType {
 //    // Since only a single section, use regular cell for "header", to vastly simplify VC
@@ -21,10 +32,6 @@ internal enum BookItemType {
 //}
 
 
-internal struct BooksSectionViewModel {
-    internal let type: BooksSectionType
-    internal let items: [BookItemType]
-}
 
 //internal enum SettingOptionType {
 //    case apSetup
@@ -38,7 +45,7 @@ internal enum BookActionType {
 }
 
 extension BooksSectionViewModel: SectionModelType {
-    typealias Item = BookItemType
+    typealias Item = BooksItemType
     init(original: BooksSectionViewModel, items: [Item]) {
         self.type = original.type
         self.items = items
