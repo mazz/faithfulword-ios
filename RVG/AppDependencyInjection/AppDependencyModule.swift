@@ -27,6 +27,9 @@ internal final class AppDependencyModule {
     
     // MARK: App-specific dependencies
     
+    // MARK: ### Thread 1: Fatal error: Unexpectedly found nil while unwrapping an Optional value
+    // MARK: ### did you remember to register the dependency before using it??
+    
     /// This is where you wire up the dependencies for the app!
     private static func applicationContainer() -> Container {
         // create a new container
@@ -123,13 +126,18 @@ internal final class AppDependencyModule {
 //        }
 //    }
     
+    
     private static func attachMainFlowDependencies(to container: Container) {
+        container.register(MediaListingCoordinator.self) { resolver in
+            MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
+        }
+        
         container.register(MainCoordinator.self) { resolver in
             MainCoordinator(
-                appUIMaking: resolver.resolve(AppUIMaking.self)!//,
-//                resettableDeviceNowPlayingCoordinator: Resettable {
-//                    resolver.resolve(DeviceNowPlayingCoordinator.self)!
-//                },
+                appUIMaking: resolver.resolve(AppUIMaking.self)!,
+                resettableMediaListingCoordinator: Resettable {
+                    resolver.resolve(MediaListingCoordinator.self)!
+                }
 //                resettableSettingsCoordinator: Resettable {
 //                    resolver.resolve(SettingsCoordinator.self)!
 //                },
@@ -147,6 +155,11 @@ internal final class AppDependencyModule {
         }
         container.register(MainViewModel.self) { resolver in
             MainViewModel(
+                productService: resolver.resolve(ProductServicing.self)!
+            )
+        }
+        container.register(MediaListingViewModel.self) { resolver in
+            MediaListingViewModel(
                 productService: resolver.resolve(ProductServicing.self)!
             )
         }

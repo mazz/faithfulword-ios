@@ -9,6 +9,7 @@ internal protocol AppUIMaking {
     func makeRoot() -> RootViewController
 //    func makeInitial() -> InitialViewController
     func makeMain() -> MainViewController
+    func makeMediaListing() -> MediaListingViewController
     func makeSplashScreen() -> SplashScreenViewController
 }
 
@@ -31,6 +32,12 @@ internal final class UIFactory: UIMaking {
 
 // MARK: <AppUIMaking>
 extension UIFactory: AppUIMaking {
+    func makeMediaListing() -> MediaListingViewController {
+        let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaList)
+        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
+        return mediaListingViewController
+    }
+
     internal func makeRoot() -> RootViewController {
         let controller = RootViewController
             .make(storyboardName: StoryboardName.main)
@@ -59,7 +66,7 @@ extension UIFactory: AppUIMaking {
 }
 
 // MARK: <SettingsUIMaking>
-extension UIFactory: SettingsUIMaking {
+//extension UIFactory: SettingsUIMaking {
 //    internal func makeSettings() -> SettingsViewController {
 //        let controller =  SettingsViewController
 //            .make(storyboardName: StoryboardName.settings)
@@ -67,4 +74,5 @@ extension UIFactory: SettingsUIMaking {
 //            .resolve(SettingsViewModel.self)
 //        return controller
 //    }
-}
+//}
+

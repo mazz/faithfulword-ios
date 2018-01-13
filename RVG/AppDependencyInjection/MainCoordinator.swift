@@ -19,7 +19,10 @@ internal final class MainCoordinator: NSObject {
     
     private let appUIMaking: AppUIMaking
 //    private let resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>
-//    private let resettableSettingsCoordinator: Resettable<SettingsCoordinator>
+    private let resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
+    
+//    private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
+    
 //    private let resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>
 //    private let resettableSectionalNavigatorCoordinator: Resettable<SectionalNavigatorCoordinator>
 //    private let resettableControlCentreCoordinator: Resettable<ControlCentreCoordinator>
@@ -27,17 +30,20 @@ internal final class MainCoordinator: NSObject {
     private let dismissBlurAnimationController: UIViewControllerAnimatedTransitioning = DismissBlurAnimationController()
 //    private let deviceManager: DeviceManaging
 
-    internal init(appUIMaking: AppUIMaking
+    internal init(appUIMaking: AppUIMaking,
+//                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
+                  resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
 //                  resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>,
-//                  resettableSettingsCoordinator: Resettable<SettingsCoordinator>,
 //                  resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>,
 //                  resettableSectionalNavigatorCoordinator: Resettable<SectionalNavigatorCoordinator>,
 //                  resettableControlCentreCoordinator: Resettable<ControlCentreCoordinator>,
 //                  deviceManager: DeviceManaging
         ) {
         self.appUIMaking = appUIMaking
-//        self.resettableDeviceNowPlayingCoordinator = resettableDeviceNowPlayingCoordinator
-//        self.resettableSettingsCoordinator = resettableSettingsCoordinator
+        self.resettableMediaListingCoordinator = resettableMediaListingCoordinator
+//        self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
+
+        //        self.resettableDeviceNowPlayingCoordinator = resettableDeviceNowPlayingCoordinator
 //        self.resettableDeviceSelectionCoordinator = resettableDeviceSelectionCoordinator
 //        self.resettableSectionalNavigatorCoordinator = resettableSectionalNavigatorCoordinator
 //        self.resettableControlCentreCoordinator = resettableControlCentreCoordinator
@@ -56,7 +62,7 @@ extension MainCoordinator: NavigationCoordinating {
     ///   - completion: Called when main flow completed (e.g. logout).
     internal func flow(with setup: FlowSetup, completion: @escaping FlowCompletion, context: FlowContext) {
         let mainViewController = appUIMaking.makeMain()
-        attachAccountAction(to: mainViewController)
+        attachRootMenuAction(to: mainViewController)
         attachSettingAction(to: mainViewController)
         
         mainNavigationController = UINavigationController(rootViewController: mainViewController)
@@ -71,12 +77,12 @@ extension MainCoordinator: NavigationCoordinating {
         mainFlowCompletion = completion
     }
     
-    private func attachAccountAction(to viewController: UIViewController) {
-//        let close = UIBarButtonItem.account()
-//        close.rx.tap.asObservable().subscribe(onNext: { [unowned self] in
-//            self.goToDeviceSelection()
-//        }).disposed(by: bag)
-//        viewController.navigationItem.leftBarButtonItem = close
+    private func attachRootMenuAction(to viewController: UIViewController) {
+        let hamburger = UIBarButtonItem.hamburger()
+        hamburger.rx.tap.asObservable().subscribe(onNext: { [unowned self] in
+            self.goToDeviceSelection()
+        }).disposed(by: bag)
+        viewController.navigationItem.leftBarButtonItem = hamburger
     }
     
     private func attachSettingAction(to viewController: UIViewController) {
@@ -86,7 +92,30 @@ extension MainCoordinator: NavigationCoordinating {
 //        }).disposed(by: bag)
 //        viewController.navigationItem.rightBarButtonItem = close
     }
-    
+
+    private func goToMedia() {
+        // do not use a new flow, because Chapters is part of the Book flow AFAICT
+//        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
+        self.resettableMediaListingCoordinator.value.flow(with: { viewController in
+            self.mainNavigationController.pushViewController(
+                viewController,
+                animated: true
+            )
+//            self.mainNavigationController.present(viewController, animated: true)
+        }, completion: { _ in
+            self.mainNavigationController.dismiss(animated: true)
+            self.resettableMediaListingCoordinator.reset()
+//            self.resettableSplashScreenCoordinator.reset()
+
+        }, context: .present)
+
+        
+//        self.MainCoordinator.pushViewController(
+//            uiFactory.makeTrackSelection(),
+//            animated: true
+//        )
+    }
+
     private func goToDeviceSelection() {
 //        self.resettableDeviceSelectionCoordinator.value.flow(with: { viewController in
 //            self.mainNavigationController.present(viewController, animated: true)
@@ -110,6 +139,16 @@ extension MainCoordinator: NavigationCoordinating {
 extension MainCoordinator {
     
     private func handle(eventsFrom mainViewModel: MainViewModel) {
+        mainViewModel.drillInEvent.next { [unowned self] type in
+            switch type {
+            case .defaultType:
+                print(".defaultType")
+                self.goToMedia()
+            default:
+                break
+            }
+            }.disposed(by: bag)
+
 //        mainViewModel.nowPlayingDetailsEvent.next { [unowned self] in
 //            self.resettableDeviceNowPlayingCoordinator.value.flow(with: { viewController in
 //                self.mainNavigationController.present(viewController, animated: true)
@@ -154,6 +193,16 @@ extension MainCoordinator {
 //        }.disposed(by: bag)
     }
 }
+
+//extension MainCoordinator {
+//    private func goToTracks() {
+//        // do not use a new flow, because Chapters is part of the Book flow AFAICT
+//        self.MainCoordinator.pushViewController(
+//            uiFactory.makeTrackSelection(),
+//            animated: true
+//        )
+//    }
+//}
 
 extension MainCoordinator: UIViewControllerTransitioningDelegate {
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {

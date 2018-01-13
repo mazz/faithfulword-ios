@@ -8,3 +8,9 @@ protocol Playable {
     var sourceMaterial : String? { get set }
 
 }
+
+enum MediaType {
+    case mediaChapter
+    case mediaSermon
+    case mediaGospel
+}

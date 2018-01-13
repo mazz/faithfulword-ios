@@ -5,6 +5,7 @@ struct StoryboardName {
     static let splashScreen = "SplashScreen"
     static let settings = "Settings"
     static let deviceSelection = "DeviceSelection"
+    static let mediaList = "Root"
 }
 
 struct AnimationConstants {

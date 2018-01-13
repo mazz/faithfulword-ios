@@ -109,5 +109,42 @@
             </objects>
             <point key="canvasLocation" x="750" y="-242"/>
         </scene>
+        <!--Media Listing View Controller-->
+        <scene sceneID="Hhu-Jn-JMS">
+            <objects>
+                <viewController storyboardIdentifier="MediaListingViewController" id="MHO-m2-ZeF" customClass="MediaListingViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6l9-E1-hlz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="GLt-SQ-juc">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="IQS-wl-76T">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ste-tR-14x" firstAttribute="trailing" secondItem="GLt-SQ-juc" secondAttribute="trailing" id="19r-ML-6EL"/>
+                            <constraint firstItem="ste-tR-14x" firstAttribute="bottom" secondItem="GLt-SQ-juc" secondAttribute="bottom" id="MNY-jw-k5k"/>
+                            <constraint firstItem="GLt-SQ-juc" firstAttribute="leading" secondItem="ste-tR-14x" secondAttribute="leading" id="VnR-jb-Tnh"/>
+                            <constraint firstItem="GLt-SQ-juc" firstAttribute="top" secondItem="ste-tR-14x" secondAttribute="top" id="xrl-Uu-Vzh"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ste-tR-14x"/>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="GLt-SQ-juc" id="cMk-v7-kd3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ONc-IA-5fh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="45.600000000000001" y="88.605697151424295"/>
+        </scene>
     </scenes>
 </document>

@@ -19,14 +19,18 @@ internal final class MainViewModel {
 
     public let selectItemEvent = PublishSubject<IndexPath>()
 
-    //    internal var deviceName: Observable<String> {
-    //        return deviceManager.selectedDevice.asObservable()
-    //            .map { $0.displayName }
-    //    }
-    //    internal private(set) var nowPlayingViewModel: DeviceNowPlayingViewModel
-    //    internal let nowPlayingDetailsEvent = PublishSubject<Void>()
-    //    internal let showControlCentreEvent = PublishSubject<Void>()
-    //    internal let deviceImageNameEvent = Observable<String>.of("temp_fab_image")
+    public var drillInEvent: Observable<BooksDrillInType> {
+        // Emit events by mapping a tapped index path to setting-option.
+        return self.selectItemEvent.filterMap { [unowned self] indexPath -> BooksDrillInType? in
+            let section = self.sections.value[indexPath.section]
+            let item = section.items[indexPath.item]
+            // Don't emit an event for anything that is not a 'drillIn'
+            if case .drillIn(let type, _, _, _) = item {
+                return type
+            }
+            return nil
+        }
+    }
     
     // MARK: Dependencies
     private let productService: ProductServicing!

@@ -19,6 +19,11 @@
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
 		4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */; };
 		4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */; };
+		4CA31F962009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F952009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift */; };
+		4CA31F982009DF4800A94101 /* MediaListingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */; };
+		4CA31F9A2009E00900A94101 /* MediaListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F992009E00900A94101 /* MediaListingViewController.swift */; };
+		4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */; };
+		4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */; };
 		4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */; };
 		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
 		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
@@ -31,7 +36,6 @@
 		4CCE8C831FF4B7C600AFBAF2 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */; };
 		4CCE8C851FF4B7C600AFBAF2 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */; };
 		4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */; };
-		4CCE8C891FF4B88C00AFBAF2 /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C881FF4B88B00AFBAF2 /* UIBarButtonItem+BaseMaking.swift */; };
 		4CCE8C8B1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */; };
 		4CCE8C8D1FF4B96400AFBAF2 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */; };
 		4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */; };
@@ -149,6 +153,11 @@
 		4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsModel.swift; sourceTree = "<group>"; };
 		4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetInflating.swift"; sourceTree = "<group>"; };
 		4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceGroupSelectionCell.xib; sourceTree = "<group>"; };
+		4CA31F952009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+BaseMaking.swift"; path = "../../../../files.noindex/BoseMobile-iOS_nogit/BoseMobileUI/BoseMobileUI/Styling/UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
+		4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingCoordinator.swift; sourceTree = "<group>"; };
+		4CA31F992009E00900A94101 /* MediaListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingViewController.swift; sourceTree = "<group>"; };
+		4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaListingViewModel.swift; sourceTree = "<group>"; };
+		4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
@@ -162,7 +171,6 @@
 		4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinating.swift; sourceTree = "<group>"; };
-		4CCE8C881FF4B88B00AFBAF2 /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
 		4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableType+Utilities.swift"; sourceTree = "<group>"; };
 		4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurAnimationController.swift; sourceTree = "<group>"; };
@@ -340,50 +348,54 @@
 		4CCE8C631FF4AD7B00AFBAF2 /* AppDependencyInjection */ = {
 			isa = PBXGroup;
 			children = (
-				4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */,
-				4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */,
-				4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */,
-				4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */,
-				4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */,
-				4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */,
-				4C381D8D200839A100FD2DEA /* MainViewController.swift */,
-				4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */,
-				4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */,
-				4CCE8C6A1FF4B29F00AFBAF2 /* UIMaking.swift */,
-				4CFB84FF2005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift */,
-				4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */,
-				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
-				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
-				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
-				4CFB85032005B92E00FEBB53 /* UIView+Instantiating.swift */,
-				4CFB85052005BA1F00FEBB53 /* UIView+NibInstantiating.swift */,
-				4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */,
-				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
-				4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */,
-				4CCE8C881FF4B88B00AFBAF2 /* UIBarButtonItem+BaseMaking.swift */,
-				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
-				4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */,
-				4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */,
-				4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */,
-				4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */,
-				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
-				4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */,
-				4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */,
 				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
+				4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */,
+				4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */,
+				4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */,
 				4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */,
-				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
-				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
-				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
-				4C3E87291FFDAFAF0037C22E /* DataStore.swift */,
+				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
+				4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */,
+				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
+				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
+				4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */,
 				4C8EE8C31FF6010F003F483A /* DataService.swift */,
+				4C3E87291FFDAFAF0037C22E /* DataStore.swift */,
+				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
+				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
+				4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */,
+				4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */,
+				4C381D8D200839A100FD2DEA /* MainViewController.swift */,
+				4CCE8C801FF4B7C500AFBAF2 /* MainViewModel.swift */,
+				4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */,
+				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
+				4CA31F992009E00900A94101 /* MediaListingViewController.swift */,
+				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
+				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
+				4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */,
+				4CCE8C8C1FF4B96400AFBAF2 /* Optional.swift */,
 				4C8EE8C11FF60105003F483A /* ProductService.swift */,
-				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
+				4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */,
+				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
+				4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */,
+				4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */,
 				4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */,
 				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
-				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
 				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
-				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
-				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
+				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
+				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
+				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
+				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
+				4CA31F952009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift */,
+				4CFB84FF2005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift */,
+				4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */,
+				4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */,
+				4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */,
+				4CCE8C6A1FF4B29F00AFBAF2 /* UIMaking.swift */,
+				4CFB85032005B92E00FEBB53 /* UIView+Instantiating.swift */,
+				4CFB85052005BA1F00FEBB53 /* UIView+NibInstantiating.swift */,
+				4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */,
+				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
+				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
 			);
 			path = AppDependencyInjection;
 			sourceTree = "<group>";
@@ -894,6 +906,7 @@
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
+				4CA31F982009DF4800A94101 /* MediaListingCoordinator.swift in Sources */,
 				68BE69D01EEA3B730082956D /* Gospel.swift in Sources */,
 				68BE69CE1EEA35240082956D /* MediaGospelResponse.swift in Sources */,
 				4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */,
@@ -917,7 +930,8 @@
 				68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
-				4CCE8C891FF4B88C00AFBAF2 /* UIBarButtonItem+BaseMaking.swift in Sources */,
+				4CA31F962009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift in Sources */,
+				4CA31F9A2009E00900A94101 /* MediaListingViewController.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
 				4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */,
@@ -925,6 +939,7 @@
 				68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */,
+				4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */,
 				701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
@@ -933,6 +948,7 @@
 				4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */,
 				6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
+				4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
