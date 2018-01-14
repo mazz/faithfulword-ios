@@ -12,9 +12,9 @@ internal final class MediaListingViewModel {
         return productService.userBooks.asObservable()
     }
 
-    internal var persistedMedia: Observable<[Book]> {
-        return productService.persistedUserBooks.asObservable()
-    }
+//    internal var persistedMedia: Observable<[Book]> {
+//        return productService.persistedUserBooks.asObservable()
+//    }
     
 //    public private(set) var media = Field<[Playable]>([])
 //    public private(set) var persistedMedia = Field<[Playable]>([])

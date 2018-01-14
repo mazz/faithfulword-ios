@@ -30,7 +30,7 @@ public protocol ProductServicing {
     
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
-    var persistedUserBooks: Field<[Book]> { get }
+//    var persistedUserBooks: Field<[Book]> { get }
 
     
     /// Adds a device to a user's account.
@@ -75,7 +75,7 @@ public protocol ProductServicing {
 
 public final class ProductService {
     public let userBooks: Field<[Book]>
-    public let persistedUserBooks: Field<[Book]>
+//    public let persistedUserBooks: Field<[Book]>
 
     // MARK: Dependencies & instantiation
     private let dataService: ProductDataServicing
@@ -85,7 +85,7 @@ public final class ProductService {
     public init(dataService: ProductDataServicing) {
         self.dataService = dataService
         userBooks = Field(value: [], observable: dataService.books)
-        persistedUserBooks = Field(value: [], observable: dataService.persistedBooks)
+//        persistedUserBooks = Field(value: [], observable: dataService.persistedBooks)
     }
 }
 

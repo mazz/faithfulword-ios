@@ -1,6 +1,7 @@
 import RxSwift
 import Moya
 import L10n_swift
+import Alamofire
 
 //private enum DataServiceError: Error {
 //    case noSession
@@ -46,7 +47,7 @@ import L10n_swift
 public protocol ProductDataServicing {
     /// Permanent observable emitting product arrays
     var books: Observable<[Book]> { get }
-    var persistedBooks: Observable<[Book]> { get }
+//    var persistedBooks: Observable<[Book]> { get }
 
     /// Fetches the latest products from the cloud.arrays
     ///
@@ -83,6 +84,8 @@ public final class DataService {
 
     // MARK: Fields
     
+    
+    private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
     private let bag = DisposeBag()
     
     // MARK: Session
@@ -201,13 +204,24 @@ public final class DataService {
 
 
 extension DataService: ProductDataServicing {
+    
     public var books: Observable<[Book]> {
-        return _books.asObservable()
+        switch self.networkStatus.value {
+            case .notReachable:
+                print("DataService reachability.notReachable")
+                return _persistedBooks.asObservable()
+            case .reachable(_):
+                print("DataService reachability.reachable")
+                return _books.asObservable()
+            case .unknown:
+                print("DataService reachability.unknown")
+                return _books.asObservable()
+        }
     }
 
-    public var persistedBooks: Observable<[Book]> {
-        return _persistedBooks.asObservable()
-    }
+//    public var persistedBooks: Observable<[Book]> {
+//        return _persistedBooks.asObservable()
+//    }
 
     public func fetchAndObserveBooks() -> Observable<[Book]> {
         let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
@@ -219,13 +233,13 @@ extension DataService: ProductDataServicing {
         }
         .do(onNext: { products in
             self._books.value = products
-            self._persistedBooks.value = products
-//            self.dataStore.addBooks(books: products)
-//                .subscribe(onSuccess: { persisted in
-//                    self._persistedBooks.value = persisted
-//                }, onError: { error in
-//                    print("something bad happened: \(error)")
-//                }).disposed(by: self.bag)
+//            self._persistedBooks.value = products
+            self.dataStore.addBooks(books: products)
+                .subscribe(onSuccess: { persisted in
+                    self._persistedBooks.value = persisted
+                }, onError: { error in
+                    print("something bad happened: \(error)")
+                }).disposed(by: self.bag)
         })
         .asObservable()
         return books
@@ -240,13 +254,10 @@ extension DataService: ProductDataServicing {
     private func reactToReachability() {
         reachability.startListening().asObservable()
             .subscribe(onNext: { networkStatus in
+                self.networkStatus.value = networkStatus
                 if networkStatus == .notReachable {
-                    // dispose of bag for current productService.userBooks.asObservable
-                    // observe the persistedUserBooks
                     print("DataService reachability.notReachable")
                 } else if networkStatus == .reachable(.ethernetOrWiFi) {
-                    // dispose of bag for current productService.userBooks.asObservable
-                    // observe the persistedUserBooks
                     print("DataService reachability.reachable")
                 }
             }).disposed(by: bag)
