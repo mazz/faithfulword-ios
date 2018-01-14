@@ -224,11 +224,11 @@ extension DataService: ProductDataServicing {
 //    }
 
     public func fetchAndObserveBooks() -> Observable<[Book]> {
-        let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
-        let bookResponse: Single<BookResponse> = moyaResponse.map { response -> BookResponse in
+        return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
+        .map { response -> BookResponse in
             try! response.map(BookResponse.self)
         }
-        let books: Observable<[Book]> = bookResponse.flatMap { bookResponse -> Single<[Book]> in
+        .flatMap { bookResponse -> Single<[Book]> in
             Single.just(bookResponse.result)
         }
         .do(onNext: { products in
@@ -242,7 +242,6 @@ extension DataService: ProductDataServicing {
                 }).disposed(by: self.bag)
         })
         .asObservable()
-        return books
     }
     
     public func deletePersistedBooks() -> Single<Void> {
