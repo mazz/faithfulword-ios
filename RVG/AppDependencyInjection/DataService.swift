@@ -2,10 +2,6 @@ import RxSwift
 import Moya
 import L10n_swift
 
-//import BoseMobileModels
-//import BoseMobileData
-//import BoseMobileUtilities
-
 //private enum DataServiceError: Error {
 //    case noSession
 //    case noAccessToken
@@ -46,34 +42,6 @@ import L10n_swift
 //    func fetchMusicServiceAccounts() -> Observable<[MusicServiceAccount]>
 //}
 
-//public enum BMXDataServicingError: Error, LocalizedError {
-//    case noBaseUrl(request: String)
-//
-//    public var errorDescription: String? {
-//        switch self {
-//        case .noBaseUrl(let request):
-//            return "No base URL found for BMX \(request)"
-//        }
-//    }
-//}
-
-/// Provides BMX related data to the app
-//public protocol BMXDataServicing {
-//
-//    // BMXMusicServiceProvider
-//    var supportedMusicDescriptions: Observable<[MusicServiceDescription]> { get }
-//    var musicServiceAvailabilities: Observable<[MusicServiceAvailabilities.Availability]> { get }
-//
-//    func fetchSupportedServices() -> Observable<[MusicServiceDescription]>
-//    func fetchAvailableServices() -> Observable<[MusicServiceAvailabilities.Availability]>
-//    func fetchLogin(for service: MusicServiceAvailabilities.Availability) -> Single<MusicServiceLoginPage>
-//    func deleteAccount(_ account: MusicServiceAccount) -> Single<Void>
-//
-//    // BMXMusicService
-//    func fetchCreds(for service: MusicService) -> Single<MusicServiceCreds>
-//    func fetchNavigation(for service: MusicService, navigationLink: NavigationLink?) -> Single<NavigationSectionsContaining>
-//}
-
 /// Provides product related data to the app
 public protocol ProductDataServicing {
     /// Permanent observable emitting product arrays
@@ -110,10 +78,9 @@ public final class DataService {
     // MARK: Dependencies
     
     private let dataStore: DataStoring
-//    private let passportNetworking: MoyaProvider<PassportAPI>!
-//    private let bmxNetworking: MoyaProvider<BMXMusicServiceAPI>!
     private let kjvrvgNetworking: MoyaProvider<KJVRVGService>!
-    
+    private let reachability: RxReachable!
+
     // MARK: Fields
     
     private let bag = DisposeBag()
@@ -150,22 +117,16 @@ public final class DataService {
     private var _books = Field<[Book]>([])
     private var _persistedBooks = Field<[Book]>([])
     
-    // MARK: BMX
-    
-//    private var _supportedMusicDescriptions = Field<[MusicServiceDescription]>([])
-//    private var _musicServiceAvailabilities = Field<[MusicServiceAvailabilities.Availability]>([])
-    
     public init(
         dataStore: DataStoring,
-//                passportNetworking: MoyaProvider<PassportAPI>,
-//                bmxNetworking: MoyaProvider<BMXMusicServiceAPI>,
-                kjvrvgNetworking: MoyaProvider<KJVRVGService>) {
+        kjvrvgNetworking: MoyaProvider<KJVRVGService>,
+        reachability: RxReachable) {
         self.dataStore = dataStore
-//        self.passportNetworking = passportNetworking
-//        self.bmxNetworking = bmxNetworking
         self.kjvrvgNetworking = kjvrvgNetworking
+        self.reachability = reachability
         
-//        loadInMemoryCache()
+        reactToReachability()
+        //        loadInMemoryCache()
     }
     
     // MARK: Helpers
@@ -238,128 +199,6 @@ public final class DataService {
 //}
 
 
-//public enum BMXError: Error {
-//    case failedResponse
-//    case failedParse
-//    case unauthorized
-//}
-
-//extension DataService: BMXDataServicing {
-//    // BMXMusicServiceProvider
-//
-//    public var supportedMusicDescriptions: Observable<[MusicServiceDescription]> { return _supportedMusicDescriptions.asObservable() }
-//    public var musicServiceAvailabilities: Observable<[MusicServiceAvailabilities.Availability]> { return _musicServiceAvailabilities.asObservable() }
-//
-//    public func fetchSupportedServices() -> Observable<[MusicServiceDescription]> {
-//        return bmxNetworking.rx
-//            .request(.services)
-//            .parse(type: MusicServicesResponse.self)
-//            .map { $0.bmxServices }
-//            .do(onNext: { [unowned self] descriptions in
-//                self._supportedMusicDescriptions.value = descriptions
-//            })
-//            .asObservable()
-//            .flatMap { [unowned self] _ in self.supportedMusicDescriptions }
-//    }
-//
-//    public func fetchAvailableServices() -> Observable<[MusicServiceAvailabilities.Availability]> {
-//        return bmxNetworking.rx
-//            .request(.servicesAvailability)
-//            .parse(type: MusicServiceAvailabilities.self)
-//            .do(onNext: { [unowned self] availabilities in
-//                self._musicServiceAvailabilities.value = availabilities.availabilities
-//            })
-//            .asObservable()
-//            .flatMap { [unowned self] _ in self.musicServiceAvailabilities }
-//    }
-//
-//    public func fetchLogin(for service: MusicServiceAvailabilities.Availability) -> Single<MusicServiceLoginPage> {
-//        return assertingSessionWithToken
-//            .flatMap { [unowned self] session -> Single<Response> in
-//                self.bmxNetworking.rx.request(.loginPage(login: service.loginPage,
-//                                                         userToken: session.accessToken!,
-//                                                         bosePersonId: session.bosePersonId))
-//            }
-//            .parse(type: MusicServiceLoginPage.self)
-//    }
-//
-//    public func deleteAccount(_ account: MusicServiceAccount) -> Single<Void> {
-//        return assertingSessionWithToken
-//            .flatMap { [unowned self] session -> Single<Response> in
-//                self.bmxNetworking.rx.request(.delete(accountId: account.accountId,
-//                                                      userToken: session.accessToken!,
-//                                                      bosePersonId: session.bosePersonId))
-//            }
-//            .filterSuccessfulStatusCodes()
-//            .toVoid()
-//    }
-//
-//    // BMXMusicService
-//
-//    public func fetchCreds(for service: MusicService) -> Single<MusicServiceCreds> {
-//        guard let baseUrl = service.serviceDescription.baseUrl else {
-//            return Single.error(BMXDataServicingError.noBaseUrl(
-//                request: "fetchCreds - .token")
-//            )
-//        }
-//        return bmxNetworking.rx
-//            .request(
-//                .token(
-//                    refreshToken: service.account.tokens.refreshToken,
-//                    baseUrl: baseUrl,
-//                    link: service.serviceDescription.links.token?.href
-//                )
-//            )
-//            .parse(type: MusicServiceCreds.self)
-//    }
-//
-//    public func fetchNavigation(for service: MusicService, navigationLink: NavigationLink?) -> Single<NavigationSectionsContaining> {
-//        guard let baseUrl = service.serviceDescription.baseUrl else {
-//            return Single.error(BMXDataServicingError.noBaseUrl(
-//                request: "fetchNavigation - .navigate")
-//            )
-//        }
-//        var link = service.serviceDescription.links.navigate?.href
-//        if let navigate = navigationLink {
-//            link = navigate.href
-//        }
-//        return bmxNetworking.rx
-//            .request(
-//                .navigate(
-//                    token: service.account.tokens.accessToken,
-//                    baseUrl: baseUrl,
-//                    link: link
-//                )
-//            )
-//            .map { response -> NavigationSectionsContaining in
-//                if response.statusCode == 401 {
-//                    throw BMXError.unauthorized
-//                }
-//                guard let serializedJSONOptional = try? JSONSerialization.jsonObject(with: response.data),
-//                    let responseDictionary = serializedJSONOptional as? [String: Any],
-//                    let sectionsList = responseDictionary[NavigationKey.sectionsKey.rawValue] as? [Any]
-//                    else {
-//                        BoseLog.error("BMX malformed response, cannot convert to Dictionary.")
-//                        if let bmxResponse = response.data.utf8String { BoseLog.error(bmxResponse) }
-//                        throw BMXError.failedResponse
-//                }
-//
-//                guard let container =
-//                    NavigationSectionsContainer(
-//                        sectionsList: sectionsList,
-//                        source: service.serviceDescription.id.name,
-//                        sourceAccount: service.account.name
-//                    )
-//                    else {
-//                        BoseLog.error("BMX failed to parse response")
-//                        if let bmxResponse = response.data.utf8String { BoseLog.error(bmxResponse) }
-//                        throw BMXError.failedParse
-//                }
-//
-//                return container
-//        }
-//    }
-//}
 
 extension DataService: ProductDataServicing {
     public var books: Observable<[Book]> {
@@ -371,12 +210,7 @@ extension DataService: ProductDataServicing {
     }
 
     public func fetchAndObserveBooks() -> Observable<[Book]> {
-
-//        let moyaResponse = self.kjvrvgNetworking.rx.request()
         let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
-
-        
-//        let moyaResponse = self.kjvrvgNetworking.rx.request(.books(languageId: "el"))
         let bookResponse: Single<BookResponse> = moyaResponse.map { response -> BookResponse in
             try! response.map(BookResponse.self)
         }
@@ -385,47 +219,39 @@ extension DataService: ProductDataServicing {
         }
         .do(onNext: { products in
             self._books.value = products
-            self.dataStore.addBooks(books: products)
-                .subscribe(onSuccess: { persisted in
-                    self._persistedBooks.value = persisted
-                }, onError: { error in
-                    print("something bad happened: \(error)")
-                }).disposed(by: self.bag)
+            self._persistedBooks.value = products
+//            self.dataStore.addBooks(books: products)
+//                .subscribe(onSuccess: { persisted in
+//                    self._persistedBooks.value = persisted
+//                }, onError: { error in
+//                    print("something bad happened: \(error)")
+//                }).disposed(by: self.bag)
         })
         .asObservable()
         return books
-//        .flatMap { [unowned self] _ in self.products }
-        
-//            .map { moyaResponse in try! moyaResponse.map(BookResponse.self) }
-//            .flatMap({ bookResponse -> Single<[Book]> in
-//                bookResponse.result
-//            })
-//            .asObservable()
-
-        
-//            .flatMap { bookResponse in bookResponse.result }
-//            .do(onNext: { products in
-//                self._books.value = products
-//            })
-//            .asObservable()
-        
-        
-//            .parse(type: BookResponse.self)
-//            .flatMap { bookResponse in bookResponse.result }
-//            .do(onNext: { products in
-//                self._products.value = products
-//            })
-//            .asObservable()
-//            .flatMap { [unowned self] _ in self.products }
-
-//            .flatMap { [unowned self] in self.productsWithSettings(products: $0) }
-//            .flatMap { [unowned self] in self.replacePersistedProducts($0) }
-            
     }
     
     public func deletePersistedBooks() -> Single<Void> {
         return self.dataStore.deleteAllBooks()
     }
+    
+    // MARK: Private helpers
+    
+    private func reactToReachability() {
+        reachability.startListening().asObservable()
+            .subscribe(onNext: { networkStatus in
+                if networkStatus == .notReachable {
+                    // dispose of bag for current productService.userBooks.asObservable
+                    // observe the persistedUserBooks
+                    print("DataService reachability.notReachable")
+                } else if networkStatus == .reachable(.ethernetOrWiFi) {
+                    // dispose of bag for current productService.userBooks.asObservable
+                    // observe the persistedUserBooks
+                    print("DataService reachability.reachable")
+                }
+            }).disposed(by: bag)
+    }
+
 //    public func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void> {
 //        return passportNetworking.rx
 //            .request(.updateProductSettings(productId: productId, settings: settings))

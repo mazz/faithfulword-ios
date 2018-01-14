@@ -35,10 +35,15 @@ internal final class AppDependencyModule {
         // create a new container
         let container = Container()
         
+        //        container.register(DataStoring.self) { resolver in
+        //            return DataStore()
+        //        }
+        //
         container.register(DataService.self) { resolver in
             return DataService(dataStore: DataStore(),
-                kjvrvgNetworking: MoyaProvider<KJVRVGService>())
-        }.inObjectScope(.container)
+                               kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
+                               reachability: resolver.resolve(RxReachable.self)!)
+            }.inObjectScope(.container)
         
         container.register(ProductServicing.self) { resolver in
             return ProductService(dataService: resolver.resolve(DataService.self)!)
@@ -61,8 +66,8 @@ internal final class AppDependencyModule {
 //            GigyaBridge()
 //        }
         
-        attachAppLevelDependencies(to: container)
         attachUtilityDependencies(to: container)
+        attachAppLevelDependencies(to: container)
         
 //        attachInitialFlowDependencies(to: container)
         attachMainFlowDependencies(to: container)
@@ -155,8 +160,7 @@ internal final class AppDependencyModule {
         }
         container.register(MainViewModel.self) { resolver in
             MainViewModel(
-                productService: resolver.resolve(ProductServicing.self)!
-            )
+                productService: resolver.resolve(ProductServicing.self)!)
         }
         container.register(MediaListingViewModel.self) { resolver in
             MediaListingViewModel(

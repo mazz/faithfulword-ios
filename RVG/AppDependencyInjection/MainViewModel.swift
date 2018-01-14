@@ -2,16 +2,9 @@ import RxSwift
 import Alamofire
 
 internal final class MainViewModel {
+    
     // MARK: Fields
     
-//    internal var books: Observable<[Book]> {
-//        return productService.userBooks.asObservable()
-//    }
-
-//    internal var persistedBooks: Observable<[Book]> {
-//        return productService.persistedUserBooks.asObservable()
-//    }
-
     public func section(at index: Int) -> BooksSectionViewModel {
         return sections.value[index]
     }
@@ -38,21 +31,21 @@ internal final class MainViewModel {
     
     private let networkStatus = PublishSubject<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>()
 
+    
     // MARK: Dependencies
+    
     private let productService: ProductServicing!
-    private let reachability: RxReachable!
     
     private var bag = DisposeBag()
 
-    internal init(productService: ProductServicing,
-                  reachability: RxReachable) {
+    internal init(productService: ProductServicing) {
         self.productService = productService
-        self.reachability = reachability
         
-        reactToReachability()
         setupDatasource()
     }
     
+    // MARK: Private helpers
+
     private func setupDatasource() {
         // assume we are online and observe userBooks by default
         productService.userBooks.asObservable()
@@ -62,22 +55,5 @@ internal final class MainViewModel {
                     BooksSectionViewModel(type: .book, items: names)
                 ]
             }.disposed(by: bag)
-    }
-
-    // MARK: Private helpers
-
-    private func reactToReachability() {
-        reachability.startListening().asObservable()
-            .subscribe(onNext: { networkStatus in
-                if networkStatus == .notReachable {
-                    // dispose of bag for current productService.userBooks.asObservable
-                    // observe the persistedUserBooks
-                    print("MainViewModel reachability.notReachable")
-                } else if networkStatus == .reachable(.ethernetOrWiFi) {
-                    // dispose of bag for current productService.userBooks.asObservable
-                    // observe the persistedUserBooks
-                    print("MainViewModel reachability.reachable")
-                }
-            }).disposed(by: bag)
     }
 }
