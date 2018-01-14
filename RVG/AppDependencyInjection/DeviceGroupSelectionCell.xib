@@ -40,11 +40,8 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="_GroupSelection_" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B64-Nu-IJo" userLabel="groupSelection">
-                    <rect key="frame" x="60" y="15" width="188" height="45"/>
+                    <rect key="frame" x="60" y="15" width="167" height="45"/>
                     <accessibility key="accessibilityConfiguration" identifier="groupSelection"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="188" id="y34-RC-g0H"/>
-                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -58,10 +55,10 @@
                 <constraint firstItem="n8w-3S-pox" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="IeC-Nk-fhq"/>
                 <constraint firstItem="B64-Nu-IJo" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="J3J-4a-3um"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="CCy-3z-JRs" secondAttribute="trailing" constant="20" id="JjV-VT-UYU"/>
-                <constraint firstItem="B64-Nu-IJo" firstAttribute="leading" secondItem="Qqa-0v-ajY" secondAttribute="trailing" constant="10" id="Mur-cw-1IO"/>
                 <constraint firstItem="B64-Nu-IJo" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="15" id="Mwv-ad-ixW"/>
-                <constraint firstItem="CCy-3z-JRs" firstAttribute="leading" secondItem="B64-Nu-IJo" secondAttribute="trailing" constant="8" id="SIK-vl-XM2"/>
+                <constraint firstItem="B64-Nu-IJo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="aBz-24-TUP"/>
                 <constraint firstAttribute="trailing" secondItem="n8w-3S-pox" secondAttribute="trailing" id="lWN-YN-gz0"/>
+                <constraint firstItem="B64-Nu-IJo" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="60" id="sbB-nx-CmX"/>
                 <constraint firstItem="Qqa-0v-ajY" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="vA1-AL-9hR"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

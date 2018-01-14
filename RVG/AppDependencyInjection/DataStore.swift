@@ -207,14 +207,6 @@ extension DataStore: DataStoring {
     }
     
     public func addBooks(books: [Book]) -> Single<[Book]> {
-        // database write happens in 3 steps
-        // 1) get a bose person from database or add one if it doesn't exist
-        // 2) get products from bose person
-        // 3) remove duplicate product in products and add updated product
-//        let realmInstance = realm()
-        
-//        print("self.dbQueue: \(self.dbQueue)")
-        
         return Single.create { [unowned self] single in
             do {
                 for book in books {
@@ -238,29 +230,6 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-//        return Single.create { [unowned self] single in
-//            do {
-//                try realmInstance.write {
-//                    var persistedPerson = self.getPersistedPerson(bosePersonId: boseSession.bosePersonId)
-//                    if persistedPerson == nil {
-//                        persistedPerson = PersistedBosePerson(session: boseSession)
-//                        realmInstance.add(persistedPerson!)
-//                    }
-//                    let associatedProducts = persistedPerson!.associatedProducts
-//                    for product in products {
-//                        let persistedProduct = PersistedProduct(userProduct: product)
-//                        associatedProducts.append(persistedProduct)
-//                    }
-//                    single(.success(products))
-//                }
-//            } catch let error {
-//                BoseLog.error("add product error: \(error)")
-//                single(.error(error))
-//
-//            }
-//            return Disposables.create {}
-//        }
-    
     // This should follow the pattern of returning the object it adds in case it gets sanitized or something.
 //    func addPerson(boseSession: BoseSession) -> Single<BoseSession> {
 //        let realmInstance = realm()

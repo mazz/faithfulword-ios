@@ -24,6 +24,8 @@
 		4CA31F9A2009E00900A94101 /* MediaListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F992009E00900A94101 /* MediaListingViewController.swift */; };
 		4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */; };
 		4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */; };
+		4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */; };
+		4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */; };
 		4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */; };
 		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
 		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
@@ -158,6 +160,8 @@
 		4CA31F992009E00900A94101 /* MediaListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingViewController.swift; sourceTree = "<group>"; };
 		4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaListingViewModel.swift; sourceTree = "<group>"; };
 		4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingSectionViewModel.swift; sourceTree = "<group>"; };
+		4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestedNameCell.xib; sourceTree = "<group>"; };
+		4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedNameCell.swift; sourceTree = "<group>"; };
 		4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
@@ -362,6 +366,8 @@
 				4C3E87291FFDAFAF0037C22E /* DataStore.swift */,
 				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
 				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
+				4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */,
+				4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */,
 				4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */,
 				4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */,
 				4C381D8D200839A100FD2DEA /* MainViewController.swift */,
@@ -743,6 +749,7 @@
 				4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */,
 				4CFB84F92005AE1A00FEBB53 /* SettingDrillInCellStacked.xib in Resources */,
 				4CFB84FE2005AEEB00FEBB53 /* Root.storyboard in Resources */,
+				4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
 				4CFB84FA2005AE1A00FEBB53 /* SettingDrillInCell.xib in Resources */,
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
@@ -926,6 +933,7 @@
 				68B2B1051F57B70600D986D4 /* BookTitle.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
 				68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */,
+				4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */,
 				4CCE8C6B1FF4B2A000AFBAF2 /* UIMaking.swift in Sources */,
 				68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,

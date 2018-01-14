@@ -1,22 +1,26 @@
 import RxSwift
-//import BoseMobileModels
-//import BoseMobileCore
-//import BoseMobilePresentation
-//import BoseMobileCommunication
+import Alamofire
 
 internal final class MainViewModel {
     // MARK: Fields
     
-    internal var books: Observable<[Book]> {
-        return productService.userBooks.asObservable()
-    }
+//    internal var books: Observable<[Book]> {
+//        return productService.userBooks.asObservable()
+//    }
 
-    internal var persistedBooks: Observable<[Book]> {
-        return productService.persistedUserBooks.asObservable()
+//    internal var persistedBooks: Observable<[Book]> {
+//        return productService.persistedUserBooks.asObservable()
+//    }
+
+    public func section(at index: Int) -> BooksSectionViewModel {
+        return sections.value[index]
+    }
+    
+    public func item(at indexPath: IndexPath) -> BooksItemType {
+        return section(at: indexPath.section).items[indexPath.item]
     }
 
     public private(set) var sections = Field<[BooksSectionViewModel]>([])
-
     public let selectItemEvent = PublishSubject<IndexPath>()
 
     public var drillInEvent: Observable<BooksDrillInType> {
@@ -32,58 +36,48 @@ internal final class MainViewModel {
         }
     }
     
+    private let networkStatus = PublishSubject<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>()
+
     // MARK: Dependencies
     private let productService: ProductServicing!
-    private let bag = DisposeBag()
+    private let reachability: RxReachable!
+    
+    private var bag = DisposeBag()
 
-    internal init(productService: ProductServicing) {
+    internal init(productService: ProductServicing,
+                  reachability: RxReachable) {
         self.productService = productService
+        self.reachability = reachability
+        
+        reactToReachability()
         setupDatasource()
-
-//        sections.value = sectionViewModels
     }
     
-//    private var sectionViewModels: Observable<[BooksSectionViewModel]> {
-//        return books.map { books in
-//            let sectionViewModels = [
-//                BooksSectionViewModel(type: .book,
-//                                     items: books.map { BookItemType.action(name: $0.title) })
-//            ]
-//            return sectionViewModels
-//        }
-//    }
-    
     private func setupDatasource() {
-        // TODO: CASTLE-4739 - JT/RL Figure out proper mapping between connection type, product, and regime (Rio or Riv)
-//        let productType: ProductType = device.discoveredDevice.connectionType == .webSocket ? .eddie : .goodyear
-        productService.persistedUserBooks.asObservable()
+        // assume we are online and observe userBooks by default
+        productService.userBooks.asObservable()
             .map { $0.map { BooksItemType.drillIn(type: .defaultType, iconName: "book", title: $0.localizedTitle, showBottomSeparator: true) } }
             .next { [unowned self] names in
                 self.sections.value = [
                     BooksSectionViewModel(type: .book, items: names)
                 ]
             }.disposed(by: bag)
-//            .map { $0.map { NameDeviceItemType.suggestedName($0) } }
-//            .next { [unowned self] names in
-//                self.sections.value = [NameDeviceSectionViewModel(type: .device, items: []),
-//                                       NameDeviceSectionViewModel(type: .suggestedNames, items: names),
-//                                       NameDeviceSectionViewModel(type: .customName, items: [.customName])]
-//            }.disposed(by: bag)
     }
-    
-//    private var sectionViewModels: [BooksSectionViewModel] {
-//        var sectionViewModels = [
-//            BooksSectionViewModel(type: .book, items: [
-//                .action(.name)
-//                ])
-//        ]
-//        #if DEBUG
-//            let debugSection = BooksSectionViewModel(type: .debug, items: [
-//
-//                ])
-//            sectionViewModels.append(debugSection)
-//        #endif
-//        return sectionViewModels
-//    }
 
+    // MARK: Private helpers
+
+    private func reactToReachability() {
+        reachability.startListening().asObservable()
+            .subscribe(onNext: { networkStatus in
+                if networkStatus == .notReachable {
+                    // dispose of bag for current productService.userBooks.asObservable
+                    // observe the persistedUserBooks
+                    print("MainViewModel reachability.notReachable")
+                } else if networkStatus == .reachable(.ethernetOrWiFi) {
+                    // dispose of bag for current productService.userBooks.asObservable
+                    // observe the persistedUserBooks
+                    print("MainViewModel reachability.reachable")
+                }
+            }).disposed(by: bag)
+    }
 }
