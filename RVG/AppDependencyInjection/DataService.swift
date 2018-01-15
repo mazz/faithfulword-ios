@@ -129,18 +129,15 @@ public final class DataService {
         self.reachability = reachability
         
         reactToReachability()
-        //        loadInMemoryCache()
+        loadInMemoryCache()
     }
     
     // MARK: Helpers
     
-//    private func loadInMemoryCache() {
-//        loadSession()
-//            .asObservable()
-//            .filterNils()
-//            .flatMap { [unowned self] in self.loadProducts(with: $0) }
-//            .subscribeAndDispose(by: bag)
-//    }
+    private func loadInMemoryCache() {
+        self.loadBooks()
+            .subscribeAndDispose(by: bag)
+    }
 }
 
 //extension DataService: AccountDataServicing {
@@ -209,7 +206,7 @@ extension DataService: ProductDataServicing {
         switch self.networkStatus.value {
             case .notReachable:
                 print("DataService reachability.notReachable")
-                return _persistedBooks.asObservable()
+                return _books.asObservable()
             case .reachable(_):
                 print("DataService reachability.reachable")
                 return _books.asObservable()
@@ -225,21 +222,13 @@ extension DataService: ProductDataServicing {
 
     public func fetchAndObserveBooks() -> Observable<[Book]> {
         return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
-        .map { response -> BookResponse in
-            try! response.map(BookResponse.self)
-        }
-        .flatMap { bookResponse -> Single<[Book]> in
-            Single.just(bookResponse.result)
-        }
+//            .catchError { _ in Single.just(product) }
+        .map { response -> BookResponse in try! response.map(BookResponse.self) }
+        .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
+        .flatMap { [unowned self] in self.replacePersistedBooks($0) }
         .do(onNext: { products in
             self._books.value = products
 //            self._persistedBooks.value = products
-            self.dataStore.addBooks(books: products)
-                .subscribe(onSuccess: { persisted in
-                    self._persistedBooks.value = persisted
-                }, onError: { error in
-                    print("something bad happened: \(error)")
-                }).disposed(by: self.bag)
         })
         .asObservable()
     }
@@ -249,6 +238,26 @@ extension DataService: ProductDataServicing {
     }
     
     // MARK: Private helpers
+    
+    private func replacePersistedBooks(_ books: [Book]) -> Single<[Book]> {
+        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
+        return dataStore.deleteAllBooks()
+            .flatMap { [unowned self] in self.dataStore.addBooks(books: books) }
+    }
+
+    private func loadBooks() -> Observable<[Book]> {
+        return dataStore.fetchBooks()
+//            .asObservable()
+            .do(
+                onNext: { [weak self] books in
+                    self?._books.value = books
+                },
+                onError: { [weak self] error in
+                    print("error: \(error.localizedDescription)")
+                    self?._books.value = []
+            })
+            .asObservable()
+    }
     
     private func reactToReachability() {
         reachability.startListening().asObservable()

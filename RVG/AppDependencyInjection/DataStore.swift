@@ -35,6 +35,8 @@ public protocol DataStoring {
     /// Write a list of products to Realm database
     func addBooks(books: [Book]) -> Single<[Book]>
     
+    func fetchBooks() -> Single<[Book]>
+    
     func deleteAllBooks() -> Single<Void>
     
     /// Add or update a bose person to Realm database
@@ -50,6 +52,7 @@ public final class DataStore {
     public var dbPool: DatabasePool {
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! as NSString
         let databasePath = documentsPath.appendingPathComponent("db.sqlite")
+        print("databasePath: \(databasePath)")
         return try! openDatabase(atPath: databasePath)
     }
     
@@ -59,13 +62,13 @@ public final class DataStore {
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("v1.2") { db in
-            try! db.create(table: "book") { t in
-                print("created: \(t)")
-                t.column("id", .integer).primaryKey()
-                t.column("bid", .text)
-                t.column("title", .text)
-                t.column("languageId", .text)
-                t.column("localizedTitle", .text)
+            try! db.create(table: "book") { bookTable in
+                print("created: \(bookTable)")
+                bookTable.column("id", .integer).primaryKey()
+                bookTable.column("bid", .text)
+                bookTable.column("title", .text)
+                bookTable.column("languageId", .text)
+                bookTable.column("localizedTitle", .text)
             }
         }
         return migrator
@@ -186,7 +189,50 @@ extension DataStore: DataStoring {
 //            return Disposables.create {}
 //        }
 //    }
+    
+    public func addBooks(books: [Book]) -> Single<[Book]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
 
+                for book in books {
+                    print("book: \(book)")
+                    //            try! self.dbQueue.inDatabase { db in
+                        var book = Book(id: nil,
+                                        bid: book.bid,
+                                        title: book.title,
+                                        languageId: book.languageId,
+                                        localizedTitle: book.localizedTitle)
+                    try book.insert(db)
+                    }
+                    return .commit
+                }
+                single(.success(books))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func fetchBooks() -> Single<[Book]> {
+        return Single.create { [unowned self] single in
+            do {
+                var books: [Book] = []
+                try self.dbPool.read { db in
+                    books = try Book.fetchAll(db)
+                }
+                single(.success(books))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    
     public func deleteAllBooks() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
@@ -206,30 +252,8 @@ extension DataStore: DataStoring {
         }
     }
     
-    public func addBooks(books: [Book]) -> Single<[Book]> {
-        return Single.create { [unowned self] single in
-            do {
-                for book in books {
-                    print("book: \(book)")
-                    //            try! self.dbQueue.inDatabase { db in
-                    try self.dbPool.writeInTransaction { db in
-                        var book = Book(id: nil,
-                                        bid: book.bid,
-                                        title: book.title,
-                                        languageId: book.languageId,
-                                        localizedTitle: book.localizedTitle)
-                        try book.insert(db)
-                        return .commit
-                    }
-                }
-                single(.success(books))
-            } catch {
-                print(error)
-                single(.error(error))
-            }
-            return Disposables.create {}
-        }
-    }
+    
+    
     // This should follow the pattern of returning the object it adds in case it gets sanitized or something.
 //    func addPerson(boseSession: BoseSession) -> Single<BoseSession> {
 //        let realmInstance = realm()
