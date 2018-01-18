@@ -3,45 +3,45 @@ import Moya
 import L10n_swift
 import Alamofire
 
-//private enum DataServiceError: Error {
-//    case noSession
-//    case noAccessToken
-//}
+private enum DataServiceError: Error {
+    case noSession
+    case noAccessToken
+}
 
-/// Provides account related data to the app
-//public protocol AccountDataServicing {
-//
-//    /// Permanent observable providing session objects.
-//    var session: Observable<BoseSession?> { get }
-//
-//    /// Permanent observable providing a list of MusicServiceAccounts.
+// Provides account related data to the app
+public protocol AccountDataServicing {
+
+    /// Permanent observable providing session objects.
+    var session: Observable<String?> { get }
+
+    /// Permanent observable providing a list of MusicServiceAccounts.
 //    var musicServiceAccounts: Observable<[MusicServiceAccount]> { get }
-//
-//    /// Downloads the user's session from Passport.
-//    ///
-//    /// - Parameters:
-//    ///   - user: The Gigya user object for which the session is required.
-//    ///   - idToken: The Gigya token obtained for the user.
-//    /// - Returns: Single with the session object.
-//    func fetchSession(for user: GigyaUser, idToken: String) -> Single<BoseSession>
-//
-//    /// Delete's the user's session from disk.
-//    ///
-//    /// - Returns: Single indicating success or failure.
+
+    /// Downloads the user's session from Passport.
+    ///
+    /// - Parameters:
+    ///   - user: The Gigya user object for which the session is required.
+    ///   - idToken: The Gigya token obtained for the user.
+    /// - Returns: Single with the session object.
+    func fetchSession() -> Single<String>
+
+    /// Delete's the user's session from disk.
+    ///
+    /// - Returns: Single indicating success or failure.
 //    @discardableResult func deleteSession() -> Single<Void>
-//
+
 //    func fetchRemoteServiceMap(for user: GigyaUser) -> Single<RemoteServiceMap>
-//
-//    /// Fetch the account object for a given BosePerson from Passport.
-//    ///
-//    /// - Returns: Single with the account info object.
+
+    /// Fetch the account object for a given BosePerson from Passport.
+    ///
+    /// - Returns: Single with the account info object.
 //    func fetchAccountInfo() -> Single<PassportAccountInfo>
-//
-//    /// Fetches MusicServiceAccounts from Passport.
-//    ///
-//    /// - Returns: Either a permanent observable of MusicServiceAccounts or an erroring observable based on the success of the routine. Waits until the fetch routing completes before emitting anything.
+
+    /// Fetches MusicServiceAccounts from Passport.
+    ///
+    /// - Returns: Either a permanent observable of MusicServiceAccounts or an erroring observable based on the success of the routine. Waits until the fetch routing completes before emitting anything.
 //    func fetchMusicServiceAccounts() -> Observable<[MusicServiceAccount]>
-//}
+}
 
 /// Provides product related data to the app
 public protocol ProductDataServicing {
@@ -90,7 +90,7 @@ public final class DataService {
     
     // MARK: Session
     
-//    private var _session = Field<BoseSession?>(nil)
+    private var _session = Field<String?>(nil)
 //    private var assertingSession: Single<BoseSession> {
 //        guard let value = _session.value else {
 //            assertionFailure("No session. Must call this function after login so a session exists.")
@@ -140,7 +140,16 @@ public final class DataService {
     }
 }
 
-//extension DataService: AccountDataServicing {
+extension DataService: AccountDataServicing {
+    public func fetchSession() -> Single<String> {
+        return Single.just("a-fake-session")
+            .flatMap { [unowned self] in
+                self.dataStore.addUser(session: $0) }
+            .do(onNext: { [unowned self] session in
+                self._session.value = session
+            })
+    }
+    
 //    public func fetchRemoteServiceMap(for user: GigyaUser) -> Single<RemoteServiceMap> {
 //        return galapagosNetworking.rx.request(.remoteServices(gigyaUserId: user.uid))
 //            .parse(type: RemoteServiceMap.self)
@@ -148,10 +157,10 @@ public final class DataService {
 //                BoseLog.debug("RemoteServiceMap: \(map)")
 //            })
 //    }
-//
-//    public var session: Observable<BoseSession?> { return _session.asObservable() }
+
+    public var session: Observable<String?> { return _session.asObservable() }
 //    public var musicServiceAccounts: Observable<[MusicServiceAccount]> { return _musicServiceAccounts.asObservable() }
-//
+
 //    public func fetchSession(for user: GigyaUser, idToken: String) -> Single<BoseSession> {
 //        return passportNetworking.rx.request(.tokens(user: user, idToken: idToken))
 //            .parse(type: PassportAccountSession.self)
@@ -160,12 +169,12 @@ public final class DataService {
 //                self._session.value = session
 //            })
 //    }
-//
+
 //    public func deleteSession() -> Single<Void> {
 //        self._session.value = nil
-//        return dataStore.deleteBosePerson()
+//        return dataStore.deletePersistedUser()
 //    }
-//
+
 //    public func fetchAccountInfo() -> Single<PassportAccountInfo> {
 //        return assertingSession
 //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accountInfo(bosePersonId: $0.bosePersonId)) }
@@ -182,21 +191,21 @@ public final class DataService {
 //            .asObservable()
 //            .flatMap { [unowned self] _ in self.musicServiceAccounts }
 //    }
-//
-//    // MARK: Helpers
-//
-//    private func loadSession() -> Single<BoseSession?> {
-//        return dataStore.latestCachedUser(boseSessionFactory: PassportAccountSession.init)
-//            .do(
-//                onNext: { [unowned self] session in
-//                    self._session.value = session
-//                },
-//                onError: { [unowned self] error in
-//                    BoseLog.error(error.localizedDescription)
-//                    self._session.value = nil
-//            })
-//    }
-//}
+
+    // MARK: Helpers
+
+    private func loadSession() -> Single<String?> {
+        return dataStore.latestCachedUser()
+            .do(
+                onNext: { [unowned self] session in
+                    self._session.value = session
+                },
+                onError: { [unowned self] error in
+                    print(error.localizedDescription)
+                    self._session.value = nil
+            })
+    }
+}
 
 
 

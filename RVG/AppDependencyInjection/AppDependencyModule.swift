@@ -39,15 +39,37 @@ internal final class AppDependencyModule {
         //            return DataStore()
         //        }
         //
+
+        container.register(LoginSequencer.self) { resolver in
+
+        
         container.register(DataService.self) { resolver in
             return DataService(dataStore: DataStore(),
                                kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
                                reachability: resolver.resolve(RxReachable.self)!)
             }.inObjectScope(.container)
+
+            
+            return LoginSequencer(dataService: resolver.resolve(DataService.self)!)
+
         
+//            return DataService(dataStore: DataStore(),
+//                               kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
+//                               reachability: resolver.resolve(RxReachable.self)!)
+            }.inObjectScope(.container)
+
+            
+            
         container.register(ProductServicing.self) { resolver in
             return ProductService(dataService: resolver.resolve(DataService.self)!)
             }.inObjectScope(.container)
+        
+        container.register(AccountServicing.self) { resolver in
+            return AccountService(loginSequencer: resolver.resolve(LoginSequencer.self)!,
+                                  dataService: resolver.resolve(DataService.self)!)
+//            return ProductService(dataService: resolver.resolve(DataService.self)!)
+            }.inObjectScope(.container)
+
 
 //        container.register(GospelServicing.self) { resolver in
 //            return GospelService(dataService: resolver.resolve(DataService.self)!)
@@ -78,6 +100,17 @@ internal final class AppDependencyModule {
         return container
     }
     
+    private static func attachUtilityDependencies(to container: Container) {
+        container.register(RxReachable.self) { _ in
+            RxReachability(
+                reachabilityManager: Alamofire.NetworkReachabilityManager(host: "www.apple.com")
+            )
+        }
+        //        container.register(Analytics.self) { _ in
+        //            Analytics()
+        //        }
+    }
+
     private static func attachAppLevelDependencies(to container: Container) {
         container.register(AppInfoProviding.self) { _ in
             AppInfoProvider()
@@ -99,7 +132,7 @@ internal final class AppDependencyModule {
 //                resettableAccountSetupCoordinator: Resettable {
 //                    resolver.resolve(AccountSetupCoordinator.self)!
 //                },
-//                accountService: resolver.resolve(AccountServicing.self)!,
+                accountService: resolver.resolve(AccountServicing.self)!,
                 productService: resolver.resolve(ProductServicing.self)!
             )
         }
@@ -109,16 +142,6 @@ internal final class AppDependencyModule {
         }
     }
     
-    private static func attachUtilityDependencies(to container: Container) {
-        container.register(RxReachable.self) { _ in
-            RxReachability(
-                reachabilityManager: Alamofire.NetworkReachabilityManager(host: "www.apple.com")
-            )
-        }
-//        container.register(Analytics.self) { _ in
-//            Analytics()
-//        }
-    }
     
 //    private static func attachInitialFlowDependencies(to container: Container) {
 //        container.register(InitialCoordinator.self) { resolver in

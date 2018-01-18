@@ -28,7 +28,7 @@ internal class AppCoordinator {
     private let resettableMainCoordinator: Resettable<MainCoordinator>
     private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
 //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
-//    private let accountService: AccountServicing
+    private let accountService: AccountServicing
     private let productService: ProductServicing
     
     internal init(uiFactory: AppUIMaking,
@@ -36,7 +36,7 @@ internal class AppCoordinator {
                   resettableMainCoordinator: Resettable<MainCoordinator>,
                   resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
 //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
-//                  accountService: AccountServicing,
+                  accountService: AccountServicing,
                   productService: ProductServicing
         ) {
         self.uiFactory = uiFactory
@@ -44,7 +44,7 @@ internal class AppCoordinator {
         self.resettableMainCoordinator = resettableMainCoordinator
         self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
 //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
-//        self.accountService = accountService
+        self.accountService = accountService
         self.productService = productService
     }
 }
@@ -62,20 +62,20 @@ extension AppCoordinator: NavigationCoordinating {
         
         // while we do not require auth,
         // just check for user books for now
-        self.checkUserBooks()
+//        self.checkUserBooks()
 
         // On Logout, go back to the Initial flow
-//        accountService.authState
-//            // Event only fire on main thread
-//            .observeOn(MainScheduler.instance)
-//            .subscribe(onNext: { [unowned self] authState in
-//                if authState == .authenticated {
-//                    self.checkUserBooks()
-//                } else if authState == .unauthenticated {
-//                    self.swapInInitialFlow()
-//                }
-//            })
-//            .disposed(by: bag)
+        accountService.authState
+            // Event only fire on main thread
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] authState in
+                if authState == .authenticated {
+                    self.checkUserBooks()
+                } else if authState == .unauthenticated {
+                    self.swapInInitialFlow()
+                }
+            })
+            .disposed(by: bag)
     }
     
     private func checkUserBooks() {
@@ -120,11 +120,18 @@ extension AppCoordinator: NavigationCoordinating {
             self.rootViewController.plant(splashScreenFlowViewController)
         }, completion: { [unowned self] _ in
             self.startHandlingAuthEvents()
-//            self.accountService.start()
+            self.accountService.start()
+            
+            // bootstrap login/fetching of session HERE because we have no login UI
+            self.accountService.startLoginFlow()
+                .asObservable()
+                .subscribeAndDispose(by: self.bag)
+            
         }, context: .other)
     }
     
     private func swapInAccountSetupFlow() {
+        print("swapInAccountSetupFlow")
 //        resettableAccountSetupCoordinator.value.flow(with: { [unowned self] accountSetupNavigationController in
 //            self.rootViewController.plant(accountSetupNavigationController)
 //        }, completion: { [unowned self] _ in

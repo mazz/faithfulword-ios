@@ -28,7 +28,10 @@ import GRDB
 /// Protocol for storing and retrieving data from Realm database
 public protocol DataStoring {
     /// Fetch the cached bose person in Realm database
-//    func latestCachedUser(boseSessionFactory: @escaping BoseSessionFactory) -> Single<BoseSession?>
+    func latestCachedUser() -> Single<String?>
+    
+    func addUser(session: String) -> Single<String>
+    
     /// Fetch a list of products associated to a bose person from Realm database, returns nil if bose person not found
 //    func fetchAccountDevices(bosePersonId: String) -> Single<[UserProduct]>
     
@@ -62,13 +65,21 @@ public final class DataStore {
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("v1.2") { db in
+            try! db.create(table: "user") { userTable in
+                print("created: \(userTable)")
+                userTable.column("userId", .integer).primaryKey()
+                userTable.column("name", .text)
+                userTable.column("session", .text)
+                userTable.column("pushNotifications", .boolean)
+            }
             try! db.create(table: "book") { bookTable in
                 print("created: \(bookTable)")
-                bookTable.column("id", .integer).primaryKey()
+                bookTable.column("bookId", .integer).primaryKey()
                 bookTable.column("bid", .text)
                 bookTable.column("title", .text)
                 bookTable.column("languageId", .text)
                 bookTable.column("localizedTitle", .text)
+                bookTable.column("userId", .integer).references("user", onDelete: .cascade)
             }
         }
         return migrator
@@ -143,14 +154,44 @@ public final class DataStore {
 
 // MARK: <DataStoring>
 extension DataStore: DataStoring {
-//    public func latestCachedUser(boseSessionFactory: @escaping BoseSessionFactory) -> Single<BoseSession?> {
+    
+    //MARK: User
+    
+    public func latestCachedUser() -> Single<String?> {
 //        guard let boseUser = getPersistedPerson(bosePersonId: nil) else { return Single.just(nil) }
 //
 //        return Single.just(boseSessionFactory(boseUser.accessToken,
 //                                              BoseSessionTokenType(rawValue: boseUser.tokenType ?? ""),
 //                                              boseUser.expiresIn.value, boseUser.refreshToken,
 //                                              boseUser.personId))
-//    }
+        
+        return Single.just("")
+    }
+    
+    public func addUser(session: String) -> Single<String> {
+        return Single.create { [unowned self] single in
+            var resultSession: String = session
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    if try User.fetchCount(db) == 0 {
+                        var user = User(userId: nil,
+                                        name: "john hancock",
+                                        session: session,
+                                        pushNotifications: false)
+                        try user.insert(db)
+                        resultSession = user.session
+                    }
+                    return .commit
+                }
+                single(.success(resultSession))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+//        return Single.just("")
+    }
     
 //    public func fetchAccountDevices(bosePersonId: String) -> Single<[UserProduct]> {
 //        return Single.create { [unowned self] single in
@@ -190,20 +231,25 @@ extension DataStore: DataStoring {
 //        }
 //    }
     
+    // MARK: Books
+    
+    
     public func addBooks(books: [Book]) -> Single<[Book]> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-
-                for book in books {
-                    print("book: \(book)")
-                    //            try! self.dbQueue.inDatabase { db in
-                        var book = Book(id: nil,
-                                        bid: book.bid,
-                                        title: book.title,
-                                        languageId: book.languageId,
-                                        localizedTitle: book.localizedTitle)
-                    try book.insert(db)
+                    if let user = try User.fetchOne(db) {
+                        for book in books {
+                            print("book: \(book)")
+                            //            try! self.dbQueue.inDatabase { db in
+                            var book = Book(bookId: nil,
+                                            userId: user.userId,
+                                            bid: book.bid,
+                                            title: book.title,
+                                            languageId: book.languageId,
+                                            localizedTitle: book.localizedTitle)
+                            try book.insert(db)
+                        }
                     }
                     return .commit
                 }

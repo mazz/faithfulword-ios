@@ -11,6 +11,9 @@
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
 		4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */; };
 		4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3E87291FFDAFAF0037C22E /* DataStore.swift */; };
+		4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5466200EF7D30038B265 /* LoginSequencer.swift */; };
+		4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5468200EF7E60038B265 /* AccountService.swift */; };
+		4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D546A200EF80F0038B265 /* ApplicationUser.swift */; };
 		4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */; };
 		4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */; };
 		4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */; };
@@ -26,6 +29,7 @@
 		4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */; };
 		4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */; };
 		4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */; };
+		4CA31FAC200E3C0900A94101 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FAB200E3C0900A94101 /* User.swift */; };
 		4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */; };
 		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
 		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
@@ -147,6 +151,9 @@
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceGroupSelectionCell.swift; sourceTree = "<group>"; };
 		4C3E87291FFDAFAF0037C22E /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		4C7D5466200EF7D30038B265 /* LoginSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequencer.swift; sourceTree = "<group>"; };
+		4C7D5468200EF7E60038B265 /* AccountService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountService.swift; sourceTree = "<group>"; };
+		4C7D546A200EF80F0038B265 /* ApplicationUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationUser.swift; sourceTree = "<group>"; };
 		4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Single+Utilities.swift"; sourceTree = "<group>"; };
 		4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Parsing.swift"; sourceTree = "<group>"; };
@@ -162,6 +169,7 @@
 		4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestedNameCell.xib; sourceTree = "<group>"; };
 		4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedNameCell.swift; sourceTree = "<group>"; };
+		4CA31FAB200E3C0900A94101 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
@@ -349,9 +357,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4C7D5465200EF7A90038B265 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				4C7D5468200EF7E60038B265 /* AccountService.swift */,
+				4C7D5466200EF7D30038B265 /* LoginSequencer.swift */,
+				4C7D546A200EF80F0038B265 /* ApplicationUser.swift */,
+			);
+			path = Account;
+			sourceTree = "<group>";
+		};
 		4CCE8C631FF4AD7B00AFBAF2 /* AppDependencyInjection */ = {
 			isa = PBXGroup;
 			children = (
+				4C7D5465200EF7A90038B265 /* Account */,
 				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
 				4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */,
 				4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */,
@@ -560,6 +579,7 @@
 			children = (
 				689A05441ED27A9E00D3232D /* Bible.swift */,
 				681E117E1ED138DA00B028DD /* Book.swift */,
+				4CA31FAB200E3C0900A94101 /* User.swift */,
 				681E11801ED13B1400B028DD /* BookResponse.swift */,
 				68B2B1031F57B70600D986D4 /* BookTitle.swift */,
 				68B2B1041F57B70600D986D4 /* BookTitleResponse.swift */,
@@ -874,11 +894,13 @@
 				683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */,
 				4CFB85042005B92E00FEBB53 /* UIView+Instantiating.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
+				4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */,
 				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
 				4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */,
 				4CFB85022005B66300FEBB53 /* CellContentLayoutStyle.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
+				4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4CCE8C7B1FF4B5CA00AFBAF2 /* RootViewController.swift in Sources */,
 				4CCE8C7F1FF4B6D000AFBAF2 /* AppAnimations.swift in Sources */,
@@ -888,11 +910,13 @@
 				4CFB85002005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift in Sources */,
 				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
+				4CA31FAC200E3C0900A94101 /* User.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
 				68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */,
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
+				4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				4CCE8C831FF4B7C600AFBAF2 /* MainViewModel.swift in Sources */,
 				4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */,
