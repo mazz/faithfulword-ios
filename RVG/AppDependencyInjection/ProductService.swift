@@ -1,9 +1,5 @@
 import Foundation
 import RxSwift
-//import BoseMobileModels
-//import BoseMobileCommunication
-//import BoseMobileData
-//import BoseMobileUtilities
 
 /// Various states of user's products and when they are discovered by the app
 ///

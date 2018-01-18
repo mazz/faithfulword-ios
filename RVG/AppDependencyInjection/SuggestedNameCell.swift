@@ -1,5 +1,4 @@
 import UIKit
-//import BoseMobileUtilities
 
 public final class SuggestedNameCell: UICollectionViewCell {
 

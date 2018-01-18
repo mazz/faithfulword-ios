@@ -1,8 +1,6 @@
 import Foundation
 import UIKit
 import Swinject
-//import BoseMobileUI
-//import BoseMobileUtilities
 
 /// Protocol facade for factory making all app-root-level related UI.
 internal protocol AppUIMaking {
@@ -18,7 +16,7 @@ internal protocol SettingsUIMaking {
 //    func makeSettings() -> SettingsViewController
 }
 
-/// The king of UI creation in BoseMobileSample app.
+/// The king of UI creation in GoseMobileSample app.
 /// Having a single factory fronted by facades avoids circular-dependency problems that often arise with multiple
 /// factories.  This is because the nature of interactions between screens are not hierarchical in general, and
 /// sometimes inverts at different points in the app.

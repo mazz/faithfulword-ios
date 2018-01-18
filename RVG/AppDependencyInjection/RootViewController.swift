@@ -1,8 +1,5 @@
 import UIKit
 import RxSwift
-//import BoseMobileCore
-//import BoseMobileUI
-//import BoseMobileUtilities
 
 /// The bottom level view controller that all navigation flows stem from (lives for the entire lifetime of the app)
 final class RootViewController: UIViewController {

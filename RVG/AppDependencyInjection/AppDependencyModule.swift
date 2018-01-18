@@ -1,13 +1,6 @@
 import Foundation
 import Swinject
 import Moya
-//import BoseMobileCore
-//import BoseMobileUI
-//import BoseMobileCommunication
-//import BoseMobilePresentation
-//import BoseMobileModels
-//import BoseMobileUtilities
-//import BoseMobileData
 import Alamofire
 
 /// Central place for all app dependency wiring
@@ -248,21 +241,21 @@ internal final class AppDependencyModule {
 //        }
 //    }
     
-    // MARK: Bose-mobile dependencies
+    // MARK: gose-mobile dependencies
     
-    /// All bose-mobile related dependencies are assembled here.  Note that custom configurations can be specified per
-    /// bose-module.
+    /// All gose-mobile related dependencies are assembled here.  Note that custom configurations can be specified per
+    /// gose-module.
     private static func appModulesAssemblies() -> [Assembly] {
-//        let boseCoreAssembly = BoseMobileCore.DependencyAssembly(with: nil)
-//        let boseCommunicationAssembly = BoseMobileCommunication.DependencyAssembly(with: nil)
-//        let bosePresentationAssembly = BoseMobilePresentation.DependencyAssembly(with: nil)
-//        let boseUiAssembly = BoseMobileUI.DependencyAssembly(with: nil)
-//        let boseDataAssembly = BoseMobileData.DependencyAssembly(with: nil)
-//        return [boseCoreAssembly,
-//                boseCommunicationAssembly,
-//                bosePresentationAssembly,
-//                boseUiAssembly,
-//                boseDataAssembly]
+//        let goseCoreAssembly = GoseMobileCore.DependencyAssembly(with: nil)
+//        let goseCommunicationAssembly = GoseMobileCommunication.DependencyAssembly(with: nil)
+//        let gosePresentationAssembly = GoseMobilePresentation.DependencyAssembly(with: nil)
+//        let goseUiAssembly = GoseMobileUI.DependencyAssembly(with: nil)
+//        let goseDataAssembly = GoseMobileData.DependencyAssembly(with: nil)
+//        return [goseCoreAssembly,
+//                goseCommunicationAssembly,
+//                gosePresentationAssembly,
+//                goseUiAssembly,
+//                goseDataAssembly]
         return []
     }
     

@@ -32,7 +32,7 @@ public protocol AccountDataServicing {
 
 //    func fetchRemoteServiceMap(for user: GigyaUser) -> Single<RemoteServiceMap>
 
-    /// Fetch the account object for a given BosePerson from Passport.
+    /// Fetch the account object for a given GosePerson from Passport.
     ///
     /// - Returns: Single with the account info object.
 //    func fetchAccountInfo() -> Single<PassportAccountInfo>
@@ -91,7 +91,7 @@ public final class DataService {
     // MARK: Session
     
     private var _session = Field<String?>(nil)
-//    private var assertingSession: Single<BoseSession> {
+//    private var assertingSession: Single<GoseSession> {
 //        guard let value = _session.value else {
 //            assertionFailure("No session. Must call this function after login so a session exists.")
 //            return Single.error(DataServiceError.noSession)
@@ -99,9 +99,9 @@ public final class DataService {
 //
 //        return Single.just(value)
 //    }
-//    private var assertingSessionWithToken: Single<BoseSession> {
+//    private var assertingSessionWithToken: Single<GoseSession> {
 //        return assertingSession
-//            .map { session -> BoseSession in
+//            .map { session -> GoseSession in
 //                if session.accessToken == nil {
 //                    assertionFailure("No user access token. Passport must have not provided one.")
 //                    throw DataServiceError.noAccessToken
@@ -154,14 +154,14 @@ extension DataService: AccountDataServicing {
 //        return galapagosNetworking.rx.request(.remoteServices(gigyaUserId: user.uid))
 //            .parse(type: RemoteServiceMap.self)
 //            .do(onNext: { map in
-//                BoseLog.debug("RemoteServiceMap: \(map)")
+//                GoseLog.debug("RemoteServiceMap: \(map)")
 //            })
 //    }
 
     public var session: Observable<String?> { return _session.asObservable() }
 //    public var musicServiceAccounts: Observable<[MusicServiceAccount]> { return _musicServiceAccounts.asObservable() }
 
-//    public func fetchSession(for user: GigyaUser, idToken: String) -> Single<BoseSession> {
+//    public func fetchSession(for user: GigyaUser, idToken: String) -> Single<GoseSession> {
 //        return passportNetworking.rx.request(.tokens(user: user, idToken: idToken))
 //            .parse(type: PassportAccountSession.self)
 //            .flatMap { [unowned self] in self.dataStore.addPerson(boseSession: $0) }
@@ -340,19 +340,19 @@ extension DataService: ProductDataServicing {
 //
 //    private func replacePersistedProducts(_ products: [UserProduct]) -> Single<[UserProduct]> {
 //        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
-//        return dataStore.deleteBosePerson()
+//        return dataStore.deleteGosePerson()
 //            .flatMap { [unowned self] in self.assertingSession }
 //            .flatMap { [unowned self] in self.dataStore.addProducts(boseSession: $0, products: products) }
 //    }
 //
-//    private func loadProducts(with session: BoseSession) -> Single<[UserProduct]> {
+//    private func loadProducts(with session: GoseSession) -> Single<[UserProduct]> {
 //        return dataStore.fetchAccountDevices(bosePersonId: session.bosePersonId)
 //            .do(
 //                onNext: { [weak self] products in
 //                    self?._products.value = products
 //                },
 //                onError: { [weak self] error in
-//                    BoseLog.error(error.localizedDescription)
+//                    GoseLog.error(error.localizedDescription)
 //                    self?._products.value = []
 //            })
 //    }

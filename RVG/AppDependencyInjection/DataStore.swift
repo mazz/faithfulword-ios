@@ -1,17 +1,17 @@
 //import RealmSwift
 import RxSwift
-//import BoseMobileModels
-//import BoseMobileUtilities
+//import GoseMobileModels
+//import GoseMobileUtilities
 
 import GRDB
 
-//private enum BoseDataStoreError: Swift.Error, LocalizedError {
+//private enum GoseDataStoreError: Swift.Error, LocalizedError {
 //    case personNotFound
 //
 //    public var errorDescription: String? {
 //        switch self {
 //        case .personNotFound:
-//            return "Data Store error - Bose Person not found"
+//            return "Data Store error - Gose Person not found"
 //        }
 //    }
 //}
@@ -19,11 +19,11 @@ import GRDB
 
 /// Factory for Realm with default config
 //internal typealias RealmProvider = () -> Realm
-//public typealias BoseSessionFactory = ( _ accessToken: String?,
-//                                        _ tokenType: BoseSessionTokenType?,
+//public typealias GoseSessionFactory = ( _ accessToken: String?,
+//                                        _ tokenType: GoseSessionTokenType?,
 //                                        _ expiresIn: Int?,
 //                                        _ refreshToken: String?,
-//                                        _ bosePersonId: String) -> BoseSession
+//                                        _ bosePersonId: String) -> GoseSession
 
 /// Protocol for storing and retrieving data from Realm database
 public protocol DataStoring {
@@ -43,9 +43,9 @@ public protocol DataStoring {
     func deleteAllBooks() -> Single<Void>
     
     /// Add or update a bose person to Realm database
-//    func addPerson(boseSession: BoseSession) -> Single<BoseSession>
+//    func addPerson(boseSession: GoseSession) -> Single<GoseSession>
     /// Delete bose persons from Realm database
-//    func deleteBosePerson() -> Single<Void>
+//    func deleteGosePerson() -> Single<Void>
 }
 
 /// Storage class holding reference to realm object
@@ -124,26 +124,26 @@ public final class DataStore {
 //        self.realm = realm
 //    }
     
-//    private func getPersistedPerson(bosePersonId: String?) -> PersistedBosePerson? {
+//    private func getPersistedPerson(bosePersonId: String?) -> PersistedGosePerson? {
 //        let realmInstance = realm()
-//        let result: PersistedBosePerson?
+//        let result: PersistedGosePerson?
 //        if let bosePersonId = bosePersonId {
 //            let bosePersonPredicate = NSPredicate(format: "personId = %@", "\(bosePersonId)")
-//            result = realmInstance.objects(PersistedBosePerson.self).filter(bosePersonPredicate).first
+//            result = realmInstance.objects(PersistedGosePerson.self).filter(bosePersonPredicate).first
 //        } else {
-//            result = realmInstance.objects(PersistedBosePerson.self).first
+//            result = realmInstance.objects(PersistedGosePerson.self).first
 //        }
 //        return result
 //    }
     
-//    private func fetchBosePerson(bosePersonId: String?, boseSessionFactory: @escaping BoseSessionFactory) -> Single<BoseSession?> {
+//    private func fetchGosePerson(bosePersonId: String?, boseSessionFactory: @escaping GoseSessionFactory) -> Single<GoseSession?> {
 //        let realmInstance = realm()
 //        return Single.create { [unowned self] single in
 //            // If ID != nil, fetch the current bose person as there will always be at most one persisted bose person
-//            if let person = bosePersonId != nil ? self.getPersistedPerson(bosePersonId: bosePersonId!) : realmInstance.objects(PersistedBosePerson.self).first {
-//                single(.success( boseSessionFactory(person.accessToken, BoseSessionTokenType(rawValue: person.tokenType ?? ""), person.expiresIn.value, person.refreshToken, person.personId) ))
+//            if let person = bosePersonId != nil ? self.getPersistedPerson(bosePersonId: bosePersonId!) : realmInstance.objects(PersistedGosePerson.self).first {
+//                single(.success( boseSessionFactory(person.accessToken, GoseSessionTokenType(rawValue: person.tokenType ?? ""), person.expiresIn.value, person.refreshToken, person.personId) ))
 //            } else {
-//                single(.error(BoseDataStoreError.personNotFound))
+//                single(.error(GoseDataStoreError.personNotFound))
 //            }
 //            return Disposables.create {}
 //        }
@@ -161,7 +161,7 @@ extension DataStore: DataStoring {
 //        guard let boseUser = getPersistedPerson(bosePersonId: nil) else { return Single.just(nil) }
 //
 //        return Single.just(boseSessionFactory(boseUser.accessToken,
-//                                              BoseSessionTokenType(rawValue: boseUser.tokenType ?? ""),
+//                                              GoseSessionTokenType(rawValue: boseUser.tokenType ?? ""),
 //                                              boseUser.expiresIn.value, boseUser.refreshToken,
 //                                              boseUser.personId))
         
@@ -206,16 +206,16 @@ extension DataStore: DataStoring {
 //                }
 //                single(.success(associatedProducts))
 //            } else {
-//                single(.error(BoseDataStoreError.personNotFound))
+//                single(.error(GoseDataStoreError.personNotFound))
 //            }
 //            return Disposables.create {}
 //        }
 //    }
     
-//    public func deleteBosePerson() -> Single<Void> {
+//    public func deleteGosePerson() -> Single<Void> {
 //        let realmInstance = realm()
 //        return Single.create { single in
-//            let persons = realmInstance.objects(PersistedBosePerson.self)
+//            let persons = realmInstance.objects(PersistedGosePerson.self)
 //
 //            do {
 //                try realmInstance.write {
@@ -301,13 +301,13 @@ extension DataStore: DataStoring {
     
     
     // This should follow the pattern of returning the object it adds in case it gets sanitized or something.
-//    func addPerson(boseSession: BoseSession) -> Single<BoseSession> {
+//    func addPerson(boseSession: GoseSession) -> Single<GoseSession> {
 //        let realmInstance = realm()
 //        return Single.create { [unowned self] single in
 //            do {
 //                let persistedPerson = self.getPersistedPerson(bosePersonId: boseSession.bosePersonId)
 //
-//                let persisted = PersistedBosePerson(session: boseSession)
+//                let persisted = PersistedGosePerson(session: boseSession)
 //
 //                try realmInstance.write {
 //                    if let persistedPerson = persistedPerson {
@@ -325,7 +325,7 @@ extension DataStore: DataStoring {
 //                }
 //                single(.success(boseSession))
 //            } catch let error {
-//                BoseLog.error("add person error: \(error)")
+//                GoseLog.error("add person error: \(error)")
 //                single(.error(error))
 //            }
 //            return Disposables.create {}

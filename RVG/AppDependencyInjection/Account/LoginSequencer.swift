@@ -1,7 +1,5 @@
 import Foundation
 import RxSwift
-//import BoseMobileUtilities
-//import BoseMobileModels
 
 public protocol LoginSequencing {
     var session: Observable<String?> { get } // a session is a simple String for now

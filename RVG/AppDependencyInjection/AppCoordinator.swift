@@ -1,11 +1,6 @@
 import Foundation
 import UIKit
 import RxSwift
-//import BoseMobileModels
-//import BoseMobileCore
-//import BoseMobilePresentation
-//import BoseMobileUI
-//import BoseMobileUtilities
 
 /// Coordinator in charge of navigating between the two main states of the app.
 /// Operates on the level of the rootViewController and switches between the
@@ -96,7 +91,7 @@ extension AppCoordinator: NavigationCoordinating {
     /// and sets up the initial flow to be replaced by the main flow when complete.
     private func swapInInitialFlow() {
 //        resettableInitialCoordinator.value.flow(with: { [unowned self] initialFlowViewController in
-//            self.rootViewController.plant(initialFlowViewController, withAnimation: BoseAnimations.fade)
+//            self.rootViewController.plant(initialFlowViewController, withAnimation: GoseAnimations.fade)
 //        }, completion: { [unowned self] _ in
 //            self.swapInMainFlow()
 //            self.resettableInitialCoordinator.reset()

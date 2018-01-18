@@ -1,8 +1,6 @@
 import Foundation
 import UIKit
 import RxSwift
-//import BoseMobileModels
-//import BoseMobileUtilities
 
 public enum AuthStatus {
     case initialState
@@ -61,7 +59,7 @@ public final class AccountService {
     
 //    private func fetchAccountInfo() {
 //        dataService.fetchAccountInfo().subscribe(onSuccess: { [unowned self] accountInfo in
-//            BoseLog.info("Cached Login Flow - Retrieved Passport Account Info: \(accountInfo)")
+//            print("Cached Login Flow - Retrieved Passport Account Info: \(accountInfo)")
 //            self.currentUser?.accountInfo = accountInfo
 //            self.authStateBehaviorSubject.onNext(.accountInfoRetrieved)
 //        }).disposed(by: bag)

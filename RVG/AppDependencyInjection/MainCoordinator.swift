@@ -1,8 +1,5 @@
 import UIKit
 import RxSwift
-//import BoseMobileUI
-//import BoseMobileUtilities
-//import BoseMobileCore
 
 /// Coordinator in charge of all navigation in authenticated state.
 /// Handles navigation between the main and device selection flows.
