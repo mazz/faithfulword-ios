@@ -56,6 +56,7 @@ public protocol ProductDataServicing {
     
     func deletePersistedBooks() -> Single<Void>
     
+    func chapters(for bookId: String) -> Single<[Playable]>
     /// Updates the settings of a user's product.
     ///
     /// - Parameters:
@@ -210,7 +211,16 @@ extension DataService: AccountDataServicing {
 
 
 extension DataService: ProductDataServicing {
-    
+    public func chapters(for bookId: String) -> Single<[Playable]> {
+        let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(bid: bookId, languageId: L10n.shared.language))
+        let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
+            try! response.map(MediaChapterResponse.self)
+        }
+        return mediaChapterResponse.flatMap { mediaChapterResponse -> Single<[Playable]> in
+            Single.just(mediaChapterResponse.result)
+        }
+    }
+
     public var books: Observable<[Book]> {
         switch self.networkStatus.value {
             case .notReachable:

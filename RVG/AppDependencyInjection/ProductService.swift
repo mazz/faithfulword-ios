@@ -26,6 +26,7 @@ public protocol ProductServicing {
     
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
+//    var userChapters: Field<[Playable]> { get }
 //    var persistedUserBooks: Field<[Book]> { get }
 
     
@@ -54,6 +55,8 @@ public protocol ProductServicing {
     
     func deleteBooks() -> Single<Void>
     
+    func fetchChapters(for bookId: String) -> Single<[Playable]>
+    
     /// Updates the attributes of a user's product.
     ///
     /// - Parameters:
@@ -70,7 +73,10 @@ public protocol ProductServicing {
 }
 
 public final class ProductService {
+    
     public let userBooks: Field<[Book]>
+//    public var userChapters: Field<[Playable]>
+    
 //    public let persistedUserBooks: Field<[Book]>
 
     // MARK: Dependencies & instantiation
@@ -81,12 +87,18 @@ public final class ProductService {
     public init(dataService: ProductDataServicing) {
         self.dataService = dataService
         userBooks = Field(value: [], observable: dataService.books)
+//        userChapters = Field(value: [], observable: dataService.chapters)
 //        persistedUserBooks = Field(value: [], observable: dataService.persistedBooks)
     }
 }
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
+    public func fetchChapters(for bookId: String) -> Single<[Playable]> {
+        return dataService.chapters(for: bookId)
+//        return Single.just([])
+    }
+    
     
 //    public func addProduct(productName: String,
 //                           productId: String,

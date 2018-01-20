@@ -65,9 +65,11 @@ extension AppCoordinator: NavigationCoordinating {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] authState in
                 if authState == .authenticated {
+                    print("authenticated")
                     self.checkUserBooks()
                 } else if authState == .unauthenticated {
                     self.swapInInitialFlow()
+                    print("unauthenticated")
                 }
             })
             .disposed(by: bag)

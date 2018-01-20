@@ -7,17 +7,9 @@ public protocol Playable {
     var sourceMaterial : String? { get set }
 }
 
-public protocol PlayableType: Playable {
-    var iconName : String { get }
-}
-
-public protocol PlayableSermon: PlayableType { }
-public protocol PlayableChapter: PlayableType { }
-public protocol PlayableGospel: PlayableType { }
-
 enum MediaType {
-    case mediaChapter
-    case mediaSermon
-    case mediaGospel
+    case audioChapter
+    case audioSermon
+    case audioGospel
 }
 

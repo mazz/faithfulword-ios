@@ -143,8 +143,6 @@ extension KJVRVGService: TargetType {
             return "{\"mid\": \(mid),\"}".utf8Encoded
         case .music:
             return "foobar".utf8Encoded
-        case .booksChapterMedia(let bid, let languageId):
-            return "{\"bid\": \(bid), \"language-id\": \"\(languageId)\"}".utf8Encoded
         case .books(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .languagesSupported:

@@ -90,10 +90,14 @@ extension MainCoordinator: NavigationCoordinating {
 //        viewController.navigationItem.rightBarButtonItem = close
     }
 
-    private func goToMedia() {
+    private func goToBook(for bookId: String) {
         // do not use a new flow, because Chapters is part of the Book flow AFAICT
 //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
+        
+        self.resettableMediaListingCoordinator.value.playlistId = bookId
+        self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
+            
             self.mainNavigationController.pushViewController(
                 viewController,
                 animated: true
@@ -104,7 +108,7 @@ extension MainCoordinator: NavigationCoordinating {
             self.resettableMediaListingCoordinator.reset()
 //            self.resettableSplashScreenCoordinator.reset()
 
-        }, context: .present)
+        }, context: .push(onto: self.mainNavigationController))
 
         
 //        self.MainCoordinator.pushViewController(
@@ -114,6 +118,7 @@ extension MainCoordinator: NavigationCoordinating {
     }
 
     private func goToDeviceSelection() {
+        print("goToDeviceSelection")
 //        self.resettableDeviceSelectionCoordinator.value.flow(with: { viewController in
 //            self.mainNavigationController.present(viewController, animated: true)
 //        }, completion: { _ in
@@ -123,6 +128,7 @@ extension MainCoordinator: NavigationCoordinating {
     }
     
     private func goToSettings() {
+        print("goToSettings")
 //        resettableSettingsCoordinator.value.flow(with: { [unowned self] settingsFlowViewController in
 //            self.mainNavigationController.present(settingsFlowViewController, animated: true)
 //        }, completion: { [unowned self] _ in
@@ -138,9 +144,9 @@ extension MainCoordinator {
     private func handle(eventsFrom mainViewModel: MainViewModel) {
         mainViewModel.drillInEvent.next { [unowned self] type in
             switch type {
-            case .defaultType:
-                print(".defaultType")
-                self.goToMedia()
+            case .bookType(let bookId):
+                print(".defaultType: \(bookId)")
+                self.goToBook(for: bookId)
             default:
                 break
             }

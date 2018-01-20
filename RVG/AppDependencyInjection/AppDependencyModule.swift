@@ -62,24 +62,6 @@ internal final class AppDependencyModule {
                                   dataService: resolver.resolve(DataService.self)!)
 //            return ProductService(dataService: resolver.resolve(DataService.self)!)
             }.inObjectScope(.container)
-
-
-//        container.register(GospelServicing.self) { resolver in
-//            return GospelService(dataService: resolver.resolve(DataService.self)!)
-//        }.inObjectScope(.container)
-        
-//        container.register(DataService.self) { resolver in
-//            All_Scripture.DataService(kjvrvgNetworking: MoyaProvider<KJVRVGService>())
-//            }.inObjectScope(.container)
-        
-//        container.register(GospelServicing.self) { resolver in
-//            return GospelService(dataService: GospelDataServicing.self as! GospelDataServicing)
-//            }.inObjectScope(.container)
-
-        
-//        container.register(GigyaBridging.self) { _ in
-//            GigyaBridge()
-//        }
         
         attachUtilityDependencies(to: container)
         attachAppLevelDependencies(to: container)
@@ -178,11 +160,13 @@ internal final class AppDependencyModule {
             MainViewModel(
                 productService: resolver.resolve(ProductServicing.self)!)
         }
-        container.register(MediaListingViewModel.self) { resolver in
+        container.register(MediaListingViewModel.self) { resolver, playlistId, mediaType in
             MediaListingViewModel(
+                playlistId: playlistId,
+                mediaType: mediaType,
                 productService: resolver.resolve(ProductServicing.self)!
             )
-        }
+        }.inObjectScope(.transient)
     }
     
     private static func attachSplashScreenFlowDependencies(to container: Container) {

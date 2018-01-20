@@ -4,15 +4,7 @@ import RxSwift
 internal final class MediaListingViewModel {
     // MARK: Fields
     
-    internal var media: Observable<[Book]> {
-        return productService.userBooks.asObservable()
-    }
-
-//    internal var persistedMedia: Observable<[Book]> {
-//        return productService.persistedUserBooks.asObservable()
-//    }
-    
-//    public private(set) var media = Field<[Playable]>([])
+    public private(set) var media = Field<[Playable]>([])
 //    public private(set) var persistedMedia = Field<[Playable]>([])
 //    public private(set) var mediaType: MediaType = MediaType.mediaChapter
     
@@ -34,57 +26,35 @@ internal final class MediaListingViewModel {
     }
     
     // MARK: Dependencies
+    private let playlistId: String!
+    private let mediaType: MediaType!
     private let productService: ProductServicing!
     private let bag = DisposeBag()
     
-//    internal init(media: Field<[Playable]>, mediaType: MediaType) {
-//        self.media = media
-//        self.mediaType = mediaType
-    internal init(productService: ProductServicing) {
+    internal init(playlistId: String,
+                  mediaType: MediaType,
+                  productService: ProductServicing) {
+        self.playlistId = playlistId
+        self.mediaType = mediaType
         self.productService = productService
 
         setupDatasource()
-        
-        //        sections.value = sectionViewModels
     }
 
     private func setupDatasource() {
-        // TODO: CASTLE-4739 - JT/RL Figure out proper mapping between connection type, product, and regime (Rio or Riv)
-        //        let productType: ProductType = device.discoveredDevice.connectionType == .webSocket ? .eddie : .goodyear
-        
-        
         self.media.asObservable()
-            .map { $0.map { MediaListingItemType.drillIn(type: .defaultType, iconName: "book", title: $0.localizedTitle, showBottomSeparator: true) } }
+            .map { $0.map { MediaListingItemType.drillIn(type: .defaultType, iconName: "book", title: $0.localizedName!, showBottomSeparator: true) } }
             .next { [unowned self] names in
                 self.sections.value = [
                     MediaListingSectionViewModel(type: .media, items: names)
                 ]
             }.disposed(by: bag)
-
         
-        
-        
-        //            .map { $0.map { NameDeviceItemType.suggestedName($0) } }
-        //            .next { [unowned self] names in
-        //                self.sections.value = [NameDeviceSectionViewModel(type: .device, items: []),
-        //                                       NameDeviceSectionViewModel(type: .suggestedNames, items: names),
-        //                                       NameDeviceSectionViewModel(type: .customName, items: [.customName])]
-        //            }.disposed(by: bag)
+        self.productService.fetchChapters(for: self.playlistId)
+            .map { [unowned self] in
+                self.media.value = $0
+                print("self.media.value: \(self.media.value)")
+            }.asObservable()
+            .subscribeAndDispose(by: self.bag)
     }
-    
-    //    private var sectionViewModels: [BooksSectionViewModel] {
-    //        var sectionViewModels = [
-    //            BooksSectionViewModel(type: .book, items: [
-    //                .action(.name)
-    //                ])
-    //        ]
-    //        #if DEBUG
-    //            let debugSection = BooksSectionViewModel(type: .debug, items: [
-    //
-    //                ])
-    //            sectionViewModels.append(debugSection)
-    //        #endif
-    //        return sectionViewModels
-    //    }
-    
 }

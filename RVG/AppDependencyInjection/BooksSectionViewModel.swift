@@ -20,11 +20,7 @@ internal enum BooksItemType {
 }
 
 public enum BooksDrillInType {
-    case defaultType
-}
-
-internal enum BookActionType {
-    case openBook
+    case bookType(bookId: String)
 }
 
 extension BooksSectionViewModel: SectionModelType {

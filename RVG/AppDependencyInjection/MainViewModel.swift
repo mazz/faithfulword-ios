@@ -49,7 +49,7 @@ internal final class MainViewModel {
     private func setupDatasource() {
         // assume we are online and observe userBooks by default
         productService.userBooks.asObservable()
-            .map { $0.map { BooksItemType.drillIn(type: .defaultType, iconName: "book", title: $0.localizedTitle, showBottomSeparator: true) } }
+            .map { $0.map { BooksItemType.drillIn(type: .bookType(bookId: $0.bid), iconName: "book", title: $0.localizedTitle, showBottomSeparator: true) } }
             .next { [unowned self] names in
                 self.sections.value = [
                     BooksSectionViewModel(type: .book, items: names)

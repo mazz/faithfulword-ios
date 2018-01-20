@@ -5,8 +5,10 @@ import RxCocoa
 public final class MediaListingCoordinator {
     
     // MARK: Fields
+    internal var playlistId: String?
+    internal var mediaType: MediaType?
     
-    private var trackListingFlowCompletion: FlowCompletion!
+    private var mediaListingFlowCompletion: FlowCompletion!
     private let bag = DisposeBag()
     
     // MARK: Dependencies
@@ -24,22 +26,25 @@ public final class MediaListingCoordinator {
 extension MediaListingCoordinator: NavigationCoordinating {
     public func flow(with setup: FlowSetup, completion: @escaping FlowCompletion, context: FlowContext) {
         // 1. Hang on to the completion block for when the user if done with now-playing.
-        trackListingFlowCompletion = completion
-        // 2. Create a full-screen now-playing view controller and show to user.
-        let trackListingViewController = self.uiFactory.makeMediaListing()
-//            .makeDeviceNowPlayingFullScreen(for: deviceManaging.currentDevice.asObservable())
-        setup(trackListingViewController)
-        handle(eventsFrom: trackListingViewController.viewModel)
+        mediaListingFlowCompletion = completion
+        
+        if let playlistId = playlistId, let mediaType = mediaType {
+            let mediaListingViewController = self.uiFactory.makeMediaListing(playlistId: playlistId, mediaType: mediaType)
+//            let mediaListingViewController = self.uiFactory.makeMediaListing(mediaId: mediaId, mediaType: mediaType)
+            //            .makeDeviceNowPlayingFullScreen(for: deviceManaging.currentDevice.asObservable())
+            setup(mediaListingViewController)
+            handle(eventsFrom: mediaListingViewController.viewModel)
+        }
     }
     
 }
 
 // MARK: Event handling for now playing screen.
 extension MediaListingCoordinator {
-    private func handle(eventsFrom trackListingViewModel: MediaListingViewModel) {
-        print("handle(eventsFrom trackListingViewModel")
-//        trackListingViewModel.closeEvent.subscribe(onNext: { [unowned self] _ in
-//            self.trackListingFlowCompletion(.finished)
+    private func handle(eventsFrom mediaListingViewModel: MediaListingViewModel) {
+        print("handle(eventsFrom mediaListingViewModel")
+//        mediaListingViewModel.closeEvent.subscribe(onNext: { [unowned self] _ in
+//            self.mediaListingFlowCompletion(.finished)
 //        }).disposed(by: bag)
     }
 }
