@@ -4,6 +4,14 @@ import RxSwift
 internal final class MediaListingViewModel {
     // MARK: Fields
     
+    public func section(at index: Int) -> MediaListingSectionViewModel {
+        return sections.value[index]
+    }
+
+    public func item(at indexPath: IndexPath) -> MediaListingItemType {
+        return section(at: indexPath.section).items[indexPath.item]
+    }
+
     public private(set) var media = Field<[Playable]>([])
 //    public private(set) var persistedMedia = Field<[Playable]>([])
 //    public private(set) var mediaType: MediaType = MediaType.mediaChapter
@@ -43,7 +51,21 @@ internal final class MediaListingViewModel {
 
     private func setupDatasource() {
         self.media.asObservable()
-            .map { $0.map { MediaListingItemType.drillIn(type: .defaultType, iconName: "book", title: $0.localizedName!, showBottomSeparator: true) } }
+            .map { $0.map {
+                let icon: String!
+                
+                switch self.mediaType {
+                case .audioChapter:
+                    icon = "chapter"
+                case .audioSermon:
+                    icon = "feet"
+                case .audioGospel:
+                    icon = "feet"
+                default:
+                    icon = "feet"
+                }
+                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedName!, showBottomSeparator: true) }
+            }
             .next { [unowned self] names in
                 self.sections.value = [
                     MediaListingSectionViewModel(type: .media, items: names)

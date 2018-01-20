@@ -14,11 +14,9 @@ public final class MediaListingCoordinator {
     // MARK: Dependencies
     
     private let uiFactory: AppUIMaking
-//    private let deviceManaging: DeviceManaging
     
     internal init(uiFactory: AppUIMaking) {
         self.uiFactory = uiFactory
-//        self.deviceManaging = deviceManaging
     }
 }
 
@@ -30,22 +28,29 @@ extension MediaListingCoordinator: NavigationCoordinating {
         
         if let playlistId = playlistId, let mediaType = mediaType {
             let mediaListingViewController = self.uiFactory.makeMediaListing(playlistId: playlistId, mediaType: mediaType)
-//            let mediaListingViewController = self.uiFactory.makeMediaListing(mediaId: mediaId, mediaType: mediaType)
-            //            .makeDeviceNowPlayingFullScreen(for: deviceManaging.currentDevice.asObservable())
             setup(mediaListingViewController)
             handle(eventsFrom: mediaListingViewController.viewModel)
         }
     }
     
+    func goToPlayback(for playable: Playable) {
+        print("goToPlayback playable: \(playable)")
+    }
 }
 
 // MARK: Event handling for now playing screen.
 extension MediaListingCoordinator {
     private func handle(eventsFrom mediaListingViewModel: MediaListingViewModel) {
         print("handle(eventsFrom mediaListingViewModel")
-//        mediaListingViewModel.closeEvent.subscribe(onNext: { [unowned self] _ in
-//            self.mediaListingFlowCompletion(.finished)
-//        }).disposed(by: bag)
+        mediaListingViewModel.drillInEvent.next { [unowned self] type in
+            switch type {
+            case .playable(let item):
+                print(".defaultType: \(item)")
+                self.goToPlayback(for: item)
+            default:
+                break
+            }
+            }.disposed(by: bag)
     }
 }
 

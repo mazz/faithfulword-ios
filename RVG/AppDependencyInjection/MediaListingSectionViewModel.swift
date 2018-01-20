@@ -20,7 +20,7 @@ internal enum MediaListingItemType {
 }
 
 public enum MediaListingDrillInType {
-    case defaultType
+    case playable(item: Playable)
 }
 
 internal enum MediaListingActionType {
