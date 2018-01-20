@@ -1,8 +1,4 @@
-//import RealmSwift
 import RxSwift
-//import GoseMobileModels
-//import GoseMobileUtilities
-
 import GRDB
 
 //private enum GoseDataStoreError: Swift.Error, LocalizedError {
@@ -64,7 +60,7 @@ public final class DataStore {
     internal var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
         
-        migrator.registerMigration("v1.2") { db in
+        migrator.registerMigration("v2") { db in
             try! db.create(table: "user") { userTable in
                 print("created: \(userTable)")
                 userTable.column("userId", .integer).primaryKey()
@@ -81,6 +77,16 @@ public final class DataStore {
                 bookTable.column("localizedTitle", .text)
                 bookTable.column("userId", .integer).references("user", onDelete: .cascade)
             }
+//            try! db.create(table: "mediachapter") { chapterTable in
+//                print("created: \(chapterTable)")
+//                chapterTable.column("chapterId", .integer).primaryKey()
+//                chapterTable.column("bookId", .integer)
+//                chapterTable.column("localizedName", .text)
+//                chapterTable.column("path", .text)
+//                chapterTable.column("presenterName", .text)
+//                chapterTable.column("sourceMaterial", .text)
+//                chapterTable.column("bookId", .integer).references("book", onDelete: .cascade)
+//            }
         }
         return migrator
     }
