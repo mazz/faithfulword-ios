@@ -55,7 +55,7 @@ public protocol ProductServicing {
     
     func deleteBooks() -> Single<Void>
     
-    func fetchChapters(for bookId: String) -> Single<[Playable]>
+    func fetchChapters(for bookUuid: String) -> Single<[Playable]>
     
     /// Updates the attributes of a user's product.
     ///
@@ -94,8 +94,8 @@ public final class ProductService {
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
-    public func fetchChapters(for bookId: String) -> Single<[Playable]> {
-        return dataService.chapters(for: bookId)
+    public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
+        return dataService.chapters(for: bookUuid)
 //        return Single.just([])
     }
     

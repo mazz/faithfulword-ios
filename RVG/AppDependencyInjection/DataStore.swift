@@ -23,21 +23,25 @@ import GRDB
 
 /// Protocol for storing and retrieving data from Realm database
 public protocol DataStoring {
-    /// Fetch the cached bose person in Realm database
-    func latestCachedUser() -> Single<String?>
+//    func latestCachedUser() -> Single<String?>
     
     func addUser(session: String) -> Single<String>
     
     /// Fetch a list of products associated to a bose person from Realm database, returns nil if bose person not found
 //    func fetchAccountDevices(bosePersonId: String) -> Single<[UserProduct]>
     
-    /// Write a list of products to Realm database
     func addBooks(books: [Book]) -> Single<[Book]>
     
     func fetchBooks() -> Single<[Book]>
     
     func deleteAllBooks() -> Single<Void>
     
+    func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]>
+    
+    func fetchChapters(for bookUuid: String) -> Single<[Playable]>
+    
+    func deleteChapters(for bookUuid: String) -> Single<Void>
+
     /// Add or update a bose person to Realm database
 //    func addPerson(boseSession: GoseSession) -> Single<GoseSession>
     /// Delete bose persons from Realm database
@@ -64,29 +68,30 @@ public final class DataStore {
             try! db.create(table: "user") { userTable in
                 print("created: \(userTable)")
                 userTable.column("userId", .integer).primaryKey()
+                userTable.column("userUuid", .text)
                 userTable.column("name", .text)
                 userTable.column("session", .text)
                 userTable.column("pushNotifications", .boolean)
             }
             try! db.create(table: "book") { bookTable in
                 print("created: \(bookTable)")
-                bookTable.column("bookId", .integer).primaryKey()
-                bookTable.column("bid", .text)
+//                bookTable.column("bookId", .integer).primaryKey()
+                bookTable.column("bid", .text).primaryKey()
                 bookTable.column("title", .text)
                 bookTable.column("languageId", .text)
                 bookTable.column("localizedTitle", .text)
                 bookTable.column("userId", .integer).references("user", onDelete: .cascade)
             }
-//            try! db.create(table: "mediachapter") { chapterTable in
-//                print("created: \(chapterTable)")
+            try! db.create(table: "mediachapter") { chapterTable in
+                print("created: \(chapterTable)")
 //                chapterTable.column("chapterId", .integer).primaryKey()
-//                chapterTable.column("bookId", .integer)
-//                chapterTable.column("localizedName", .text)
-//                chapterTable.column("path", .text)
-//                chapterTable.column("presenterName", .text)
-//                chapterTable.column("sourceMaterial", .text)
-//                chapterTable.column("bookId", .integer).references("book", onDelete: .cascade)
-//            }
+                chapterTable.column("uuid", .text).primaryKey()
+                chapterTable.column("localizedName", .text)
+                chapterTable.column("path", .text)
+                chapterTable.column("presenterName", .text)
+                chapterTable.column("sourceMaterial", .text)
+                chapterTable.column("bid", .text).references("book", onDelete: .cascade)
+            }
         }
         return migrator
     }
@@ -160,19 +165,18 @@ public final class DataStore {
 
 // MARK: <DataStoring>
 extension DataStore: DataStoring {
-    
     //MARK: User
     
-    public func latestCachedUser() -> Single<String?> {
+//    public func latestCachedUser() -> Single<String?> {
 //        guard let boseUser = getPersistedPerson(bosePersonId: nil) else { return Single.just(nil) }
 //
 //        return Single.just(boseSessionFactory(boseUser.accessToken,
 //                                              GoseSessionTokenType(rawValue: boseUser.tokenType ?? ""),
 //                                              boseUser.expiresIn.value, boseUser.refreshToken,
 //                                              boseUser.personId))
-        
-        return Single.just("")
-    }
+//
+//        return Single.just("")
+//    }
     
     public func addUser(session: String) -> Single<String> {
         return Single.create { [unowned self] single in
@@ -236,9 +240,78 @@ extension DataStore: DataStoring {
 //            return Disposables.create {}
 //        }
 //    }
+    // MARK: Chapters
+
+    public func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+//                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    if let book = try Book.filter(Column("bid") == bookUuid).fetchOne(db){
+                        print("found chapter book: \(book)")
+                        for chapter in chapters {
+                            var mediaChapter = MediaChapter(uuid: chapter.uuid,
+                                                            localizedName: chapter.localizedName,
+                                                            path: chapter.path,
+                                                            presenterName: chapter.presenterName,
+                                                            sourceMaterial: chapter.sourceMaterial,
+                                                            bid: book.bid)
+                            try mediaChapter.insert(db)
+                        }
+                    }
+                    return .commit
+                }
+                single(.success(chapters))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+
+//        return Single.just([])
+    }
+
+    public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+                
+                var chapters: [Playable] = []
+//                let chapters: [Playable]!
+                try self.dbPool.read { db in
+                    chapters = try MediaChapter.filter(Column("bid") == bookUuid).fetchAll(db)
+                }
+                single(.success(chapters))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
     
+    public func deleteChapters(for bookUuid: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    
+//                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    if let _ = try Book.filter(Column("bid") == bookUuid).fetchOne(db) {
+                        try MediaChapter.filter(Column("bid") == bookUuid).deleteAll(db)
+                    }
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+//        return Single.just(())
+    }
+
     // MARK: Books
-    
     
     public func addBooks(books: [Book]) -> Single<[Book]> {
         return Single.create { [unowned self] single in
@@ -248,8 +321,7 @@ extension DataStore: DataStoring {
                         for book in books {
                             print("book: \(book)")
                             //            try! self.dbQueue.inDatabase { db in
-                            var book = Book(bookId: nil,
-                                            userId: user.userId,
+                            var book = Book(userId: user.userId,
                                             bid: book.bid,
                                             title: book.title,
                                             languageId: book.languageId,

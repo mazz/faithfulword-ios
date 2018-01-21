@@ -56,7 +56,7 @@ public protocol ProductDataServicing {
     
     func deletePersistedBooks() -> Single<Void>
     
-    func chapters(for bookId: String) -> Single<[Playable]>
+    func chapters(for bookUuid: String) -> Single<[Playable]>
     /// Updates the settings of a user's product.
     ///
     /// - Parameters:
@@ -195,30 +195,34 @@ extension DataService: AccountDataServicing {
 
     // MARK: Helpers
 
-    private func loadSession() -> Single<String?> {
-        return dataStore.latestCachedUser()
-            .do(
-                onNext: { [unowned self] session in
-                    self._session.value = session
-                },
-                onError: { [unowned self] error in
-                    print(error.localizedDescription)
-                    self._session.value = nil
-            })
-    }
 }
 
-
-
 extension DataService: ProductDataServicing {
-    public func chapters(for bookId: String) -> Single<[Playable]> {
-        let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(bid: bookId, languageId: L10n.shared.language))
-        let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
-            try! response.map(MediaChapterResponse.self)
+    public func chapters(for bookUuid: String) -> Single<[Playable]> {
+        switch self.networkStatus.value {
+        case .notReachable:
+            return dataStore.fetchChapters(for: bookUuid)
+        case .reachable(_):
+            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(bid: bookUuid, languageId: L10n.shared.language))
+            let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
+                try! response.map(MediaChapterResponse.self)
+            }
+            let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
+                self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
+            }
+            return storedChapters
+        case .unknown:
+            return dataStore.fetchChapters(for: bookUuid)
         }
-        return mediaChapterResponse.flatMap { mediaChapterResponse -> Single<[Playable]> in
-            Single.just(mediaChapterResponse.result)
-        }
+        
+//        return storedChapters.flatMap { mediaChapterResponse -> Single<[Playable]> in
+//            Single.just(mediaChapterResponse.result)
+//        }
+
+//        MARK: not storing but listing
+//        return mediaChapterResponse.flatMap { mediaChapterResponse -> Single<[Playable]> in
+//            Single.just(mediaChapterResponse.result)
+//        }
     }
 
     public var books: Observable<[Book]> {
@@ -276,6 +280,11 @@ extension DataService: ProductDataServicing {
                     self?._books.value = []
             })
             .asObservable()
+    }
+    
+    private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+        let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
+        return deleted.flatMap { [unowned self] _ in self.dataStore.addChapters(chapters: chapters, for: bookUuid) }
     }
     
     private func reactToReachability() {

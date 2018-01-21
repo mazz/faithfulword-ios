@@ -37,20 +37,13 @@ class MediaGospelViewController: BaseClass {
                 case let .success(moyaResponse):
                     do {
                         try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-                        let data = moyaResponse.data
-                        var parsedObject: MediaGospelResponse
+                        let mediaGospelResponse: MediaGospelResponse = try moyaResponse.map(MediaGospelResponse.self)
+                        print("mapped to moyaResponse: \(moyaResponse)")
                         
-                        let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                        if let jsonObject = json as? [String:Any] {
-                            parsedObject = MediaGospelResponse(JSON: jsonObject)!
-                            print(parsedObject)
-                            
-                            self.media = parsedObject.media!
-                            DispatchQueue.main.async {
-                                MBProgressHUD.hide(for: self.view, animated: true)
-                                self.tableView.reloadData()
-                            }
-                            
+                        self.media = mediaGospelResponse.result
+                        DispatchQueue.main.async {
+                            MBProgressHUD.hide(for: self.view, animated: true)
+                            self.tableView.reloadData()
                         }
                     }
                     catch {

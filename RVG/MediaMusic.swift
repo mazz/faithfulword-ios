@@ -1,22 +1,11 @@
-
 import Foundation
-import ObjectMapper
 
-class MediaMusic : Mappable, Playable {
-    var localizedName : String?
-    var path : String?
-    var presenterName : String?
-    var sourceMaterial: String?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        localizedName  <- map["localizedName"]
-        path  <- map["path"]
-        presenterName  <- map["presenterName"]
-        sourceMaterial  <- map["sourceMaterial"]
-    }
-    
+public struct MediaMusic: Codable, Playable {
+    //    var bookId: Int64?
+    //    var userId: Int64?
+    public var uuid: String
+    public var localizedName: String?
+    public var path: String?
+    public var presenterName: String?
+    public var sourceMaterial: String?
 }

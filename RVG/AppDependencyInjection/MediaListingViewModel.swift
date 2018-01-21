@@ -13,11 +13,7 @@ internal final class MediaListingViewModel {
     }
 
     public private(set) var media = Field<[Playable]>([])
-//    public private(set) var persistedMedia = Field<[Playable]>([])
-//    public private(set) var mediaType: MediaType = MediaType.mediaChapter
-    
     public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
-
     public let selectItemEvent = PublishSubject<IndexPath>()
     
     public var drillInEvent: Observable<MediaListingDrillInType> {
@@ -72,11 +68,10 @@ internal final class MediaListingViewModel {
                 ]
             }.disposed(by: bag)
         
-        self.productService.fetchChapters(for: self.playlistId)
-            .map { [unowned self] in
-                self.media.value = $0
-                print("self.media.value: \(self.media.value)")
-            }.asObservable()
-            .subscribeAndDispose(by: self.bag)
+        self.productService.fetchChapters(for: self.playlistId).subscribe(onSuccess: { chapters in
+            self.media.value = chapters
+        }, onError: { error in
+            print("fetchChapters failed with error: \(error.localizedDescription)")
+        }).disposed(by: self.bag)
     }
 }

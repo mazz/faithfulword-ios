@@ -1,4 +1,3 @@
-
 import Foundation
 public struct MediaChapterResponse: Codable {
     public var result: [MediaChapter]

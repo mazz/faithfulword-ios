@@ -1,16 +1,7 @@
-
 import Foundation
-import ObjectMapper
 
-class MediaMusicResponse : Mappable {
-    var media : [MediaMusic]?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        media  <- map["result"]
-    }
-    
+public struct MediaMusicResponse: Codable {
+    public var result: [MediaMusic]
+    public var status: String
+    public var version: String
 }

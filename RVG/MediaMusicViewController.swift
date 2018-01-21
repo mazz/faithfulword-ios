@@ -36,20 +36,13 @@ class MediaMusicViewController: BaseClass {
             case let .success(moyaResponse):
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-                    let data = moyaResponse.data
-                    var parsedObject: MediaMusicResponse
+                    let mediaMusicResponse: MediaMusicResponse = try moyaResponse.map(MediaMusicResponse.self)
+                    print("mapped to moyaResponse: \(moyaResponse)")
                     
-                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                    if let jsonObject = json as? [String:Any] {
-                        parsedObject = MediaMusicResponse(JSON: jsonObject)!
-                        print(parsedObject)
-                        
-                        self.music = parsedObject.media!
-                        DispatchQueue.main.async {
-                            MBProgressHUD.hide(for: self.view, animated: true)
-                            self.tableView.reloadData()
-                        }
-                        
+                    self.music = mediaMusicResponse.result
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.tableView.reloadData()
                     }
                 }
                 catch {

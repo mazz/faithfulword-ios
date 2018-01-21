@@ -2,15 +2,16 @@ import Foundation
 import GRDB
 
 public struct Book: Codable {
-    var bookId: Int64?
+//    var bookId: Int64?
     var userId: Int64?
     public var bid: String
     public var title: String
     public var languageId: String
     public var localizedTitle: String
+    
 }
 
-// Define colums so that we can build GRDB requests
+// Define columns so that we can build GRDB requests
 extension Book {
     enum Columns {
         static let userId = Column("userId")
@@ -29,8 +30,8 @@ extension Book: RowConvertible { }
 // Implementation is partially derived from Codable.
 extension Book: MutablePersistable {
     public static let databaseTableName = "book"
-    public mutating func didInsert(with rowID: Int64, for column: String?) {
-        bookId = rowID
+    public mutating func didInsert(with rowID: String, for column: String?) {
+        bid = rowID
     }
 }
 

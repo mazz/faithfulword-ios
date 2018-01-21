@@ -90,11 +90,11 @@ extension MainCoordinator: NavigationCoordinating {
 //        viewController.navigationItem.rightBarButtonItem = close
     }
 
-    private func goToBook(for bookId: String) {
+    private func goToBook(for bookUuid: String) {
         // do not use a new flow, because Chapters is part of the Book flow AFAICT
 //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
         
-        self.resettableMediaListingCoordinator.value.playlistId = bookId
+        self.resettableMediaListingCoordinator.value.playlistId = bookUuid
         self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
             
@@ -144,9 +144,9 @@ extension MainCoordinator {
     private func handle(eventsFrom mainViewModel: MainViewModel) {
         mainViewModel.drillInEvent.next { [unowned self] type in
             switch type {
-            case .bookType(let bookId):
-                print(".defaultType: \(bookId)")
-                self.goToBook(for: bookId)
+            case .bookType(let bookUuid):
+                print(".defaultType: \(bookUuid)")
+                self.goToBook(for: bookUuid)
             default:
                 break
             }

@@ -20,7 +20,7 @@ internal enum BooksItemType {
 }
 
 public enum BooksDrillInType {
-    case bookType(bookId: String)
+    case bookType(bookUuid: String)
 }
 
 extension BooksSectionViewModel: SectionModelType {
