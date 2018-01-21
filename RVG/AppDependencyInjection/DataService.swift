@@ -214,15 +214,6 @@ extension DataService: ProductDataServicing {
         case .unknown:
             return dataStore.fetchChapters(for: bookUuid)
         }
-        
-//        return storedChapters.flatMap { mediaChapterResponse -> Single<[Playable]> in
-//            Single.just(mediaChapterResponse.result)
-//        }
-
-//        MARK: not storing but listing
-//        return mediaChapterResponse.flatMap { mediaChapterResponse -> Single<[Playable]> in
-//            Single.just(mediaChapterResponse.result)
-//        }
     }
 
     public var books: Observable<[Book]> {
