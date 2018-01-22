@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
 		4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */; };
@@ -23,7 +24,6 @@
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
 		4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */; };
 		4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */; };
-		4CA31F962009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F952009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift */; };
 		4CA31F982009DF4800A94101 /* MediaListingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */; };
 		4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */; };
 		4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */; };
@@ -147,6 +147,7 @@
 		39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
+		4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceGroupSelectionCell.swift; sourceTree = "<group>"; };
@@ -163,7 +164,6 @@
 		4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsModel.swift; sourceTree = "<group>"; };
 		4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetInflating.swift"; sourceTree = "<group>"; };
 		4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceGroupSelectionCell.xib; sourceTree = "<group>"; };
-		4CA31F952009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+BaseMaking.swift"; path = "../../../../files.noindex/BoseMobile-iOS_nogit/BoseMobileUI/BoseMobileUI/Styling/UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
 		4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingCoordinator.swift; sourceTree = "<group>"; };
 		4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaListingViewModel.swift; sourceTree = "<group>"; };
 		4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingSectionViewModel.swift; sourceTree = "<group>"; };
@@ -410,8 +410,8 @@
 				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
 				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
 				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
-				4CA31F952009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift */,
 				4CFB84FF2005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift */,
+				4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */,
 				4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */,
 				4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */,
 				4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */,
@@ -893,6 +893,7 @@
 				683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */,
 				683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */,
 				4CFB85042005B92E00FEBB53 /* UIView+Instantiating.swift in Sources */,
+				4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
 				4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */,
 				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
@@ -963,7 +964,6 @@
 				68B2B1061F57B70600D986D4 /* BookTitleResponse.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
-				4CA31F962009D7E400A94101 /* UIBarButtonItem+BaseMaking.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
 				4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */,
