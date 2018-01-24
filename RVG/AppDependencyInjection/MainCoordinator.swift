@@ -1,6 +1,12 @@
 import UIKit
 import RxSwift
 
+
+internal enum MainRevealState {
+    case closed
+    case open
+}
+
 /// Coordinator in charge of all navigation in authenticated state.
 /// Handles navigation between the main and device selection flows.
 internal final class MainCoordinator: NSObject {
@@ -11,6 +17,10 @@ internal final class MainCoordinator: NSObject {
     private let bag = DisposeBag()
     private var deviceContextBag = DisposeBag()
     private var mainFlowCompletion: FlowCompletion!
+    
+    // hamburger
+    private var mainViewRevealed: MainRevealState = .closed
+    private var originalMenuFrame: CGRect!
     
     // MARK: Dependencies
     
@@ -63,6 +73,10 @@ extension MainCoordinator: NavigationCoordinating {
         attachSettingAction(to: mainViewController)
         
         mainNavigationController = UINavigationController(rootViewController: mainViewController)
+        
+        // keep original state of hamburger so we know what frame to toggle back to
+        originalMenuFrame = self.mainNavigationController.view.frame
+        
         handle(eventsFrom: mainViewController.viewModel)
         setup(mainNavigationController)
         
@@ -76,8 +90,9 @@ extension MainCoordinator: NavigationCoordinating {
     
     private func attachRootMenuAction(to viewController: UIViewController) {
         let hamburger = UIBarButtonItem.hamburger()
+        
         hamburger.rx.tap.asObservable().subscribe(onNext: { [unowned self] in
-            self.goToDeviceSelection()
+            self.goToHamburger()
         }).disposed(by: bag)
         viewController.navigationItem.leftBarButtonItem = hamburger
     }
@@ -117,8 +132,44 @@ extension MainCoordinator: NavigationCoordinating {
 //        )
     }
 
-    private func goToDeviceSelection() {
-        print("goToDeviceSelection")
+    private func goToHamburger() {
+        print("goToHamburger")
+        
+        let mainNavigationView: UIView = self.mainNavigationController.view
+        let mainView: UIView = self.mainNavigationController.viewControllers[0].view
+
+        var targetRect: CGRect!
+        let openX: CGFloat = mainView.frame.size.width * 0.85
+        
+        switch mainViewRevealed {
+        case .closed:
+            targetRect = CGRect(x: openX,
+                                y: originalMenuFrame.origin.y,
+                                width: originalMenuFrame.size.width,
+                                height: originalMenuFrame.size.height)
+        case .open:
+            targetRect = CGRect(x: 0.0,
+                                y: originalMenuFrame.origin.y,
+                                width: originalMenuFrame.size.width,
+                                height: originalMenuFrame.size.height)
+        }
+        let hamburgerAnimation: UIViewPropertyAnimator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.8) {
+            mainNavigationView.frame = targetRect
+        }
+        
+        hamburgerAnimation.addCompletion { [unowned self] position in
+            switch self.mainViewRevealed {
+            case .closed:
+                mainView.isUserInteractionEnabled = false
+                self.mainViewRevealed = .open
+            case .open:
+                mainView.isUserInteractionEnabled = true
+                self.mainViewRevealed = .closed
+            }
+//            self.mainViewRevealed = (self.mainViewRevealed == .open) ? .closed : .open
+        }
+        hamburgerAnimation.startAnimation()
+        
 //        self.resettableDeviceSelectionCoordinator.value.flow(with: { viewController in
 //            self.mainNavigationController.present(viewController, animated: true)
 //        }, completion: { _ in
