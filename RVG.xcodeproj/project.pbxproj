@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */; };
+		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
 		4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */; };
@@ -148,6 +149,7 @@
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
 		4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
+		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceGroupSelectionCell.swift; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 				4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */,
 				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
 				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
+				4C21A729201843DC000F02CE /* SlideAnimationController.swift */,
 				4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */,
 				4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */,
 				4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */,
@@ -970,6 +973,7 @@
 				4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */,
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
+				4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				4CA31F982009DF4800A94101 /* MediaListingCoordinator.swift in Sources */,
 				68BE69D01EEA3B730082956D /* Gospel.swift in Sources */,

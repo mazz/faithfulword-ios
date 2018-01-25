@@ -135,6 +135,11 @@ extension MainCoordinator: NavigationCoordinating {
     private func goToHamburger() {
         print("goToHamburger")
         
+//        let mainViewController: MainViewController = self.mainNavigationController.viewControllers[0] as! MainViewController
+//        self.mainNavigationController.viewControllers[0].transitioningDelegate = self
+        
+
+        /*
         let mainNavigationView: UIView = self.mainNavigationController.view
         let mainView: UIView = self.mainNavigationController.viewControllers[0].view
 
@@ -166,9 +171,10 @@ extension MainCoordinator: NavigationCoordinating {
                 mainView.isUserInteractionEnabled = true
                 self.mainViewRevealed = .closed
             }
-//            self.mainViewRevealed = (self.mainViewRevealed == .open) ? .closed : .open
         }
         hamburgerAnimation.startAnimation()
+
+        */
         
 //        self.resettableDeviceSelectionCoordinator.value.flow(with: { viewController in
 //            self.mainNavigationController.present(viewController, animated: true)
