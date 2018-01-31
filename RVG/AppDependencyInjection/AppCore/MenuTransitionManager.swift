@@ -22,6 +22,9 @@ class MenuTransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UI
             if let delegate = delegate {
                 let tapGestureRecognizer = UITapGestureRecognizer(target: delegate, action: #selector(MenuTransitionManagerDelegate.dismiss))
                 snapshot?.addGestureRecognizer(tapGestureRecognizer)
+                snapshot?.layer.shadowRadius = 10.0
+                snapshot?.layer.shadowOpacity = 0.7
+
             }
         }
     }
@@ -44,12 +47,13 @@ class MenuTransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UI
         let moveDown = CGAffineTransform(translationX: 0, y: containerView.frame.height - 150)
         let moveUp = CGAffineTransform(translationX: 0, y: -50)
         
-//        let moveRight = CGAffineTransform(translationX: containerView.frame.width + 150, y: 0)
-//        let moveLeft = CGAffineTransform(translationX: 0, y: 0)
+        let moveRight = CGAffineTransform(translationX: containerView.frame.width - 75, y: 0)
+        let moveLeft = CGAffineTransform(translationX: 0, y: 0)
 
         // Add both views to the container view
         if isPresenting {
-            toView.transform = moveUp
+//            toView.transform = moveUp
+            toView.transform = moveLeft
             snapshot = fromView.snapshotView(afterScreenUpdates: true)
             containerView.addSubview(toView)
             containerView.addSubview(snapshot!)
@@ -59,11 +63,13 @@ class MenuTransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UI
         UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: [], animations: {
             
             if self.isPresenting {
-                self.snapshot?.transform = moveDown
+//                self.snapshot?.transform = moveDown
+                self.snapshot?.transform = moveRight
                 toView.transform = CGAffineTransform.identity
             } else {
                 self.snapshot?.transform = CGAffineTransform.identity
-                fromView.transform = moveUp
+//                fromView.transform = moveUp
+                fromView.transform = moveLeft
             }
             
             }, completion: { finished in
