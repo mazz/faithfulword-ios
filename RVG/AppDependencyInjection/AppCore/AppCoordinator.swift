@@ -13,32 +13,36 @@ internal class AppCoordinator {
     // MARK: Fields
     
     private var rootViewController: RootViewController!
+    private var sideMenuViewController: SideMenuController!
     private let bag = DisposeBag()
     
     
     // MARK: Dependencies
     
     private let uiFactory: AppUIMaking
-//    private let resettableInitialCoordinator: Resettable<InitialCoordinator>
+    //    private let resettableInitialCoordinator: Resettable<InitialCoordinator>
     private let resettableMainCoordinator: Resettable<MainCoordinator>
+    private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
     private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
-//    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
+    //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
     private let accountService: AccountServicing
     private let productService: ProductServicing
     
     internal init(uiFactory: AppUIMaking,
-//                  resettableInitialCoordinator: Resettable<InitialCoordinator>
-                  resettableMainCoordinator: Resettable<MainCoordinator>,
-                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
-//                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
-                  accountService: AccountServicing,
-                  productService: ProductServicing
+                  //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
+        resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>,
+        resettableMainCoordinator: Resettable<MainCoordinator>,
+        resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
+        //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
+        accountService: AccountServicing,
+        productService: ProductServicing
         ) {
         self.uiFactory = uiFactory
-//        self.resettableInitialCoordinator = resettableInitialCoordinator
+        //        self.resettableInitialCoordinator = resettableInitialCoordinator
+        self.resettableSideMenuCoordinator = resettableSideMenuCoordinator
         self.resettableMainCoordinator = resettableMainCoordinator
         self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
-//        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
+        //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
         self.accountService = accountService
         self.productService = productService
     }
@@ -47,18 +51,25 @@ internal class AppCoordinator {
 // MARK: <NavigationCoordinating>
 extension AppCoordinator: NavigationCoordinating {
     public func flow(with setup: FlowSetup, completion: @escaping FlowCompletion, context: FlowContext) {
+//        rootViewController = uiFactory.makeRoot()
+//        setup(rootViewController)
+
         rootViewController = uiFactory.makeRoot()
         setup(rootViewController)
+
+//        sideMenuViewController = uiFactory.makeSideMenu()
+//        self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)
+
         // Load splash screen animations, proceed to other flows when completed
         swapInSplashScreenFlow()
     }
-    
+
     private func startHandlingAuthEvents() {
         
         // while we do not require auth,
         // just check for user books for now
-//        self.checkUserBooks()
-
+        //        self.checkUserBooks()
+        
         // On Logout, go back to the Initial flow
         accountService.authState
             // Event only fire on main thread
@@ -92,6 +103,7 @@ extension AppCoordinator: NavigationCoordinating {
     /// Puts the initial flow (unauthenticated state) on top of the rootViewController,
     /// and sets up the initial flow to be replaced by the main flow when complete.
     private func swapInInitialFlow() {
+        print("swapInInitialFlow")
 //        resettableInitialCoordinator.value.flow(with: { [unowned self] initialFlowViewController in
 //            self.rootViewController.plant(initialFlowViewController, withAnimation: GoseAnimations.fade)
 //        }, completion: { [unowned self] _ in
@@ -104,11 +116,56 @@ extension AppCoordinator: NavigationCoordinating {
     private func swapInMainFlow() {
         resettableMainCoordinator.value.flow(with: { [unowned self] mainFlowViewController in
             self.rootViewController.plant(mainFlowViewController, withAnimation: AppAnimations.fade)
+            
+//            accountService.authState
+            resettableMainCoordinator.value.tappedHamburger
+                // Event only fire on main thread
+                .observeOn(MainScheduler.instance)
+                .subscribe(onNext: { [unowned self] revealState in
+                    switch revealState {
+                    case .closed:
+                       print("closed")
+                        self.swapInSideMenuFlow()
+                    case .open:
+                        print("open")
+                    }
+                    
+//                    }
+//                    if authState == .authenticated {
+//                        print("authenticated")
+//                        self.checkUserBooks()
+//                    } else if authState == .unauthenticated {
+//                        self.swapInInitialFlow()
+//                        print("unauthenticated")
+//                    }
+                })
+                .disposed(by: bag)
+
         }, completion: { [unowned self] _ in
             self.swapInInitialFlow()
             self.resettableMainCoordinator.reset()
         }, context: .other)
     }
+
+    func swapInSideMenuFlow() {
+        resettableSideMenuCoordinator.value.flow(with: { [unowned self] sideMenuViewController in
+            self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)//(sideMenuViewController, withAnimation: AppAnimations.fade)
+//            self.sideMenuViewController = sideMenuViewController as! SideMenuController
+            }, completion: { [unowned self] _ in
+                //                            self.swapInMainFlow()
+                
+//                self.startHandlingAuthEvents()
+//                self.accountService.start()
+//
+//                // bootstrap login/fetching of session HERE because we have no login UI
+//                self.accountService.startLoginFlow()
+//                    .asObservable()
+//                    .subscribeAndDispose(by: self.bag)
+                
+                self.resettableSideMenuCoordinator.reset()
+            }, context: .other)
+    }
+
     
     /// Puts the splash screen flow on top of the rootViewController, and animates the
     /// splash screen sequence. Authorization handling is called when complete.

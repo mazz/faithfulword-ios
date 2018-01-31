@@ -65,7 +65,7 @@ internal final class AppDependencyModule {
         
         attachUtilityDependencies(to: container)
         attachAppLevelDependencies(to: container)
-        
+        attachSideMenuFlowDependencies(to: container)
 //        attachInitialFlowDependencies(to: container)
         attachMainFlowDependencies(to: container)
         attachSplashScreenFlowDependencies(to: container)
@@ -98,6 +98,9 @@ internal final class AppDependencyModule {
 //                resettableInitialCoordinator: Resettable {
 //                    resolver.resolve(InitialCoordinator.self)!
 //                },
+                resettableSideMenuCoordinator: Resettable {
+                    resolver.resolve(SideMenuCoordinator.self)!
+                },
                 resettableMainCoordinator: Resettable {
                     resolver.resolve(MainCoordinator.self)!
                 },
@@ -129,6 +132,14 @@ internal final class AppDependencyModule {
 //        }
 //    }
     
+    private static func attachSideMenuFlowDependencies(to container: Container) {
+        container.register(SideMenuCoordinator.self) { resolver in
+            SideMenuCoordinator(
+                uiFactory: resolver.resolve(AppUIMaking.self)!
+            )
+        }
+    }
+
     
     private static func attachMainFlowDependencies(to container: Container) {
         container.register(MediaListingCoordinator.self) { resolver in
@@ -140,7 +151,11 @@ internal final class AppDependencyModule {
                 appUIMaking: resolver.resolve(AppUIMaking.self)!,
                 resettableMediaListingCoordinator: Resettable {
                     resolver.resolve(MediaListingCoordinator.self)!
+                },
+                resettableSideMenuCoordinator: Resettable {
+                    resolver.resolve(SideMenuCoordinator.self)!
                 }
+
 //                resettableSettingsCoordinator: Resettable {
 //                    resolver.resolve(SettingsCoordinator.self)!
 //                },

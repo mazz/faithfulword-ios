@@ -7,6 +7,7 @@ internal protocol AppUIMaking {
     func makeRoot() -> RootViewController
 //    func makeInitial() -> InitialViewController
     func makeMain() -> MainViewController
+    func makeSideMenu() -> SideMenuController
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
     func makeSplashScreen() -> SplashScreenViewController
 }
@@ -30,6 +31,12 @@ internal final class UIFactory: UIMaking {
 
 // MARK: <AppUIMaking>
 extension UIFactory: AppUIMaking {
+    
+    func makeSideMenu() -> SideMenuController {
+        let sideMenuController = SideMenuController.make(storyboardName: StoryboardName.sideMenu)
+        return sideMenuController
+    }
+    
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController {
         let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaList)
         mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaType)

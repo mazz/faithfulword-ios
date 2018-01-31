@@ -9,9 +9,13 @@
 /* Begin PBXBuildFile section */
 		4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */; };
 		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
+		4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */; };
+		4C21A72E20201148000F02CE /* SideMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C21A72D20201148000F02CE /* SideMenu.storyboard */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
 		4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */; };
+		4C3998FC20201942008E76E8 /* SideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FB20201942008E76E8 /* SideMenuController.swift */; };
+		4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FD2021FC34008E76E8 /* MenuTransitionManager.swift */; };
 		4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3E87291FFDAFAF0037C22E /* DataStore.swift */; };
 		4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5466200EF7D30038B265 /* LoginSequencer.swift */; };
 		4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5468200EF7E60038B265 /* AccountService.swift */; };
@@ -150,9 +154,13 @@
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
 		4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
 		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
+		4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCoordinator.swift; sourceTree = "<group>"; };
+		4C21A72D20201148000F02CE /* SideMenu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SideMenu.storyboard; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceGroupSelectionCell.swift; sourceTree = "<group>"; };
+		4C3998FB20201942008E76E8 /* SideMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuController.swift; sourceTree = "<group>"; };
+		4C3998FD2021FC34008E76E8 /* MenuTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTransitionManager.swift; sourceTree = "<group>"; };
 		4C3E87291FFDAFAF0037C22E /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		4C7D5466200EF7D30038B265 /* LoginSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequencer.swift; sourceTree = "<group>"; };
 		4C7D5468200EF7E60038B265 /* AccountService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountService.swift; sourceTree = "<group>"; };
@@ -393,6 +401,7 @@
 				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
 				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
 				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
+				4C3998FD2021FC34008E76E8 /* MenuTransitionManager.swift */,
 				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
 				4C8EE8C11FF60105003F483A /* ProductService.swift */,
 				4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */,
@@ -451,7 +460,10 @@
 				4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */,
 				4C7D546C2013DB210038B265 /* MediaListingViewController.swift */,
 				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
+				4C21A72D20201148000F02CE /* SideMenu.storyboard */,
 				4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */,
+				4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */,
+				4C3998FB20201942008E76E8 /* SideMenuController.swift */,
 				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
 				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
 				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
@@ -806,6 +818,7 @@
 				4CFB84FE2005AEEB00FEBB53 /* Root.storyboard in Resources */,
 				4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
+				4C21A72E20201148000F02CE /* SideMenu.storyboard in Resources */,
 				4CFB84FA2005AE1A00FEBB53 /* SettingDrillInCell.xib in Resources */,
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
@@ -940,6 +953,8 @@
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4CCE8C7B1FF4B5CA00AFBAF2 /* RootViewController.swift in Sources */,
 				4CCE8C7F1FF4B6D000AFBAF2 /* AppAnimations.swift in Sources */,
+				4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */,
+				4C3998FC20201942008E76E8 /* SideMenuController.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
 				68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */,
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,
@@ -947,6 +962,7 @@
 				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
 				4CA31FAC200E3C0900A94101 /* User.swift in Sources */,
+				4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
 				68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,

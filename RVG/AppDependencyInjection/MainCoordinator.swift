@@ -11,8 +11,11 @@ internal enum MainRevealState {
 /// Handles navigation between the main and device selection flows.
 internal final class MainCoordinator: NSObject {
     
+    public var tappedHamburger = PublishSubject<MainRevealState>()
+
     // MARK: Fields
     
+    private let menuTransitionManager = MenuTransitionManager()
     private var mainNavigationController: UINavigationController!
     private let bag = DisposeBag()
     private var deviceContextBag = DisposeBag()
@@ -27,7 +30,8 @@ internal final class MainCoordinator: NSObject {
     private let appUIMaking: AppUIMaking
 //    private let resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>
     private let resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
-    
+    private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
+
 //    private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
     
 //    private let resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>
@@ -39,7 +43,9 @@ internal final class MainCoordinator: NSObject {
 
     internal init(appUIMaking: AppUIMaking,
 //                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
-                  resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
+                  resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>,
+        resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
+
 //                  resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>,
 //                  resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>,
 //                  resettableSectionalNavigatorCoordinator: Resettable<SectionalNavigatorCoordinator>,
@@ -48,6 +54,8 @@ internal final class MainCoordinator: NSObject {
         ) {
         self.appUIMaking = appUIMaking
         self.resettableMediaListingCoordinator = resettableMediaListingCoordinator
+        self.resettableSideMenuCoordinator = resettableSideMenuCoordinator
+
 //        self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
 
         //        self.resettableDeviceNowPlayingCoordinator = resettableDeviceNowPlayingCoordinator
@@ -131,9 +139,35 @@ extension MainCoordinator: NavigationCoordinating {
 //            animated: true
 //        )
     }
+    
+    func swapInSideMenuFlow() {
+        resettableSideMenuCoordinator.value.flow(with: { [unowned self] sideMenuViewController in
+            sideMenuViewController.transitioningDelegate = menuTransitionManager
+            menuTransitionManager.delegate = self
+
+            self.mainNavigationController.present(sideMenuViewController, animated: true)
+//            self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)//(sideMenuViewController, withAnimation: AppAnimations.fade)
+            //            self.sideMenuViewController = sideMenuViewController as! SideMenuController
+            }, completion: { [unowned self] _ in
+                //                            self.swapInMainFlow()
+                
+                //                self.startHandlingAuthEvents()
+                //                self.accountService.start()
+                //
+                //                // bootstrap login/fetching of session HERE because we have no login UI
+                //                self.accountService.startLoginFlow()
+                //                    .asObservable()
+                //                    .subscribeAndDispose(by: self.bag)
+                self.mainNavigationController.dismiss(animated: true)
+                self.resettableSideMenuCoordinator.reset()
+            }, context: .present)
+    }
 
     private func goToHamburger() {
         print("goToHamburger")
+        self.swapInSideMenuFlow()
+//        tappedHamburger.onNext(mainViewRevealed)
+        
         
 //        let mainViewController: MainViewController = self.mainNavigationController.viewControllers[0] as! MainViewController
 //        self.mainNavigationController.viewControllers[0].transitioningDelegate = self
@@ -264,12 +298,18 @@ extension MainCoordinator {
 //    }
 //}
 
-extension MainCoordinator: UIViewControllerTransitioningDelegate {
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return presentBlurAnimationController
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return dismissBlurAnimationController
+//extension MainCoordinator: UIViewControllerTransitioningDelegate {
+//    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        return presentBlurAnimationController
+//    }
+//
+//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        return dismissBlurAnimationController
+//    }
+//}
+
+extension MainCoordinator: MenuTransitionManagerDelegate {
+    func dismiss() {
+        self.mainNavigationController.dismiss(animated: true, completion: nil)
     }
 }
