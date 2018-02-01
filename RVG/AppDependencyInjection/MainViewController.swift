@@ -42,19 +42,6 @@ public final class MainViewController: UIViewController {
                 self.collectionView.reloadData()
             }.disposed(by: bag)
     }
-
-//    private func reactToContentSizeChange() {
-//        // Only dynamically change in iOS 11+. With iOS 10, user must re-launch app
-//        if #available(iOS 11, *) {
-//            NotificationCenter.default.rx
-//                .notification(NSNotification.Name.UIContentSizeCategoryDidChange)
-//                .next { [unowned self] _ in
-//                    // With self sizing done in collectionView:cellForItemAt, the layout doesn't yet know to recalculate the layout attributes
-//                    self.collectionView.collectionViewLayout.invalidateLayout()
-//                }
-//                .disposed(by: bag)
-//        }
-//    }
     
     private func registerReusableViews() {
         collectionView.register(cellType: DeviceGroupSelectionCell.self)

@@ -1,5 +1,4 @@
 import RxSwift
-import Alamofire
 
 internal final class MainViewModel {
     
@@ -28,9 +27,6 @@ internal final class MainViewModel {
             return nil
         }
     }
-    
-    private let networkStatus = PublishSubject<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>()
-
     
     // MARK: Dependencies
     

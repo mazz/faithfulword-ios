@@ -34,6 +34,7 @@ extension UIFactory: AppUIMaking {
     
     func makeSideMenu() -> SideMenuController {
         let sideMenuController = SideMenuController.make(storyboardName: StoryboardName.sideMenu)
+        sideMenuController.viewModel = resolver.resolve(SideMenuViewModel.self)
         return sideMenuController
     }
     

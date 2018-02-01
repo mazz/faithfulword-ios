@@ -135,6 +135,9 @@ internal final class AppDependencyModule {
                 uiFactory: resolver.resolve(AppUIMaking.self)!
             )
         }
+        container.register(SideMenuViewModel.self) { resolver in
+            SideMenuViewModel()
+        }
     }
 
     
