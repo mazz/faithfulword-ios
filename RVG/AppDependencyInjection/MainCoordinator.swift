@@ -10,9 +10,6 @@ internal enum MainRevealState {
 /// Coordinator in charge of all navigation in authenticated state.
 /// Handles navigation between the main and device selection flows.
 internal final class MainCoordinator: NSObject {
-    
-    public var tappedHamburger = PublishSubject<MainRevealState>()
-
     // MARK: Fields
     
     private let menuTransitionManager = MenuTransitionManager()

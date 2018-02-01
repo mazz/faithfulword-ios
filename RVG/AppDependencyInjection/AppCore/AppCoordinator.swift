@@ -22,7 +22,6 @@ internal class AppCoordinator {
     private let uiFactory: AppUIMaking
     //    private let resettableInitialCoordinator: Resettable<InitialCoordinator>
     private let resettableMainCoordinator: Resettable<MainCoordinator>
-    private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
     private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
     //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
     private let accountService: AccountServicing
@@ -30,7 +29,6 @@ internal class AppCoordinator {
     
     internal init(uiFactory: AppUIMaking,
                   //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
-        resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>,
         resettableMainCoordinator: Resettable<MainCoordinator>,
         resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
         //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
@@ -39,7 +37,6 @@ internal class AppCoordinator {
         ) {
         self.uiFactory = uiFactory
         //        self.resettableInitialCoordinator = resettableInitialCoordinator
-        self.resettableSideMenuCoordinator = resettableSideMenuCoordinator
         self.resettableMainCoordinator = resettableMainCoordinator
         self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
         //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
@@ -116,56 +113,11 @@ extension AppCoordinator: NavigationCoordinating {
     private func swapInMainFlow() {
         resettableMainCoordinator.value.flow(with: { [unowned self] mainFlowViewController in
             self.rootViewController.plant(mainFlowViewController, withAnimation: AppAnimations.fade)
-            
-//            accountService.authState
-            resettableMainCoordinator.value.tappedHamburger
-                // Event only fire on main thread
-                .observeOn(MainScheduler.instance)
-                .subscribe(onNext: { [unowned self] revealState in
-                    switch revealState {
-                    case .closed:
-                       print("closed")
-                        self.swapInSideMenuFlow()
-                    case .open:
-                        print("open")
-                    }
-                    
-//                    }
-//                    if authState == .authenticated {
-//                        print("authenticated")
-//                        self.checkUserBooks()
-//                    } else if authState == .unauthenticated {
-//                        self.swapInInitialFlow()
-//                        print("unauthenticated")
-//                    }
-                })
-                .disposed(by: bag)
-
         }, completion: { [unowned self] _ in
             self.swapInInitialFlow()
             self.resettableMainCoordinator.reset()
         }, context: .other)
     }
-
-    func swapInSideMenuFlow() {
-        resettableSideMenuCoordinator.value.flow(with: { [unowned self] sideMenuViewController in
-            self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)//(sideMenuViewController, withAnimation: AppAnimations.fade)
-//            self.sideMenuViewController = sideMenuViewController as! SideMenuController
-            }, completion: { [unowned self] _ in
-                //                            self.swapInMainFlow()
-                
-//                self.startHandlingAuthEvents()
-//                self.accountService.start()
-//
-//                // bootstrap login/fetching of session HERE because we have no login UI
-//                self.accountService.startLoginFlow()
-//                    .asObservable()
-//                    .subscribeAndDispose(by: self.bag)
-                
-                self.resettableSideMenuCoordinator.reset()
-            }, context: .other)
-    }
-
     
     /// Puts the splash screen flow on top of the rootViewController, and animates the
     /// splash screen sequence. Authorization handling is called when complete.

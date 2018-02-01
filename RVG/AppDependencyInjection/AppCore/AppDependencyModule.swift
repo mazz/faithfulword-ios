@@ -98,9 +98,6 @@ internal final class AppDependencyModule {
 //                resettableInitialCoordinator: Resettable {
 //                    resolver.resolve(InitialCoordinator.self)!
 //                },
-                resettableSideMenuCoordinator: Resettable {
-                    resolver.resolve(SideMenuCoordinator.self)!
-                },
                 resettableMainCoordinator: Resettable {
                     resolver.resolve(MainCoordinator.self)!
                 },
