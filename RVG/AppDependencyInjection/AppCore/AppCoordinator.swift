@@ -13,7 +13,7 @@ internal class AppCoordinator {
     // MARK: Fields
     
     private var rootViewController: RootViewController!
-    private var sideMenuViewController: SideMenuController!
+    private var sideMenuViewController: SideMenuViewController!
     private let bag = DisposeBag()
     
     

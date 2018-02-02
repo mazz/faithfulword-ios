@@ -3,45 +3,45 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-public final class SideMenuController: UIViewController {
-    
+public final class SideMenuViewController: UIViewController {
+
     @IBOutlet weak var collectionView: UICollectionView!
-    
+
     // MARK: Dependencies
 
     internal var viewModel: SideMenuViewModel!
 
     // MARK: Fields
-    
+
     private var viewModelSections: [SideMenuSectionViewModel] = []
     private let bag = DisposeBag()
 
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
-        
+
         registerReusableViews()
         bindToViewModel()
         reactToViewModel()
     }
-    
+
     // MARK: Private helpers
-    
+
     private func reactToViewModel() {
         viewModel.sections.asObservable()
             .next { [unowned self] sections in
                 // Cache our viewModel sections, so we don't need to read the value while it' still being written to
                 self.viewModelSections = sections
-                
+
                 self.collectionView.reloadData()
             }.disposed(by: bag)
     }
-    
+
     private func registerReusableViews() {
         collectionView.register(cellType: DeviceGroupSelectionCell.self)
         collectionView.register(cellType: VerseCell.self)
     }
-    
+
     private func bindToViewModel() {
         collectionView.rx.setDelegate(self).disposed(by: bag)
         viewModel.sections.asObservable()
@@ -51,8 +51,7 @@ public final class SideMenuController: UIViewController {
             .subscribe(viewModel.selectItemEvent.asObserver())
             .disposed(by: bag)
     }
-    
-    
+
     private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<SideMenuSectionViewModel> {
         let dataSource = RxCollectionViewSectionedReloadDataSource<SideMenuSectionViewModel>(
             configureCell: { (dataSource, collectionView, indexPath, item) in
@@ -65,23 +64,23 @@ public final class SideMenuController: UIViewController {
                     let verseCell = collectionView.dequeue(cellType: VerseCell.self, for: indexPath)
                     verseCell.populate(with: body, chapterAndVerse: chapterAndVerse)
                     return verseCell
-                }},
+                } },
             configureSupplementaryView: { _, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(
                     ofKind: kind,
                     withReuseIdentifier: UICollectionReusableView.identifierName,
                     for: indexPath)
-        })
+            })
         return dataSource
     }
 }
 
-extension SideMenuController: UICollectionViewDelegateFlowLayout {
+extension SideMenuViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
         let preferredWidth: CGFloat = collectionView.bounds.width
-        
+
         switch viewModel.item(at: indexPath) {
         case let .drillIn(_, iconName, title, showBottomSeparator):
             guard let view = try? UIView.sizingView(for: DeviceGroupSelectionCell.self,

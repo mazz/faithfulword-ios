@@ -14,7 +14,7 @@ internal final class MainCoordinator: NSObject {
 
     private let menuTransitionManager = MenuTransitionManager()
     private var mainNavigationController: UINavigationController!
-    private var sideMenuController: SideMenuController?
+    private var sideMenuController: SideMenuViewController?
 
     private let bag = DisposeBag()
     private var deviceContextBag = DisposeBag()
@@ -137,7 +137,7 @@ extension MainCoordinator: NavigationCoordinating {
             sideMenuViewController.transitioningDelegate = menuTransitionManager
             menuTransitionManager.delegate = self
             
-            if let controller = sideMenuViewController as? SideMenuController {
+            if let controller = sideMenuViewController as? SideMenuViewController {
                 self.sideMenuController = controller
 //                self.sideMenuController = sideMenuViewController as! SideMenuController
                 handle(eventsFrom: (self.sideMenuController?.viewModel)!)

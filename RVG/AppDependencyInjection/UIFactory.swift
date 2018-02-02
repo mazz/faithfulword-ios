@@ -12,7 +12,7 @@ internal protocol AppUIMaking {
     func makeInlineWebBrowser(url: URL) -> SFSafariViewController
     func makeMailComposer() -> MFMailComposeViewController?
     func makeOkAlert(title: String, message: String) -> UIAlertController
-    func makeSideMenu() -> SideMenuController
+    func makeSideMenu() -> SideMenuViewController
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
     func makeSplashScreen() -> SplashScreenViewController
 }
@@ -37,8 +37,8 @@ internal final class UIFactory: UIMaking {
 // MARK: <AppUIMaking>
 extension UIFactory: AppUIMaking {
     
-    func makeSideMenu() -> SideMenuController {
-        let sideMenuController = SideMenuController.make(storyboardName: StoryboardName.sideMenu)
+    func makeSideMenu() -> SideMenuViewController {
+        let sideMenuController = SideMenuViewController.make(storyboardName: StoryboardName.sideMenu)
         sideMenuController.viewModel = resolver.resolve(SideMenuViewModel.self)
         return sideMenuController
     }

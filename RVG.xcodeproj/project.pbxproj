@@ -14,7 +14,7 @@
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
 		4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */; };
-		4C3998FC20201942008E76E8 /* SideMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FB20201942008E76E8 /* SideMenuController.swift */; };
+		4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FB20201942008E76E8 /* SideMenuViewController.swift */; };
 		4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FD2021FC34008E76E8 /* MenuTransitionManager.swift */; };
 		4C39990020229D6C008E76E8 /* SideMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FF20229D6C008E76E8 /* SideMenuViewModel.swift */; };
 		4C39990220229E02008E76E8 /* SideMenuSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */; };
@@ -163,7 +163,7 @@
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceGroupSelectionCell.swift; sourceTree = "<group>"; };
-		4C3998FB20201942008E76E8 /* SideMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuController.swift; sourceTree = "<group>"; };
+		4C3998FB20201942008E76E8 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		4C3998FD2021FC34008E76E8 /* MenuTransitionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTransitionManager.swift; sourceTree = "<group>"; };
 		4C3998FF20229D6C008E76E8 /* SideMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewModel.swift; sourceTree = "<group>"; };
 		4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuSectionViewModel.swift; sourceTree = "<group>"; };
@@ -475,7 +475,7 @@
 				4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */,
 				4C21A72D20201148000F02CE /* SideMenu.storyboard */,
 				4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */,
-				4C3998FB20201942008E76E8 /* SideMenuController.swift */,
+				4C3998FB20201942008E76E8 /* SideMenuViewController.swift */,
 				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
 				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
 				4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */,
@@ -969,7 +969,7 @@
 				4CCE8C7B1FF4B5CA00AFBAF2 /* RootViewController.swift in Sources */,
 				4CCE8C7F1FF4B6D000AFBAF2 /* AppAnimations.swift in Sources */,
 				4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */,
-				4C3998FC20201942008E76E8 /* SideMenuController.swift in Sources */,
+				4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
 				68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */,
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,

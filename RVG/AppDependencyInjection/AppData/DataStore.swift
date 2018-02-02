@@ -65,33 +65,51 @@ public final class DataStore {
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("v2") { db in
-            try! db.create(table: "user") { userTable in
-                print("created: \(userTable)")
-                userTable.column("userId", .integer).primaryKey()
-                userTable.column("userUuid", .text)
-                userTable.column("name", .text)
-                userTable.column("session", .text)
-                userTable.column("pushNotifications", .boolean)
+            do {
+                try db.create(table: "user") { userTable in
+                    print("created: \(userTable)")
+                    userTable.column("userId", .integer).primaryKey()
+                    userTable.column("userUuid", .text)
+                    userTable.column("name", .text)
+                    userTable.column("session", .text)
+                    userTable.column("pushNotifications", .boolean)
+                }
             }
-            try! db.create(table: "book") { bookTable in
-                print("created: \(bookTable)")
-//                bookTable.column("bookId", .integer).primaryKey()
-                bookTable.column("bid", .text).primaryKey()
-                bookTable.column("title", .text)
-                bookTable.column("languageId", .text)
-                bookTable.column("localizedTitle", .text)
-                bookTable.column("userId", .integer).references("user", onDelete: .cascade)
+            catch {
+                print("error making user table: \(error)")
             }
-            try! db.create(table: "mediachapter") { chapterTable in
-                print("created: \(chapterTable)")
-//                chapterTable.column("chapterId", .integer).primaryKey()
-                chapterTable.column("uuid", .text).primaryKey()
-                chapterTable.column("localizedName", .text)
-                chapterTable.column("path", .text)
-                chapterTable.column("presenterName", .text)
-                chapterTable.column("sourceMaterial", .text)
-                chapterTable.column("bid", .text).references("book", onDelete: .cascade)
+
+            do {
+                try db.create(table: "book") { bookTable in
+                    print("created: \(bookTable)")
+                    //                bookTable.column("bookId", .integer).primaryKey()
+                    bookTable.column("bid", .text).primaryKey()
+                    bookTable.column("title", .text)
+                    bookTable.column("languageId", .text)
+                    bookTable.column("localizedTitle", .text)
+                    bookTable.column("userId", .integer).references("user", onDelete: .cascade)
+                }
             }
+            catch {
+                print("error making book table: \(error)")
+            }
+
+            do {
+                try db.create(table: "mediachapter") { chapterTable in
+                    print("created: \(chapterTable)")
+                    //                chapterTable.column("chapterId", .integer).primaryKey()
+                    chapterTable.column("uuid", .text).primaryKey()
+                    chapterTable.column("localizedName", .text)
+                    chapterTable.column("path", .text)
+                    chapterTable.column("presenterName", .text)
+                    chapterTable.column("sourceMaterial", .text)
+                    chapterTable.column("bid", .text).references("book", onDelete: .cascade)
+                }
+            }
+            catch {
+                print("error making mediachapter table: \(error)")
+            }
+
         }
         return migrator
     }
