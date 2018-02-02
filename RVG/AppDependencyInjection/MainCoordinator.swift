@@ -111,6 +111,10 @@ extension MainCoordinator: NavigationCoordinating {
 //        viewController.navigationItem.rightBarButtonItem = close
     }
 
+    private func goToSoulWinningFlow(for bookUuid: String) {
+        
+    }
+
     private func goToBook(for bookUuid: String) {
         // do not use a new flow, because Chapters is part of the Book flow AFAICT
 //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
@@ -290,7 +294,7 @@ extension MainCoordinator {
                 case .bible:
                     print(".bible")
                     self.dismiss()
-                case .soulwinning:
+                case .gospel:
                     print(".soulwinning")
                 case .music:
                     print(".music")

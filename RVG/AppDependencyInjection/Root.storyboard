@@ -78,37 +78,6 @@
             </objects>
             <point key="canvasLocation" x="120.8" y="-618.44077961019491"/>
         </scene>
-        <!--Main View Controller depr-->
-        <scene sceneID="fNk-yR-jeB">
-            <objects>
-                <viewController storyboardIdentifier="MainViewController_depr" id="U9D-YH-jZo" customClass="MainViewController_depr" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="eUP-VQ-M47"/>
-                        <viewControllerLayoutGuide type="bottom" id="ZXI-kr-QCN"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hT3-yP-dbh">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5cW-K2-lsf">
-                                <rect key="frame" x="42" y="197" width="291" height="418"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="350"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.30840110780000002" green="0.5618229508" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="5cW-K2-lsf" firstAttribute="centerY" secondItem="hT3-yP-dbh" secondAttribute="centerY" id="MUx-py-VfC"/>
-                            <constraint firstItem="5cW-K2-lsf" firstAttribute="centerX" secondItem="hT3-yP-dbh" secondAttribute="centerX" id="xbq-P0-X1N"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="PYv-rw-O28"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="L51-nL-Fhe" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="769" y="-618"/>
-        </scene>
         <!--Media Listing View Controller-->
         <scene sceneID="V8x-t5-tQj">
             <objects>

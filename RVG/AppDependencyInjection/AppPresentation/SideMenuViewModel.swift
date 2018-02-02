@@ -44,7 +44,7 @@ internal final class SideMenuViewModel {
                                      iconName: "books-stack-of-three",
                                      title: NSLocalizedString("Bible", comment: "").l10n(),
                                      showBottomSeparator: true),
-            SideMenuItemType.drillIn(type: .soulwinning,
+            SideMenuItemType.drillIn(type: .gospel,
                                      iconName: "candlelight",
                                      title: NSLocalizedString("Soul-winning", comment: "").l10n(),
                                      showBottomSeparator: true),
