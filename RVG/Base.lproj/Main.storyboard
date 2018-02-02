@@ -959,7 +959,7 @@ Thank you!</string>
         <image name="close" width="20" height="20"/>
         <image name="dots" width="30" height="30"/>
         <image name="leftArrow" width="32" height="32"/>
-        <image name="menu" width="21" height="20"/>
+        <image name="menu" width="22" height="22"/>
         <image name="player_next_180" width="180" height="180"/>
         <image name="player_play_180" width="180" height="180"/>
         <image name="player_prev_180" width="180" height="180"/>

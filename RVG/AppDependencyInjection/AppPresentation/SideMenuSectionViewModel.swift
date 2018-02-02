@@ -7,11 +7,13 @@ internal struct SideMenuSectionViewModel {
 }
 
 internal enum SideMenuSectionType {
-    case normal
+    case menuItem
+    case quote
 }
 
 internal enum SideMenuItemType {
     case drillIn(type: SideMenuDrillInType, iconName: String, title: String, showBottomSeparator: Bool)
+    case quote(body: String, chapterAndVerse: String)
 }
 
 public enum SideMenuDrillInType {
@@ -37,4 +39,3 @@ extension SideMenuSectionViewModel: SectionModelType {
 public struct SideMenuItem {
     public var heading: SideMenuDrillInType
 }
-

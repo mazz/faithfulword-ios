@@ -1,12 +1,17 @@
 import Foundation
 import UIKit
 import Swinject
+import SafariServices
+import MessageUI
 
 /// Protocol facade for factory making all app-root-level related UI.
 internal protocol AppUIMaking {
     func makeRoot() -> RootViewController
 //    func makeInitial() -> InitialViewController
     func makeMain() -> MainViewController
+    func makeInlineWebBrowser(url: URL) -> SFSafariViewController
+    func makeMailComposer() -> MFMailComposeViewController?
+    func makeOkAlert(title: String, message: String) -> UIAlertController
     func makeSideMenu() -> SideMenuController
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
     func makeSplashScreen() -> SplashScreenViewController
@@ -66,6 +71,35 @@ extension UIFactory: AppUIMaking {
         return controller
     }
 
+    internal func makeInlineWebBrowser(url: URL) -> SFSafariViewController {
+        return SFSafariViewController(url: url)
+    }
+
+    internal func makeMailComposer() -> MFMailComposeViewController? {
+        let mailComposerVC = MFMailComposeViewController()
+        
+        let appVersionString: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        
+        mailComposerVC.setToRecipients(["allscripturebaptist@gmail.com"])
+        mailComposerVC.setSubject("All Scripture iOS \(appVersionString) App Feedback")
+
+        if MFMailComposeViewController.canSendMail() {
+            return mailComposerVC
+        } else {
+            return nil
+        }
+    }
+    
+    internal func makeOkAlert(title: String, message: String) -> UIAlertController {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok",
+                                     style: .default)
+        alert.addAction(okAction)
+        return alert
+    }
+    
     internal func makeSplashScreen() -> SplashScreenViewController {
         return SplashScreenViewController
             .make(storyboardName: StoryboardName.splashScreen)

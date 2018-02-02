@@ -2,20 +2,19 @@ import Foundation
 import RxSwift
 
 internal final class SideMenuViewModel {
-    
     // MARK: Fields
-    
+
     public func section(at index: Int) -> SideMenuSectionViewModel {
         return sections.value[index]
     }
-    
+
     public func item(at indexPath: IndexPath) -> SideMenuItemType {
         return section(at: indexPath.section).items[indexPath.item]
     }
-    
+
     public private(set) var sections = Field<[SideMenuSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
-    
+
     public var drillInEvent: Observable<SideMenuDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent.filterMap { [unowned self] indexPath -> SideMenuDrillInType? in
@@ -28,19 +27,19 @@ internal final class SideMenuViewModel {
             return nil
         }
     }
-    
+
     // MARK: Dependencies
     private var bag = DisposeBag()
-    
+
     internal init() {
         setupDatasource()
     }
-    
+
     // MARK: Private helpers
-    
+
     private func setupDatasource() {
         //        sections.value =
-        let items: [SideMenuItemType] = [
+        let menuItems: [SideMenuItemType] = [
             SideMenuItemType.drillIn(type: .bible,
                                      iconName: "books-stack-of-three",
                                      title: NSLocalizedString("Bible", comment: "").l10n(),
@@ -78,27 +77,11 @@ internal final class SideMenuViewModel {
                                      title: NSLocalizedString("Contact Us", comment: "").l10n(),
                                      showBottomSeparator: true)]
         sections.value = [
-            SideMenuSectionViewModel(type: .normal, items: items)
+            SideMenuSectionViewModel(type: .menuItem, items: menuItems),
+            SideMenuSectionViewModel(type: .quote, items: [
+                SideMenuItemType.quote(body: NSLocalizedString("All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness: That the man of God may be perfect, thoroughly furnished unto all good works.", comment: "").l10n(), chapterAndVerse: NSLocalizedString("2 Timothy 3:16-17", comment: "").l10n())
+                ])
         ]
-        // assume we are online and observe userBooks by default
-//        productService.userBooks.asObservable()
-//            .map { $0.map { BooksItemType.drillIn(type: .bookType(bookUuid: $0.bid), iconName: "book", title: $0.localizedTitle, showBottomSeparator: true) } }
-//            .next { [unowned self] names in
-//                self.sections.value = [
-//                    BooksSectionViewModel(type: .book, items: names)
-//                ]
-//            }.disposed(by: bag)
     }
-    
-//    private var staticSection: [SideMenuItem] {
-//        return [SideMenuItem(heading: SideMenuDrillInType.soulwinning),
-//                SideMenuItem(heading: SideMenuDrillInType.music),
-//                SideMenuItem(heading: SideMenuDrillInType.aboutUs),
-//                SideMenuItem(heading: SideMenuDrillInType.share),
-//                SideMenuItem(heading: SideMenuDrillInType.setBibleLanguage),
-//                SideMenuItem(heading: SideMenuDrillInType.donate),
-//                SideMenuItem(heading: SideMenuDrillInType.privacyPolicy),
-//                SideMenuItem(heading: SideMenuDrillInType.contactUs)]
-//    }
-//
 }
+

@@ -59,6 +59,8 @@
 		4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */; };
 		4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */; };
 		4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */; };
+		4CD5C1BA20242A96007BFC1B /* VerseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD5C1B820242A96007BFC1B /* VerseCell.swift */; };
+		4CD5C1BB20242A96007BFC1B /* VerseCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD5C1B920242A96007BFC1B /* VerseCell.xib */; };
 		4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */; };
 		4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */; };
 		4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */; };
@@ -206,6 +208,8 @@
 		4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashScreenCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		4CD5C1B820242A96007BFC1B /* VerseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseCell.swift; sourceTree = "<group>"; };
+		4CD5C1B920242A96007BFC1B /* VerseCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerseCell.xib; sourceTree = "<group>"; };
 		4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
 		4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapterResponse.swift; sourceTree = "<group>"; };
 		4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaChapter.swift; sourceTree = "<group>"; };
@@ -414,6 +418,8 @@
 				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
 				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
 				4C21A729201843DC000F02CE /* SlideAnimationController.swift */,
+				4CD5C1B820242A96007BFC1B /* VerseCell.swift */,
+				4CD5C1B920242A96007BFC1B /* VerseCell.xib */,
 				4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */,
 				4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */,
 				4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */,
@@ -817,6 +823,7 @@
 				4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
 				68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */,
+				4CD5C1BB20242A96007BFC1B /* VerseCell.xib in Resources */,
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
 				68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */,
 				4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */,
@@ -956,6 +963,7 @@
 				4CFB85022005B66300FEBB53 /* CellContentLayoutStyle.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
 				68BE69D41EEA3FBF0082956D /* GospelViewController.swift in Sources */,
+				4CD5C1BA20242A96007BFC1B /* VerseCell.swift in Sources */,
 				4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4CCE8C7B1FF4B5CA00AFBAF2 /* RootViewController.swift in Sources */,

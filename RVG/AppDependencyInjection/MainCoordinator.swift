@@ -1,6 +1,6 @@
 import UIKit
 import RxSwift
-
+import SafariServices
 
 internal enum MainRevealState {
     case closed
@@ -11,19 +11,21 @@ internal enum MainRevealState {
 /// Handles navigation between the main and device selection flows.
 internal final class MainCoordinator: NSObject {
     // MARK: Fields
-    
+
     private let menuTransitionManager = MenuTransitionManager()
     private var mainNavigationController: UINavigationController!
+    private var sideMenuController: SideMenuController?
+
     private let bag = DisposeBag()
     private var deviceContextBag = DisposeBag()
     private var mainFlowCompletion: FlowCompletion!
-    
+
     // hamburger
     private var mainViewRevealed: MainRevealState = .closed
     private var originalMenuFrame: CGRect!
-    
+
     // MARK: Dependencies
-    
+
     private let appUIMaking: AppUIMaking
 //    private let resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>
     private let resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
@@ -34,8 +36,8 @@ internal final class MainCoordinator: NSObject {
 //    private let resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>
 //    private let resettableSectionalNavigatorCoordinator: Resettable<SectionalNavigatorCoordinator>
 //    private let resettableControlCentreCoordinator: Resettable<ControlCentreCoordinator>
-    private let presentBlurAnimationController: UIViewControllerAnimatedTransitioning = PresentBlurAnimationController()
-    private let dismissBlurAnimationController: UIViewControllerAnimatedTransitioning = DismissBlurAnimationController()
+//    private let presentBlurAnimationController: UIViewControllerAnimatedTransitioning = PresentBlurAnimationController()
+//    private let dismissBlurAnimationController: UIViewControllerAnimatedTransitioning = DismissBlurAnimationController()
 //    private let deviceManager: DeviceManaging
 
     internal init(appUIMaking: AppUIMaking,
@@ -65,7 +67,6 @@ internal final class MainCoordinator: NSObject {
 
 // MARK: <NavigationCoordinating>
 extension MainCoordinator: NavigationCoordinating {
-    
     /// Creates and sets up the mainViewController and sets it as the root of mainNavigationController,
     /// and stores the completion closure to be executed when the flow is complete.
     ///
@@ -129,18 +130,18 @@ extension MainCoordinator: NavigationCoordinating {
 //            self.resettableSplashScreenCoordinator.reset()
 
         }, context: .push(onto: self.mainNavigationController))
-
-        
-//        self.MainCoordinator.pushViewController(
-//            uiFactory.makeTrackSelection(),
-//            animated: true
-//        )
     }
-    
+
     func swapInSideMenuFlow() {
         resettableSideMenuCoordinator.value.flow(with: { [unowned self] sideMenuViewController in
             sideMenuViewController.transitioningDelegate = menuTransitionManager
             menuTransitionManager.delegate = self
+            
+            if let controller = sideMenuViewController as? SideMenuController {
+                self.sideMenuController = controller
+//                self.sideMenuController = sideMenuViewController as! SideMenuController
+                handle(eventsFrom: (self.sideMenuController?.viewModel)!)
+            }
 
             self.mainNavigationController.present(sideMenuViewController, animated: true)
 //            self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)//(sideMenuViewController, withAnimation: AppAnimations.fade)
@@ -206,7 +207,7 @@ extension MainCoordinator: NavigationCoordinating {
         hamburgerAnimation.startAnimation()
 
         */
-        
+
 //        self.resettableDeviceSelectionCoordinator.value.flow(with: { viewController in
 //            self.mainNavigationController.present(viewController, animated: true)
 //        }, completion: { _ in
@@ -214,7 +215,7 @@ extension MainCoordinator: NavigationCoordinating {
 //            self.resettableDeviceSelectionCoordinator.reset()
 //        }, context: .present)
     }
-    
+
     private func goToSettings() {
         print("goToSettings")
 //        resettableSettingsCoordinator.value.flow(with: { [unowned self] settingsFlowViewController in
@@ -235,8 +236,6 @@ extension MainCoordinator {
             case .bookType(let bookUuid):
                 print(".defaultType: \(bookUuid)")
                 self.goToBook(for: bookUuid)
-            default:
-                break
             }
             }.disposed(by: bag)
 
@@ -283,27 +282,78 @@ extension MainCoordinator {
 //            }, context: .present)
 //        }.disposed(by: bag)
     }
+    
+    private func handle(eventsFrom sideMenuViewModel: SideMenuViewModel) {
+        sideMenuViewModel.drillInEvent.next { [unowned self] type in
+            DispatchQueue.main.async {
+                switch type {
+                case .bible:
+                    print(".bible")
+                    self.dismiss()
+                case .soulwinning:
+                    print(".soulwinning")
+                case .music:
+                    print(".music")
+                case .aboutUs:
+                    print(".aboutUs")
+                    self.dismissAndGoToInlineWebBrowser(url: NSURL(
+                        string:"http://allscripturebaptist.com/")!
+                        as URL)
+                case .share:
+                    print(".share")
+                case .setBibleLanguage:
+                    print(".setBibleLanguage")
+                case .donate:
+                    print(".donate")
+                    self.dismissAndGoToExternalWebBrowser(url: NSURL(
+                        string:"http://allscripturebaptist.com/donate/")!
+                        as URL)
+                case .privacyPolicy:
+                    print(".privacyPolicy")
+                    self.dismissAndGoToInlineWebBrowser(url: NSURL(
+                        string:"http://allscripturebaptist.com/privacy-policy/")!
+                        as URL)
+                case .contactUs:
+                    print(".contactUs")
+                    self.dismissAndGoToMailComposer()
+                }
+            }
+            }.disposed(by: bag)
+    }
 }
 
-//extension MainCoordinator {
-//    private func goToTracks() {
-//        // do not use a new flow, because Chapters is part of the Book flow AFAICT
-//        self.MainCoordinator.pushViewController(
-//            uiFactory.makeTrackSelection(),
-//            animated: true
-//        )
-//    }
-//}
+extension MainCoordinator {
+    private func dismissAndGoToInlineWebBrowser(url: URL) {
+        self.mainNavigationController.dismiss(animated: true, completion: {
+            let svc = self.appUIMaking.makeInlineWebBrowser(url: url)
+            self.mainNavigationController.pushViewController(svc,
+                                                             animated: true)
+        })
+    }
 
-//extension MainCoordinator: UIViewControllerTransitioningDelegate {
-//    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        return presentBlurAnimationController
-//    }
-//
-//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        return dismissBlurAnimationController
-//    }
-//}
+    func dismissAndGoToExternalWebBrowser(url: URL) {
+        self.mainNavigationController.dismiss(animated: true) {
+            UIApplication.shared.open(url, options: [:],
+                        completionHandler: nil)
+        }
+    }
+
+    func dismissAndGoToMailComposer() {
+        self.mainNavigationController.dismiss(animated: true, completion: {
+            if let mailComposer = self.appUIMaking.makeMailComposer() {
+                self.mainNavigationController.pushViewController(mailComposer,
+                                                                 animated: true)
+            } else {
+                let okAlert = self.appUIMaking.makeOkAlert(
+                    title: NSLocalizedString(
+                        "Mail services are not available", comment: "").l10n(),
+                    message: "")
+                self.mainNavigationController.pushViewController(okAlert,
+                                                                 animated: true)
+            }
+        })
+    }
+}
 
 extension MainCoordinator: MenuTransitionManagerDelegate {
     func dismiss() {

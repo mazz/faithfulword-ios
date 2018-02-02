@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,11 +15,11 @@
             <objects>
                 <viewController storyboardIdentifier="MainViewController" id="kkr-Oe-XuT" customClass="MainViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="I9q-zN-mfm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="RBa-ce-00p">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="768"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="xyA-Tv-2sD">
                                     <size key="itemSize" width="50" height="50"/>
@@ -33,8 +33,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="iM4-ei-wzh" firstAttribute="trailing" secondItem="RBa-ce-00p" secondAttribute="trailing" id="35p-Ko-sbw"/>
-                            <constraint firstItem="iM4-ei-wzh" firstAttribute="bottom" secondItem="RBa-ce-00p" secondAttribute="bottom" id="3ru-Zw-ipE"/>
                             <constraint firstItem="RBa-ce-00p" firstAttribute="top" secondItem="iM4-ei-wzh" secondAttribute="top" id="Q7N-bL-xh3"/>
+                            <constraint firstAttribute="bottom" secondItem="RBa-ce-00p" secondAttribute="bottom" id="S8D-3S-675"/>
                             <constraint firstItem="RBa-ce-00p" firstAttribute="leading" secondItem="iM4-ei-wzh" secondAttribute="leading" id="vKh-xV-W3F"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iM4-ei-wzh"/>
@@ -45,7 +45,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="orP-Qp-Olk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="121" y="99"/>
+            <point key="canvasLocation" x="120.8" y="98.275862068965523"/>
         </scene>
         <!--Root View Controller-->
         <scene sceneID="Peq-wv-6ce">
@@ -56,11 +56,11 @@
                         <viewControllerLayoutGuide type="bottom" id="viz-az-9Yc"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="4Cy-un-hnm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QG2-OX-B7x">
-                                <rect key="frame" x="82.5" y="124.5" width="210" height="418"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QG2-OX-B7x">
+                                <rect key="frame" x="82.666666666666686" y="197" width="210" height="418"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="350"/>
                                 <color key="textColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -87,11 +87,11 @@
                         <viewControllerLayoutGuide type="bottom" id="ZXI-kr-QCN"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="hT3-yP-dbh">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5cW-K2-lsf">
-                                <rect key="frame" x="42" y="124.5" width="291" height="418"/>
+                                <rect key="frame" x="42" y="197" width="291" height="418"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="350"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -114,11 +114,11 @@
             <objects>
                 <viewController storyboardIdentifier="MediaListingViewController" id="OvY-nq-ElA" customClass="MediaListingViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wtQ-GP-g76">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="a9b-0o-IQr">
-                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="768"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="F5W-HX-FU3">
                                     <size key="itemSize" width="50" height="50"/>
@@ -132,7 +132,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="a9b-0o-IQr" firstAttribute="leading" secondItem="UPw-ee-97v" secondAttribute="leading" id="G9b-Ae-0Q9"/>
-                            <constraint firstItem="UPw-ee-97v" firstAttribute="bottom" secondItem="a9b-0o-IQr" secondAttribute="bottom" id="Zgz-J3-mvu"/>
+                            <constraint firstAttribute="bottom" secondItem="a9b-0o-IQr" secondAttribute="bottom" id="bLy-ie-1UH"/>
                             <constraint firstItem="UPw-ee-97v" firstAttribute="trailing" secondItem="a9b-0o-IQr" secondAttribute="trailing" id="cCC-w4-vNS"/>
                             <constraint firstItem="a9b-0o-IQr" firstAttribute="top" secondItem="UPw-ee-97v" secondAttribute="top" id="opG-VR-VQD"/>
                         </constraints>
@@ -144,7 +144,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jUJ-qb-fGv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="769" y="99"/>
+            <point key="canvasLocation" x="768.79999999999995" y="98.275862068965523"/>
         </scene>
     </scenes>
 </document>

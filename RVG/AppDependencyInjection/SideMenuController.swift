@@ -39,6 +39,7 @@ public final class SideMenuController: UIViewController {
     
     private func registerReusableViews() {
         collectionView.register(cellType: DeviceGroupSelectionCell.self)
+        collectionView.register(cellType: VerseCell.self)
     }
     
     private func bindToViewModel() {
@@ -60,7 +61,10 @@ public final class SideMenuController: UIViewController {
                     let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
                     drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
                     return drillInCell
-                    
+                case let .quote(body, chapterAndVerse):
+                    let verseCell = collectionView.dequeue(cellType: VerseCell.self, for: indexPath)
+                    verseCell.populate(with: body, chapterAndVerse: chapterAndVerse)
+                    return verseCell
                 }},
             configureSupplementaryView: { _, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(
@@ -78,12 +82,16 @@ extension SideMenuController: UICollectionViewDelegateFlowLayout {
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
         let preferredWidth: CGFloat = collectionView.bounds.width
         
-        
         switch viewModel.item(at: indexPath) {
         case let .drillIn(_, iconName, title, showBottomSeparator):
             guard let view = try? UIView.sizingView(for: DeviceGroupSelectionCell.self,
                                                     bundle: ModuleInfo.bundle) else { break }
             view.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
+            return CGSize(width: preferredWidth, height: view.height(for: preferredWidth))
+        case let .quote(body, chapterAndVerse):
+            guard let view = try? UIView.sizingView(for: VerseCell.self,
+                                                    bundle: ModuleInfo.bundle) else { break }
+            view.populate(with: body, chapterAndVerse: chapterAndVerse)
             return CGSize(width: preferredWidth, height: view.height(for: preferredWidth))
         }
         return CGSize(width: 0.1, height: 0.1)
