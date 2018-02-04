@@ -19,6 +19,7 @@ internal enum SideMenuItemType {
 public enum SideMenuDrillInType {
     case bible
     case gospel
+    case preaching
     case music
     case aboutUs
     case share

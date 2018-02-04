@@ -301,6 +301,9 @@ extension MainCoordinator {
                 case .gospel:
                     print(".soulwinning")
                     self.dismissAndGoToGospelFlow()
+                case .preaching:
+                    print(".preaching")
+//                    self.dismissAndGoToGospelFlow()
                 case .music:
                     print(".music")
                 case .aboutUs:
