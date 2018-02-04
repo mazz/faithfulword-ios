@@ -16,6 +16,19 @@ final class CategoryListingViewModel {
     public private(set) var sections = Field<[CategoryListingSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
 
+    public var drillInEvent: Observable<CategoryListingDrillInType> {
+        // Emit events by mapping a tapped index path to setting-option.
+        return self.selectItemEvent.filterMap { [unowned self] indexPath -> CategoryListingDrillInType? in
+            let section = self.sections.value[indexPath.section]
+            let item = section.items[indexPath.item]
+            // Don't emit an event for anything that is not a 'drillIn'
+            if case .drillIn(let type, _, _, _) = item {
+                return type
+            }
+            return nil
+        }
+    }
+
     // MARK: Dependencies
 
     private let categoryListingType: CategoryListingType!
@@ -46,7 +59,7 @@ final class CategoryListingViewModel {
                 default:
                     icon = "feetprint"
                 }
-                return CategoryListingItemType.drillIn(type: .categoryItemType(categoryItemUuid: $0.uuid), iconName: icon, title: $0.localizedTitle, showBottomSeparator: true)
+                return CategoryListingItemType.drillIn(type: .categoryItemType(item: $0), iconName: icon, title: $0.localizedTitle, showBottomSeparator: true)
             }
             }
             .next { [unowned self] list in

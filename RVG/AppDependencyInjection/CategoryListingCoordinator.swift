@@ -20,7 +20,28 @@ extension CategoryListingCoordinator: NavigationCoordinating {
         if let mediaType = self.categoryType {
             let categoryListingViewController = uiFactory.makeCategoryListing(categoryType: mediaType)
             setup(categoryListingViewController)
+            handle(eventsFrom: categoryListingViewController.viewModel)
         }
     }
+
+    func goToCategory(for categorizable: Categorizable) {
+        print("goToCategory categorizable: \(categorizable)")
+    }
+
 }
+
+// MARK: Event handling for medialisting screen
+extension CategoryListingCoordinator {
+    private func handle(eventsFrom categoryListingViewModel: CategoryListingViewModel) {
+        print("handle(eventsFrom categoryListingViewModel")
+        categoryListingViewModel.drillInEvent.next { [unowned self] type in
+            switch type {
+            case .categoryItemType(let item):
+                self.goToCategory(for: item)
+                print("categoryItem: \(item)")
+            }
+            }.disposed(by: bag)
+    }
+}
+
 

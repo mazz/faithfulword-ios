@@ -38,7 +38,7 @@ extension MediaListingCoordinator: NavigationCoordinating {
     }
 }
 
-// MARK: Event handling for now playing screen.
+// MARK: Event handling for medialisting screen
 extension MediaListingCoordinator {
     private func handle(eventsFrom mediaListingViewModel: MediaListingViewModel) {
         print("handle(eventsFrom mediaListingViewModel")

@@ -16,7 +16,7 @@ internal enum CategoryListingItemType {
 }
 
 public enum CategoryListingDrillInType {
-    case categoryItemType(categoryItemUuid: String)
+    case categoryItemType(item: Categorizable)
 }
 
 extension CategoryListingSectionViewModel: SectionModelType {
