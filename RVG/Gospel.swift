@@ -1,20 +1,17 @@
 import Foundation
-import ObjectMapper
+//import ObjectMapper
 
-class Gospel : Mappable {
-    var gospelId : String?
-    var title : String?
-    var localizedTitle : String?
-    var languageId : String?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        gospelId  <- map["gid"]
-        title  <- map["title"]
-        languageId  <- map["languageId"]
-        localizedTitle  <- map["localizedTitle"]
+public struct Gospel: Codable, Categorizable {
+    public var uuid: String
+    public var title: String
+    public var languageId: String
+    public var localizedTitle: String
+
+    enum CodingKeys: String, CodingKey {
+        case uuid = "gid"
+        case title
+        case languageId
+        case localizedTitle
     }
 }
+

@@ -1,15 +1,9 @@
 import Foundation
 import ObjectMapper
 
-class GospelResponse : Mappable {
-    var gospels : [Gospel]?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        gospels  <- map["result"]
-    }
-    
+public struct GospelResponse: Codable {
+    public var result: [Gospel]
+    public var status: String
+    public var version: String
 }
+

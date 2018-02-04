@@ -7,19 +7,20 @@ import MessageUI
 /// Protocol facade for factory making all app-root-level related UI.
 internal protocol AppUIMaking {
     func makeRoot() -> RootViewController
-//    func makeInitial() -> InitialViewController
+    //    func makeInitial() -> InitialViewController
     func makeMain() -> MainViewController
     func makeInlineWebBrowser(url: URL) -> SFSafariViewController
     func makeMailComposer() -> MFMailComposeViewController?
     func makeOkAlert(title: String, message: String) -> UIAlertController
     func makeSideMenu() -> SideMenuViewController
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
+    func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController
     func makeSplashScreen() -> SplashScreenViewController
 }
 
 /// Protocol facade for factory making all settings related UI.
 internal protocol SettingsUIMaking {
-//    func makeSettings() -> SettingsViewController
+    //    func makeSettings() -> SettingsViewController
 }
 
 /// The king of UI creation in GoseMobileSample app.
@@ -36,17 +37,22 @@ internal final class UIFactory: UIMaking {
 
 // MARK: <AppUIMaking>
 extension UIFactory: AppUIMaking {
-    
+    func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController {
+        let categoryListingViewController = CategoryListingViewController.make(storyboardName: StoryboardName.categoryListing)
+        categoryListingViewController.viewModel = resolver.resolve(CategoryListingViewModel.self, argument: categoryType)
+        return categoryListingViewController
+    }
+
     func makeSideMenu() -> SideMenuViewController {
         let sideMenuController = SideMenuViewController.make(storyboardName: StoryboardName.sideMenu)
         sideMenuController.viewModel = resolver.resolve(SideMenuViewModel.self)
         return sideMenuController
     }
-    
+
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController {
-        let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaList)
+        let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaListing)
         mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaType)
-//        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
+        //        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
         return mediaListingViewController
     }
 
@@ -57,12 +63,12 @@ extension UIFactory: AppUIMaking {
             .resolve(RxReachable.self)
         return controller
     }
-    
-//    internal func makeInitial() -> InitialViewController {
-//        return InitialViewController
-//            .make(storyboardName: StoryboardName.main)
-//    }
-//
+
+    //    internal func makeInitial() -> InitialViewController {
+    //        return InitialViewController
+    //            .make(storyboardName: StoryboardName.main)
+    //    }
+    //
     internal func makeMain() -> MainViewController {
         let controller = MainViewController
             .make(storyboardName: StoryboardName.main)
@@ -77,9 +83,9 @@ extension UIFactory: AppUIMaking {
 
     internal func makeMailComposer() -> MFMailComposeViewController? {
         let mailComposerVC = MFMailComposeViewController()
-        
+
         let appVersionString: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-        
+
         mailComposerVC.setToRecipients(["allscripturebaptist@gmail.com"])
         mailComposerVC.setSubject("All Scripture iOS \(appVersionString) App Feedback")
 
@@ -89,7 +95,7 @@ extension UIFactory: AppUIMaking {
             return nil
         }
     }
-    
+
     internal func makeOkAlert(title: String, message: String) -> UIAlertController {
         let alert = UIAlertController(title: title,
                                       message: message,
@@ -99,7 +105,7 @@ extension UIFactory: AppUIMaking {
         alert.addAction(okAction)
         return alert
     }
-    
+
     internal func makeSplashScreen() -> SplashScreenViewController {
         return SplashScreenViewController
             .make(storyboardName: StoryboardName.splashScreen)

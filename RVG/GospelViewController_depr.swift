@@ -58,19 +58,13 @@ class GospelViewController_depr: BaseClass {
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                     let data = moyaResponse.data
-                    var parsedObject: GospelResponse
-                    
-                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                    if let jsonObject = json as? [String:Any] {
-                        parsedObject = GospelResponse(JSON: jsonObject)!
-                        print(parsedObject)
-                        
-                        self.gospels = parsedObject.gospels!
-                        DispatchQueue.main.async {
-                            MBProgressHUD.hide(for: self.view, animated: true)
-                            self.tableView.reloadData()
-                        }
-                        
+//                    var parsedObject: GospelResponse
+                    let gospelResponse: GospelResponse = try moyaResponse.map(GospelResponse.self)
+
+                    self.gospels = gospelResponse.result
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.tableView.reloadData()
                     }
                 }
                 catch {
@@ -106,7 +100,7 @@ extension GospelViewController_depr: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "ChapterTableViewCellID") as? ChapterTableViewCell {
             cell.selectionStyle = .none
-            cell.songLabel?.text = self.gospels[indexPath.row].localizedTitle!
+            cell.songLabel?.text = self.gospels[indexPath.row].localizedTitle
             
             cell.imageIconView.image = UIImage(named:"feetprint")!
 
@@ -119,7 +113,7 @@ extension GospelViewController_depr: UITableViewDelegate, UITableViewDataSource 
         let reachability = Reachability()!
         
         if reachability.currentReachabilityStatus != .notReachable {
-            if let gospelId = gospels[indexPath.row].gospelId {
+            let gospelId = gospels[indexPath.row].uuid //{
                 let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
                 vc?.gospelId = gospelId
                 
@@ -134,7 +128,7 @@ extension GospelViewController_depr: UITableViewDelegate, UITableViewDataSource 
                     vc?.gospelType = .gospelDefault
                 }
                 self.navigationController?.pushViewController(vc!, animated: true)
-            }
+//            }
         } else {
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: "").l10n())
         }

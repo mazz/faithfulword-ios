@@ -13,4 +13,3 @@ enum MediaType {
     case audioSermon
     case audioGospel
 }
-

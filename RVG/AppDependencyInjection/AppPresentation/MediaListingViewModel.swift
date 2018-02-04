@@ -3,7 +3,7 @@ import RxSwift
 
 internal final class MediaListingViewModel {
     // MARK: Fields
-    
+
     public func section(at index: Int) -> MediaListingSectionViewModel {
         return sections.value[index]
     }
@@ -15,7 +15,7 @@ internal final class MediaListingViewModel {
     public private(set) var media = Field<[Playable]>([])
     public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
-    
+
     public var drillInEvent: Observable<MediaListingDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent.filterMap { [unowned self] indexPath -> MediaListingDrillInType? in
@@ -28,13 +28,13 @@ internal final class MediaListingViewModel {
             return nil
         }
     }
-    
+
     // MARK: Dependencies
     private let playlistId: String!
     private let mediaType: MediaType!
     private let productService: ProductServicing!
     private let bag = DisposeBag()
-    
+
     internal init(playlistId: String,
                   mediaType: MediaType,
                   productService: ProductServicing) {
@@ -49,7 +49,7 @@ internal final class MediaListingViewModel {
         self.media.asObservable()
             .map { $0.map {
                 let icon: String!
-                
+
                 switch self.mediaType {
                 case .audioChapter:
                     icon = "chapter"
@@ -67,7 +67,7 @@ internal final class MediaListingViewModel {
                     MediaListingSectionViewModel(type: .media, items: names)
                 ]
             }.disposed(by: bag)
-        
+
         self.productService.fetchChapters(for: self.playlistId).subscribe(onSuccess: { chapters in
             self.media.value = chapters
         }, onError: { error in

@@ -452,7 +452,7 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
             // no action, just close menu
         }
         if indexPath.row == 1 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "GospelViewController")
+            let vc = self.pushVc(strBdName: "Main", vcName: "GospelViewController_depr")
             self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 2 {

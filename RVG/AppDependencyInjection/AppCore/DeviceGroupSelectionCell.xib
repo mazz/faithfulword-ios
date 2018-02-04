@@ -17,11 +17,11 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qqa-0v-ajY" userLabel="iconImage">
-                    <rect key="frame" x="10" y="17" width="40" height="40"/>
+                    <rect key="frame" x="10" y="22" width="30" height="30"/>
                     <accessibility key="accessibilityConfiguration" identifier="iconImage"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="40" id="i5t-tx-I9d"/>
-                        <constraint firstAttribute="height" constant="40" id="wv4-Ul-nXS"/>
+                        <constraint firstAttribute="width" constant="30" id="i5t-tx-I9d"/>
+                        <constraint firstAttribute="height" constant="30" id="wv4-Ul-nXS"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icRightChevron" translatesAutoresizingMaskIntoConstraints="NO" id="CCy-3z-JRs" userLabel="chevronImage">
@@ -40,10 +40,10 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="_GroupSelection_" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B64-Nu-IJo" userLabel="groupSelection">
-                    <rect key="frame" x="60" y="15" width="167" height="45"/>
+                    <rect key="frame" x="50" y="15" width="187" height="45"/>
                     <accessibility key="accessibilityConfiguration" identifier="groupSelection"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
@@ -58,7 +58,7 @@
                 <constraint firstItem="B64-Nu-IJo" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="15" id="Mwv-ad-ixW"/>
                 <constraint firstItem="B64-Nu-IJo" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="aBz-24-TUP"/>
                 <constraint firstAttribute="trailing" secondItem="n8w-3S-pox" secondAttribute="trailing" id="lWN-YN-gz0"/>
-                <constraint firstItem="B64-Nu-IJo" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="60" id="sbB-nx-CmX"/>
+                <constraint firstItem="B64-Nu-IJo" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="50" id="sbB-nx-CmX"/>
                 <constraint firstItem="Qqa-0v-ajY" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="vA1-AL-9hR"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -29,10 +29,11 @@ internal final class MainCoordinator: NSObject {
     private let appUIMaking: AppUIMaking
 //    private let resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>
     private let resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
+    private let resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>
     private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
 
 //    private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
-    
+
 //    private let resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>
 //    private let resettableSectionalNavigatorCoordinator: Resettable<SectionalNavigatorCoordinator>
 //    private let resettableControlCentreCoordinator: Resettable<ControlCentreCoordinator>
@@ -43,17 +44,19 @@ internal final class MainCoordinator: NSObject {
     internal init(appUIMaking: AppUIMaking,
 //                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
                   resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>,
-        resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
+                  resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>,
+                  resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>
 
 //                  resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>,
 //                  resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>,
 //                  resettableSectionalNavigatorCoordinator: Resettable<SectionalNavigatorCoordinator>,
 //                  resettableControlCentreCoordinator: Resettable<ControlCentreCoordinator>,
 //                  deviceManager: DeviceManaging
-        ) {
+    ) {
         self.appUIMaking = appUIMaking
         self.resettableMediaListingCoordinator = resettableMediaListingCoordinator
         self.resettableSideMenuCoordinator = resettableSideMenuCoordinator
+        self.resettableCategoryListingCoordinator = resettableCategoryListingCoordinator
 
 //        self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
 
@@ -77,15 +80,15 @@ extension MainCoordinator: NavigationCoordinating {
         let mainViewController = appUIMaking.makeMain()
         attachRootMenuAction(to: mainViewController)
         attachSettingAction(to: mainViewController)
-        
+
         mainNavigationController = UINavigationController(rootViewController: mainViewController)
-        
+
         // keep original state of hamburger so we know what frame to toggle back to
         originalMenuFrame = self.mainNavigationController.view.frame
-        
+
         handle(eventsFrom: mainViewController.viewModel)
         setup(mainNavigationController)
-        
+
 //        resettableSectionalNavigatorCoordinator.value.flow(with: { sectionalNavigator in
 //            mainViewController.plant(sectionalNavigator)
 //        }, completion: { [unowned self] _ in
@@ -93,16 +96,16 @@ extension MainCoordinator: NavigationCoordinating {
 //        }, context: .other)
         mainFlowCompletion = completion
     }
-    
+
     private func attachRootMenuAction(to viewController: UIViewController) {
         let hamburger = UIBarButtonItem.hamburger()
-        
+
         hamburger.rx.tap.asObservable().subscribe(onNext: { [unowned self] in
             self.goToHamburger()
         }).disposed(by: bag)
         viewController.navigationItem.leftBarButtonItem = hamburger
     }
-    
+
     private func attachSettingAction(to viewController: UIViewController) {
 //        let close = UIBarButtonItem.settings()
 //        close.rx.tap.asObservable().subscribe(onNext: { [unowned self] in
@@ -111,18 +114,31 @@ extension MainCoordinator: NavigationCoordinating {
 //        viewController.navigationItem.rightBarButtonItem = close
     }
 
-    private func goToSoulWinningFlow(for bookUuid: String) {
-        
+    private func dismissAndGoToGospelFlow() {
+        self.mainNavigationController.dismiss(animated: true, completion: {
+
+            self.resettableCategoryListingCoordinator.value.categoryType = .gospel
+            self.resettableCategoryListingCoordinator.value.flow(with: { viewController in
+                self.mainNavigationController.pushViewController(
+                    viewController,
+                    animated: true
+                )
+            }, completion: { _ in
+                self.mainNavigationController.dismiss(animated: true)
+                self.resettableCategoryListingCoordinator.reset()
+            }, context: .push(onto: self.mainNavigationController))
+
+        })
     }
 
     private func goToBook(for bookUuid: String) {
         // do not use a new flow, because Chapters is part of the Book flow AFAICT
 //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
-        
+
         self.resettableMediaListingCoordinator.value.playlistId = bookUuid
         self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
-            
+
             self.mainNavigationController.pushViewController(
                 viewController,
                 animated: true
@@ -140,40 +156,28 @@ extension MainCoordinator: NavigationCoordinating {
         resettableSideMenuCoordinator.value.flow(with: { [unowned self] sideMenuViewController in
             sideMenuViewController.transitioningDelegate = menuTransitionManager
             menuTransitionManager.delegate = self
-            
+
             if let controller = sideMenuViewController as? SideMenuViewController {
                 self.sideMenuController = controller
-//                self.sideMenuController = sideMenuViewController as! SideMenuController
                 handle(eventsFrom: (self.sideMenuController?.viewModel)!)
             }
 
             self.mainNavigationController.present(sideMenuViewController, animated: true)
-//            self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)//(sideMenuViewController, withAnimation: AppAnimations.fade)
-            //            self.sideMenuViewController = sideMenuViewController as! SideMenuController
-            }, completion: { [unowned self] _ in
-                //                            self.swapInMainFlow()
-                
-                //                self.startHandlingAuthEvents()
-                //                self.accountService.start()
-                //
-                //                // bootstrap login/fetching of session HERE because we have no login UI
-                //                self.accountService.startLoginFlow()
-                //                    .asObservable()
-                //                    .subscribeAndDispose(by: self.bag)
-                self.mainNavigationController.dismiss(animated: true)
-                self.resettableSideMenuCoordinator.reset()
-            }, context: .present)
+        }, completion: { [unowned self] _ in
+            self.mainNavigationController.dismiss(animated: true)
+            self.resettableSideMenuCoordinator.reset()
+        }, context: .present)
     }
 
     private func goToHamburger() {
         print("goToHamburger")
         self.swapInSideMenuFlow()
 //        tappedHamburger.onNext(mainViewRevealed)
-        
-        
+
+
 //        let mainViewController: MainViewController = self.mainNavigationController.viewControllers[0] as! MainViewController
 //        self.mainNavigationController.viewControllers[0].transitioningDelegate = self
-        
+
 
         /*
         let mainNavigationView: UIView = self.mainNavigationController.view
@@ -233,7 +237,7 @@ extension MainCoordinator: NavigationCoordinating {
 
 // MARK: Event handling for the main flow.
 extension MainCoordinator {
-    
+
     private func handle(eventsFrom mainViewModel: MainViewModel) {
         mainViewModel.drillInEvent.next { [unowned self] type in
             switch type {
@@ -241,7 +245,7 @@ extension MainCoordinator {
                 print(".defaultType: \(bookUuid)")
                 self.goToBook(for: bookUuid)
             }
-            }.disposed(by: bag)
+        }.disposed(by: bag)
 
 //        mainViewModel.nowPlayingDetailsEvent.next { [unowned self] in
 //            self.resettableDeviceNowPlayingCoordinator.value.flow(with: { viewController in
@@ -251,19 +255,19 @@ extension MainCoordinator {
 //                self.resettableDeviceNowPlayingCoordinator.reset()
 //            }, context: .present)
 //        }.disposed(by: bag)
-        
+
 //        mainViewModel.showControlCentreEvent.next { [unowned self] in
 //            // get current device from device manager and give it to the control center coordinator
 //            // if the current device changes we should alert then invalidate the control center flow
-//            
+//
 //            guard let device = self.deviceManager.currentDevice.value
 //                else {
 //                    self.mainNavigationController.showInfo(title: "No Device Selected", message: "Please select a device.")
 //                    return
 //            }
-//            
+//
 //            self.deviceContextBag = DisposeBag()
-//            
+//
 //            self.deviceManager.currentDevice.asObservable().next { currentDevice in
 //                guard let currentDevice = currentDevice,
 //                    currentDevice.identifier == device.identifier else {
@@ -274,9 +278,9 @@ extension MainCoordinator {
 //                        return
 //                }
 //            }.disposed(by: self.deviceContextBag)
-//            
+//
 //            self.resettableControlCentreCoordinator.value.device = device
-//            
+//
 //            self.resettableControlCentreCoordinator.value.flow(with: { viewController in
 //                viewController.transitioningDelegate = self
 //                self.mainNavigationController.present(viewController, animated: true)
@@ -286,7 +290,7 @@ extension MainCoordinator {
 //            }, context: .present)
 //        }.disposed(by: bag)
     }
-    
+
     private func handle(eventsFrom sideMenuViewModel: SideMenuViewModel) {
         sideMenuViewModel.drillInEvent.next { [unowned self] type in
             DispatchQueue.main.async {
@@ -296,13 +300,14 @@ extension MainCoordinator {
                     self.dismiss()
                 case .gospel:
                     print(".soulwinning")
+                    self.dismissAndGoToGospelFlow()
                 case .music:
                     print(".music")
                 case .aboutUs:
                     print(".aboutUs")
                     self.dismissAndGoToInlineWebBrowser(url: NSURL(
-                        string:"http://allscripturebaptist.com/")!
-                        as URL)
+                        string: "http://allscripturebaptist.com/")!
+                    as URL)
                 case .share:
                     print(".share")
                 case .setBibleLanguage:
@@ -310,19 +315,19 @@ extension MainCoordinator {
                 case .donate:
                     print(".donate")
                     self.dismissAndGoToExternalWebBrowser(url: NSURL(
-                        string:"http://allscripturebaptist.com/donate/")!
-                        as URL)
+                        string: "http://allscripturebaptist.com/donate/")!
+                    as URL)
                 case .privacyPolicy:
                     print(".privacyPolicy")
                     self.dismissAndGoToInlineWebBrowser(url: NSURL(
-                        string:"http://allscripturebaptist.com/privacy-policy/")!
-                        as URL)
+                        string: "http://allscripturebaptist.com/privacy-policy/")!
+                    as URL)
                 case .contactUs:
                     print(".contactUs")
                     self.dismissAndGoToMailComposer()
                 }
             }
-            }.disposed(by: bag)
+        }.disposed(by: bag)
     }
 }
 
@@ -338,7 +343,7 @@ extension MainCoordinator {
     func dismissAndGoToExternalWebBrowser(url: URL) {
         self.mainNavigationController.dismiss(animated: true) {
             UIApplication.shared.open(url, options: [:],
-                        completionHandler: nil)
+                                      completionHandler: nil)
         }
     }
 
