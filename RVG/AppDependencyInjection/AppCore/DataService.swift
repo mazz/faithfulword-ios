@@ -169,7 +169,7 @@ extension DataService: AccountDataServicing {
     //    public func fetchSession(for user: GigyaUser, idToken: String) -> Single<GoseSession> {
     //        return passportNetworking.rx.request(.tokens(user: user, idToken: idToken))
     //            .parse(type: PassportAccountSession.self)
-    //            .flatMap { [unowned self] in self.dataStore.addPerson(boseSession: $0) }
+    //            .flatMap { [unowned self] in self.dataStore.addPerson(goseSession: $0) }
     //            .do(onNext: { [unowned self] session in
     //                self._session.value = session
     //            })
@@ -182,13 +182,13 @@ extension DataService: AccountDataServicing {
 
     //    public func fetchAccountInfo() -> Single<PassportAccountInfo> {
     //        return assertingSession
-    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accountInfo(bosePersonId: $0.bosePersonId)) }
+    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accountInfo(gosePersonId: $0.gosePersonId)) }
     //            .parse(type: PassportAccountInfo.self)
     //    }
     //
     //    public func fetchMusicServiceAccounts() -> Observable<[MusicServiceAccount]> {
     //        return assertingSession
-    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accounts(bosePersonId: $0.bosePersonId)) }
+    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accounts(gosePersonId: $0.gosePersonId)) }
     //            .map([MusicServiceAccount].self)
     //            .do(onNext: { [unowned self] accounts in
     //                self._musicServiceAccounts.value = accounts
@@ -256,41 +256,32 @@ extension DataService: ProductDataServicing {
     }
 
     public func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]> {
+        var categoryListing: Single<[Categorizable]> = Single.just([])
 
-        //        switch categoryType {
-        //        case .gospel:
-
-        return self.kjvrvgNetworking.rx.request(.gospels(languageId: L10n.shared.language))
-            .map { response -> GospelResponse in
-                try! response.map(GospelResponse.self)
-            }.flatMap { gospelResponse -> Single<[Categorizable]> in
-                gospelResponse.result
-                print("gospelResponse.result: \(gospelResponse.result)")
-                return Single.just(gospelResponse.result)
+        switch categoryType {
+        case .gospel:
+            switch self.networkStatus.value {
+            case .unknown:
+                categoryListing = dataStore.fetchCategoryList(for: categoryType)
+            case .notReachable:
+                categoryListing = dataStore.fetchCategoryList(for: categoryType)
+            case .reachable(_):
+                print("reachable")
+                categoryListing = self.kjvrvgNetworking.rx.request(.gospels(languageId: L10n.shared.language))
+                    .map { response -> GospelResponse in
+                        try! response.map(GospelResponse.self)
+                    }.flatMap { gospelResponse -> Single<[Categorizable]> in
+                        print("gospelResponse.result: \(gospelResponse.result)")
+                        return Single.just(gospelResponse.result)
+                    }
+                    .flatMap { [unowned self] in self.replacePersistedCategoryList(categoryList: $0, for: categoryType) }
+            }
+        case .music:
+            print(".music")
+        case .churches:
+            print(".churches")
         }
-
-        //                .map({ response -> [Gospel] in
-        //                    try! response.map(GospelResponse.self)
-        ////                    print(
-        //                })
-        //                .map { response -> GospelResponse in try! response.map(GospelResponse.self) }
-        //                .flatMap({ gospelResponse -> Single<[Gospel]> in
-        //
-        //                })
-        //                .flatMap { gospelResponse -> Single<[Gospel]> in
-
-        //                    Single.just([Cate])
-
-        //            }
-        //            print(".gospel")
-        //        case .music:
-        //            print(".music")
-        //            response = self.kjvrvgNetworking.rx.request(.music)
-        //        case .churches:
-        //            print(".churches")
-        //            response = self.kjvrvgNetworking.rx.request(.churches)
-        //        }
-        //        return Single.just([])
+        return categoryListing
     }
 
     // MARK: Private helpers
@@ -320,6 +311,16 @@ extension DataService: ProductDataServicing {
         return deleted.flatMap { [unowned self] _ in self.dataStore.addChapters(chapters: chapters, for: bookUuid) }
     }
 
+    private func replacePersistedCategoryList(categoryList: [Categorizable],
+                                              for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
+        let deleted: Single<Void> = dataStore.deleteCategoryList(for: categoryListType)
+//        deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void>
+//        let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
+        return deleted.flatMap { [unowned self] _ in self.dataStore.addCategory(
+            categoryList: categoryList,
+            for: categoryListType) }
+    }
+
     private func reactToReachability() {
         reachability.startListening().asObservable()
             .subscribe(onNext: { networkStatus in
@@ -347,7 +348,7 @@ extension DataService: ProductDataServicing {
     //        return assertingSession
     //            .flatMap { [unowned self] session in
     //                self.passportNetworking.rx.request(.addProduct(
-    //                    bosePersonId: session.bosePersonId,
+    //                    gosePersonId: session.gosePersonId,
     //                    productId: productId,
     //                    productType: productType
     //                    ))
@@ -394,11 +395,11 @@ extension DataService: ProductDataServicing {
     //        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
     //        return dataStore.deleteGosePerson()
     //            .flatMap { [unowned self] in self.assertingSession }
-    //            .flatMap { [unowned self] in self.dataStore.addProducts(boseSession: $0, products: products) }
+    //            .flatMap { [unowned self] in self.dataStore.addProducts(goseSession: $0, products: products) }
     //    }
     //
     //    private func loadProducts(with session: GoseSession) -> Single<[UserProduct]> {
-    //        return dataStore.fetchAccountDevices(bosePersonId: session.bosePersonId)
+    //        return dataStore.fetchAccountDevices(gosePersonId: session.gosePersonId)
     //            .do(
     //                onNext: { [weak self] products in
     //                    self?._products.value = products

@@ -10,7 +10,7 @@ public final class SuggestedNameCell: UICollectionViewCell {
     
     override public func awakeFromNib() {
         super.awakeFromNib()
-//        suggestedNameLabel.font = UIFont.boseFont(.book, .body)
+//        suggestedNameLabel.font = UIFont.goseFont(.book, .body)
     }
 
     public func populate(with title: String) {

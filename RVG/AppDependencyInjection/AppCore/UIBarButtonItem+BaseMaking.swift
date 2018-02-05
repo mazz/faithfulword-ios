@@ -57,11 +57,11 @@ public extension UIBarButtonItem {
 //                                   action: nil)
 //
 //        let normalTitleAttributes = [NSAttributedStringKey.font: UIFont.dynamicGoseFont(.bold, .caption1),
-//                                     NSAttributedStringKey.foregroundColor: UIColor.boseNavBarRightActionGrey]
+//                                     NSAttributedStringKey.foregroundColor: UIColor.goseNavBarRightActionGrey]
 //        skip.setTitleTextAttributes(normalTitleAttributes, for: .normal)
 //
 //        let highlightedTitleAttributes = [NSAttributedStringKey.font: UIFont.dynamicGoseFont(.bold, .caption1),
-//                                          NSAttributedStringKey.foregroundColor: UIColor.boseNavBarRightActionGrey.withAlphaComponent(0.8)]
+//                                          NSAttributedStringKey.foregroundColor: UIColor.goseNavBarRightActionGrey.withAlphaComponent(0.8)]
 //        skip.setTitleTextAttributes(highlightedTitleAttributes, for: .highlighted)
 //
 //        return skip

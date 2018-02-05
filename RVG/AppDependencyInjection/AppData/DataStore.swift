@@ -19,16 +19,16 @@ import GRDB
 //                                        _ tokenType: GoseSessionTokenType?,
 //                                        _ expiresIn: Int?,
 //                                        _ refreshToken: String?,
-//                                        _ bosePersonId: String) -> GoseSession
+//                                        _ gosePersonId: String) -> GoseSession
 
 /// Protocol for storing and retrieving data from Realm database
 public protocol DataStoring {
-//    func latestCachedUser() -> Single<String?>
+    //    func latestCachedUser() -> Single<String?>
     
     func addUser(session: String) -> Single<String>
     
-    /// Fetch a list of products associated to a bose person from Realm database, returns nil if bose person not found
-//    func fetchAccountDevices(bosePersonId: String) -> Single<[UserProduct]>
+    /// Fetch a list of products associated to a gose person from Realm database, returns nil if gose person not found
+    //    func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]>
     
     func addBooks(books: [Book]) -> Single<[Book]>
     
@@ -42,10 +42,17 @@ public protocol DataStoring {
     
     func deleteChapters(for bookUuid: String) -> Single<Void>
 
-    /// Add or update a bose person to Realm database
-//    func addPerson(boseSession: GoseSession) -> Single<GoseSession>
-    /// Delete bose persons from Realm database
-//    func deleteGosePerson() -> Single<Void>
+    func addCategory(categoryList: [Categorizable],
+                     for categoryListType: CategoryListingType) -> Single<[Categorizable]>
+
+    func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void>
+
+    func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]>
+
+    /// Add or update a gose person to Realm database
+    //    func addPerson(goseSession: GoseSession) -> Single<GoseSession>
+    /// Delete gose persons from Realm database
+    //    func deleteGosePerson() -> Single<Void>
 }
 
 /// Storage class holding reference to realm object
@@ -110,31 +117,44 @@ public final class DataStore {
                 print("error making mediachapter table: \(error)")
             }
 
+            do {
+                try db.create(table: "gospel") { gospelTable in
+                    print("created: \(gospelTable)")
+                    gospelTable.column("uuid", .text).primaryKey()
+                    gospelTable.column("title", .text)
+                    gospelTable.column("languageId", .text)
+                    gospelTable.column("localizedTitle", .text)
+                    gospelTable.column("userId", .integer).references("user", onDelete: .cascade)
+                }
+            }
+            catch {
+                print("error making gospel table: \(error)")
+            }
+
         }
         return migrator
     }
 
+    //    private let realm: RealmProvider
+    //    public var dbQueue: DatabaseQueue {
+    //        let documentDir: URL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+    //        let fileUrl = documentDir.appendingPathComponent("model").appendingPathExtension("sqlite")
+    //        print("fileUrl.absoluteString: \(fileUrl.absoluteString)")
+    //        let dbQueue: DatabaseQueue = try! DatabaseQueue(path: fileUrl.absoluteString)
+    //        return dbQueue
+    //    }
     
-//    private let realm: RealmProvider
-//    public var dbQueue: DatabaseQueue {
-//        let documentDir: URL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-//        let fileUrl = documentDir.appendingPathComponent("model").appendingPathExtension("sqlite")
-//        print("fileUrl.absoluteString: \(fileUrl.absoluteString)")
-//        let dbQueue: DatabaseQueue = try! DatabaseQueue(path: fileUrl.absoluteString)
-//        return dbQueue
-//    }
-    
-//    internal init?() {
-//        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! as NSString
-//        let databasePath = documentsPath.appendingPathComponent("db.sqlite")
-//        do {
-//            try openDatabase(atPath: databasePath)
-//        } catch {
-//            print("error making db pool, need to bail now: \(error)")
-//        }
-////        self.dbPool = try openDatabase(atPath: databasePath)
-//        return nil
-//    }
+    //    internal init?() {
+    //        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! as NSString
+    //        let databasePath = documentsPath.appendingPathComponent("db.sqlite")
+    //        do {
+    //            try openDatabase(atPath: databasePath)
+    //        } catch {
+    //            print("error making db pool, need to bail now: \(error)")
+    //        }
+    ////        self.dbPool = try openDatabase(atPath: databasePath)
+    //        return nil
+    //    }
     
     internal func openDatabase(atPath path: String) throws -> DatabasePool {
         // Connect to the database
@@ -148,35 +168,35 @@ public final class DataStore {
         return dbPool
     }
 
-//        try DatabaseQueue(path: "/path/to/database.sqlite")
-//    internal init(realm: @escaping RealmProvider) {
-//        self.realm = realm
-//    }
+    //        try DatabaseQueue(path: "/path/to/database.sqlite")
+    //    internal init(realm: @escaping RealmProvider) {
+    //        self.realm = realm
+    //    }
     
-//    private func getPersistedPerson(bosePersonId: String?) -> PersistedGosePerson? {
-//        let realmInstance = realm()
-//        let result: PersistedGosePerson?
-//        if let bosePersonId = bosePersonId {
-//            let bosePersonPredicate = NSPredicate(format: "personId = %@", "\(bosePersonId)")
-//            result = realmInstance.objects(PersistedGosePerson.self).filter(bosePersonPredicate).first
-//        } else {
-//            result = realmInstance.objects(PersistedGosePerson.self).first
-//        }
-//        return result
-//    }
+    //    private func getPersistedPerson(gosePersonId: String?) -> PersistedGosePerson? {
+    //        let realmInstance = realm()
+    //        let result: PersistedGosePerson?
+    //        if let gosePersonId = gosePersonId {
+    //            let gosePersonPredicate = NSPredicate(format: "personId = %@", "\(gosePersonId)")
+    //            result = realmInstance.objects(PersistedGosePerson.self).filter(gosePersonPredicate).first
+    //        } else {
+    //            result = realmInstance.objects(PersistedGosePerson.self).first
+    //        }
+    //        return result
+    //    }
     
-//    private func fetchGosePerson(bosePersonId: String?, boseSessionFactory: @escaping GoseSessionFactory) -> Single<GoseSession?> {
-//        let realmInstance = realm()
-//        return Single.create { [unowned self] single in
-//            // If ID != nil, fetch the current bose person as there will always be at most one persisted bose person
-//            if let person = bosePersonId != nil ? self.getPersistedPerson(bosePersonId: bosePersonId!) : realmInstance.objects(PersistedGosePerson.self).first {
-//                single(.success( boseSessionFactory(person.accessToken, GoseSessionTokenType(rawValue: person.tokenType ?? ""), person.expiresIn.value, person.refreshToken, person.personId) ))
-//            } else {
-//                single(.error(GoseDataStoreError.personNotFound))
-//            }
-//            return Disposables.create {}
-//        }
-//    }
+    //    private func fetchGosePerson(gosePersonId: String?, goseSessionFactory: @escaping GoseSessionFactory) -> Single<GoseSession?> {
+    //        let realmInstance = realm()
+    //        return Single.create { [unowned self] single in
+    //            // If ID != nil, fetch the current gose person as there will always be at most one persisted gose person
+    //            if let person = gosePersonId != nil ? self.getPersistedPerson(gosePersonId: gosePersonId!) : realmInstance.objects(PersistedGosePerson.self).first {
+    //                single(.success( goseSessionFactory(person.accessToken, GoseSessionTokenType(rawValue: person.tokenType ?? ""), person.expiresIn.value, person.refreshToken, person.personId) ))
+    //            } else {
+    //                single(.error(GoseDataStoreError.personNotFound))
+    //            }
+    //            return Disposables.create {}
+    //        }
+    //    }
 }
 
 
@@ -185,16 +205,16 @@ public final class DataStore {
 extension DataStore: DataStoring {
     //MARK: User
     
-//    public func latestCachedUser() -> Single<String?> {
-//        guard let boseUser = getPersistedPerson(bosePersonId: nil) else { return Single.just(nil) }
-//
-//        return Single.just(boseSessionFactory(boseUser.accessToken,
-//                                              GoseSessionTokenType(rawValue: boseUser.tokenType ?? ""),
-//                                              boseUser.expiresIn.value, boseUser.refreshToken,
-//                                              boseUser.personId))
-//
-//        return Single.just("")
-//    }
+    //    public func latestCachedUser() -> Single<String?> {
+    //        guard let goseUser = getPersistedPerson(gosePersonId: nil) else { return Single.just(nil) }
+    //
+    //        return Single.just(goseSessionFactory(goseUser.accessToken,
+    //                                              GoseSessionTokenType(rawValue: goseUser.tokenType ?? ""),
+    //                                              goseUser.expiresIn.value, goseUser.refreshToken,
+    //                                              goseUser.personId))
+    //
+    //        return Single.just("")
+    //    }
     
     public func addUser(session: String) -> Single<String> {
         return Single.create { [unowned self] single in
@@ -218,53 +238,139 @@ extension DataStore: DataStoring {
             }
             return Disposables.create {}
         }
-//        return Single.just("")
+        //        return Single.just("")
     }
     
-//    public func fetchAccountDevices(bosePersonId: String) -> Single<[UserProduct]> {
-//        return Single.create { [unowned self] single in
-//            var associatedProducts: [UserProduct] = []
-//            let person = self.getPersistedPerson(bosePersonId: bosePersonId)
-//
-//            if person != nil {
-//                let products = person!.associatedProducts
-//                associatedProducts = products.map { product -> UserProduct in
-//                    let settings = ProductSettings(name: product.settings?.name)
-//                    return UserProduct(productId: product.productId, productType: product.productType, persons: [:], settings: settings)
-//                }
-//                single(.success(associatedProducts))
-//            } else {
-//                single(.error(GoseDataStoreError.personNotFound))
-//            }
-//            return Disposables.create {}
-//        }
-//    }
+    //    public func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]> {
+    //        return Single.create { [unowned self] single in
+    //            var associatedProducts: [UserProduct] = []
+    //            let person = self.getPersistedPerson(gosePersonId: gosePersonId)
+    //
+    //            if person != nil {
+    //                let products = person!.associatedProducts
+    //                associatedProducts = products.map { product -> UserProduct in
+    //                    let settings = ProductSettings(name: product.settings?.name)
+    //                    return UserProduct(productId: product.productId, productType: product.productType, persons: [:], settings: settings)
+    //                }
+    //                single(.success(associatedProducts))
+    //            } else {
+    //                single(.error(GoseDataStoreError.personNotFound))
+    //            }
+    //            return Disposables.create {}
+    //        }
+    //    }
     
-//    public func deleteGosePerson() -> Single<Void> {
-//        let realmInstance = realm()
-//        return Single.create { single in
-//            let persons = realmInstance.objects(PersistedGosePerson.self)
-//
-//            do {
-//                try realmInstance.write {
-//                    realmInstance.delete(persons)
-//                }
-//            } catch let error {
-//                single(.error(error))
-//            }
-//
-//            single(.success(()))
-//
-//            return Disposables.create {}
-//        }
-//    }
+    //    public func deleteGosePerson() -> Single<Void> {
+    //        let realmInstance = realm()
+    //        return Single.create { single in
+    //            let persons = realmInstance.objects(PersistedGosePerson.self)
+    //
+    //            do {
+    //                try realmInstance.write {
+    //                    realmInstance.delete(persons)
+    //                }
+    //            } catch let error {
+    //                single(.error(error))
+    //            }
+    //
+    //            single(.success(()))
+    //
+    //            return Disposables.create {}
+    //        }
+    //    }
+
+    // MARK: Categories
+
+    public func addCategory(categoryList: [Categorizable],
+                            for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    if let user = try User.fetchOne(db) {
+                        for category in categoryList {
+                            print("category: \(category)")
+                            switch categoryListType {
+
+                            case .gospel:
+                                print(".gospel")
+                                var gospel = Gospel(userId: user.userId,
+                                                    uuid: category.uuid,
+                                                    title: category.title,
+                                                    languageId: category.languageId,
+                                                    localizedTitle: category.localizedTitle)
+                                try gospel.insert(db)
+                            case .music:
+                                print(".music")
+                            case .churches:
+                                print(".churches")
+                            }
+                        }
+                    }
+                    return .commit
+                }
+                single(.success(categoryList))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    switch categoryListingType {
+                    case .gospel:
+                        print(".gospel")
+                        try Gospel.deleteAll(db)
+                    case .music:
+                        print(".music")
+                    case .churches:
+                        print(".churches")
+                    }
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+
+    public func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]> {
+        return Single.create { [unowned self] single in
+            do {
+                var categoryList: [Categorizable] = []
+                try self.dbPool.read { db in
+                    switch categoryListingType {
+                    case .gospel:
+                        categoryList = try Gospel.fetchAll(db)
+                    case .music:
+                        print(".music")
+                    case .churches:
+                        print(".churches")
+                    }
+                }
+                single(.success(categoryList))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
     // MARK: Chapters
 
     public func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-//                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let book = try Book.filter(Column("bid") == bookUuid).fetchOne(db){
                         print("found chapter book: \(book)")
                         for chapter in chapters {
@@ -287,7 +393,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
 
-//        return Single.just([])
+        //        return Single.just([])
     }
 
     public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
@@ -295,7 +401,7 @@ extension DataStore: DataStoring {
             do {
                 
                 var chapters: [Playable] = []
-//                let chapters: [Playable]!
+                //                let chapters: [Playable]!
                 try self.dbPool.read { db in
                     chapters = try MediaChapter.filter(Column("bid") == bookUuid).fetchAll(db)
                 }
@@ -313,7 +419,7 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     
-//                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let _ = try Book.filter(Column("bid") == bookUuid).fetchOne(db) {
                         try MediaChapter.filter(Column("bid") == bookUuid).deleteAll(db)
                     }
@@ -326,7 +432,7 @@ extension DataStore: DataStoring {
             }
             return Disposables.create()
         }
-//        return Single.just(())
+        //        return Single.just(())
     }
 
     // MARK: Books
@@ -397,34 +503,34 @@ extension DataStore: DataStoring {
     
     
     // This should follow the pattern of returning the object it adds in case it gets sanitized or something.
-//    func addPerson(boseSession: GoseSession) -> Single<GoseSession> {
-//        let realmInstance = realm()
-//        return Single.create { [unowned self] single in
-//            do {
-//                let persistedPerson = self.getPersistedPerson(bosePersonId: boseSession.bosePersonId)
-//
-//                let persisted = PersistedGosePerson(session: boseSession)
-//
-//                try realmInstance.write {
-//                    if let persistedPerson = persistedPerson {
-//                        // If the person is already in the Realm database it won't be added
-//                        if !persisted.isEqual(persistedPerson) {
-//                            persistedPerson.personId = boseSession.bosePersonId
-//                            persistedPerson.accessToken = boseSession.accessToken
-//                            persistedPerson.refreshToken = boseSession.refreshToken
-//                            persistedPerson.expiresIn = RealmOptional<Int>(boseSession.expiresIn)
-//                            persistedPerson.associatedProducts = List<PersistedProduct>()
-//                        }
-//                    } else {
-//                        realmInstance.add(persisted)
-//                    }
-//                }
-//                single(.success(boseSession))
-//            } catch let error {
-//                GoseLog.error("add person error: \(error)")
-//                single(.error(error))
-//            }
-//            return Disposables.create {}
-//        }
-//    }
+    //    func addPerson(goseSession: GoseSession) -> Single<GoseSession> {
+    //        let realmInstance = realm()
+    //        return Single.create { [unowned self] single in
+    //            do {
+    //                let persistedPerson = self.getPersistedPerson(gosePersonId: goseSession.gosePersonId)
+    //
+    //                let persisted = PersistedGosePerson(session: goseSession)
+    //
+    //                try realmInstance.write {
+    //                    if let persistedPerson = persistedPerson {
+    //                        // If the person is already in the Realm database it won't be added
+    //                        if !persisted.isEqual(persistedPerson) {
+    //                            persistedPerson.personId = goseSession.gosePersonId
+    //                            persistedPerson.accessToken = goseSession.accessToken
+    //                            persistedPerson.refreshToken = goseSession.refreshToken
+    //                            persistedPerson.expiresIn = RealmOptional<Int>(goseSession.expiresIn)
+    //                            persistedPerson.associatedProducts = List<PersistedProduct>()
+    //                        }
+    //                    } else {
+    //                        realmInstance.add(persisted)
+    //                    }
+    //                }
+    //                single(.success(goseSession))
+    //            } catch let error {
+    //                GoseLog.error("add person error: \(error)")
+    //                single(.error(error))
+    //            }
+    //            return Disposables.create {}
+    //        }
+    //    }
 }

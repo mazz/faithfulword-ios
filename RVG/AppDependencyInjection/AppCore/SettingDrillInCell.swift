@@ -60,19 +60,19 @@ public final class SettingDrillInCell: UICollectionViewCell {
     // MARK: Private
     private func styleCell() {
 //        if #available(iOS 11, *) {
-//            headingLabel.font = UIFont.boseAutoRescalingFont(.book, .caption1)
-//            valueLabel.font = UIFont.boseAutoRescalingFont(.book, .caption1)
+//            headingLabel.font = UIFont.goseAutoRescalingFont(.book, .caption1)
+//            valueLabel.font = UIFont.goseAutoRescalingFont(.book, .caption1)
 //        } else {
 //            updateFont()
 //        }
 //
-//        headingLabel.textColor = UIColor.boseBlackCellText
-//        valueLabel.textColor = UIColor.boseGreyCellText
+//        headingLabel.textColor = UIColor.goseBlackCellText
+//        valueLabel.textColor = UIColor.goseGreyCellText
 //
     }
     
     private func updateFont() {
-//        headingLabel.font = UIFont.boseFont(.book, .caption1)
-//        valueLabel.font = UIFont.boseFont(.book, .caption1)
+//        headingLabel.font = UIFont.goseFont(.book, .caption1)
+//        valueLabel.font = UIFont.goseFont(.book, .caption1)
     }
 }

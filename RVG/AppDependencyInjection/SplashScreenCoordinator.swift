@@ -31,7 +31,7 @@ extension SplashScreenCoordinator: NavigationCoordinating {
         splashScreen = SplashScreenViewController.create()
         setup(splashScreen)
         splashScreenViewController.plant(splashScreen)
-        // Animate pulsing and bose in box
+        // Animate pulsing and gose in box
         splashScreen.animateText(AnimationConstants.splashScreenTransition ) { [weak self] in
             self?.splashScreen.remove()
             completion(.finished)

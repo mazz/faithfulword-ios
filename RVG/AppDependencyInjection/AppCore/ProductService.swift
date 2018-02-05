@@ -48,7 +48,7 @@ public protocol ProductServicing {
     /// - Returns: the UserProduct, nil when not added to account
     //    func availability(of identifier: String) -> Observable<UserProduct?>
 
-    /// Updates the products associated with the bose user account
+    /// Updates the products associated with the gose user account
     ///
     /// - Returns: Returns Success or Error
     func fetchBooks() -> Single<Void>
