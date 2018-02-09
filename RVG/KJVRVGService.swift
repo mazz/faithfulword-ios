@@ -11,7 +11,7 @@ public enum KJVRVGService {
     case languagesSupported
     case gospels(languageId: String) // v1.1/gospels?language-id=en
     case gospelsMedia(gid: String) // v1.1/gospels/{gid}/media
-    case booksChapterMedia(bid: String, languageId: String) // v1.1/books/{bid}/media?language-id=en
+    case booksChapterMedia(uuid: String, languageId: String) // v1.1/books/{bid}/media?language-id=en
     case books(languageId: String) // v1.1/books?language-id=en
 }
 
@@ -19,7 +19,7 @@ public enum KJVRVGService {
 // MARK: - TargetType Protocol Implementation
 extension KJVRVGService: TargetType {
     
-    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)/v1.2")! }
+    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v2.0")! }
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
     public var path: String {
         switch self {
@@ -41,8 +41,8 @@ extension KJVRVGService: TargetType {
             return "/gospels"
         case .gospelsMedia(let gid):
             return "/gospels/\(gid)/media"
-        case .booksChapterMedia(let bid, _):
-            return "/books/\(bid)/media"
+        case .booksChapterMedia(let uuid, _):
+            return "/books/\(uuid)/media"
         case .books(_):
             return "/books"
         }
@@ -133,8 +133,8 @@ extension KJVRVGService: TargetType {
                 "userAgent": userAgent
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
-        case .booksChapterMedia(let bid, let languageId):
-            return "{\"bid\": \(bid), \"language-id\": \"\(languageId)\"}".utf8Encoded
+        case .booksChapterMedia(let uuid, let languageId):
+            return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\"}".utf8Encoded
         case .gospels(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .gospelsMedia(let gid):
@@ -174,8 +174,8 @@ extension KJVRVGService: TargetType {
                                       encoding: JSONEncoding.default)
         case .languagesSupported:
             return .requestPlain
-        case .booksChapterMedia(let bid, let languageId):
-            return .requestParameters(parameters:  ["bid": bid,
+        case .booksChapterMedia(let uuid, let languageId):
+            return .requestParameters(parameters:  ["uuid": uuid,
                                                     "language-id": languageId],
                                       encoding: URLEncoding.default)
         case .gospels(let languageId):

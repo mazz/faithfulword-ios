@@ -89,8 +89,7 @@ public final class DataStore {
             do {
                 try db.create(table: "book") { bookTable in
                     print("created: \(bookTable)")
-                    //                bookTable.column("bookId", .integer).primaryKey()
-                    bookTable.column("bid", .text).primaryKey()
+                    bookTable.column("categoryUuid", .text).primaryKey()
                     bookTable.column("title", .text)
                     bookTable.column("languageId", .text)
                     bookTable.column("localizedTitle", .text)
@@ -110,7 +109,7 @@ public final class DataStore {
                     chapterTable.column("path", .text)
                     chapterTable.column("presenterName", .text)
                     chapterTable.column("sourceMaterial", .text)
-                    chapterTable.column("bid", .text).references("book", onDelete: .cascade)
+                    chapterTable.column("categoryUuid", .text).references("book", onDelete: .cascade)
                 }
             }
             catch {
@@ -120,7 +119,7 @@ public final class DataStore {
             do {
                 try db.create(table: "gospel") { gospelTable in
                     print("created: \(gospelTable)")
-                    gospelTable.column("uuid", .text).primaryKey()
+                    gospelTable.column("categoryUuid", .text).primaryKey()
                     gospelTable.column("title", .text)
                     gospelTable.column("languageId", .text)
                     gospelTable.column("localizedTitle", .text)
@@ -293,12 +292,9 @@ extension DataStore: DataStoring {
 
                             case .gospel:
                                 print(".gospel")
-                                var gospel = Gospel(userId: user.userId,
-                                                    uuid: category.uuid,
-                                                    title: category.title,
-                                                    languageId: category.languageId,
-                                                    localizedTitle: category.localizedTitle)
-                                try gospel.insert(db)
+                                var storeGospel: Gospel = category as! Gospel
+                                storeGospel.userId = user.userId
+                                try storeGospel.insert(db)
                             case .music:
                                 print(".music")
                             case .churches:
@@ -371,7 +367,7 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
-                    if let book = try Book.filter(Column("bid") == bookUuid).fetchOne(db){
+                    if let book = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db){
                         print("found chapter book: \(book)")
                         for chapter in chapters {
                             var mediaChapter = MediaChapter(uuid: chapter.uuid,
@@ -379,7 +375,7 @@ extension DataStore: DataStoring {
                                                             path: chapter.path,
                                                             presenterName: chapter.presenterName,
                                                             sourceMaterial: chapter.sourceMaterial,
-                                                            bid: book.bid)
+                                                            categoryUuid: book.categoryUuid)
                             try mediaChapter.insert(db)
                         }
                     }
@@ -403,7 +399,7 @@ extension DataStore: DataStoring {
                 var chapters: [Playable] = []
                 //                let chapters: [Playable]!
                 try self.dbPool.read { db in
-                    chapters = try MediaChapter.filter(Column("bid") == bookUuid).fetchAll(db)
+                    chapters = try MediaChapter.filter(Column("categoryUuid") == bookUuid).fetchAll(db)
                 }
                 single(.success(chapters))
             } catch {
@@ -420,8 +416,8 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
-                    if let _ = try Book.filter(Column("bid") == bookUuid).fetchOne(db) {
-                        try MediaChapter.filter(Column("bid") == bookUuid).deleteAll(db)
+                    if let _ = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
+                        try MediaChapter.filter(Column("categoryUuid") == bookUuid).deleteAll(db)
                     }
                     return .commit
                 }
@@ -445,12 +441,9 @@ extension DataStore: DataStoring {
                         for book in books {
                             print("book: \(book)")
                             //            try! self.dbQueue.inDatabase { db in
-                            var book = Book(userId: user.userId,
-                                            bid: book.bid,
-                                            title: book.title,
-                                            languageId: book.languageId,
-                                            localizedTitle: book.localizedTitle)
-                            try book.insert(db)
+                            var storeBook: Book = book
+                            storeBook.userId = user.userId
+                            try storeBook.insert(db)
                         }
                     }
                     return .commit

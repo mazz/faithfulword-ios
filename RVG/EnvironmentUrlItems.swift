@@ -14,6 +14,9 @@ extension EnvironmentUrlItemKey {
     static var DevelopmentServerRootUrl: EnvironmentUrlItemKey {
         return EnvironmentUrlItemKey(rawValue: "https://japheth.ca")
     }
+    static var LocalServerRootUrl: EnvironmentUrlItemKey {
+        return EnvironmentUrlItemKey(rawValue: "http://localhost:6543")
+    }
     static var S3BaseUrl: EnvironmentUrlItemKey {
         return EnvironmentUrlItemKey(rawValue: "https://rvg-tracks-cdn.s3.amazonaws.com")
     }

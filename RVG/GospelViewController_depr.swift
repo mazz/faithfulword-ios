@@ -113,7 +113,7 @@ extension GospelViewController_depr: UITableViewDelegate, UITableViewDataSource 
         let reachability = Reachability()!
         
         if reachability.currentReachabilityStatus != .notReachable {
-            let gospelId = gospels[indexPath.row].uuid //{
+            let gospelId = gospels[indexPath.row].categoryUuid //{
                 let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
                 vc?.gospelId = gospelId
                 

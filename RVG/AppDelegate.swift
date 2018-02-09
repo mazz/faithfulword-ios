@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
             window?.makeKeyAndVisible()
         }, completion: { _ in },
            context: .other)
-        
+
         return true
     }
 

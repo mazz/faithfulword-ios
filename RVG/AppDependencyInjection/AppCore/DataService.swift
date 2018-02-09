@@ -207,7 +207,7 @@ extension DataService: ProductDataServicing {
         case .notReachable:
             return dataStore.fetchChapters(for: bookUuid)
         case .reachable(_):
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(bid: bookUuid, languageId: L10n.shared.language))
+            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language))
             let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
                 try! response.map(MediaChapterResponse.self)
             }

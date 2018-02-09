@@ -154,6 +154,10 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         
         provider.request(.books(languageId: L10n.shared.language)) { result in
             print("moya books: \(result)")
+
+//            let resultString: String = String(data: result encoding: .utf8)
+
+
             switch result {
             case let .success(moyaResponse):
                 do {
@@ -519,7 +523,7 @@ extension OriginViewController: UICollectionViewDelegate,UICollectionViewDataSou
         let reachability = Reachability()!
         
         if reachability.currentReachabilityStatus != .notReachable {
-            let bookId = books[indexPath.row].bid
+            let bookId = books[indexPath.row].categoryUuid
             let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
             //            vc?.folderId = id
             vc?.bookId = bookId

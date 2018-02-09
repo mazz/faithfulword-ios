@@ -9,7 +9,7 @@ public struct MediaChapter: Codable, Playable {
     public var path: String?
     public var presenterName: String?
     public var sourceMaterial: String?
-    public var bid: String?
+    public var categoryUuid: String?
 }
 
 // Define columns so that we can build GRDB requests
@@ -21,7 +21,7 @@ extension MediaChapter {
         static let path = Column("path")
         static let presenterName = Column("presenterName")
         static let sourceMaterial = Column("sourceMaterial")
-        static let bid = Column("bid")
+        static let categoryUuid = Column("categoryUuid")
     }
 }
 

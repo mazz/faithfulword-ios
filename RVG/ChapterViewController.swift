@@ -95,7 +95,7 @@ class ChapterViewController: BaseClass {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
-        provider.request(.booksChapterMedia(bid: self.bookId!, languageId: L10n.shared.language)) {
+        provider.request(.booksChapterMedia(uuid: self.bookId!, languageId: L10n.shared.language)) {
             result in
             print("booksChapterMedia: \(result)")
             switch result {

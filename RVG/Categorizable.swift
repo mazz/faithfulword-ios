@@ -1,7 +1,7 @@
 import Foundation
 
 public protocol Categorizable {
-    var uuid: String { get }
+    var categoryUuid: String { get }
     var title: String { get }
     var languageId: String { get }
     var localizedTitle: String { get }
