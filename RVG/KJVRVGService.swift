@@ -10,7 +10,7 @@ public enum KJVRVGService {
     case music
     case languagesSupported
     case gospels(languageId: String) // v1.1/gospels?language-id=en
-    case gospelsMedia(gid: String) // v1.1/gospels/{gid}/media
+    case gospelsMedia(uuid: String) // v1.1/gospels/{gid}/media
     case booksChapterMedia(uuid: String, languageId: String) // v1.1/books/{bid}/media?language-id=en
     case books(languageId: String) // v1.1/books?language-id=en
 }
@@ -39,8 +39,8 @@ extension KJVRVGService: TargetType {
             return "/languages/supported"
         case .gospels(_):
             return "/gospels"
-        case .gospelsMedia(let gid):
-            return "/gospels/\(gid)/media"
+        case .gospelsMedia(let uuid):
+            return "/gospels/\(uuid)/media"
         case .booksChapterMedia(let uuid, _):
             return "/books/\(uuid)/media"
         case .books(_):
@@ -137,8 +137,8 @@ extension KJVRVGService: TargetType {
             return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\"}".utf8Encoded
         case .gospels(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
-        case .gospelsMedia(let gid):
-            return "{\"gid\": \(gid),\"}".utf8Encoded
+        case .gospelsMedia(let uuid):
+            return "{\"uuid\": \(uuid),\"}".utf8Encoded
         case .musicMedia(let mid):
             return "{\"mid\": \(mid),\"}".utf8Encoded
         case .music:
@@ -181,8 +181,8 @@ extension KJVRVGService: TargetType {
         case .gospels(let languageId):
             return .requestParameters(parameters:  ["language-id": languageId],
                                       encoding: URLEncoding.default)
-        case .gospelsMedia(let gid):
-            return .requestParameters(parameters:  ["gid": gid],
+        case .gospelsMedia(let uuid):
+            return .requestParameters(parameters:  ["uuid": uuid],
                                       encoding: URLEncoding.default)
         }
     }

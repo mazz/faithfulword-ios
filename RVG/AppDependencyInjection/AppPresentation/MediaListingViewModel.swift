@@ -56,7 +56,7 @@ internal final class MediaListingViewModel {
                 case .audioSermon:
                     icon = "feet"
                 case .audioGospel:
-                    icon = "feet"
+                    icon = "double_feetprint_icon_white"
                 default:
                     icon = "feet"
                 }
@@ -68,10 +68,25 @@ internal final class MediaListingViewModel {
                 ]
             }.disposed(by: bag)
 
-        self.productService.fetchChapters(for: self.playlistId).subscribe(onSuccess: { chapters in
-            self.media.value = chapters
-        }, onError: { error in
-            print("fetchChapters failed with error: \(error.localizedDescription)")
-        }).disposed(by: self.bag)
+        switch self.mediaType {
+        case .audioChapter:
+            self.productService.fetchChapters(for: self.playlistId).subscribe(onSuccess: { chapters in
+                self.media.value = chapters
+            }, onError: { error in
+                print("fetchChapters failed with error: \(error.localizedDescription)")
+            }).disposed(by: self.bag)
+        case .audioSermon:
+            print("fetch .audioSermon")
+        case .audioGospel:
+            self.productService.fetchMediaGospel(for: playlistId).subscribe(onSuccess: { mediaGospel in
+                self.media.value = mediaGospel
+            }, onError: { error in
+                print("fetchChapters failed with error: \(error.localizedDescription)")
+            }).disposed(by: self.bag)
+        default:
+            print("default")
+
+        }
+
     }
 }

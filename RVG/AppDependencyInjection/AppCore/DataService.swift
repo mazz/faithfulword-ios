@@ -54,9 +54,12 @@ public protocol ProductDataServicing {
     /// - Returns: Permanent observable emitting product arrays
     func chapters(for bookUuid: String) -> Single<[Playable]>
 
+
     func fetchAndObserveBooks() -> Observable<[Book]>
 
     func deletePersistedBooks() -> Single<Void>
+
+    func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
 
     func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
 
@@ -255,6 +258,25 @@ extension DataService: ProductDataServicing {
         return self.dataStore.deleteAllBooks()
     }
 
+    public func mediaGospel(for categoryUuid: String) -> Single<[Playable]> {
+        switch self.networkStatus.value {
+        case .notReachable:
+
+            return dataStore.fetchMediaGospel(for: categoryUuid)
+        case .reachable(_):
+            let moyaResponse = self.kjvrvgNetworking.rx.request(.gospelsMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+            let mediaGospelResponse: Single<MediaGospelResponse> = moyaResponse.map { response -> MediaGospelResponse in
+                try! response.map(MediaGospelResponse.self)
+            }
+            let storedMediaGospel: Single<[Playable]> = mediaGospelResponse.flatMap { [unowned self] mediaGospelResponse -> Single<[Playable]> in
+                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+            }
+            return storedMediaGospel
+        case .unknown:
+            return dataStore.fetchMediaGospel(for: categoryUuid)
+        }
+    }
+
     public func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]> {
         var categoryListing: Single<[Categorizable]> = Single.just([])
 
@@ -310,6 +332,12 @@ extension DataService: ProductDataServicing {
         let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addChapters(chapters: chapters, for: bookUuid) }
     }
+
+    private func replacePersistedMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
+        let deleted: Single<Void> = dataStore.deleteMediaGospel(for: categoryUuid)
+        return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaGospel(mediaGospel: mediaGospel, for: categoryUuid) }
+    }
+
 
     private func replacePersistedCategoryList(categoryList: [Categorizable],
                                               for categoryListType: CategoryListingType) -> Single<[Categorizable]> {

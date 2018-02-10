@@ -31,16 +31,16 @@ public protocol DataStoring {
     //    func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]>
     
     func addBooks(books: [Book]) -> Single<[Book]>
-    
     func fetchBooks() -> Single<[Book]>
-    
     func deleteAllBooks() -> Single<Void>
     
     func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]>
-    
     func fetchChapters(for bookUuid: String) -> Single<[Playable]>
-    
     func deleteChapters(for bookUuid: String) -> Single<Void>
+
+    func addMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]>
+    func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]>
+    func deleteMediaGospel(for categoryUuid: String) -> Single<Void>
 
     func addCategory(categoryList: [Categorizable],
                      for categoryListType: CategoryListingType) -> Single<[Categorizable]>
@@ -130,6 +130,21 @@ public final class DataStore {
                 print("error making gospel table: \(error)")
             }
 
+            do {
+                try db.create(table: "mediagospel") { gospelTable in
+                    print("created: \(gospelTable)")
+                    //                chapterTable.column("chapterId", .integer).primaryKey()
+                    gospelTable.column("uuid", .text).primaryKey()
+                    gospelTable.column("localizedName", .text)
+                    gospelTable.column("path", .text)
+                    gospelTable.column("presenterName", .text)
+                    gospelTable.column("sourceMaterial", .text)
+                    gospelTable.column("categoryUuid", .text).references("gospel", onDelete: .cascade)
+                }
+            }
+            catch {
+                print("error making mediagospel table: \(error)")
+            }
         }
         return migrator
     }
@@ -202,8 +217,9 @@ public final class DataStore {
 
 // MARK: <DataStoring>
 extension DataStore: DataStoring {
+
     //MARK: User
-    
+
     //    public func latestCachedUser() -> Single<String?> {
     //        guard let goseUser = getPersistedPerson(gosePersonId: nil) else { return Single.just(nil) }
     //
@@ -214,7 +230,7 @@ extension DataStore: DataStoring {
     //
     //        return Single.just("")
     //    }
-    
+
     public func addUser(session: String) -> Single<String> {
         return Single.create { [unowned self] single in
             var resultSession: String = session
@@ -239,7 +255,7 @@ extension DataStore: DataStoring {
         }
         //        return Single.just("")
     }
-    
+
     //    public func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]> {
     //        return Single.create { [unowned self] single in
     //            var associatedProducts: [UserProduct] = []
@@ -258,7 +274,7 @@ extension DataStore: DataStoring {
     //            return Disposables.create {}
     //        }
     //    }
-    
+
     //    public func deleteGosePerson() -> Single<Void> {
     //        let realmInstance = realm()
     //        return Single.create { single in
@@ -395,7 +411,7 @@ extension DataStore: DataStoring {
     public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
-                
+
                 var chapters: [Playable] = []
                 //                let chapters: [Playable]!
                 try self.dbPool.read { db in
@@ -409,12 +425,12 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-    
+
     public func deleteChapters(for bookUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-                    
+
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let _ = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
                         try MediaChapter.filter(Column("categoryUuid") == bookUuid).deleteAll(db)
@@ -431,8 +447,75 @@ extension DataStore: DataStoring {
         //        return Single.just(())
     }
 
+    // Mark: MediaGospel
+
+    public func addMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    if let gospel = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db){
+                        print("found gospel: \(gospel)")
+                        for media in mediaGospel {
+                            var mediaGospel = MediaGospel(uuid: media.uuid,
+                                                          localizedName: media.localizedName,
+                                                          path: media.path,
+                                                          presenterName: media.presenterName,
+                                                          sourceMaterial: media.sourceMaterial,
+                                                          categoryUuid: gospel.categoryUuid)
+                            try mediaGospel.insert(db)
+                        }
+                    }
+                    return .commit
+                }
+                single(.success(mediaGospel))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+
+                var mediaGospel: [Playable] = []
+                try self.dbPool.read { db in
+                    mediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
+                }
+                single(.success(mediaGospel))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func deleteMediaGospel(for categoryUuid: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    if let _ = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
+                        try MediaGospel.filter(Column("categoryUuid") == categoryUuid).deleteAll(db)
+                    }
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+        //        return Single.just(())
+    }
+
     // MARK: Books
-    
+
     public func addBooks(books: [Book]) -> Single<[Book]> {
         return Single.create { [unowned self] single in
             do {

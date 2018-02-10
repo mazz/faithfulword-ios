@@ -147,7 +147,12 @@ internal final class AppDependencyModule {
         }
 
         container.register(CategoryListingCoordinator.self) { resolver in
-            CategoryListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
+            CategoryListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+                                       resettableMediaListingCoordinator: Resettable {
+                                        resolver.resolve(MediaListingCoordinator.self)!
+                }
+//                                       resettableMediaListingCoordinator:resolver.resolve(MediaListingCoordinator.self)!
+            )
         }
 
         container.register(MainCoordinator.self) { resolver in

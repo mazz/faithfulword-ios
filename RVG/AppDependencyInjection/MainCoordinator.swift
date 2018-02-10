@@ -118,6 +118,7 @@ extension MainCoordinator: NavigationCoordinating {
         self.mainNavigationController.dismiss(animated: true, completion: {
 
             self.resettableCategoryListingCoordinator.value.categoryType = .gospel
+            self.resettableCategoryListingCoordinator.value.mainNavigationController = self.mainNavigationController
             self.resettableCategoryListingCoordinator.value.flow(with: { viewController in
                 self.mainNavigationController.pushViewController(
                     viewController,

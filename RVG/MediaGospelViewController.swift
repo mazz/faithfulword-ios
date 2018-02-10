@@ -31,7 +31,7 @@ class MediaGospelViewController: BaseClass {
         loadingNotification.mode = MBProgressHUDMode.indeterminate
 
         if let gospelId = self.gospelId {
-            provider.request(.gospelsMedia(gid: gospelId)) { result in
+            provider.request(.gospelsMedia(uuid: gospelId)) { result in
                 print("gospelMedia: \(result)")
                 switch result {
                 case let .success(moyaResponse):
