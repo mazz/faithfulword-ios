@@ -429,8 +429,8 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MainMenuFooterTableViewCellID") as? MainMenuFooterTableViewCell
             cell?.selectionStyle = .none
             cell?.backgroundColor = UIColor.clear
-            cell?.verseBodyLabel.text = NSLocalizedString("All scripture is given by inspiration of God, and is profitable for doctrine, for reproof, for correction, for instruction in righteousness: That the man of God may be perfect, thoroughly furnished unto all good works.", comment: "").l10n()
-            cell?.chapterAndVerseLabel.text = NSLocalizedString("2 Timothy 3:16-17", comment: "").l10n()
+            cell?.verseBodyLabel.text = NSLocalizedString("Holding fast the faithful word as he hath been taught, that he may be able by sound doctrine both to exhort and to convince the gainsayers.", comment: "").l10n()
+            cell?.chapterAndVerseLabel.text = NSLocalizedString("Titus 1:9", comment: "").l10n()
             
             return cell!
         } else {

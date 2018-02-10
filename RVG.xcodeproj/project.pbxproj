@@ -86,6 +86,7 @@
 		4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB85052005BA1F00FEBB53 /* UIView+NibInstantiating.swift */; };
 		4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */; };
 		4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */; };
+		652D3E3CFFB1461AB8F19483 /* Pods_FWBC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B104C10C7CBFD5DB559A79C /* Pods_FWBC.framework */; };
 		68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */; };
 		68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */; };
 		681E117B1ED110CB00B028DD /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117A1ED110CB00B028DD /* Environment.swift */; };
@@ -155,7 +156,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B104C10C7CBFD5DB559A79C /* Pods_FWBC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWBC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		267F82415F44C7DC21E29B70 /* Pods-AllScripture.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AllScripture.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AllScripture/Pods-AllScripture.debug.xcconfig"; sourceTree = "<group>"; };
+		31FBCBA5FBCC8AC60858E650 /* Pods-FWBC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWBC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FWBC/Pods-FWBC.debug.xcconfig"; sourceTree = "<group>"; };
 		39B61A28AC305D4A3BE4704D /* Pods-RVGUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGUITests/Pods-RVGUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42394A69148B656F9C3009CC /* Pods-RVG.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVG.release.xcconfig"; path = "Pods/Target Support Files/Pods-RVG/Pods-RVG.release.xcconfig"; sourceTree = "<group>"; };
@@ -323,7 +326,7 @@
 		709234311E673BDE001F1621 /* classsDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classsDownload.swift; sourceTree = "<group>"; };
 		70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AboutUsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyPolicy.swift; sourceTree = "<group>"; };
-		70CD205E1E6479A800AF619F /* All Scripture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "All Scripture.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70CD205E1E6479A800AF619F /* FWBC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWBC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20611E6479A800AF619F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70CD20631E6479A800AF619F /* OriginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginViewController.swift; sourceTree = "<group>"; };
 		70CD20661E6479A800AF619F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -340,6 +343,7 @@
 		AF36FF2BC753A1E5EDF5D392 /* Pods-RVGTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RVGTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RVGTests/Pods-RVGTests.debug.xcconfig"; sourceTree = "<group>"; };
 		BF5EB4A4FA1B0CE93FFE1C3A /* Pods-All Scripture.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All Scripture.debug.xcconfig"; path = "Pods/Target Support Files/Pods-All Scripture/Pods-All Scripture.debug.xcconfig"; sourceTree = "<group>"; };
 		BFA03C18045DA6AA788EC14E /* Pods-All Scripture.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-All Scripture.release.xcconfig"; path = "Pods/Target Support Files/Pods-All Scripture/Pods-All Scripture.release.xcconfig"; sourceTree = "<group>"; };
+		C20F77187F654DA18D4DCF95 /* Pods-FWBC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWBC.release.xcconfig"; path = "Pods/Target Support Files/Pods-FWBC/Pods-FWBC.release.xcconfig"; sourceTree = "<group>"; };
 		C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E19D7E0E7BB6180846C55487 /* Pods_AllScripture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AllScripture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguagesSupportedResponse.swift; sourceTree = "<group>"; };
@@ -358,6 +362,7 @@
 				68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */,
 				4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */,
 				748EB8642644B92AC5ECF182 /* Pods_AllScripture.framework in Frameworks */,
+				652D3E3CFFB1461AB8F19483 /* Pods_FWBC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +382,7 @@
 				FF186C60E7CB0762EA6444C2 /* Pods_KJVRVG.framework */,
 				FA00A24B92713014F73D6E57 /* Pods_All_Scripture.framework */,
 				E19D7E0E7BB6180846C55487 /* Pods_AllScripture.framework */,
+				0B104C10C7CBFD5DB559A79C /* Pods_FWBC.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -555,7 +561,7 @@
 		70CD205F1E6479A800AF619F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				70CD205E1E6479A800AF619F /* All Scripture.app */,
+				70CD205E1E6479A800AF619F /* FWBC.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -739,6 +745,8 @@
 				BFA03C18045DA6AA788EC14E /* Pods-All Scripture.release.xcconfig */,
 				267F82415F44C7DC21E29B70 /* Pods-AllScripture.debug.xcconfig */,
 				570D267FA69AF4736FCE33B9 /* Pods-AllScripture.release.xcconfig */,
+				31FBCBA5FBCC8AC60858E650 /* Pods-FWBC.debug.xcconfig */,
+				C20F77187F654DA18D4DCF95 /* Pods-FWBC.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -746,9 +754,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		70CD205D1E6479A800AF619F /* AllScripture */ = {
+		70CD205D1E6479A800AF619F /* FWBC */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "AllScripture" */;
+			buildConfigurationList = 70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "FWBC" */;
 			buildPhases = (
 				7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */,
 				70CD205A1E6479A800AF619F /* Sources */,
@@ -761,9 +769,9 @@
 			);
 			dependencies = (
 			);
-			name = AllScripture;
+			name = FWBC;
 			productName = RVG;
-			productReference = 70CD205E1E6479A800AF619F /* All Scripture.app */;
+			productReference = 70CD205E1E6479A800AF619F /* FWBC.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -815,7 +823,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				70CD205D1E6479A800AF619F /* AllScripture */,
+				70CD205D1E6479A800AF619F /* FWBC */,
 			);
 		};
 /* End PBXProject section */
@@ -857,7 +865,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-AllScripture/Pods-AllScripture-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-FWBC/Pods-FWBC-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
 				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
@@ -898,7 +906,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AllScripture/Pods-AllScripture-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FWBC/Pods-FWBC-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */ = {
@@ -912,7 +920,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AllScripture-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-FWBC-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -931,7 +939,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AllScripture/Pods-AllScripture-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FWBC/Pods-FWBC-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1217,7 +1225,7 @@
 		};
 		70CD20871E6479A900AF619F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 267F82415F44C7DC21E29B70 /* Pods-AllScripture.debug.xcconfig */;
+			baseConfigurationReference = 31FBCBA5FBCC8AC60858E650 /* Pods-FWBC.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1229,7 +1237,7 @@
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kjvrvg.kjvrvg-ios";
-				PRODUCT_NAME = "All Scripture";
+				PRODUCT_NAME = FWBC;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RVG/RVG-Bridging-Header.h";
@@ -1241,7 +1249,7 @@
 		};
 		70CD20881E6479A900AF619F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 570D267FA69AF4736FCE33B9 /* Pods-AllScripture.release.xcconfig */;
+			baseConfigurationReference = C20F77187F654DA18D4DCF95 /* Pods-FWBC.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1253,7 +1261,7 @@
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kjvrvg.kjvrvg-ios";
-				PRODUCT_NAME = "All Scripture";
+				PRODUCT_NAME = FWBC;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RVG/RVG-Bridging-Header.h";
@@ -1274,7 +1282,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "AllScripture" */ = {
+		70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "FWBC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70CD20871E6479A900AF619F /* Debug */,
