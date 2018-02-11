@@ -86,7 +86,6 @@
 		4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB85052005BA1F00FEBB53 /* UIView+NibInstantiating.swift */; };
 		4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */; };
 		4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */; };
-		652D3E3CFFB1461AB8F19483 /* Pods_FWBC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B104C10C7CBFD5DB559A79C /* Pods_FWBC.framework */; };
 		68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68121CB01ED7D12800273342 /* ChapterTableViewCell.swift */; };
 		68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68121CB11ED7D12800273342 /* ChapterTableViewCell.xib */; };
 		681E117B1ED110CB00B028DD /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E117A1ED110CB00B028DD /* Environment.swift */; };
@@ -151,6 +150,7 @@
 		70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */; };
 		70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD209F1E64857D00AF619F /* ExtentionsAll.swift */; };
 		70CD20A71E6486CC00AF619F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20A61E6486CC00AF619F /* Constants.swift */; };
+		97769D88BA86A46CCEE3EC52 /* Pods_FaithfulWord.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE01C3698E5471BCABAB308B /* Pods_FaithfulWord.framework */; };
 		F463A90D1F68DAD00012CFEB /* LanguagesSupportedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */; };
 /* End PBXBuildFile section */
 
@@ -318,7 +318,7 @@
 		709234311E673BDE001F1621 /* classsDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classsDownload.swift; sourceTree = "<group>"; };
 		70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AboutUsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyPolicy.swift; sourceTree = "<group>"; };
-		70CD205E1E6479A800AF619F /* FWBC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWBC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		70CD205E1E6479A800AF619F /* Faithful Word.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Faithful Word.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20611E6479A800AF619F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70CD20631E6479A800AF619F /* OriginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginViewController.swift; sourceTree = "<group>"; };
 		70CD20661E6479A800AF619F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -330,9 +330,12 @@
 		70CD20831E6479A900AF619F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70CD209F1E64857D00AF619F /* ExtentionsAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtentionsAll.swift; sourceTree = "<group>"; };
 		70CD20A61E6486CC00AF619F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		90A03204187BF6ACC5EE5AFF /* Pods-FaithfulWord.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FaithfulWord.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord.debug.xcconfig"; sourceTree = "<group>"; };
 		9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE01C3698E5471BCABAB308B /* Pods_FaithfulWord.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FaithfulWord.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C20F77187F654DA18D4DCF95 /* Pods-FWBC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWBC.release.xcconfig"; path = "Pods/Target Support Files/Pods-FWBC/Pods-FWBC.release.xcconfig"; sourceTree = "<group>"; };
 		C2C9C993926A0B40630D8F6F /* Pods_RVGTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1D6F9AF1A54B3526327D3A3 /* Pods-FaithfulWord.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FaithfulWord.release.xcconfig"; path = "Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord.release.xcconfig"; sourceTree = "<group>"; };
 		E19D7E0E7BB6180846C55487 /* Pods_AllScripture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AllScripture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguagesSupportedResponse.swift; sourceTree = "<group>"; };
 		FA00A24B92713014F73D6E57 /* Pods_All_Scripture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_All_Scripture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -348,7 +351,7 @@
 				6854EED71F01F649007BB502 /* AVFoundation.framework in Frameworks */,
 				68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */,
 				4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */,
-				652D3E3CFFB1461AB8F19483 /* Pods_FWBC.framework in Frameworks */,
+				97769D88BA86A46CCEE3EC52 /* Pods_FaithfulWord.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +372,7 @@
 				FA00A24B92713014F73D6E57 /* Pods_All_Scripture.framework */,
 				E19D7E0E7BB6180846C55487 /* Pods_AllScripture.framework */,
 				0B104C10C7CBFD5DB559A79C /* Pods_FWBC.framework */,
+				AE01C3698E5471BCABAB308B /* Pods_FaithfulWord.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -547,7 +551,7 @@
 		70CD205F1E6479A800AF619F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				70CD205E1E6479A800AF619F /* FWBC.app */,
+				70CD205E1E6479A800AF619F /* Faithful Word.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -721,6 +725,8 @@
 			children = (
 				31FBCBA5FBCC8AC60858E650 /* Pods-FWBC.debug.xcconfig */,
 				C20F77187F654DA18D4DCF95 /* Pods-FWBC.release.xcconfig */,
+				90A03204187BF6ACC5EE5AFF /* Pods-FaithfulWord.debug.xcconfig */,
+				D1D6F9AF1A54B3526327D3A3 /* Pods-FaithfulWord.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -728,9 +734,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		70CD205D1E6479A800AF619F /* FWBC */ = {
+		70CD205D1E6479A800AF619F /* FaithfulWord */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "FWBC" */;
+			buildConfigurationList = 70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "FaithfulWord" */;
 			buildPhases = (
 				7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */,
 				70CD205A1E6479A800AF619F /* Sources */,
@@ -743,9 +749,9 @@
 			);
 			dependencies = (
 			);
-			name = FWBC;
+			name = FaithfulWord;
 			productName = RVG;
-			productReference = 70CD205E1E6479A800AF619F /* FWBC.app */;
+			productReference = 70CD205E1E6479A800AF619F /* Faithful Word.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -797,7 +803,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				70CD205D1E6479A800AF619F /* FWBC */,
+				70CD205D1E6479A800AF619F /* FaithfulWord */,
 			);
 		};
 /* End PBXProject section */
@@ -839,7 +845,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-FWBC/Pods-FWBC-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
 				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
@@ -880,7 +886,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FWBC/Pods-FWBC-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */ = {
@@ -894,7 +900,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FWBC-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-FaithfulWord-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -913,7 +919,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FWBC/Pods-FWBC-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1199,7 +1205,7 @@
 		};
 		70CD20871E6479A900AF619F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 31FBCBA5FBCC8AC60858E650 /* Pods-FWBC.debug.xcconfig */;
+			baseConfigurationReference = 90A03204187BF6ACC5EE5AFF /* Pods-FaithfulWord.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1211,7 +1217,7 @@
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kjvrvg.kjvrvg-ios";
-				PRODUCT_NAME = FWBC;
+				PRODUCT_NAME = "Faithful Word";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RVG/RVG-Bridging-Header.h";
@@ -1223,7 +1229,7 @@
 		};
 		70CD20881E6479A900AF619F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C20F77187F654DA18D4DCF95 /* Pods-FWBC.release.xcconfig */;
+			baseConfigurationReference = D1D6F9AF1A54B3526327D3A3 /* Pods-FaithfulWord.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1235,7 +1241,7 @@
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kjvrvg.kjvrvg-ios";
-				PRODUCT_NAME = FWBC;
+				PRODUCT_NAME = "Faithful Word";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RVG/RVG-Bridging-Header.h";
@@ -1256,7 +1262,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "FWBC" */ = {
+		70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "FaithfulWord" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				70CD20871E6479A900AF619F /* Debug */,
