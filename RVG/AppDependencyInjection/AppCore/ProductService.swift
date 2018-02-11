@@ -57,6 +57,7 @@ public protocol ProductServicing {
 
     func fetchChapters(for bookUuid: String) -> Single<[Playable]>
     func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]>
+    func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
 
     func fetchCategoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
 
@@ -105,6 +106,10 @@ extension ProductService: ProductServicing {
 
     public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {
         return dataService.mediaGospel(for: categoryUuid)
+    }
+
+    public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
+        return dataService.mediaMusic(for: categoryUuid)
     }
 
     //    public func addProduct(productName: String,

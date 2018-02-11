@@ -12,4 +12,5 @@ enum MediaType {
     case audioChapter
     case audioSermon
     case audioGospel
+    case audioMusic
 }

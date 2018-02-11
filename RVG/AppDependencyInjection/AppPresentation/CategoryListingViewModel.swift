@@ -68,10 +68,24 @@ final class CategoryListingViewModel {
                 ]
             }.disposed(by: self.bag)
 
-        self.productService.fetchCategoryListing(for: .gospel).subscribe(onSuccess: { listing in
-            self.categoryListing.value = listing
-        }) { error in
-            print("fetchCategoryListing failed with error: \(error.localizedDescription)")
-        }.disposed(by: self.bag)
+        switch self.categoryListingType {
+        case .gospel:
+            self.productService.fetchCategoryListing(for: .gospel).subscribe(onSuccess: { listing in
+                self.categoryListing.value = listing
+            }) { error in
+                print("fetchCategoryListing failed with error: \(error.localizedDescription)")
+                }.disposed(by: self.bag)
+        case .music:
+            self.productService.fetchCategoryListing(for: .music).subscribe(onSuccess: { listing in
+                self.categoryListing.value = listing
+            }) { error in
+                print("fetchCategoryListing failed with error: \(error.localizedDescription)")
+                }.disposed(by: self.bag)
+        case .churches:
+            print("preaching")
+        default:
+            print("feetprint")
+        }
+
     }
 }

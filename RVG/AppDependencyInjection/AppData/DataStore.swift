@@ -42,6 +42,10 @@ public protocol DataStoring {
     func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]>
     func deleteMediaGospel(for categoryUuid: String) -> Single<Void>
 
+    func addMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]>
+    func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
+    func deleteMediaMusic(for categoryUuid: String) -> Single<Void>
+
     func addCategory(categoryList: [Categorizable],
                      for categoryListType: CategoryListingType) -> Single<[Categorizable]>
 
@@ -145,6 +149,23 @@ public final class DataStore {
             catch {
                 print("error making mediagospel table: \(error)")
             }
+
+            do {
+                try db.create(table: "mediamusic") { gospelTable in
+                    print("created: \(gospelTable)")
+                    //                chapterTable.column("chapterId", .integer).primaryKey()
+                    gospelTable.column("uuid", .text).primaryKey()
+                    gospelTable.column("localizedName", .text)
+                    gospelTable.column("path", .text)
+                    gospelTable.column("presenterName", .text)
+                    gospelTable.column("sourceMaterial", .text)
+                    gospelTable.column("categoryUuid", .text).references("music", onDelete: .cascade)
+                }
+            }
+            catch {
+                print("error making mediagospel table: \(error)")
+            }
+
         }
         return migrator
     }
@@ -447,7 +468,7 @@ extension DataStore: DataStoring {
         //        return Single.just(())
     }
 
-    // Mark: MediaGospel
+    // MARK: MediaGospel
 
     public func addMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
@@ -495,6 +516,74 @@ extension DataStore: DataStoring {
     }
 
     public func deleteMediaGospel(for categoryUuid: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    if let _ = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
+                        try MediaGospel.filter(Column("categoryUuid") == categoryUuid).deleteAll(db)
+                    }
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+        //        return Single.just(())
+    }
+
+
+    // MARK: MediaMusic
+
+    public func addMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    if let music = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db){
+                        print("found music: \(music)")
+                        for media in mediaMusic {
+                            var mediaMusic = MediaMusic(uuid: media.uuid,
+                                                         localizedName: media.localizedName,
+                                                         path: media.path,
+                                                         presenterName: media.presenterName,
+                                                         sourceMaterial: media.sourceMaterial,
+                                                         categoryUuid: music.categoryUuid)
+                            try mediaMusic.insert(db)
+                        }
+                    }
+                    return .commit
+                }
+                single(.success(mediaMusic))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+
+                var mediaGospel: [Playable] = []
+                try self.dbPool.read { db in
+                    mediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
+                }
+                single(.success(mediaGospel))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func deleteMediaMusic(for categoryUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in

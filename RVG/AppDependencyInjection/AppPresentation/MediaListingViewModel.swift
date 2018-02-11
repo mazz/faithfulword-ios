@@ -57,6 +57,8 @@ internal final class MediaListingViewModel {
                     icon = "feet"
                 case .audioGospel:
                     icon = "double_feetprint_icon_white"
+                case .audioMusic:
+                    icon = "disc_icon_white"
                 default:
                     icon = "feet"
                 }
@@ -83,9 +85,14 @@ internal final class MediaListingViewModel {
             }, onError: { error in
                 print("fetchChapters failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
+        case .audioMusic:
+            self.productService.fetchMediaMusic(for: playlistId).subscribe(onSuccess: { mediaMusic in
+                self.media.value = mediaMusic
+            }, onError: { error in
+                print("fetchChapters failed with error: \(error.localizedDescription)")
+            }).disposed(by: self.bag)
         default:
             print("default")
-
         }
 
     }

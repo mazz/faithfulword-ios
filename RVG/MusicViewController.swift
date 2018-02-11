@@ -2,6 +2,7 @@
 import UIKit
 import MBProgressHUD
 import Moya
+import L10n_swift
 
 class MusicViewController: BaseClass {
     @IBOutlet var musicBarRightButton: UIBarButtonItem!
@@ -28,26 +29,19 @@ class MusicViewController: BaseClass {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
-        provider.request(.music) { result in
+        provider.request(.music(languageId: L10n.shared.language)) { result in
             print("gospels: \(result)")
             switch result {
             case let .success(moyaResponse):
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-                    let data = moyaResponse.data
-                    var parsedObject: MusicResponse
-                    
-                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                    if let jsonObject = json as? [String:Any] {
-                        parsedObject = MusicResponse(JSON: jsonObject)!
-                        print(parsedObject)
-                        
-                        self.musicIds = parsedObject.music!
-                        DispatchQueue.main.async {
-                            MBProgressHUD.hide(for: self.view, animated: true)
-                            self.tableView.reloadData()
-                        }
-                        
+                    let musicResponse: MusicResponse = try moyaResponse.map(MusicResponse.self)
+                    print("mapped to moyaResponse: \(moyaResponse)")
+
+                    self.musicIds = musicResponse.result
+                    DispatchQueue.main.async {
+                        MBProgressHUD.hide(for: self.view, animated: true)
+                        self.tableView.reloadData()
                     }
                 }
                 catch {
@@ -96,7 +90,7 @@ extension MusicViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicTableViewCellID") as? MusicTableViewCell
         cell?.selectionStyle = .none
-        cell?.titleLabel?.text = self.musicIds[indexPath.row].title!
+        cell?.titleLabel?.text = self.musicIds[indexPath.row].title
         
         return cell!
     }
@@ -105,13 +99,14 @@ extension MusicViewController: UITableViewDelegate, UITableViewDataSource {
         let reachability = Reachability()!
 
         if reachability.currentReachabilityStatus != .notReachable {
-            if let musicId = musicIds[indexPath.row].musicId {
-                let vc = self.pushVc(strBdName: "Main", vcName: "MediaMusicViewController") as? MediaMusicViewController
-                //            vc?.folderId = id
-                vc?.musicId = musicId
-                vc?.musicTitle = musicIds[indexPath.row].title
-                self.navigationController?.pushViewController(vc!, animated: true)
-            }
+            let musicId = musicIds[indexPath.row].categoryUuid
+            //            {
+            let vc = self.pushVc(strBdName: "Main", vcName: "MediaMusicViewController") as? MediaMusicViewController
+            //            vc?.folderId = id
+            vc?.musicId = musicId
+            vc?.musicTitle = musicIds[indexPath.row].title
+            self.navigationController?.pushViewController(vc!, animated: true)
+            //            }
         } else {
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
         }

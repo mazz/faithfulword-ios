@@ -1,16 +1,9 @@
 
 import Foundation
-import ObjectMapper
 
-class MusicResponse : Mappable {
-    var music : [Music]?
-    
-    required init?(map: Map) {
-        
-    }
-    
-    func mapping(map: Map) {
-        music  <- map["result"]
-    }
-    
+public struct MusicResponse: Codable {
+    public var result: [Music]
+    public var status: String
+    public var version: String
 }
+

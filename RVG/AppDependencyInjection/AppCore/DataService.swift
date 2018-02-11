@@ -60,6 +60,7 @@ public protocol ProductDataServicing {
     func deletePersistedBooks() -> Single<Void>
 
     func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
+    func mediaMusic(for categoryUuid: String) -> Single<[Playable]>
 
     func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
 
@@ -243,8 +244,8 @@ extension DataService: ProductDataServicing {
 
     public func fetchAndObserveBooks() -> Observable<[Book]> {
         return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
-        //            .catchError { _ in Single.just(product) }
-        .map { response -> BookResponse in try! response.map(BookResponse.self) }
+            //            .catchError { _ in Single.just(product) }
+            .map { response -> BookResponse in try! response.map(BookResponse.self) }
             .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
             .flatMap { [unowned self] in self.replacePersistedBooks($0) }
             .do(onNext: { products in
@@ -277,6 +278,24 @@ extension DataService: ProductDataServicing {
         }
     }
 
+    public func mediaMusic(for categoryUuid: String) -> Single<[Playable]> {
+        switch self.networkStatus.value {
+        case .notReachable:
+            return dataStore.fetchMediaMusic(for: categoryUuid)
+        case .reachable(_):
+            let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+            let mediaGospelResponse: Single<MediaGospelResponse> = moyaResponse.map { response -> MediaGospelResponse in
+                try! response.map(MediaGospelResponse.self)
+            }
+            let storedMediaGospel: Single<[Playable]> = mediaGospelResponse.flatMap { [unowned self] mediaGospelResponse -> Single<[Playable]> in
+                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+            }
+            return storedMediaGospel
+        case .unknown:
+            return dataStore.fetchMediaMusic(for: categoryUuid)
+        }
+    }
+
     public func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]> {
         var categoryListing: Single<[Categorizable]> = Single.just([])
 
@@ -300,6 +319,22 @@ extension DataService: ProductDataServicing {
             }
         case .music:
             print(".music")
+            switch self.networkStatus.value {
+            case .unknown:
+                categoryListing = dataStore.fetchCategoryList(for: categoryType)
+            case .notReachable:
+                categoryListing = dataStore.fetchCategoryList(for: categoryType)
+            case .reachable(_):
+                print("reachable")
+                categoryListing = self.kjvrvgNetworking.rx.request(.music(languageId: L10n.shared.language))
+                    .map { response -> MusicResponse in
+                        try! response.map(MusicResponse.self)
+                    }.flatMap { musicResponse -> Single<[Categorizable]> in
+                        print("musicResponse.result: \(musicResponse.result)")
+                        return Single.just(musicResponse.result)
+                    }
+                    .flatMap { [unowned self] in self.replacePersistedCategoryList(categoryList: $0, for: categoryType) }
+            }
         case .churches:
             print(".churches")
         }
@@ -316,14 +351,14 @@ extension DataService: ProductDataServicing {
 
     private func loadBooks() -> Observable<[Book]> {
         return dataStore.fetchBooks()
-        //            .asObservable()
-        .do(
-            onNext: { [weak self] books in
-                self?._books.value = books
-            },
-            onError: { [weak self] error in
-                print("error: \(error.localizedDescription)")
-                self?._books.value = []
+            //            .asObservable()
+            .do(
+                onNext: { [weak self] books in
+                    self?._books.value = books
+                },
+                onError: { [weak self] error in
+                    print("error: \(error.localizedDescription)")
+                    self?._books.value = []
             })
             .asObservable()
     }
@@ -342,8 +377,6 @@ extension DataService: ProductDataServicing {
     private func replacePersistedCategoryList(categoryList: [Categorizable],
                                               for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
         let deleted: Single<Void> = dataStore.deleteCategoryList(for: categoryListType)
-//        deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void>
-//        let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addCategory(
             categoryList: categoryList,
             for: categoryListType) }

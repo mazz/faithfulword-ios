@@ -6,8 +6,8 @@ public enum KJVRVGService {
     case churchesMediaSermons(cid: String)
     case appVersions
     case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String)
-    case musicMedia(mid: String) // "/music/{mid}/media"
-    case music
+    case musicMedia(uuid: String) // "/music/{mid}/media"
+    case music(languageId: String)
     case languagesSupported
     case gospels(languageId: String) // v1.1/gospels?language-id=en
     case gospelsMedia(uuid: String) // v1.1/gospels/{gid}/media
@@ -31,9 +31,9 @@ extension KJVRVGService: TargetType {
             return "/device/pushtoken/update"
         case .appVersions:
             return "/app/versions"
-        case .musicMedia(let mid):
-            return "/music/\(mid)/media"
-        case .music:
+        case .musicMedia(let uuid):
+            return "/music/\(uuid)/media"
+        case .music(_):
             return "/music"
         case .languagesSupported:
             return "/languages/supported"
@@ -77,8 +77,8 @@ extension KJVRVGService: TargetType {
             return nil
         case .musicMedia(_):
             return nil
-        case .music:
-            return nil
+        case .music(let languageId):
+            return ["language-id": languageId]
         case .booksChapterMedia(_, let languageId):
             return ["language-id": languageId]
         case .books(let languageId):
@@ -139,10 +139,10 @@ extension KJVRVGService: TargetType {
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .gospelsMedia(let uuid):
             return "{\"uuid\": \(uuid),\"}".utf8Encoded
-        case .musicMedia(let mid):
-            return "{\"mid\": \(mid),\"}".utf8Encoded
-        case .music:
-            return "foobar".utf8Encoded
+        case .musicMedia(let uuid):
+            return "{\"uuid\": \(uuid),\"}".utf8Encoded
+        case .music(let languageId):
+            return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .books(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .languagesSupported:
@@ -158,11 +158,12 @@ extension KJVRVGService: TargetType {
                                       encoding: URLEncoding.default)
         case .appVersions:
             return .requestPlain
-        case .musicMedia(let mid):
-            return .requestParameters(parameters:  ["mid": mid],
+        case .musicMedia(let uuid):
+            return .requestParameters(parameters:  ["uuid": uuid],
                                       encoding: URLEncoding.default)
-        case .music:
-            return .requestPlain
+        case .music(let languageId):
+            return .requestParameters(parameters:  ["language-id": languageId],
+                                      encoding: URLEncoding.default)
         case .books(let languageId):
             return .requestParameters(parameters:  ["language-id": languageId],
                                       encoding: URLEncoding.default)

@@ -14,7 +14,7 @@ internal final class CategoryListingCoordinator {
 
     internal init(uiFactory: AppUIMaking,
                   resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
-                  ) {
+        ) {
         self.uiFactory = uiFactory
         self.resettableMediaListingCoordinator = resettableMediaListingCoordinator
     }
@@ -25,7 +25,7 @@ extension CategoryListingCoordinator: NavigationCoordinating {
         if let mediaType = self.categoryType {
 
             let categoryListingViewController = uiFactory.makeCategoryListing(categoryType: mediaType)
-//            mainNavigationController = UINavigationController(rootViewController: categoryListingViewController)
+            //            mainNavigationController = UINavigationController(rootViewController: categoryListingViewController)
 
             setup(categoryListingViewController)
             handle(eventsFrom: categoryListingViewController.viewModel)
@@ -36,7 +36,9 @@ extension CategoryListingCoordinator: NavigationCoordinating {
         DispatchQueue.main.async {
             print("goToCategory categorizable: \(categorizable)")
             self.resettableMediaListingCoordinator.value.playlistId = categorizable.categoryUuid
-            self.resettableMediaListingCoordinator.value.mediaType = .audioGospel
+            self.resettableMediaListingCoordinator.value.mediaType = (categorizable is Gospel)
+                ? .audioGospel : (categorizable is Music)
+                ? .audioMusic : .audioSermon
             self.resettableMediaListingCoordinator.value.flow(with: { viewController in
 
                 self.mainNavigationController.pushViewController(

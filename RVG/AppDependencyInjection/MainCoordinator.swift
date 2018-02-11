@@ -114,10 +114,10 @@ extension MainCoordinator: NavigationCoordinating {
 //        viewController.navigationItem.rightBarButtonItem = close
     }
 
-    private func dismissAndGoToGospelFlow() {
+    private func dismissAndGoToCategoryFlow(categoryType: CategoryListingType) {
         self.mainNavigationController.dismiss(animated: true, completion: {
 
-            self.resettableCategoryListingCoordinator.value.categoryType = .gospel
+            self.resettableCategoryListingCoordinator.value.categoryType = categoryType
             self.resettableCategoryListingCoordinator.value.mainNavigationController = self.mainNavigationController
             self.resettableCategoryListingCoordinator.value.flow(with: { viewController in
                 self.mainNavigationController.pushViewController(
@@ -301,12 +301,13 @@ extension MainCoordinator {
                     self.dismiss()
                 case .gospel:
                     print(".soulwinning")
-                    self.dismissAndGoToGospelFlow()
+                    self.dismissAndGoToCategoryFlow(categoryType: .gospel)
                 case .preaching:
                     print(".preaching")
-//                    self.dismissAndGoToGospelFlow()
+                    self.dismissAndGoToCategoryFlow(categoryType: .churches)
                 case .music:
                     print(".music")
+                    self.dismissAndGoToCategoryFlow(categoryType: .music)
                 case .aboutUs:
                     print(".aboutUs")
                     self.dismissAndGoToInlineWebBrowser(url: NSURL(

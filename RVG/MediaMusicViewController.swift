@@ -30,7 +30,7 @@ class MediaMusicViewController: BaseClass {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
-        provider.request(.musicMedia(mid: musicId!)) { result in
+        provider.request(.musicMedia(uuid: musicId!)) { result in
             print("gospels: \(result)")
             switch result {
             case let .success(moyaResponse):
