@@ -310,8 +310,8 @@ extension MainCoordinator {
                     self.dismissAndGoToCategoryFlow(categoryType: .music)
                 case .aboutUs:
                     print(".aboutUs")
-                    self.dismissAndGoToInlineWebBrowser(url: NSURL(
-                        string: "http://allscripturebaptist.com/")!
+                    self.dismissAndGoToExternalWebBrowser(url: NSURL(
+                        string: "http://faithfulwordbaptist.org/")!
                     as URL)
                 case .share:
                     print(".share")
@@ -320,12 +320,12 @@ extension MainCoordinator {
                 case .donate:
                     print(".donate")
                     self.dismissAndGoToExternalWebBrowser(url: NSURL(
-                        string: "http://allscripturebaptist.com/donate/")!
+                        string: "http://faithfulwordbaptist.org/donate.html")!
                     as URL)
                 case .privacyPolicy:
                     print(".privacyPolicy")
-                    self.dismissAndGoToInlineWebBrowser(url: NSURL(
-                        string: "http://allscripturebaptist.com/privacy-policy/")!
+                    self.dismissAndGoToExternalWebBrowser(url: NSURL(
+                        string: "http://faithfulwordbaptist.org/privacy.html")!
                     as URL)
                 case .contactUs:
                     print(".contactUs")

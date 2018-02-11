@@ -86,8 +86,8 @@ extension UIFactory: AppUIMaking {
 
         let appVersionString: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
 
-        mailComposerVC.setToRecipients(["allscripturebaptist@gmail.com"])
-        mailComposerVC.setSubject("All Scripture iOS \(appVersionString) App Feedback")
+        mailComposerVC.setToRecipients(["collindanielschneide@gmail.com"])
+        mailComposerVC.setSubject("Faithful Word iOS \(appVersionString) App Feedback")
 
         if MFMailComposeViewController.canSendMail() {
             return mailComposerVC
