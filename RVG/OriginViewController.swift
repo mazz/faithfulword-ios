@@ -226,9 +226,9 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
     func shareTextButton() {
         
         // text to share
-        let allScripture = NSLocalizedString("All Scripture", comment: "")
+        let faithfulWord = NSLocalizedString("Faithful Word", comment: "")
         
-        let text = NSLocalizedString("\(allScripture): https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "").l10n()
+        let text = NSLocalizedString("\(faithfulWord): https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "").l10n()
         
         // set up activity view controller
         let textToShare = [ text ]
@@ -249,8 +249,8 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         
         let appVersionString: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
 
-        mailComposerVC.setToRecipients(["allscripturebaptist@gmail.com"])
-        mailComposerVC.setSubject("All Scripture iOS \(appVersionString) App Feedback")
+        mailComposerVC.setToRecipients(["collindanielschneide@gmail.com"])
+        mailComposerVC.setSubject("Faithful Word iOS \(appVersionString) App Feedback")
         
         return mailComposerVC
     }
@@ -464,7 +464,7 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 3 {
-            let svc = SFSafariViewController(url: NSURL(string: "http://allscripturebaptist.com/")! as URL)
+            let svc = SFSafariViewController(url: NSURL(string: "http://faithfulwordbaptist.org/")! as URL)
             self.present(svc, animated: true, completion: nil)
         }
         else if indexPath.row == 4 {
@@ -479,7 +479,7 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
         }
         else if indexPath.row == 6 {
             
-            UIApplication.shared.open(NSURL(string:"http://allscripturebaptist.com/donate/")! as URL, options: [:], completionHandler: nil)
+            UIApplication.shared.open(NSURL(string:"http://faithfulwordbaptist.org/donate.html")! as URL, options: [:], completionHandler: nil)
             //            let svc = SFSafariViewController(url: NSURL(string: "http://kjvrvg.com/donate/")! as URL)
             //            self.present(svc, animated: true, completion: nil)
             
@@ -487,7 +487,7 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
             //            self.navigationController?.pushViewController(vc, animated: true)
         }
         else if indexPath.row == 7 {
-            let svc = SFSafariViewController(url: NSURL(string: "http://allscripturebaptist.com/privacy-policy/")! as URL)
+            let svc = SFSafariViewController(url: NSURL(string: "http://faithfulwordbaptist.org/privacy.html")! as URL)
             self.present(svc, animated: true, completion: nil)
         }
         else if indexPath.row == 8 {
