@@ -13,7 +13,7 @@
         <!--Side Menu View Controller-->
         <scene sceneID="Bkr-Fa-EBs">
             <objects>
-                <viewController storyboardIdentifier="SideMenuViewController" id="khE-7T-Bs6" customClass="SideMenuViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SideMenuViewController" id="khE-7T-Bs6" customClass="SideMenuViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="H4m-0x-VTx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -45,7 +45,44 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xvu-VM-nDY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-420" y="-159.67016491754123"/>
+            <point key="canvasLocation" x="-65" y="-273"/>
+        </scene>
+        <!--Bible Language View Controller-->
+        <scene sceneID="2nC-XD-x1k">
+            <objects>
+                <viewController storyboardIdentifier="BibleLanguageViewController" id="2ci-p9-FX8" customClass="BibleLanguageViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="SUY-wV-75G">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2kh-dc-PEe">
+                                <rect key="frame" x="0.0" y="20" width="300" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="UvB-mV-hGt">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="2kh-dc-PEe" firstAttribute="trailing" secondItem="jET-mC-ys3" secondAttribute="trailing" constant="-75" id="7lp-aB-gDO"/>
+                            <constraint firstItem="2kh-dc-PEe" firstAttribute="top" secondItem="jET-mC-ys3" secondAttribute="top" id="f6f-fq-Dhq"/>
+                            <constraint firstItem="2kh-dc-PEe" firstAttribute="bottom" secondItem="jET-mC-ys3" secondAttribute="bottom" id="qFG-fy-cx5"/>
+                            <constraint firstItem="2kh-dc-PEe" firstAttribute="leading" secondItem="jET-mC-ys3" secondAttribute="leading" id="zV1-VT-b1Y"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="jET-mC-ys3"/>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="2kh-dc-PEe" id="o7b-fs-5V3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MEW-Nb-xVT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-783" y="-273"/>
         </scene>
     </scenes>
 </document>

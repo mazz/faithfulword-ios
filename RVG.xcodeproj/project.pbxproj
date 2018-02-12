@@ -23,6 +23,10 @@
 		4C39990220229E02008E76E8 /* SideMenuSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */; };
 		4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3E87291FFDAFAF0037C22E /* DataStore.swift */; };
 		4C5FAD5F2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */; };
+		4C5FAD612031D5B400397BFF /* BibleLanguageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */; };
+		4C5FAD632031D78A00397BFF /* BibleLanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD622031D78A00397BFF /* BibleLanguageViewController.swift */; };
+		4C5FAD652031D7AB00397BFF /* BibleLanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD642031D7AB00397BFF /* BibleLanguageViewModel.swift */; };
+		4C5FAD672031D85C00397BFF /* BibleLanguageSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD662031D85C00397BFF /* BibleLanguageSectionViewModel.swift */; };
 		4C619BCF20265CC700E70B6E /* Categorizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C619BCE20265CC700E70B6E /* Categorizable.swift */; };
 		4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5466200EF7D30038B265 /* LoginSequencer.swift */; };
 		4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5468200EF7E60038B265 /* AccountService.swift */; };
@@ -175,6 +179,10 @@
 		4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuSectionViewModel.swift; sourceTree = "<group>"; };
 		4C3E87291FFDAFAF0037C22E /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MainCoordinator+SideMenuHandling.swift"; path = "AppPresentation/MainCoordinator+SideMenuHandling.swift"; sourceTree = "<group>"; };
+		4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageCoordinator.swift; sourceTree = "<group>"; };
+		4C5FAD622031D78A00397BFF /* BibleLanguageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageViewController.swift; sourceTree = "<group>"; };
+		4C5FAD642031D7AB00397BFF /* BibleLanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageViewModel.swift; sourceTree = "<group>"; };
+		4C5FAD662031D85C00397BFF /* BibleLanguageSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageSectionViewModel.swift; sourceTree = "<group>"; };
 		4C619BCE20265CC700E70B6E /* Categorizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categorizable.swift; sourceTree = "<group>"; };
 		4C7D5466200EF7D30038B265 /* LoginSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequencer.swift; sourceTree = "<group>"; };
 		4C7D5468200EF7E60038B265 /* AccountService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountService.swift; sourceTree = "<group>"; };
@@ -390,6 +398,8 @@
 				4C3998FF20229D6C008E76E8 /* SideMenuViewModel.swift */,
 				4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */,
 				4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */,
+				4C5FAD642031D7AB00397BFF /* BibleLanguageViewModel.swift */,
+				4C5FAD662031D85C00397BFF /* BibleLanguageSectionViewModel.swift */,
 			);
 			path = AppPresentation;
 			sourceTree = "<group>";
@@ -484,6 +494,8 @@
 				4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */,
 				4C21A72D20201148000F02CE /* SideMenu.storyboard */,
 				4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */,
+				4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */,
+				4C5FAD622031D78A00397BFF /* BibleLanguageViewController.swift */,
 				4C3998FB20201942008E76E8 /* SideMenuViewController.swift */,
 				4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */,
 				4CCE8CA11FF5697200AFBAF2 /* SplashScreenCoordinator.swift */,
@@ -945,6 +957,8 @@
 				4CCE8C931FF4BC8200AFBAF2 /* AppConstants.swift in Sources */,
 				4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */,
 				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
+				4C5FAD672031D85C00397BFF /* BibleLanguageSectionViewModel.swift in Sources */,
+				4C5FAD612031D5B400397BFF /* BibleLanguageCoordinator.swift in Sources */,
 				68F0F3F71F11E9A900718AFF /* Music.swift in Sources */,
 				4CF401EB1ED391F400632272 /* Device.swift in Sources */,
 				4CCE8C851FF4B7C600AFBAF2 /* MainCoordinator.swift in Sources */,
@@ -1007,6 +1021,7 @@
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
 				4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */,
+				4C5FAD632031D78A00397BFF /* BibleLanguageViewController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				4CA31F982009DF4800A94101 /* MediaListingCoordinator.swift in Sources */,
 				4C0F48732025709F00A8904F /* CategoryListingViewController.swift in Sources */,
@@ -1023,6 +1038,7 @@
 				689880511F147B5900CC2BC5 /* Playable.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
 				4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */,
+				4C5FAD652031D7AB00397BFF /* BibleLanguageViewModel.swift in Sources */,
 				4CCE8C7D1FF4B60400AFBAF2 /* RxReachability.swift in Sources */,
 				6833CBC71FC9F9DA001FEFD5 /* AppVersion.swift in Sources */,
 				4CEF753B2026CBA300C1BBF3 /* CategoryListingViewModel.swift in Sources */,

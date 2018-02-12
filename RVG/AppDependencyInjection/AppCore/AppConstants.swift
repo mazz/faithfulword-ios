@@ -5,6 +5,7 @@ struct StoryboardName {
     static let splashScreen = "SplashScreen"
     static let settings = "Settings"
     static let sideMenu = "SideMenu"
+    static let bibleLanguage = "SideMenu"
     static let mediaListing = "Root"
     static let categoryListing = "Root"
 }
