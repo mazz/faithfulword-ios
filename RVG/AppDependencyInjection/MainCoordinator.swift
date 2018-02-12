@@ -13,7 +13,7 @@ internal final class MainCoordinator: NSObject {
     // MARK: Fields
 
     private let menuTransitionManager = MenuTransitionManager()
-    private var mainNavigationController: UINavigationController!
+    internal var mainNavigationController: UINavigationController!
     private var sideMenuController: SideMenuViewController?
 
     private let bag = DisposeBag()
@@ -26,10 +26,10 @@ internal final class MainCoordinator: NSObject {
 
     // MARK: Dependencies
 
-    private let appUIMaking: AppUIMaking
+    internal let appUIMaking: AppUIMaking
 //    private let resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>
     private let resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
-    private let resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>
+    internal let resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>
     private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
 
 //    private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
@@ -114,24 +114,6 @@ extension MainCoordinator: NavigationCoordinating {
 //        viewController.navigationItem.rightBarButtonItem = close
     }
 
-    private func dismissAndGoToCategoryFlow(categoryType: CategoryListingType) {
-        self.mainNavigationController.dismiss(animated: true, completion: {
-
-            self.resettableCategoryListingCoordinator.value.categoryType = categoryType
-            self.resettableCategoryListingCoordinator.value.mainNavigationController = self.mainNavigationController
-            self.resettableCategoryListingCoordinator.value.flow(with: { viewController in
-                self.mainNavigationController.pushViewController(
-                    viewController,
-                    animated: true
-                )
-            }, completion: { _ in
-                self.mainNavigationController.dismiss(animated: true)
-                self.resettableCategoryListingCoordinator.reset()
-            }, context: .push(onto: self.mainNavigationController))
-
-        })
-    }
-
     private func goToBook(for bookUuid: String) {
         // do not use a new flow, because Chapters is part of the Book flow AFAICT
 //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
@@ -168,6 +150,10 @@ extension MainCoordinator: NavigationCoordinating {
             self.mainNavigationController.dismiss(animated: true)
             self.resettableSideMenuCoordinator.reset()
         }, context: .present)
+    }
+
+    func goToBibleLanguageFlow() {
+
     }
 
     private func goToHamburger() {
@@ -301,71 +287,40 @@ extension MainCoordinator {
                     self.dismiss()
                 case .gospel:
                     print(".soulwinning")
-                    self.dismissAndGoToCategoryFlow(categoryType: .gospel)
+                    self.goToCategoryFlow(categoryType: .gospel)
                 case .preaching:
                     print(".preaching")
-                    self.dismissAndGoToCategoryFlow(categoryType: .churches)
+                    self.goToCategoryFlow(categoryType: .churches)
                 case .music:
                     print(".music")
-                    self.dismissAndGoToCategoryFlow(categoryType: .music)
+                    self.goToCategoryFlow(categoryType: .music)
                 case .aboutUs:
                     print(".aboutUs")
-                    self.dismissAndGoToExternalWebBrowser(url: NSURL(
+                    self.goToExternalWebBrowser(url: NSURL(
                         string: "http://faithfulwordbaptist.org/")!
                     as URL)
                 case .share:
                     print(".share")
                 case .setBibleLanguage:
                     print(".setBibleLanguage")
+                    self.goToBibleLanguageFlow()
+
                 case .donate:
                     print(".donate")
-                    self.dismissAndGoToExternalWebBrowser(url: NSURL(
+                    self.goToExternalWebBrowser(url: NSURL(
                         string: "http://faithfulwordbaptist.org/donate.html")!
                     as URL)
                 case .privacyPolicy:
                     print(".privacyPolicy")
-                    self.dismissAndGoToExternalWebBrowser(url: NSURL(
+                    self.goToExternalWebBrowser(url: NSURL(
                         string: "http://faithfulwordbaptist.org/privacy.html")!
                     as URL)
                 case .contactUs:
                     print(".contactUs")
-                    self.dismissAndGoToMailComposer()
+                    self.goToMailComposer()
                 }
             }
         }.disposed(by: bag)
-    }
-}
-
-extension MainCoordinator {
-    private func dismissAndGoToInlineWebBrowser(url: URL) {
-        self.mainNavigationController.dismiss(animated: true, completion: {
-            let svc = self.appUIMaking.makeInlineWebBrowser(url: url)
-            self.mainNavigationController.pushViewController(svc,
-                                                             animated: true)
-        })
-    }
-
-    func dismissAndGoToExternalWebBrowser(url: URL) {
-        self.mainNavigationController.dismiss(animated: true) {
-            UIApplication.shared.open(url, options: [:],
-                                      completionHandler: nil)
-        }
-    }
-
-    func dismissAndGoToMailComposer() {
-        self.mainNavigationController.dismiss(animated: true, completion: {
-            if let mailComposer = self.appUIMaking.makeMailComposer() {
-                self.mainNavigationController.pushViewController(mailComposer,
-                                                                 animated: true)
-            } else {
-                let okAlert = self.appUIMaking.makeOkAlert(
-                    title: NSLocalizedString(
-                        "Mail services are not available", comment: "").l10n(),
-                    message: "")
-                self.mainNavigationController.pushViewController(okAlert,
-                                                                 animated: true)
-            }
-        })
     }
 }
 
