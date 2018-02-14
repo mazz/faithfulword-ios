@@ -56,16 +56,11 @@ class BibleLanguageViewController: UIViewController {
         let dataSource = RxCollectionViewSectionedReloadDataSource<BibleLanguageSectionViewModel>(
             configureCell: { (dataSource, collectionView, indexPath, item) in
                 switch item {
-                case let .language(_, body):
+                case let .language(_, sourceMaterial, languageIdentifier, _):
                     print(".language")
-//                case let .drillIn(_, iconName, title, showBottomSeparator):
                     let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
-                    drillInCell.populate(iconName: "iconName", label: "title", showBottomSeparator: true)
+                    drillInCell.populate(iconName: "language_menu", label: String(sourceMaterial + " (\(languageIdentifier))"), showBottomSeparator: true)
                     return drillInCell
-//                case let .quote(body, chapterAndVerse):
-//                    let verseCell = collectionView.dequeue(cellType: VerseCell.self, for: indexPath)
-//                    verseCell.populate(with: body, chapterAndVerse: chapterAndVerse)
-//                    return verseCell
                 } },
             configureSupplementaryView: { _, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(
@@ -84,10 +79,11 @@ extension BibleLanguageViewController: UICollectionViewDelegateFlowLayout {
         let preferredWidth: CGFloat = collectionView.bounds.width
 
         switch viewModel.item(at: indexPath) {
-        case let .language(_, body):
-            guard let view = try? UIView.sizingView(for: VerseCell.self,
+        case let .language(_, sourceMaterial, languageIdentifier, _):
+
+            guard let view = try? UIView.sizingView(for: DeviceGroupSelectionCell.self,
                                                     bundle: ModuleInfo.bundle) else { break }
-            view.populate(with: body, chapterAndVerse: "test")
+            view.populate(iconName: "language_menu", label: String(sourceMaterial + " (\(languageIdentifier))"), showBottomSeparator: true)
             return CGSize(width: preferredWidth, height: view.height(for: preferredWidth))
         }
         return CGSize(width: 0.1, height: 0.1)

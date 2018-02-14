@@ -56,6 +56,7 @@ class OtherLanguagesViewController: BaseClass {
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                     let data = moyaResponse.data
+                    print(String(data: data, encoding: .utf8))
 //                    var parsedObject: LanguagesSupportedResponse
                     
                     let supportedLanguages: LanguagesSupportedResponse = try moyaResponse.map(LanguagesSupportedResponse.self)

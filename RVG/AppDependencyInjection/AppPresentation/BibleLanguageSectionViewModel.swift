@@ -11,7 +11,10 @@ internal enum BibleLanguageSectionType {
 }
 
 internal enum BibleLanguageItemType {
-    case language(type: BibleLanguageLanguageType, body: String)
+    case language(type: BibleLanguageLanguageType,
+        sourceMaterial: String,
+        languageIdentifier: String,
+        supported: Bool)
 }
 
 public enum BibleLanguageLanguageType {

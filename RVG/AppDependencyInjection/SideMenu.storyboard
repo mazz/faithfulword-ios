@@ -56,7 +56,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2kh-dc-PEe">
-                                <rect key="frame" x="0.0" y="20" width="300" height="647"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="UvB-mV-hGt">
                                     <size key="itemSize" width="50" height="50"/>
@@ -69,7 +69,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="2kh-dc-PEe" firstAttribute="trailing" secondItem="jET-mC-ys3" secondAttribute="trailing" constant="-75" id="7lp-aB-gDO"/>
+                            <constraint firstItem="2kh-dc-PEe" firstAttribute="trailing" secondItem="jET-mC-ys3" secondAttribute="trailing" id="7lp-aB-gDO"/>
                             <constraint firstItem="2kh-dc-PEe" firstAttribute="top" secondItem="jET-mC-ys3" secondAttribute="top" id="f6f-fq-Dhq"/>
                             <constraint firstItem="2kh-dc-PEe" firstAttribute="bottom" secondItem="jET-mC-ys3" secondAttribute="bottom" id="qFG-fy-cx5"/>
                             <constraint firstItem="2kh-dc-PEe" firstAttribute="leading" secondItem="jET-mC-ys3" secondAttribute="leading" id="zV1-VT-b1Y"/>

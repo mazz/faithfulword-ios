@@ -46,11 +46,13 @@ public protocol DataStoring {
     func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
     func deleteMediaMusic(for categoryUuid: String) -> Single<Void>
 
+    func addBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]>
+    func fetchBibleLanguages() -> Single<[LanguageIdentifier]>
+    func deleteBibleLanguages() -> Single<Void>
+
     func addCategory(categoryList: [Categorizable],
                      for categoryListType: CategoryListingType) -> Single<[Categorizable]>
-
     func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void>
-
     func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]>
 
     /// Add or update a gose person to Realm database
@@ -180,6 +182,24 @@ public final class DataStore {
                 print("error making mediagospel table: \(error)")
             }
 
+            do {
+                try db.create(table: "languageidentifier") { langTable in
+                    print("created: \(langTable)")
+                    langTable.column("uuid", .text).primaryKey()
+                    langTable.column("sourceMaterial", .text)
+                    langTable.column("languageIdentifier", .text)
+                    langTable.column("supported", .boolean)
+                }
+            }
+            catch {
+                print("error making languageidentifier table: \(error)")
+            }
+//            var uuid: String
+//            let sourceMaterial: String
+//            let languageIdentifier: String
+//            let supported: Bool
+
+            // languageidentifier
         }
         return migrator
     }
@@ -621,6 +641,65 @@ extension DataStore: DataStoring {
             return Disposables.create()
         }
         //        return Single.just(())
+    }
+
+    // MARK: Bible Languages
+
+    public func addBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+//                    if let user = try User.fetchOne(db) {
+                        for bibleLanguage in bibleLanguages {
+                            print("bibleLanguage: \(bibleLanguage)")
+                            //            try! self.dbQueue.inDatabase { db in
+                            var storeLang: LanguageIdentifier = bibleLanguage
+//                            storeLang.userId = user.userId
+                            try storeLang.insert(db)
+                        }
+//                    }
+                    return .commit
+                }
+                single(.success(bibleLanguages))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func fetchBibleLanguages() -> Single<[LanguageIdentifier]> {
+        return Single.create { [unowned self] single in
+            do {
+
+                var languages: [LanguageIdentifier] = []
+                try self.dbPool.read { db in
+                    languages = try LanguageIdentifier.fetchAll(db)
+                }
+                single(.success(languages))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func deleteBibleLanguages() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try LanguageIdentifier.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
     }
 
     // MARK: Books

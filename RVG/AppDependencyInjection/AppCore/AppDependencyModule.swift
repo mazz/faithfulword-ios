@@ -151,7 +151,11 @@ internal final class AppDependencyModule {
                                        resettableMediaListingCoordinator: Resettable {
                                         resolver.resolve(MediaListingCoordinator.self)!
                 }
-//                                       resettableMediaListingCoordinator:resolver.resolve(MediaListingCoordinator.self)!
+            )
+        }
+
+        container.register(BibleLanguageCoordinator.self) { resolver in
+            BibleLanguageCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
             )
         }
 
@@ -166,6 +170,9 @@ internal final class AppDependencyModule {
                 },
                 resettableCategoryListingCoordinator: Resettable {
                     resolver.resolve(CategoryListingCoordinator.self)!
+                },
+                resettableBibleLanguageCoordinator: Resettable {
+                    resolver.resolve(BibleLanguageCoordinator.self)!
                 }
 
                 //                resettableSettingsCoordinator: Resettable {
@@ -200,6 +207,11 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!
             )
         }.inObjectScope(.transient)
+
+        container.register(BibleLanguageViewModel.self) { resolver in
+            BibleLanguageViewModel(
+                productService: resolver.resolve(ProductServicing.self)!)
+        }
     }
 
     private static func attachSplashScreenFlowDependencies(to container: Container) {

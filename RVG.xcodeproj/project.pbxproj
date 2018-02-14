@@ -128,7 +128,6 @@
 		68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D11EEA3C600082956D /* GospelResponse.swift */; };
 		68BE69D41EEA3FBF0082956D /* GospelViewController_depr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D31EEA3FBF0082956D /* GospelViewController_depr.swift */; };
 		68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BE69D71EEBBB5B0082956D /* SafariServices.framework */; };
-		68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */; };
 		68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */; };
 		68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */; };
 		68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */; };
@@ -305,7 +304,6 @@
 		68BE69E21EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Main.strings; sourceTree = "<group>"; };
 		68BE69E31EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; lineEnding = 0; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		68BE69E41EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifierResponse.swift; sourceTree = "<group>"; };
 		68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifier.swift; sourceTree = "<group>"; };
 		68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTableViewCell.swift; sourceTree = "<group>"; };
@@ -669,7 +667,6 @@
 				68BE69CF1EEA3B730082956D /* Gospel.swift */,
 				68BE69D11EEA3C600082956D /* GospelResponse.swift */,
 				68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */,
-				68BE69E51EEBC0620082956D /* LanguageIdentifierResponse.swift */,
 				F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */,
 				4CD63DFE1ED4D29A00C4E2EC /* MediaChapter.swift */,
 				4CD63DFC1ED4D27600C4E2EC /* MediaChapterResponse.swift */,
@@ -994,7 +991,6 @@
 				4CA31FAC200E3C0900A94101 /* User.swift in Sources */,
 				4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
-				68BE69E61EEBC0620082956D /* LanguageIdentifierResponse.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */,
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,

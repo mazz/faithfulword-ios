@@ -61,6 +61,7 @@ public protocol ProductDataServicing {
 
     func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
     func mediaMusic(for categoryUuid: String) -> Single<[Playable]>
+    func bibleLanguages() -> Single<[LanguageIdentifier]>
 
     func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
 
@@ -288,12 +289,31 @@ extension DataService: ProductDataServicing {
                 try! response.map(MediaMusicResponse.self)
             }
             let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
-//                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+                //                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
                 self.replacePersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
             }
             return storedMediaMusic
         case .unknown:
             return dataStore.fetchMediaMusic(for: categoryUuid)
+        }
+    }
+
+    public func bibleLanguages() -> Single<[LanguageIdentifier]> {
+        switch self.networkStatus.value {
+        case .unknown:
+            return dataStore.fetchBibleLanguages()
+        case .notReachable:
+            return dataStore.fetchBibleLanguages()
+        case .reachable(_):
+            //        var categoryListing: Single<[LanguageIdentifier]> = Single.just([])
+            return self.kjvrvgNetworking.rx.request(.languagesSupported)
+                .map { response -> LanguagesSupportedResponse in
+                    try! response.map(LanguagesSupportedResponse.self)
+                }.flatMap { languagesSupportedResponse -> Single<[LanguageIdentifier]> in
+                    print("languagesSupportedResponse.result: \(languagesSupportedResponse.result)")
+                    return Single.just(languagesSupportedResponse.result)
+                }
+                .flatMap { [unowned self] in self.replacePersistedBibleLanguages(bibleLanguages: $0) }
         }
     }
 
@@ -377,6 +397,13 @@ extension DataService: ProductDataServicing {
     private func replacePersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteMediaMusic(for: categoryUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid) }
+    }
+
+    private func replacePersistedBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {
+        return dataStore.deleteBibleLanguages()
+            .flatMap { [unowned self] _ in
+                self.dataStore.addBibleLanguages(bibleLanguages: bibleLanguages)
+        }
     }
 
     private func replacePersistedCategoryList(categoryList: [Categorizable],

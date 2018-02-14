@@ -58,6 +58,7 @@ public protocol ProductServicing {
     func fetchChapters(for bookUuid: String) -> Single<[Playable]>
     func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]>
     func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
+    func fetchBibleLanguages() -> Single<[LanguageIdentifier]>
 
     func fetchCategoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
 
@@ -101,7 +102,6 @@ extension ProductService: ProductServicing {
 
     public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
         return dataService.chapters(for: bookUuid)
-        //        return Single.just([])
     }
 
     public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {
@@ -110,6 +110,10 @@ extension ProductService: ProductServicing {
 
     public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
         return dataService.mediaMusic(for: categoryUuid)
+    }
+
+    public func fetchBibleLanguages() -> Single<[LanguageIdentifier]> {
+        return dataService.bibleLanguages()
     }
 
     //    public func addProduct(productName: String,

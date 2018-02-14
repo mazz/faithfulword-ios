@@ -21,74 +21,42 @@ internal final class BibleLanguageViewModel {
             let section = self.sections.value[indexPath.section]
             let item = section.items[indexPath.item]
             // Don't emit an event for anything that is not a 'drillIn'
-            if case .language(let type, _) = item {
+            if case .language(let type, _, _, _) = item {
                 return type
             }
-//            if case .drillIn(let type, _, _, _) = item {
-//                return type
-//            }
+            //            if case .drillIn(let type, _, _, _) = item {
+            //                return type
+            //            }
             return nil
         }
     }
 
     // MARK: Dependencies
+
+    private let productService: ProductServicing!
+
     private var bag = DisposeBag()
 
-    internal init() {
+    internal init(productService: ProductServicing) {
+        self.productService = productService
+
         setupDatasource()
     }
 
     // MARK: Private helpers
 
     private func setupDatasource() {
-        //        sections.value =
-//        let menuItems: [BibleLanguageItemType] = [
-//            BibleLanguageItemType.drillIn(type: .bible,
-//                                     iconName: "books-stack-of-three",
-//                                     title: NSLocalizedString("Bible", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .gospel,
-//                                     iconName: "candlelight",
-//                                     title: NSLocalizedString("Soul-winning", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .preaching,
-//                                     iconName: "preaching",
-//                                     title: NSLocalizedString("Preaching", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .music,
-//                                     iconName: "discs_icon_white",
-//                                     title: NSLocalizedString("Music", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .aboutUs,
-//                                     iconName: "about_ic",
-//                                     title: NSLocalizedString("About Us", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .share,
-//                                     iconName: "share_ic",
-//                                     title: NSLocalizedString("Share", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .setBibleLanguage,
-//                                     iconName: "language_menu",
-//                                     title: NSLocalizedString("Set Bible Language", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .donate,
-//                                     iconName: "donate",
-//                                     title: NSLocalizedString("Donate", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .privacyPolicy,
-//                                     iconName: "privacy_ic",
-//                                     title: NSLocalizedString("Privacy Policy", comment: "").l10n(),
-//                                     showBottomSeparator: true),
-//            BibleLanguageItemType.drillIn(type: .contactUs,
-//                                     iconName: "mail",
-//                                     title: NSLocalizedString("Contact Us", comment: "").l10n(),
-//                                     showBottomSeparator: true)]
-//        sections.value = [
-//            BibleLanguageSectionViewModel(type: .menuItem, items: menuItems),
-//            BibleLanguageSectionViewModel(type: .quote, items: [
-//                BibleLanguageItemType.quote(body: NSLocalizedString("Holding fast the faithful word as he hath been taught, that he may be able by sound doctrine both to exhort and to convince the gainsayers.", comment: "").l10n(), chapterAndVerse: NSLocalizedString("Titus 1:9", comment: "").l10n())
-//                ])
-//        ]
+        productService.fetchBibleLanguages().asObservable()
+            .map { $0.map { BibleLanguageItemType.language(type: .defaultLanguageType,
+                                                           sourceMaterial: $0.sourceMaterial,
+                                                           languageIdentifier: $0.languageIdentifier,
+                                                           supported: $0.supported) }
+            }
+            .next { [unowned self] languageIdentifiers in
+                self.sections.value = [
+                    BibleLanguageSectionViewModel(type: .languages, items: languageIdentifiers)
+                ]
+            }.disposed(by: bag)
     }
 }
 
