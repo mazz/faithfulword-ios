@@ -151,6 +151,20 @@ public final class DataStore {
             }
 
             do {
+                try db.create(table: "music") { musicTable in
+                    print("created: \(musicTable)")
+                    musicTable.column("categoryUuid", .text).primaryKey()
+                    musicTable.column("title", .text)
+                    musicTable.column("languageId", .text)
+                    musicTable.column("localizedTitle", .text)
+                    musicTable.column("userId", .integer).references("user", onDelete: .cascade)
+                }
+            }
+            catch {
+                print("error making gospel table: \(error)")
+            }
+
+            do {
                 try db.create(table: "mediamusic") { gospelTable in
                     print("created: \(gospelTable)")
                     //                chapterTable.column("chapterId", .integer).primaryKey()
@@ -328,14 +342,17 @@ extension DataStore: DataStoring {
                             switch categoryListType {
 
                             case .gospel:
-                                print(".gospel")
+                                print("writing .gospel")
                                 var storeGospel: Gospel = category as! Gospel
                                 storeGospel.userId = user.userId
                                 try storeGospel.insert(db)
                             case .music:
-                                print(".music")
+                                print("writing .music")
+                                var storeMusic: Music = category as! Music
+                                storeMusic.userId = user.userId
+                                try storeMusic.insert(db)
                             case .churches:
-                                print(".churches")
+                                print("writing .churches")
                             }
                         }
                     }
@@ -356,10 +373,11 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     switch categoryListingType {
                     case .gospel:
-                        print(".gospel")
+                        print("delete .gospel")
                         try Gospel.deleteAll(db)
                     case .music:
-                        print(".music")
+                        print("delete .music")
+                        try Music.deleteAll(db)
                     case .churches:
                         print(".churches")
                     }
@@ -381,9 +399,11 @@ extension DataStore: DataStoring {
                 try self.dbPool.read { db in
                     switch categoryListingType {
                     case .gospel:
+                        print("fetch .gospel")
                         categoryList = try Gospel.fetchAll(db)
                     case .music:
-                        print(".music")
+                        print("fetch .music")
+                        categoryList = try Music.fetchAll(db)
                     case .churches:
                         print(".churches")
                     }

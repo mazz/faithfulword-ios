@@ -284,13 +284,14 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchMediaMusic(for: categoryUuid)
         case .reachable(_):
             let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
-            let mediaGospelResponse: Single<MediaGospelResponse> = moyaResponse.map { response -> MediaGospelResponse in
-                try! response.map(MediaGospelResponse.self)
+            let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
+                try! response.map(MediaMusicResponse.self)
             }
-            let storedMediaGospel: Single<[Playable]> = mediaGospelResponse.flatMap { [unowned self] mediaGospelResponse -> Single<[Playable]> in
-                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+            let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
+//                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+                self.replacePersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
             }
-            return storedMediaGospel
+            return storedMediaMusic
         case .unknown:
             return dataStore.fetchMediaMusic(for: categoryUuid)
         }
@@ -373,6 +374,10 @@ extension DataService: ProductDataServicing {
         return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaGospel(mediaGospel: mediaGospel, for: categoryUuid) }
     }
 
+    private func replacePersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
+        let deleted: Single<Void> = dataStore.deleteMediaMusic(for: categoryUuid)
+        return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid) }
+    }
 
     private func replacePersistedCategoryList(categoryList: [Categorizable],
                                               for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
