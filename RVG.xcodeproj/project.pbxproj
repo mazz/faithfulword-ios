@@ -28,6 +28,10 @@
 		4C5FAD652031D7AB00397BFF /* BibleLanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD642031D7AB00397BFF /* BibleLanguageViewModel.swift */; };
 		4C5FAD672031D85C00397BFF /* BibleLanguageSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD662031D85C00397BFF /* BibleLanguageSectionViewModel.swift */; };
 		4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD682035258E00397BFF /* LanguageService.swift */; };
+		4C5FAD6B203697FB00397BFF /* RadioSelectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C5FAD6A203697FA00397BFF /* RadioSelectionCell.xib */; };
+		4C5FAD6D2036980500397BFF /* RadioSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD6C2036980400397BFF /* RadioSelectionCell.swift */; };
+		4C5FAD7020369A5600397BFF /* RadioListSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD6E20369A5500397BFF /* RadioListSectionViewModel.swift */; };
+		4C5FAD7120369A5600397BFF /* RadioListViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */; };
 		4C619BCF20265CC700E70B6E /* Categorizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C619BCE20265CC700E70B6E /* Categorizable.swift */; };
 		4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5466200EF7D30038B265 /* LoginSequencer.swift */; };
 		4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5468200EF7E60038B265 /* AccountService.swift */; };
@@ -184,6 +188,10 @@
 		4C5FAD642031D7AB00397BFF /* BibleLanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageViewModel.swift; sourceTree = "<group>"; };
 		4C5FAD662031D85C00397BFF /* BibleLanguageSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageSectionViewModel.swift; sourceTree = "<group>"; };
 		4C5FAD682035258E00397BFF /* LanguageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageService.swift; sourceTree = "<group>"; };
+		4C5FAD6A203697FA00397BFF /* RadioSelectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RadioSelectionCell.xib; sourceTree = "<group>"; };
+		4C5FAD6C2036980400397BFF /* RadioSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioSelectionCell.swift; sourceTree = "<group>"; };
+		4C5FAD6E20369A5500397BFF /* RadioListSectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioListSectionViewModel.swift; sourceTree = "<group>"; };
+		4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioListViewModeling.swift; sourceTree = "<group>"; };
 		4C619BCE20265CC700E70B6E /* Categorizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categorizable.swift; sourceTree = "<group>"; };
 		4C7D5466200EF7D30038B265 /* LoginSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequencer.swift; sourceTree = "<group>"; };
 		4C7D5468200EF7E60038B265 /* AccountService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountService.swift; sourceTree = "<group>"; };
@@ -434,6 +442,10 @@
 				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
 				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
 				4C21A729201843DC000F02CE /* SlideAnimationController.swift */,
+				4C5FAD6E20369A5500397BFF /* RadioListSectionViewModel.swift */,
+				4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */,
+				4C5FAD6C2036980400397BFF /* RadioSelectionCell.swift */,
+				4C5FAD6A203697FA00397BFF /* RadioSelectionCell.xib */,
 				4CD5C1B820242A96007BFC1B /* VerseCell.swift */,
 				4CD5C1B920242A96007BFC1B /* VerseCell.xib */,
 				4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */,
@@ -838,6 +850,7 @@
 				4CD5C1BB20242A96007BFC1B /* VerseCell.xib in Resources */,
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
 				68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */,
+				4C5FAD6B203697FB00397BFF /* RadioSelectionCell.xib in Resources */,
 				4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */,
 				4CFB84F92005AE1A00FEBB53 /* SettingDrillInCellStacked.xib in Resources */,
 				4CFB84FE2005AEEB00FEBB53 /* Root.storyboard in Resources */,
@@ -986,6 +999,7 @@
 				4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */,
 				4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */,
 				4CD63DFF1ED4D29A00C4E2EC /* MediaChapter.swift in Sources */,
+				4C5FAD6D2036980500397BFF /* RadioSelectionCell.swift in Sources */,
 				68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */,
 				4CD63DFD1ED4D27600C4E2EC /* MediaChapterResponse.swift in Sources */,
 				4CFB85002005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift in Sources */,
@@ -1017,6 +1031,8 @@
 				4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */,
 				4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */,
 				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,
+				4C5FAD7020369A5600397BFF /* RadioListSectionViewModel.swift in Sources */,
+				4C5FAD7120369A5600397BFF /* RadioListViewModeling.swift in Sources */,
 				4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */,
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,

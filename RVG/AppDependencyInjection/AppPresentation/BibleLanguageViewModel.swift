@@ -1,5 +1,6 @@
 import Foundation
 import RxSwift
+import L10n_swift
 
 internal final class BibleLanguageViewModel {
     // MARK: Fields
@@ -21,7 +22,7 @@ internal final class BibleLanguageViewModel {
             let section = self.sections.value[indexPath.section]
             let item = section.items[indexPath.item]
             // Don't emit an event for anything that is not a 'drillIn'
-            if case .language(let type, _, let languageIdentifier, _) = item {
+            if case .language(let type, _, let languageIdentifier, _, _) = item {
 
                 self.languageService.updateUserLanguage(languageIdentifier: languageIdentifier)
                     .asObservable()
@@ -31,6 +32,11 @@ internal final class BibleLanguageViewModel {
             return nil
         }
     }
+
+    // MARK: Events
+
+    public var selectionEvent = PublishSubject<IndexPath>()
+    public var errorEvent = PublishSubject<Error>()
 
     // MARK: Dependencies
 
@@ -45,6 +51,7 @@ internal final class BibleLanguageViewModel {
         self.languageService = languageService
 
         setupDatasource()
+        setupSelection()
     }
 
     // MARK: Private helpers
@@ -54,7 +61,9 @@ internal final class BibleLanguageViewModel {
             .map { $0.map { BibleLanguageItemType.language(type: .defaultLanguageType(languageIdentifier: $0.languageIdentifier),
                                                            sourceMaterial: $0.sourceMaterial,
                                                            languageIdentifier: $0.languageIdentifier,
-                                                           supported: $0.supported) }
+                                                           supported: $0.supported,
+                                                           isSelected: L10n.shared.language == $0.languageIdentifier
+                ) }
             }
             .next { [unowned self] languageIdentifiers in
                 self.sections.value = [
@@ -62,6 +71,16 @@ internal final class BibleLanguageViewModel {
                 ]
             }.disposed(by: bag)
     }
+
+    private func setupSelection() {
+        selectionEvent.next { [unowned self] indexPath in
+            print("indexPath: \(indexPath)")
+//            self.selectionBag = DisposeBag()
+//            let voiceLanguage = self.datasource.value[indexPath.section].languages[indexPath.item]
+//            self.device.execute(AssignVoiceLanguage(voiceLanguage)).subscribeAndDispose(by: self.selectionBag)
+            }.disposed(by: bag)
+    }
+
 }
 
 

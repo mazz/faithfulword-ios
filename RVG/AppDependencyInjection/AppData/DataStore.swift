@@ -29,6 +29,7 @@ public protocol DataStoring {
     func addUser(session: String) -> Single<String>
 //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
+    func fetchUserLanguage() -> Single<String>
 
     /// Fetch a list of products associated to a gose person from Realm database, returns nil if gose person not found
     //    func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]>
@@ -313,6 +314,8 @@ extension DataStore: DataStoring {
         //        return Single.just("")
     }
 
+    // MARK: -- User Language
+
     public func updateUserLanguage(identifier: String) -> Single<String> {
         return Single.create { [unowned self] single in
             do {
@@ -332,6 +335,25 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
+
+    public func fetchUserLanguage() -> Single<String> {
+        return Single.create { [unowned self] single in
+            do {
+                var language: String = ""
+                try self.dbPool.read { db in
+                    if let user = try User.fetchOne(db) {
+                        language = user.language
+                    }
+                }
+                single(.success(language))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
     //    public func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]> {
     //        return Single.create { [unowned self] single in
     //            var associatedProducts: [UserProduct] = []
