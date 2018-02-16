@@ -35,12 +35,11 @@ internal final class AppDependencyModule {
 
         container.register(LoginSequencer.self) { resolver in
 
-
             container.register(DataService.self) { resolver in
                 return DataService(dataStore: DataStore(),
                                    kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
                                    reachability: resolver.resolve(RxReachable.self)!)
-            }.inObjectScope(.container)
+                }.inObjectScope(.container)
 
 
             return LoginSequencer(dataService: resolver.resolve(DataService.self)!)
@@ -49,19 +48,21 @@ internal final class AppDependencyModule {
             //            return DataService(dataStore: DataStore(),
             //                               kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
             //                               reachability: resolver.resolve(RxReachable.self)!)
-        }.inObjectScope(.container)
-
-
+            }.inObjectScope(.container)
 
         container.register(ProductServicing.self) { resolver in
             return ProductService(dataService: resolver.resolve(DataService.self)!)
-        }.inObjectScope(.container)
+            }.inObjectScope(.container)
+
+        container.register(LanguageServicing.self) { resolver in
+            return LanguageService(dataService: resolver.resolve(DataService.self)!)
+            }.inObjectScope(.container)
 
         container.register(AccountServicing.self) { resolver in
             return AccountService(loginSequencer: resolver.resolve(LoginSequencer.self)!,
                                   dataService: resolver.resolve(DataService.self)!)
             //            return ProductService(dataService: resolver.resolve(DataService.self)!)
-        }.inObjectScope(.container)
+            }.inObjectScope(.container)
 
         attachUtilityDependencies(to: container)
         attachAppLevelDependencies(to: container)
@@ -200,17 +201,20 @@ internal final class AppDependencyModule {
                 mediaType: mediaType,
                 productService: resolver.resolve(ProductServicing.self)!
             )
-        }.inObjectScope(.transient)
+            }.inObjectScope(.transient)
         container.register(CategoryListingViewModel.self) { resolver, categoryType in
             CategoryListingViewModel(
                 categoryType: categoryType,
                 productService: resolver.resolve(ProductServicing.self)!
             )
-        }.inObjectScope(.transient)
+            }.inObjectScope(.transient)
 
         container.register(BibleLanguageViewModel.self) { resolver in
             BibleLanguageViewModel(
-                productService: resolver.resolve(ProductServicing.self)!)
+                productService: resolver.resolve(ProductServicing.self)!,
+                languageService:
+                resolver.resolve(LanguageServicing.self)!
+            )
         }
     }
 
@@ -287,5 +291,4 @@ internal final class AppDependencyModule {
         //                goseDataAssembly]
         return []
     }
-
 }

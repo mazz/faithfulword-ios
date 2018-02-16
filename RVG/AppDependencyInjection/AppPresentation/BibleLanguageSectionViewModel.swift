@@ -18,7 +18,7 @@ internal enum BibleLanguageItemType {
 }
 
 public enum BibleLanguageLanguageType {
-    case defaultLanguageType
+    case defaultLanguageType(languageIdentifier: String)
 }
 
 extension BibleLanguageSectionViewModel: SectionModelType {

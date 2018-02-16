@@ -27,6 +27,7 @@
 		4C5FAD632031D78A00397BFF /* BibleLanguageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD622031D78A00397BFF /* BibleLanguageViewController.swift */; };
 		4C5FAD652031D7AB00397BFF /* BibleLanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD642031D7AB00397BFF /* BibleLanguageViewModel.swift */; };
 		4C5FAD672031D85C00397BFF /* BibleLanguageSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD662031D85C00397BFF /* BibleLanguageSectionViewModel.swift */; };
+		4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD682035258E00397BFF /* LanguageService.swift */; };
 		4C619BCF20265CC700E70B6E /* Categorizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C619BCE20265CC700E70B6E /* Categorizable.swift */; };
 		4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5466200EF7D30038B265 /* LoginSequencer.swift */; };
 		4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5468200EF7E60038B265 /* AccountService.swift */; };
@@ -182,6 +183,7 @@
 		4C5FAD622031D78A00397BFF /* BibleLanguageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageViewController.swift; sourceTree = "<group>"; };
 		4C5FAD642031D7AB00397BFF /* BibleLanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageViewModel.swift; sourceTree = "<group>"; };
 		4C5FAD662031D85C00397BFF /* BibleLanguageSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageSectionViewModel.swift; sourceTree = "<group>"; };
+		4C5FAD682035258E00397BFF /* LanguageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageService.swift; sourceTree = "<group>"; };
 		4C619BCE20265CC700E70B6E /* Categorizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categorizable.swift; sourceTree = "<group>"; };
 		4C7D5466200EF7D30038B265 /* LoginSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequencer.swift; sourceTree = "<group>"; };
 		4C7D5468200EF7E60038B265 /* AccountService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountService.swift; sourceTree = "<group>"; };
@@ -446,6 +448,7 @@
 				4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */,
 				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
 				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
+				4C5FAD682035258E00397BFF /* LanguageService.swift */,
 			);
 			path = AppCore;
 			sourceTree = "<group>";
@@ -994,6 +997,7 @@
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */,
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
+				4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */,
 				4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				4CCE8C831FF4B7C600AFBAF2 /* MainViewModel.swift in Sources */,

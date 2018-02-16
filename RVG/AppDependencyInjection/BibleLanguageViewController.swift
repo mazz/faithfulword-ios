@@ -2,6 +2,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import L10n_swift
 
 class BibleLanguageViewController: UIViewController {
 
@@ -25,6 +26,12 @@ class BibleLanguageViewController: UIViewController {
         reactToViewModel()
     }
 
+    internal override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationItem.title = NSLocalizedString("Set Bible Language", comment: "").l10n()
+    }
+
     // MARK: Private helpers
 
     private func reactToViewModel() {
@@ -35,6 +42,16 @@ class BibleLanguageViewController: UIViewController {
 
                 self.collectionView.reloadData()
             }.disposed(by: bag)
+
+        viewModel.chooseLanguageEvent.next { bibleLanguageLanguageType in
+            switch bibleLanguageLanguageType {
+            case .defaultLanguageType(let languageIdentifier):
+                print("languageIdentifier: \(languageIdentifier)")
+                L10n.shared.language = languageIdentifier
+                self.navigationItem.title = NSLocalizedString("Set Bible Language", comment: "").l10n()
+                self.title = NSLocalizedString("Set Bible Language", comment: "").l10n()
+            }
+        }.disposed(by: bag)
     }
 
     private func registerReusableViews() {
@@ -89,4 +106,5 @@ extension BibleLanguageViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: 0.1, height: 0.1)
     }
 }
+
 

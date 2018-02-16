@@ -1,5 +1,6 @@
 import RxSwift
 import GRDB
+import L10n_swift
 
 //private enum GoseDataStoreError: Swift.Error, LocalizedError {
 //    case personNotFound
@@ -26,7 +27,9 @@ public protocol DataStoring {
     //    func latestCachedUser() -> Single<String?>
     
     func addUser(session: String) -> Single<String>
-    
+//    func updateUserLanguage(identifier: String) -> Single<String>
+    func updateUserLanguage(identifier: String) -> Single<String>
+
     /// Fetch a list of products associated to a gose person from Realm database, returns nil if gose person not found
     //    func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]>
     
@@ -86,6 +89,7 @@ public final class DataStore {
                     userTable.column("name", .text)
                     userTable.column("session", .text)
                     userTable.column("pushNotifications", .boolean)
+                    userTable.column("language", .text)
                 }
             }
             catch {
@@ -292,10 +296,8 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     if try User.fetchCount(db) == 0 {
-                        var user = User(userId: nil,
-                                        name: "john hancock",
-                                        session: session,
-                                        pushNotifications: false)
+
+                        var user = User(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
                         try user.insert(db)
                         resultSession = user.session
                     }
@@ -311,6 +313,25 @@ extension DataStore: DataStoring {
         //        return Single.just("")
     }
 
+    public func updateUserLanguage(identifier: String) -> Single<String> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    if let user = try User.fetchOne(db) {
+                        var storeUser: User = user
+                        storeUser.language = identifier
+                        try storeUser.update(db)
+                    }
+                    return .commit
+                }
+                single(.success(identifier))
+            } catch {
+                print(error)
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
     //    public func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]> {
     //        return Single.create { [unowned self] single in
     //            var associatedProducts: [UserProduct] = []

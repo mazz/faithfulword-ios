@@ -137,7 +137,7 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
         
         print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
         print("L10n.shared.language: \(L10n.shared.language)")
-        print("languageIdentifier: \(languageIdentifier)")
+        print("OtherLanguagesViewController languageIdentifier: \(languageIdentifier)")
     }
     
     func localizedString(identifier: String) -> String {
@@ -160,5 +160,4 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
         )
     }
 }
-
 

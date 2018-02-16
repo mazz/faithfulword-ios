@@ -15,30 +15,34 @@ internal final class BibleLanguageViewModel {
     public private(set) var sections = Field<[BibleLanguageSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
 
-    public var drillInEvent: Observable<BibleLanguageLanguageType> {
+    public var chooseLanguageEvent: Observable<BibleLanguageLanguageType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent.filterMap { [unowned self] indexPath -> BibleLanguageLanguageType? in
             let section = self.sections.value[indexPath.section]
             let item = section.items[indexPath.item]
             // Don't emit an event for anything that is not a 'drillIn'
-            if case .language(let type, _, _, _) = item {
+            if case .language(let type, _, let languageIdentifier, _) = item {
+
+                self.languageService.updateUserLanguage(languageIdentifier: languageIdentifier)
+                    .asObservable()
+                    .subscribeAndDispose(by: self.bag)
                 return type
             }
-            //            if case .drillIn(let type, _, _, _) = item {
-            //                return type
-            //            }
             return nil
         }
     }
 
     // MARK: Dependencies
 
-    private let productService: ProductServicing!
+    private let productService: ProductServicing
+    private let languageService: LanguageServicing
 
     private var bag = DisposeBag()
 
-    internal init(productService: ProductServicing) {
+    internal init(productService: ProductServicing,
+                  languageService: LanguageServicing) {
         self.productService = productService
+        self.languageService = languageService
 
         setupDatasource()
     }
@@ -47,7 +51,7 @@ internal final class BibleLanguageViewModel {
 
     private func setupDatasource() {
         productService.fetchBibleLanguages().asObservable()
-            .map { $0.map { BibleLanguageItemType.language(type: .defaultLanguageType,
+            .map { $0.map { BibleLanguageItemType.language(type: .defaultLanguageType(languageIdentifier: $0.languageIdentifier),
                                                            sourceMaterial: $0.sourceMaterial,
                                                            languageIdentifier: $0.languageIdentifier,
                                                            supported: $0.supported) }

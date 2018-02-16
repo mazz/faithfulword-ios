@@ -8,6 +8,11 @@ private enum DataServiceError: Error {
     case noAccessToken
 }
 
+public protocol UserDataServicing {
+    var languageIdentifier: Observable<String> { get }
+    func updateUserLanguage(identifier: String) -> Single<String>
+}
+
 // Provides account related data to the app
 public protocol AccountDataServicing {
 
@@ -53,10 +58,7 @@ public protocol ProductDataServicing {
     ///
     /// - Returns: Permanent observable emitting product arrays
     func chapters(for bookUuid: String) -> Single<[Playable]>
-
-
     func fetchAndObserveBooks() -> Observable<[Book]>
-
     func deletePersistedBooks() -> Single<Void>
 
     func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
@@ -97,6 +99,10 @@ public final class DataService {
 
     private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
     private let bag = DisposeBag()
+
+    // MARK: User
+
+    private var _languageIdentifier = Field<String>("test init identifier")
 
     // MARK: Session
 
@@ -150,12 +156,26 @@ public final class DataService {
     }
 }
 
+extension DataService: UserDataServicing {
+    public var languageIdentifier: Observable<String> { return _languageIdentifier.asObservable() }
+
+    public func updateUserLanguage(identifier: String) -> Single<String> {
+//        let updated: Single<String> =
+        return self.dataStore.updateUserLanguage(identifier: identifier)
+//        return Single.just(identifier)
+
+//            return updated.map { [unowned self] identifier in
+//                self._languageIdentifier.value = identifier }
+//            .toVoid()
+    }
+}
+
 extension DataService: AccountDataServicing {
     public func fetchSession() -> Single<String> {
         return Single.just("a-fake-session")
             .flatMap { [unowned self] in
                 self.dataStore.addUser(session: $0) }
-            .do(onNext: { [unowned self] session in
+            .do(onSuccess: { [unowned self] session in
                 self._session.value = session
             })
     }
@@ -249,7 +269,7 @@ extension DataService: ProductDataServicing {
             .map { response -> BookResponse in try! response.map(BookResponse.self) }
             .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
             .flatMap { [unowned self] in self.replacePersistedBooks($0) }
-            .do(onNext: { products in
+            .do(onSuccess: { products in
                 self._books.value = products
                 //            self._persistedBooks.value = products
             })

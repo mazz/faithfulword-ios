@@ -6,6 +6,7 @@ public struct User: Codable {
     public var name: String
     public var session: String
     public var pushNotifications: Bool
+    public var language: String
 }
 
 // Define colums so that we can build GRDB requests
@@ -14,6 +15,7 @@ extension User {
         static let name = Column("name")
         static let session = Column("session")
         static let pushNotifications = Column("pushNotifications")
+        static let language = Column("language")
     }
 }
 

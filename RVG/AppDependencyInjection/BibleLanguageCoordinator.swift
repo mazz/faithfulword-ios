@@ -20,4 +20,3 @@ extension BibleLanguageCoordinator: NavigationCoordinating {
         setup(bibleLanguageController)
     }
 }
-
