@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 import RxSwift
+import L10n_swift
 
 /// Coordinator in charge of navigating between the two main states of the app.
 /// Operates on the level of the rootViewController and switches between the
@@ -26,14 +27,16 @@ internal class AppCoordinator {
     //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
     private let accountService: AccountServicing
     private let productService: ProductServicing
-    
+    private let languageService: LanguageServicing
+
     internal init(uiFactory: AppUIMaking,
                   //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
         resettableMainCoordinator: Resettable<MainCoordinator>,
         resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
         //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
         accountService: AccountServicing,
-        productService: ProductServicing
+        productService: ProductServicing,
+        languageService: LanguageServicing
         ) {
         self.uiFactory = uiFactory
         //        self.resettableInitialCoordinator = resettableInitialCoordinator
@@ -42,6 +45,7 @@ internal class AppCoordinator {
         //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
         self.accountService = accountService
         self.productService = productService
+        self.languageService = languageService
     }
 }
 
@@ -84,17 +88,27 @@ extension AppCoordinator: NavigationCoordinating {
     }
     
     private func checkUserBooks() {
-        self.productService.fetchBooks().subscribe(onSuccess: { [unowned self] in
-            if self.productService.userBooks.value.count > 0 {
-                print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
-                self.swapInMainFlow()
-            } else {
-                self.swapInAccountSetupFlow()
-            }
-            }, onError: { [unowned self] error in
-                print("Check user products failed with error: \(error.localizedDescription)")
-                self.swapInMainFlow()
-        }).disposed(by: self.bag)
+        // we must fetch and set the user language before we do
+        // anything, really
+        self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
+            print("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
+            L10n.shared.language = userLanguage
+
+            self.productService.fetchBooks().subscribe(onSuccess: { [unowned self] in
+                if self.productService.userBooks.value.count > 0 {
+                    print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
+                    self.swapInMainFlow()
+                } else {
+                    self.swapInAccountSetupFlow()
+                }
+                }, onError: { [unowned self] error in
+                    print("Check user products failed with error: \(error.localizedDescription)")
+                    self.swapInMainFlow()
+            }).disposed(by: self.bag)
+
+        }, onError: { error in
+            print("fetch user language failed with error: \(error.localizedDescription)")
+        }).disposed(by: bag)
     }
     
     /// Puts the initial flow (unauthenticated state) on top of the rootViewController,

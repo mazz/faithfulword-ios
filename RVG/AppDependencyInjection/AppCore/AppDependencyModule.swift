@@ -109,7 +109,8 @@ internal final class AppDependencyModule {
                 //                    resolver.resolve(AccountSetupCoordinator.self)!
                 //                },
                 accountService: resolver.resolve(AccountServicing.self)!,
-                productService: resolver.resolve(ProductServicing.self)!
+                productService: resolver.resolve(ProductServicing.self)!,
+                languageService: resolver.resolve(LanguageServicing.self)!
             )
         }
 

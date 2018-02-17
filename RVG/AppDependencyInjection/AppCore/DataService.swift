@@ -11,6 +11,7 @@ private enum DataServiceError: Error {
 public protocol UserDataServicing {
     var languageIdentifier: Observable<String> { get }
     func updateUserLanguage(identifier: String) -> Single<String>
+    func fetchUserLanguage() -> Single<String>
 }
 
 // Provides account related data to the app
@@ -157,6 +158,7 @@ public final class DataService {
 }
 
 extension DataService: UserDataServicing {
+
     public var languageIdentifier: Observable<String> { return _languageIdentifier.asObservable() }
 
     public func updateUserLanguage(identifier: String) -> Single<String> {
@@ -168,7 +170,12 @@ extension DataService: UserDataServicing {
 //                self._languageIdentifier.value = identifier }
 //            .toVoid()
     }
+
+    public func fetchUserLanguage() -> Single<String> {
+        return self.dataStore.fetchUserLanguage()
+    }
 }
+
 
 extension DataService: AccountDataServicing {
     public func fetchSession() -> Single<String> {

@@ -398,17 +398,17 @@
 		4C21A72520161B00000F02CE /* AppPresentation */ = {
 			isa = PBXGroup;
 			children = (
-				4C5FAD6E20369A5500397BFF /* RadioListSectionViewModel.swift */,
-				4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */,
-				4CCE8C801FF4B7C500AFBAF2 /* BooksViewModel.swift */,
 				4CFB850720064BA200FEBB53 /* BooksSectionViewModel.swift */,
+				4CCE8C801FF4B7C500AFBAF2 /* BooksViewModel.swift */,
 				4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */,
-				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
-				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
-				4C3998FF20229D6C008E76E8 /* SideMenuViewModel.swift */,
-				4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */,
 				4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */,
 				4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */,
+				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
+				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
+				4C5FAD6E20369A5500397BFF /* RadioListSectionViewModel.swift */,
+				4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */,
+				4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */,
+				4C3998FF20229D6C008E76E8 /* SideMenuViewModel.swift */,
 			);
 			path = AppPresentation;
 			sourceTree = "<group>";
@@ -425,6 +425,9 @@
 			isa = PBXGroup;
 			children = (
 				4C7D5465200EF7A90038B265 /* Account */,
+				4C8EE8C11FF60105003F483A /* ProductService.swift */,
+				4C5FAD682035258E00397BFF /* LanguageService.swift */,
+				4C8EE8C31FF6010F003F483A /* DataService.swift */,
 				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
 				4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */,
 				4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */,
@@ -433,12 +436,10 @@
 				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
 				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
 				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
-				4C8EE8C31FF6010F003F483A /* DataService.swift */,
 				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
 				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
 				4C3998FD2021FC34008E76E8 /* MenuTransitionManager.swift */,
 				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
-				4C8EE8C11FF60105003F483A /* ProductService.swift */,
 				4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */,
 				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
 				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
@@ -461,7 +462,6 @@
 				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
 				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
 				4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */,
-				4C5FAD682035258E00397BFF /* LanguageService.swift */,
 			);
 			path = AppCore;
 			sourceTree = "<group>";
@@ -1252,7 +1252,7 @@
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kjvrvg.kjvrvg-ios";
+				PRODUCT_BUNDLE_IDENTIFIER = allscripture20;
 				PRODUCT_NAME = "Faithful Word";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1276,7 +1276,7 @@
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kjvrvg.kjvrvg-ios";
+				PRODUCT_BUNDLE_IDENTIFIER = allscripture20;
 				PRODUCT_NAME = "Faithful Word";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
