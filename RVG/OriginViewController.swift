@@ -194,7 +194,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                                (NSLocalizedString("Set Bible Language", comment: "").l10n(), UIImage(named: "language_menu")!),
                                (NSLocalizedString("Donate", comment: "").l10n(), UIImage(named: "donate")!),
                                (NSLocalizedString("Privacy Policy", comment: "").l10n(), UIImage(named: "privacy_ic")!),
-                               (NSLocalizedString("Contact Us", comment: "").l10n(), UIImage(named: "mail")!),
+                               (NSLocalizedString("Feedback", comment: "").l10n(), UIImage(named: "mail")!),
         ]
         
         self.tableView.reloadData()

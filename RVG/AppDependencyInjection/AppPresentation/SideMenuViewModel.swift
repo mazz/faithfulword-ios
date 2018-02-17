@@ -78,7 +78,7 @@ internal final class SideMenuViewModel {
                                      showBottomSeparator: true),
             SideMenuItemType.drillIn(type: .contactUs,
                                      iconName: "mail",
-                                     title: NSLocalizedString("Contact Us", comment: "").l10n(),
+                                     title: NSLocalizedString("Feedback", comment: "").l10n(),
                                      showBottomSeparator: true)]
         sections.value = [
             SideMenuSectionViewModel(type: .menuItem, items: menuItems),
