@@ -13,7 +13,8 @@ internal protocol AppUIMaking {
     func makeMailComposer() -> MFMailComposeViewController?
     func makeOkAlert(title: String, message: String) -> UIAlertController
     func makeSideMenu() -> SideMenuViewController
-    func makeBibleLanguagePage() -> BibleLanguageViewController
+//    func makeBibleLanguagePage() -> BibleLanguageViewController
+    func makeBibleLanguagePage() -> RadioListViewController
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
     func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController
     func makeSplashScreen() -> SplashScreenViewController
@@ -50,9 +51,9 @@ extension UIFactory: AppUIMaking {
         return sideMenuController
     }
 
-    func makeBibleLanguagePage() -> BibleLanguageViewController {
-        let bibleLanguageViewController = BibleLanguageViewController.make(storyboardName: StoryboardName.bibleLanguage)
-        bibleLanguageViewController.viewModel = resolver.resolve(BibleLanguageViewModel.self)
+    func makeBibleLanguagePage() -> RadioListViewController {
+        let bibleLanguageViewController = RadioListViewController.make(storyboardName: StoryboardName.bibleLanguage)
+        bibleLanguageViewController.viewModel = resolver.resolve(LanguageViewModel.self)
         return bibleLanguageViewController
     }
 

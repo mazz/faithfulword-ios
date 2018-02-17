@@ -209,8 +209,8 @@ internal final class AppDependencyModule {
             )
             }.inObjectScope(.transient)
 
-        container.register(BibleLanguageViewModel.self) { resolver in
-            BibleLanguageViewModel(
+        container.register(LanguageViewModel.self) { resolver in
+            LanguageViewModel(
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService:
                 resolver.resolve(LanguageServicing.self)!

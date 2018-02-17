@@ -76,14 +76,16 @@ class BibleLanguageViewController: UIViewController {
                 switch item {
                 case let .language(_, sourceMaterial, languageIdentifier, _, isSelected):
                     print(".language")
-//                    let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
-//                    drillInCell.populate(iconName: "language_menu", label: String(sourceMaterial + " (\(languageIdentifier))"), showBottomSeparator: true)
-//                    return drillInCell
-                    let radioSelectionCell = collectionView.dequeue(cellType: RadioSelectionCell.self, for: indexPath)
-                    radioSelectionCell.populate(with: String(sourceMaterial + " (\(languageIdentifier))"))
-                    radioSelectionCell.setTopDivider(hidden: indexPath.item == 0)
-                    radioSelectionCell.isSelected = isSelected
-                    return radioSelectionCell
+
+                    let drillInCell = collectionView.dequeue(cellType: RadioSelectionCell.self, for: indexPath)
+//                    drillInCell.populate(label: String(sourceMaterial + " (\(languageIdentifier))"), showBottomSeparator: true)
+                    return drillInCell
+
+//                    let radioSelectionCell = collectionView.dequeue(cellType: RadioSelectionCell.self, for: indexPath)
+//                    radioSelectionCell.populate(with: String(sourceMaterial + " (\(languageIdentifier))"))
+//                    radioSelectionCell.setTopDivider(hidden: indexPath.item == 0)
+//                    radioSelectionCell.isSelected = isSelected
+//                    return radioSelectionCell
                 } },
             configureSupplementaryView: { _, collectionView, kind, indexPath in
                 return collectionView.dequeueReusableSupplementaryView(
@@ -104,12 +106,14 @@ extension BibleLanguageViewController: UICollectionViewDelegateFlowLayout {
         switch viewModel.item(at: indexPath) {
         case let .language(_, sourceMaterial, languageIdentifier, _, isSelected):
 
-//            guard let view = try? UIView.sizingView(for: DeviceGroupSelectionCell.self,
-//                                                    bundle: ModuleInfo.bundle) else { break }
-//            view.populate(iconName: "language_menu", label: String(sourceMaterial + " (\(languageIdentifier))"), showBottomSeparator: true)
             guard let view = try? UIView.sizingView(for: RadioSelectionCell.self,
                                                     bundle: ModuleInfo.bundle) else { break }
-            view.populate(with: String(sourceMaterial + " (\(languageIdentifier))"))
+//            view.populate(label: String(sourceMaterial + " (\(languageIdentifier))"), showBottomSeparator: true)
+
+
+//            guard let view = try? UIView.sizingView(for: RadioSelectionCell.self,
+//                                                    bundle: ModuleInfo.bundle) else { break }
+//            view.populate(with: String(sourceMaterial + " (\(languageIdentifier))"))
             return CGSize(width: preferredWidth, height: view.height(for: preferredWidth))
         }
         return CGSize(width: 0.1, height: 0.1)
