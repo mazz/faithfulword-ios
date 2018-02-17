@@ -1,0 +1,69 @@
+
+/* Class = "UIViewController"; title = "Chapters"; ObjectID = "1nv-Zj-Fvc"; */
+"1nv-Zj-Fvc.title" = "Chapters";
+
+/* Class = "UIViewController"; title = "About Us"; ObjectID = "2Mb-Fp-bqX"; */
+"2Mb-Fp-bqX.title" = "About Us";
+
+/* Class = "UILabel"; text = "--:--"; ObjectID = "4IJ-Go-clF"; */
+"4IJ-Go-clF.text" = "--:--";
+
+/* Class = "UILabel"; text = "R"; ObjectID = "Ams-b1-ReD"; */
+"Ams-b1-ReD.text" = "R";
+
+/* Class = "UILabel"; text = "USD"; ObjectID = "AyI-94-1oL"; */
+"AyI-94-1oL.text" = "USD";
+
+/* Class = "UINavigationItem"; title = "Books"; ObjectID = "Ds0-aJ-Lm3"; */
+"Ds0-aJ-Lm3.title" = "Books";
+
+/* Class = "UIBarButtonItem"; title = "Back"; ObjectID = "FIr-BW-eVJ"; */
+"FIr-BW-eVJ.title" = "Back";
+
+/* Class = "UILabel"; text = "--:--"; ObjectID = "FoA-oh-exn"; */
+"FoA-oh-exn.text" = "--:--";
+
+/* Class = "UILabel"; text = "Donate to KJVRVG"; ObjectID = "GzK-B5-PVL"; */
+"GzK-B5-PVL.text" = "Donate to KJVRVG";
+
+/* Class = "UILabel"; text = " "; ObjectID = "KvM-Yh-B7N"; */
+"KvM-Yh-B7N.text" = " ";
+
+/* Class = "UIButton"; normalTitle = "0"; ObjectID = "MaB-o8-Y11"; */
+"MaB-o8-Y11.normalTitle" = "0";
+
+/* Class = "UILabel"; text = "Your donation was successful.\nThank you!"; ObjectID = "Q2F-xp-T0c"; */
+"Q2F-xp-T0c.text" = "Your donation was successful.\nThank you!";
+
+/* Class = "UIViewController"; title = "Other Languages"; ObjectID = "XNS-Js-NKc"; */
+"XNS-Js-NKc.title" = "Other Languages";
+
+/* Class = "UILabel"; text = "M"; ObjectID = "YTF-s0-S4e"; */
+"YTF-s0-S4e.text" = "M";
+
+/* Class = "UIBarButtonItem"; title = "  "; ObjectID = "a95-ue-oDB"; */
+"a95-ue-oDB.title" = "  ";
+
+/* Class = "UIViewController"; title = "Music"; ObjectID = "b8S-DK-hav"; */
+"b8S-DK-hav.title" = "Music";
+
+/* Class = "UIButton"; normalTitle = "Donate Via PayPal"; ObjectID = "efg-tW-S3C"; */
+"efg-tW-S3C.normalTitle" = "Donate Via PayPal";
+
+/* Class = "UIButton"; normalTitle = "0"; ObjectID = "fgS-Qg-Yxy"; */
+"fgS-Qg-Yxy.normalTitle" = "0";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "imT-Bo-8Lg"; */
+"imT-Bo-8Lg.normalTitle" = "Button";
+
+/* Class = "UIViewController"; title = "Chapters"; ObjectID = "kh0-eY-UNT"; */
+"kh0-eY-UNT.title" = "Chapters";
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "lBj-QZ-dra"; */
+"lBj-QZ-dra.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "UIViewController"; title = "Music"; ObjectID = "lx1-zk-lkF"; */
+"lx1-zk-lkF.title" = "Music";
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "mKJ-Gf-iPc"; */
+"mKJ-Gf-iPc.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";

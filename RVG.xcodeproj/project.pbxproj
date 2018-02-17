@@ -326,6 +326,10 @@
 		68F0F3F81F11EC1B00718AFF /* MediaMusic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusic.swift; sourceTree = "<group>"; };
 		68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicResponse.swift; sourceTree = "<group>"; };
 		68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicResponse.swift; sourceTree = "<group>"; };
+		68F2EA6F2038A0CA00566484 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		68F2EA702038A0CA00566484 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
+		68F2EA712038A0CA00566484 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		68F2EA722038A0CB00566484 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		701F014F1E65DA000010B320 /* LoadingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceSingleTon.swift; sourceTree = "<group>"; };
 		701F01541E65DA2E0010B320 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -824,6 +828,7 @@
 				"pt-BR",
 				hi,
 				el,
+				hu,
 			);
 			mainGroup = 70CD20551E6479A800AF619F;
 			productRefGroup = 70CD205F1E6479A800AF619F /* Products */;
@@ -1099,6 +1104,7 @@
 				68BE69DF1EEBBF090082956D /* pt-BR */,
 				68BE69E31EEBBF240082956D /* hi */,
 				683D5B8D1F1EE89C0019ED0E /* el */,
+				68F2EA712038A0CA00566484 /* hu */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1111,6 +1117,7 @@
 				68BE69E01EEBBF090082956D /* pt-BR */,
 				68BE69E41EEBBF240082956D /* hi */,
 				683D5B8E1F1EE89C0019ED0E /* el */,
+				68F2EA722038A0CB00566484 /* hu */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1124,6 +1131,7 @@
 				68BE69DE1EEBBF090082956D /* pt-BR */,
 				68BE69E21EEBBF240082956D /* hi */,
 				683D5B8C1F1EE89C0019ED0E /* el */,
+				68F2EA702038A0CA00566484 /* hu */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1137,6 +1145,7 @@
 				68BE69DD1EEBBF090082956D /* pt-BR */,
 				68BE69E11EEBBF240082956D /* hi */,
 				683D5B8B1F1EE89C0019ED0E /* el */,
+				68F2EA6F2038A0CA00566484 /* hu */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

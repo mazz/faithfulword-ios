@@ -1,0 +1,173 @@
+
+/* find . -name \*.swift | xargs genstrings -o . */
+
+/* No comment provided by engineer. */
+"About Us" = "About Us";
+
+/* No comment provided by engineer. */
+"Bible" = "Bible";
+
+/* No comment provided by engineer. */
+"Change Language" = "Change Language";
+
+/* No comment provided by engineer. */
+"Other Languages" = "Other Languages";
+
+"Set Bible Language" = "Set Bible Language";
+
+/* No comment provided by engineer. */
+"Chapters" = "Chapters";
+
+/* No comment provided by engineer. */
+"Contact Us" = "Contact Us";
+
+/* No comment provided by engineer. */
+"Do you want to close the player?" = "Do you want to close the player?";
+
+/* No comment provided by engineer. */
+"Donate" = "Donate";
+
+/* No comment provided by engineer. */
+"Email" = "Email";
+
+/* No comment provided by engineer. */
+"Message" = "Message";
+
+/* No comment provided by engineer. */
+"Name" = "Name";
+
+/* No comment provided by engineer. */
+"Please fill out your email address" = "Please fill out your email address";
+
+/* No comment provided by engineer. */
+"Please fill out your message" = "Please fill out your message";
+
+/* No comment provided by engineer. */
+"Please fill out your name" = "Please fill out your name";
+
+/* No comment provided by engineer. */
+"Privacy Policy" = "Privacy Policy";
+
+/* No comment provided by engineer. */
+"Share" = "Share";
+
+/* No comment provided by engineer. */
+"Submit" = "Submit";
+
+/* No comment provided by engineer. */
+"Thank you, we will contact you soon" = "Thank you, we will contact you soon";
+
+/* No comment provided by engineer. */
+"Faithful Word: https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8" = "Faithful Word: https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8";
+
+/* No comment provided by engineer. */
+"Holding fast the faithful word as he hath been taught, that he may be able by sound doctrine both to exhort and to convince the gainsayers." = "Holding fast the faithful word as he hath been taught, that he may be able by sound doctrine both to exhort and to convince the gainsayers.";
+
+/* No comment provided by engineer. */
+"Titus 1:9" = "Titus 1:9";
+
+/* No comment provided by engineer. */
+"Yes" = "Yes";
+
+"No" = "No";
+
+/* No comment provided by engineer. */
+"Your donation was successful.\nThank you!" = "Your donation was successful.\nThank you!";
+
+"Matthew" = "Matthew";
+
+"Mark" = "Mark";
+
+"Luke" = "Luke";
+
+"John" = "John";
+
+"Acts" = "Acts";
+
+"Romans" = "Romans";
+
+"1 Corinthians" = "1 Corinthians";
+
+"2 Corinthians" = "2 Corinthians";
+
+"Galatians" = "Galatians";
+
+"Ephesians" = "Ephesians";
+
+"Philippians" = "Philippians";
+
+"Colossians" = "Colossians";
+
+"1 Thessalonians" = "1 Thessalonians";
+
+"2 Thessalonians" = "2 Thessalonians";
+
+"1 Timothy" = "1 Timothy";
+
+"2 Timothy" = "2 Timothy";
+
+"Titus" = "Titus";
+
+"Philemon" = "Philemon";
+
+"Hebrews" = "Hebrews";
+
+"James" = "James";
+
+"1 Peter" = "1 Peter";
+
+"2 Peter" = "2 Peter";
+
+"1 John" = "1 John";
+
+"2 John" = "2 John";
+
+"3 John" = "3 John";
+
+"Jude" = "Jude";
+
+"Revelation" = "Revelation";
+
+"Plan Of Salvation" = "Plan Of Salvation";
+
+/* about-us */
+"The Faithful Audio Project\n\nFaithful Word, hosted by the Faithful Audio Team. Funded in part by FWBC, with representation thereof by Brother Domonique Davis.\n\n This application is the beginning of a much greater global project. We currently support the Audio of the KJV New Testament and RVG New Testament. We are continuing to record other language's textus receptus Bibles, or KJV equivalents. This application will also someday house the texts of each New Testament, with the function to read several languages on the same page!\n\nThe current reader of the RVG New Testament available in this application is Collin Schneide, who is also the editor of the RVG new Testament as well as the KJV New Testament. This application is produced in accordance with the copyright on the RVG Bible.\n\nWe are always looking for likeminded believers who speak foreign languages, and can code Mobile Applications.\n\n\n\nFaithful Word Vision\n\nThis application is full of promise, and we hope that you enjoy what is just the beginning! We look forward to seeing this work grow more and more! Already we are reaching out to get the gospel across international boundries in any language that has a faithful Bible, but even more so someday to reach out with hard preaching. Applications are the future of technology. Someday each church will have it's own application, and this work will be just the beginning. We hope to incorporate spin-off's of FWBC preaching sections, Verity Baptist preaching sections, FWBC Hymns sections, and the like, all in one convenient place.\n\nNot only this, but we are sharpening the Sword of the Lord to see faithful New Testaments in languages all over the world. The Lord has opened the door to us to begin working with revisions in many languages, and we hope to see these versions brought into harmony with the King James Bible in English. We will edify the brethren all over the world, and give them the tools to reach the world in their language with our work. These versions once completed will be put into print.\n\nPlease contact us for more information, and check out our Youtube channels for free downloadable copies of the Audio.\n\nKJV Audio\nhttps://www.youtube.com/c/AUDIOKJV\nRVG Audio:\nhttps://www.youtube.com/c/CollinSchneide\n \nFor the glory of God and his Word Jesus Christ!\nThe Faithful Audio Team:\n\nCollin Schneide, Team Lead, RVG Reader\nDomonique Davis, KJV reader\nSean Jolley, RVG  Reader\nLuis Mendez,  RVG Editor\nJorge Ramos, 1602 Purificada Reader and Editor\nFerdinand Perez, 1865 Spanish Reader/Editor\nConrad Rutkowski, Gdansk Rutkowski Revisor, Reader and Editor\nRenato Trevisan, Almeida Corregida Fiel Reader and Editor\nPastor Joe Major, David Martin 1744 Reader and Editor\nValerian Mayega, Ostervald Reader and Editor\nInderpreet Anand, Hindi 1874 Kanhurkar Reader/ Editor\nJaiarshdeep Singh Bedi, Old Punjabi Bedi Revisor/ Reader/ Editor\nRichard Long, Apple Coding\nMichael Hanna, Coding Team Lead\nJonathan McCallister, Android Coder\nBlake Rinkin, Administrative Assistant\nShane Freeman, Administrative Assistant\nDr. Humberto Gomez, Translator RVG\nPrashant Kanhurkar,  Hindi 1874 Revisor\nSean McCrary, German Schlachter Revisor\nEstefano Leone, Graphics Designer\nTim Xing, Chinese Union Version Revisor\nNgar Ip, Chinese Revision Reader/ Editor\nPastor Steve Kambalazaza, Chechiwa Revision Team Leader (Team offline)\nHunor Kasco, Hungarian Karolia Gaspar Revision Team Leader (Team offline)\nPastor Edward Boquiren, Tagalog Ang Bagong Tipan Isinalin sa Filipino Audio" = "The Faithful Audio Project\n\nFaithful Word, hosted by the Faithful Audio Team. Funded in part by FWBC, with representation thereof by Brother Domonique Davis.\n\n This application is the beginning of a much greater global project. We currently support the Audio of the KJV New Testament and RVG New Testament. We are continuing to record other language's textus receptus Bibles, or KJV equivalents. This application will also someday house the texts of each New Testament, with the function to read several languages on the same page!\n\nThe current reader of the RVG New Testament available in this application is Collin Schneide, who is also the editor of the RVG new Testament as well as the KJV New Testament. This application is produced in accordance with the copyright on the RVG Bible.\n\nWe are always looking for likeminded believers who speak foreign languages, and can code Mobile Applications.\n\n\n\nFaithful Word Vision\n\nThis application is full of promise, and we hope that you enjoy what is just the beginning! We look forward to seeing this work grow more and more! Already we are reaching out to get the gospel across international boundries in any language that has a faithful Bible, but even more so someday to reach out with hard preaching. Applications are the future of technology. Someday each church will have it's own application, and this work will be just the beginning. We hope to incorporate spin-off's of FWBC preaching sections, Verity Baptist preaching sections, FWBC Hymns sections, and the like, all in one convenient place.\n\nNot only this, but we are sharpening the Sword of the Lord to see faithful New Testaments in languages all over the world. The Lord has opened the door to us to begin working with revisions in many languages, and we hope to see these versions brought into harmony with the King James Bible in English. We will edify the brethren all over the world, and give them the tools to reach the world in their language with our work. These versions once completed will be put into print.\n\nPlease contact us for more information, and check out our Youtube channels for free downloadable copies of the Audio.\n\nKJV Audio\nhttps://www.youtube.com/c/AUDIOKJV\nRVG Audio:\nhttps://www.youtube.com/c/CollinSchneide\n \nFor the glory of God and his Word Jesus Christ!\nThe Faithful Audio Team:\n\nCollin Schneide, Team Lead, RVG Reader\nDomonique Davis, KJV reader\nSean Jolley, RVG  Reader\nLuis Mendez,  RVG Editor\nJorge Ramos, 1602 Purificada Reader and Editor\nFerdinand Perez, 1865 Spanish Reader/Editor\nConrad Rutkowski, Gdansk Rutkowski Revisor, Reader and Editor\nRenato Trevisan, Almeida Corregida Fiel Reader and Editor\nPastor Joe Major, David Martin 1744 Reader and Editor\nValerian Mayega, Ostervald Reader and Editor\nInderpreet Anand, Hindi 1874 Kanhurkar Reader/ Editor\nJaiarshdeep Singh Bedi, Old Punjabi Bedi Revisor/ Reader/ Editor\nRichard Long, Apple Coding\nMichael Hanna, Coding Team Lead\nJonathan McCallister, Android Coder\nBlake Rinkin, Administrative Assistant\nShane Freeman, Administrative Assistant\nDr. Humberto Gomez, Translator RVG\nPrashant Kanhurkar,  Hindi 1874 Revisor\nSean McCrary, German Schlachter Revisor\nEstefano Leone, Graphics Designer\nTim Xing, Chinese Union Version Revisor\nNgar Ip, Chinese Revision Reader/ Editor\nPastor Steve Kambalazaza, Chechiwa Revision Team Leader (Team offline)\nHunor Kasco, Hungarian Karolia Gaspar Revision Team Leader (Team offline)\nPastor Edward Boquiren, Tagalog Ang Bagong Tipan Isinalin sa Filipino Audio";
+
+/* privacy-policy */
+"Use of Information\n\nPlease be aware that any information shared through the option \"Contact Us\" is handled solely at the discretion of the owner of the application. This application is produced in according with the Copyright of the RVG. This copyright outlines the free distribution of the literature barring the profiting off of the venture, and has the expressed consent of Dr. Gomez. Any electronic property produced by this application is freely given. In addition, all files may be freely downloaded for distribution from our youtube channels listed in the about us section.\n\nHere is a link to the license for use of the RVG text: http://www.reinavaleragomez.com/sites/default/files/image/RVG-License.pdf\n\nLikewise, our source code is freely available for anyone who is willing to use it for the Kingdom of God. We grant permission to use our source code for the base of a church application involving biblically correct preaching, and sound doctrine. Contact us for a copy of our source code to create a free app for your church preaching, or the music produced by your church.\n\nFor the glory of God and his Word Jesus Christ!\nThe Faithful AudioTeam\n\nMailing Address\n\np.o box 9114\nBeaufort, Sc 29904\ncollindanielschneide@gmail.com" = "Use of Information\n\nPlease be aware that any information shared through the option \"Contact Us\" is handled solely at the discretion of the owner of the application. This application is produced in according with the Copyright of the RVG. This copyright outlines the free distribution of the literature barring the profiting off of the venture, and has the expressed consent of Dr. Gomez. Any electronic property produced by this application is freely given. In addition, all files may be freely downloaded for distribution from our youtube channels listed in the about us section.\n\nHere is a link to the license for use of the RVG text: http://www.reinavaleragomez.com/sites/default/files/image/RVG-License.pdf\n\nLikewise, our source code is freely available for anyone who is willing to use it for the Kingdom of God. We grant permission to use our source code for the base of a church application involving biblically correct preaching, and sound doctrine. Contact us for a copy of our source code to create a free app for your church preaching, or the music produced by your church.\n\nFor the glory of God and his Word Jesus Christ!\nThe Faithful AudioTeam\n\nMailing Address\n\np.o box 9114\nBeaufort, Sc 29904\ncollindanielschneide@gmail.com";
+
+
+"Donate to Faithful Word" = "Donate to Faithful Word";
+
+"Donate via PayPal" = "Donate via PayPal";
+
+"There was a problem getting the media." = "There was a problem getting the media.";
+
+"Your device is not connected to the Internet." = "Your device is not connected to the Internet.";
+
+"There was a problem loading the chapters." = "There was a problem loading the chapters.";
+
+"Music" = "Music";
+
+"To listen to the Bible in other languages, follow the instructions in the video below." = "To listen to the Bible in other languages, follow the instructions in the video below.";
+
+"Soul-winning" = "Soul-winning";
+
+"Faithful Word" = "Faithful Word";
+
+"Notifications" = "Notifications";
+
+"Keep up with new sermons and content regularly!" = "Keep up with new sermons and content regularly!";
+
+"Later" = "Later";
+
+"Get Notifications" = "Get Notifications";
+
+"Upgrade to New Version" = "Upgrade to New Version";
+
+"There is a new version available" = "There is a new version available";
+
+"Upgrade Later" = "Upgrade Later";
+
+"Go To App Store" = "Go To App Store";
+
