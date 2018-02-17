@@ -242,7 +242,7 @@ extension MainCoordinator: NavigationCoordinating {
 // MARK: Event handling for the main flow.
 extension MainCoordinator {
 
-    private func handle(eventsFrom mainViewModel: MainViewModel) {
+    private func handle(eventsFrom mainViewModel: BooksViewModel) {
         mainViewModel.drillInEvent.next { [unowned self] type in
             switch type {
             case .bookType(let bookUuid):

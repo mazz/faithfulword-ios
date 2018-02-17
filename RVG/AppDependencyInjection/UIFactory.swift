@@ -81,7 +81,7 @@ extension UIFactory: AppUIMaking {
         let controller = MainViewController
             .make(storyboardName: StoryboardName.main)
         controller.viewModel = resolver
-            .resolve(MainViewModel.self)
+            .resolve(BooksViewModel.self)
         return controller
     }
 

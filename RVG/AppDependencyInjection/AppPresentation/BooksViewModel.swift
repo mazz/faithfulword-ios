@@ -1,9 +1,13 @@
 import RxSwift
 
-internal final class MainViewModel {
+internal final class BooksViewModel {
     
     // MARK: Fields
-    
+
+    public var title = Field<String>(NSLocalizedString("Bible", comment: "").l10n()) //{
+//        return Observable.just(NSLocalizedString("Bible", comment: "").l10n())
+//    }
+
     public func section(at index: Int) -> BooksSectionViewModel {
         return sections.value[index]
     }
@@ -30,13 +34,24 @@ internal final class MainViewModel {
     
     // MARK: Dependencies
     
-    private let productService: ProductServicing!
+    private let productService: ProductServicing
+    private let languageService: LanguageServicing
     
     private var bag = DisposeBag()
 
-    internal init(productService: ProductServicing) {
+    internal init(productService: ProductServicing,
+                  languageService: LanguageServicing
+        ) {
         self.productService = productService
-        
+        self.languageService = languageService
+
+        self.languageService.userLanguage.asObservable()
+            .next { [unowned self] identifier in
+                self.title.value = NSLocalizedString("Bible", comment: "").l10n()
+                productService.fetchBooks().asObservable()
+                    .subscribeAndDispose(by: self.bag)
+        }.disposed(by: bag)
+
         setupDatasource()
     }
     

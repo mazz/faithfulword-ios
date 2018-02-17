@@ -11,7 +11,7 @@ public final class MainViewController: UIViewController {
     
     // MARK: Dependencies
     
-    internal var viewModel: MainViewModel!
+    internal var viewModel: BooksViewModel!
     
     // MARK: Fields
     
@@ -54,6 +54,11 @@ public final class MainViewController: UIViewController {
             .disposed(by: bag)
         collectionView.rx.itemSelected.asObservable()
             .subscribe(viewModel.selectItemEvent.asObserver())
+            .disposed(by: bag)
+
+        viewModel.title
+            .asObservable()
+            .bind(to: rx.title)
             .disposed(by: bag)
     }
 

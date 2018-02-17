@@ -191,9 +191,11 @@ internal final class AppDependencyModule {
                 //                deviceManager: resolver.resolve(DeviceManaging.self)!
             )
         }
-        container.register(MainViewModel.self) { resolver in
-            MainViewModel(
-                productService: resolver.resolve(ProductServicing.self)!)
+        container.register(BooksViewModel.self) { resolver in
+            BooksViewModel(
+                productService: resolver.resolve(ProductServicing.self)!,
+                languageService: resolver.resolve(LanguageServicing.self)!
+            )
         }
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaType in
             MediaListingViewModel(

@@ -11,14 +11,16 @@ import RxSwift
 import L10n_swift
 
 internal final class LanguageViewModel: RadioListViewModeling {
+//    public func section(at index: Int) -> RadioListSectionViewModel {
+//        return internalSections.value[index]
+//    }
+
     public func section(at index: Int) -> RadioListSectionViewModel {
-        return internalSections.value[index]
+        return datasource.value[index].section
     }
 
     // MARK: Fields
     private let bag =  DisposeBag()
-
-    //    var sections: Observable<[RadioListSectionViewModel]>
 
     public var selectionEvent = PublishSubject<IndexPath>()
 
@@ -30,12 +32,25 @@ internal final class LanguageViewModel: RadioListViewModeling {
 
     private var internalSections = Field<[RadioListSectionViewModel]>([])
 
+    private var datasource = Field<[(section: RadioListSectionViewModel, languageIdentifiers: [String])]>([])
+
+//    public var sections: Observable<[RadioListSectionViewModel]> {
+//        return internalSections.asObservable()
+//    }
+
     public var sections: Observable<[RadioListSectionViewModel]> {
-        return internalSections.asObservable()
+        //        return datasource.asObservable()
+        return datasource.asObservable().map { fullSections in
+            fullSections.map { $0.section }
+        }
     }
 
+//    public func item(at indexPath: IndexPath) -> RadioListItemType {
+//        return internalSections.value[indexPath.section].items[indexPath.item]
+//    }
+
     public func item(at indexPath: IndexPath) -> RadioListItemType {
-        return internalSections.value[indexPath.section].items[indexPath.item]
+        return datasource.value[indexPath.section].section.items[indexPath.item]
     }
 
     // MARK: Dependencies
@@ -50,7 +65,6 @@ internal final class LanguageViewModel: RadioListViewModeling {
 
         setupDatasource()
         setupSelection()
-
     }
 
     // MARK: Private helpers
@@ -58,27 +72,26 @@ internal final class LanguageViewModel: RadioListViewModeling {
     private func setupDatasource() {
         productService.fetchBibleLanguages().asObservable()
             .map { $0.map {
-                RadioListItemType.selectable(header: String("\($0.sourceMaterial) (\(self.localizedString(identifier: $0.languageIdentifier))) "), isSelected: false)
-//                BibleLanguageItemType.language(type: .defaultLanguageType(languageIdentifier: $0.languageIdentifier),
-//                                                           sourceMaterial: $0.sourceMaterial,
-//                                                           languageIdentifier: $0.languageIdentifier,
-//                                                           supported: $0.supported,
-//                                                           isSelected: L10n.shared.language == $0.languageIdentifier
-//                )
+                (RadioListItemType.selectable(header: String("\($0.sourceMaterial) (\(self.localizedString(identifier: $0.languageIdentifier))) "), isSelected: false), $0.languageIdentifier)
                 }
             }
-            .next { [unowned self] languageIdentifiers in
-                self.internalSections.value = [
-                    RadioListSectionViewModel(type: .list, items: languageIdentifiers)
-                ]
-            }.disposed(by: bag)
+            .next({ tuples in
+                let listItems = tuples.map { $0.0 }
+                let identifiers = tuples.map { $0.1 }
+
+                self.datasource.value = [(section: RadioListSectionViewModel(type: .list, items: listItems), languageIdentifiers: identifiers)]
+            })
+            .disposed(by: bag)
     }
 
     func setupSelection() {
         self.selectionEvent.next { [unowned self] event in
-            print("event: \(event)")
+            let identifier: String = self.datasource.value[event.section].languageIdentifiers[event.row]
+            L10n.shared.language = identifier
 
-            print("self.internalSections: \(self.internalSections.value)")
+            self.languageService.updateUserLanguage(languageIdentifier: identifier)
+                .asObservable()
+                .subscribeAndDispose(by: self.bag)
             }.disposed(by: bag)
     }
 

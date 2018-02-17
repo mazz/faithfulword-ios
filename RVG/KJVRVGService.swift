@@ -20,6 +20,7 @@ public enum KJVRVGService {
 extension KJVRVGService: TargetType {
     
     public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v2.0")! }
+//    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)/v2.0")! }
     //    var baseURL: URL { return URL(string: "http://localhost:6543/v1")! }
     public var path: String {
         switch self {
