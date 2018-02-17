@@ -1,21 +1,21 @@
 PODS:
   - Alamofire (4.6.0)
   - Differentiator (3.0.2)
-  - Firebase/Core (4.8.0):
-    - FirebaseAnalytics (= 4.0.5)
-    - FirebaseCore (= 4.0.13)
-  - Firebase/Crash (4.8.0):
+  - Firebase/Core (4.8.1):
+    - FirebaseAnalytics (= 4.0.7)
+    - FirebaseCore (= 4.0.14)
+  - Firebase/Crash (4.8.1):
     - Firebase/Core
     - FirebaseCrash (= 2.0.2)
-  - Firebase/Messaging (4.8.0):
+  - Firebase/Messaging (4.8.1):
     - Firebase/Core
     - FirebaseMessaging (= 2.0.8)
-  - FirebaseAnalytics (4.0.5):
+  - FirebaseAnalytics (4.0.7):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
     - nanopb (~> 0.3)
-  - FirebaseCore (4.0.13):
+  - FirebaseCore (4.0.14):
     - GoogleToolboxForMac/NSData+zlib (~> 2.1)
   - FirebaseCrash (2.0.2):
     - FirebaseAnalytics (~> 4.0)
@@ -36,7 +36,7 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.1.3)
   - GoogleToolboxForMac/NSData+zlib (2.1.3):
     - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GRDB.swift (2.5.0)
+  - GRDB.swift (2.7.0)
   - IQKeyboardManagerSwift (5.0.7)
   - L10n-swift (5.0.1):
     - L10n-swift/Core (= 5.0.1)
@@ -68,11 +68,11 @@ PODS:
     - Differentiator (~> 3.0)
     - RxCocoa (~> 4.0)
     - RxSwift (~> 4.0)
-  - RxGRDB (0.7.0):
-    - RxGRDB/default (= 0.7.0)
+  - RxGRDB (0.8.0):
+    - RxGRDB/default (= 0.8.0)
     - RxSwift (~> 4.0)
-  - RxGRDB/default (0.7.0):
-    - GRDB.swift (~> 2.0)
+  - RxGRDB/default (0.8.0):
+    - GRDB.swift (~> 2.6)
     - RxSwift (~> 4.0)
   - RxSwift (4.1.1)
   - SwiftLint (0.24.2)
@@ -98,14 +98,14 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
   Differentiator: a87be69eba49ec4ab460c7671143ee3a9eececfd
-  Firebase: 710decbbc6d9d48530e9a5dba3209740c3532e05
-  FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
-  FirebaseCore: 3c02ec652db3d03fdc8bc6d9154af3e20d64b6f5
+  Firebase: 2721056b8885eef90233b03f37be64358d35d262
+  FirebaseAnalytics: 617afa8c26b57a0c3f11361b248bc9e17bfd8dfd
+  FirebaseCore: 2e0b98fb2d64ca8140136beff15772bdd14d2dd7
   FirebaseCrash: cded0fc566c03651aea606a101bc156085f333ca
   FirebaseInstanceID: 81df5805a08001e69138664bdd02c6719a9ac80f
   FirebaseMessaging: dfdcd307c2382290a1e297a81d0f18370f5b1bcd
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
-  GRDB.swift: 4331c7b53f299aa1d150fc4e0afb6112df7e92ca
+  GRDB.swift: d8770b27724ff443507b75352d026bfc879c42cf
   IQKeyboardManagerSwift: 30fb3a61de1af53a95e02b80fb54ed0a19d5ede5
   L10n-swift: 24aa04562cad25e79b8a93f301754c91d351f9e6
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
@@ -116,7 +116,7 @@ SPEC CHECKSUMS:
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   RxCocoa: fd0862fd2df95fa55562ad28ffd2522c25eb4a85
   RxDataSources: cb7c31e652a87ebb919da45f716bbb87b3765f6b
-  RxGRDB: 9c90eb5af501804418507e8fc4d81b1e10775c41
+  RxGRDB: b702deba4175ee04dd59ba2f6af124c8f122a8b3
   RxSwift: c6e3b1c7b325c7d121cd4327e9d98b7ed746b570
   SwiftLint: 2aa21b96c8d13396a051bc1cb659d2ce1e0075b0
   Swinject: afea49fd95f392b41171669f165842879c48fad6

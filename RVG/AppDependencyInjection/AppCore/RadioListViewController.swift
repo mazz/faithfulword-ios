@@ -22,6 +22,7 @@ public final class RadioListViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.automaticallyAdjustsScrollViewInsets = false
         registerReusableViews()
         bindToViewModel()
     }

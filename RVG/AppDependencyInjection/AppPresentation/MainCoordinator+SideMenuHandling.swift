@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MessageUI
 
 protocol SideMenuHandling {
     func goToCategoryFlow(categoryType: CategoryListingType)
@@ -17,12 +18,12 @@ protocol SideMenuHandling {
 
 extension MainCoordinator: SideMenuHandling {
     func goToInlineWebBrowser(url: URL) {
-
+        
     }
-
+    
     func goToCategoryFlow(categoryType: CategoryListingType) {
         self.mainNavigationController.dismiss(animated: true, completion: {
-
+            
             self.resettableCategoryListingCoordinator.value.categoryType = categoryType
             self.resettableCategoryListingCoordinator.value.mainNavigationController = self.mainNavigationController
             self.resettableCategoryListingCoordinator.value.flow(with: { viewController in
@@ -34,22 +35,25 @@ extension MainCoordinator: SideMenuHandling {
                 self.mainNavigationController.dismiss(animated: true)
                 self.resettableCategoryListingCoordinator.reset()
             }, context: .push(onto: self.mainNavigationController))
-
+            
         })
     }
-
+    
     func goToExternalWebBrowser(url: URL) {
         self.mainNavigationController.dismiss(animated: true) {
             UIApplication.shared.open(url, options: [:],
                                       completionHandler: nil)
         }
     }
-
+    
     func goToMailComposer() {
         self.mainNavigationController.dismiss(animated: true, completion: {
             if let mailComposer = self.appUIMaking.makeMailComposer() {
-                self.mainNavigationController.pushViewController(mailComposer,
-                                                                 animated: true)
+                mailComposer.mailComposeDelegate = self
+                if let rootViewController = self.mainNavigationController?.viewControllers.first {
+                    rootViewController.present(mailComposer, animated: true, completion: nil)
+                }
+                
             } else {
                 let okAlert = self.appUIMaking.makeOkAlert(
                     title: NSLocalizedString(
@@ -60,8 +64,12 @@ extension MainCoordinator: SideMenuHandling {
             }
         })
     }
-
-
+    
+    
 }
 
-
+extension MainCoordinator: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Swift.Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+}
