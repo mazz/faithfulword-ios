@@ -13,7 +13,7 @@
         <!--Main View Controller-->
         <scene sceneID="yBE-Uq-8yv">
             <objects>
-                <viewController storyboardIdentifier="MainViewController" id="kkr-Oe-XuT" customClass="MainViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" id="kkr-Oe-XuT" customClass="MainViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="I9q-zN-mfm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -25,22 +25,34 @@
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="52"/>
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5gw-fc-Q4z">
+                                <rect key="frame" x="0.0" y="760" width="375" height="52"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="Yjs-W7-L9N"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="iM4-ei-wzh" firstAttribute="trailing" secondItem="RBa-ce-00p" secondAttribute="trailing" id="35p-Ko-sbw"/>
+                            <constraint firstItem="5gw-fc-Q4z" firstAttribute="leading" secondItem="iM4-ei-wzh" secondAttribute="leading" id="AwB-8D-VN7"/>
                             <constraint firstItem="RBa-ce-00p" firstAttribute="top" secondItem="iM4-ei-wzh" secondAttribute="top" id="Q7N-bL-xh3"/>
                             <constraint firstAttribute="bottom" secondItem="RBa-ce-00p" secondAttribute="bottom" id="S8D-3S-675"/>
+                            <constraint firstAttribute="bottom" secondItem="5gw-fc-Q4z" secondAttribute="bottom" id="ZdT-5H-Txz"/>
+                            <constraint firstItem="5gw-fc-Q4z" firstAttribute="centerX" secondItem="I9q-zN-mfm" secondAttribute="centerX" id="aPW-jv-PSq"/>
+                            <constraint firstItem="5gw-fc-Q4z" firstAttribute="trailing" secondItem="iM4-ei-wzh" secondAttribute="trailing" id="ewe-jg-OaH"/>
                             <constraint firstItem="RBa-ce-00p" firstAttribute="leading" secondItem="iM4-ei-wzh" secondAttribute="leading" id="vKh-xV-W3F"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iM4-ei-wzh"/>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="RBa-ce-00p" id="Yq0-N1-VhU"/>
+                        <outlet property="deviceNowPlayingBarContainerView" destination="5gw-fc-Q4z" id="fAI-9c-NU7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="orP-Qp-Olk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -50,7 +62,7 @@
         <!--Root View Controller-->
         <scene sceneID="Peq-wv-6ce">
             <objects>
-                <viewController storyboardIdentifier="RootViewController" id="96T-Ty-Qrk" customClass="RootViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RootViewController" id="96T-Ty-Qrk" customClass="RootViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="DOU-fF-nbF"/>
                         <viewControllerLayoutGuide type="bottom" id="viz-az-9Yc"/>
@@ -59,7 +71,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QG2-OX-B7x">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QG2-OX-B7x">
                                 <rect key="frame" x="82.666666666666686" y="197" width="210" height="418"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="350"/>
                                 <color key="textColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -81,7 +93,7 @@
         <!--Media Listing View Controller-->
         <scene sceneID="V8x-t5-tQj">
             <objects>
-                <viewController storyboardIdentifier="MediaListingViewController" id="OvY-nq-ElA" customClass="MediaListingViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MediaListingViewController" id="OvY-nq-ElA" customClass="MediaListingViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wtQ-GP-g76">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -118,7 +130,7 @@
         <!--Category Listing View Controller-->
         <scene sceneID="3tt-SW-y2a">
             <objects>
-                <viewController storyboardIdentifier="CategoryListingViewController" id="Utc-tz-I45" customClass="CategoryListingViewController" customModule="All_Scripture" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CategoryListingViewController" id="Utc-tz-I45" customClass="CategoryListingViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="p4N-Ny-Ubb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

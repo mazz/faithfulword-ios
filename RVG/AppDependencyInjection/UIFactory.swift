@@ -7,6 +7,7 @@ import MessageUI
 /// Protocol facade for factory making all app-root-level related UI.
 internal protocol AppUIMaking {
     func makeRoot() -> RootViewController
+    func makePlayer() -> PlaybackViewController
     //    func makeInitial() -> InitialViewController
     func makeMain() -> MainViewController
     func makeInlineWebBrowser(url: URL) -> SFSafariViewController
@@ -69,6 +70,13 @@ extension UIFactory: AppUIMaking {
             .make(storyboardName: StoryboardName.main)
         controller.reachability = resolver
             .resolve(RxReachable.self)
+        return controller
+    }
+
+    internal func makePlayer() -> PlaybackViewController {
+        let controller = PlaybackViewController
+            .make(storyboardName: StoryboardName.playback)
+//        controller.reachability = resolver.resolve(RxReachable.self)
         return controller
     }
 

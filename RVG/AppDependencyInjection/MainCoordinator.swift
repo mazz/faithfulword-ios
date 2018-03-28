@@ -22,7 +22,7 @@ internal final class MainCoordinator: NSObject {
 
     // hamburger
     private var mainViewRevealed: MainRevealState = .closed
-    private var originalMenuFrame: CGRect!
+//    private var originalMenuFrame: CGRect!
 
     // MARK: Dependencies
 
@@ -87,10 +87,13 @@ extension MainCoordinator: NavigationCoordinating {
         mainNavigationController = UINavigationController(rootViewController: mainViewController)
 
         // keep original state of hamburger so we know what frame to toggle back to
-        originalMenuFrame = self.mainNavigationController.view.frame
+//        originalMenuFrame = self.mainNavigationController.view.frame
 
         handle(eventsFrom: mainViewController.viewModel)
         setup(mainNavigationController)
+
+        let playbackViewController = appUIMaking.makePlayer()
+//        mainViewController.plant(playbackViewController, withAnimation: AppAnimations.fade)
 
         //        resettableSectionalNavigatorCoordinator.value.flow(with: { sectionalNavigator in
         //            mainViewController.plant(sectionalNavigator)

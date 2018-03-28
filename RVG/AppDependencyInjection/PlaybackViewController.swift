@@ -4,35 +4,35 @@ import RxCocoa
 import RxDataSources
 
 /// Add service screen
-public final class MainViewController: UIViewController {
+public final class PlaybackViewController: UIViewController {
     // MARK: View
-    
+
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var deviceNowPlayingBarContainerView: UIView!
 
     // MARK: Dependencies
-    
+
     internal var viewModel: BooksViewModel!
-    
+
     // MARK: Fields
 
     private let nowPlayingBar = DeviceNowPlayingBarView.fromUiNib()
     private var viewModelSections: [BooksSectionViewModel] = []
     private let bag = DisposeBag()
-    
+
     // MARK: Lifecycle
-    
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
-        embedNowPlayingBar()
-        registerReusableViews()
-        bindToViewModel()
-        reactToViewModel()
-//        reactToContentSizeChange()
+//        embedNowPlayingBar()
+//        registerReusableViews()
+//        bindToViewModel()
+//        reactToViewModel()
+        //        reactToContentSizeChange()
 
     }
-    
+
     // MARK: Private helpers
 
     private func embedNowPlayingBar() {
@@ -44,11 +44,11 @@ public final class MainViewController: UIViewController {
             .next { [unowned self] sections in
                 // Cache our viewModel sections, so we don't need to read the value while it' still being written to
                 self.viewModelSections = sections
-                
+
                 self.collectionView.reloadData()
             }.disposed(by: bag)
     }
-    
+
     private func registerReusableViews() {
         collectionView.register(cellType: DeviceGroupSelectionCell.self)
     }
@@ -68,7 +68,7 @@ public final class MainViewController: UIViewController {
             .disposed(by: bag)
     }
 
-    
+
     private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<BooksSectionViewModel> {
         let dataSource = RxCollectionViewSectionedReloadDataSource<BooksSectionViewModel>(
             configureCell: { (dataSource, collectionView, indexPath, item) in
@@ -89,13 +89,13 @@ public final class MainViewController: UIViewController {
     }
 }
 
-extension MainViewController: UICollectionViewDelegateFlowLayout {
+extension PlaybackViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
         let preferredWidth: CGFloat = collectionView.bounds.width
-        
-        
+
+
         switch viewModel.item(at: indexPath) {
         case let .drillIn(_, iconName, title, showBottomSeparator):
             guard let view = try? UIView.sizingView(for: DeviceGroupSelectionCell.self,
@@ -107,11 +107,3 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension MainViewController {
-    public func plant(_ viewController: UIViewController, withAnimation animation: AppAnimations.Animatable? = nil) {
-        if let residualPresentedViewController = childViewControllers.first?.presentedViewController {
-            residualPresentedViewController.dismiss(animated: true, completion: nil)
-        }
-        replace(childViewControllers.first, with: viewController, in: view, withAnimation: animation)
-    }
-}

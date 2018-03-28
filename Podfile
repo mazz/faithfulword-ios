@@ -20,5 +20,6 @@ target 'FaithfulWord' do
     pod 'SwiftLint'
     pod 'Swinject'
     pod 'RxDataSources'
+    pod 'AlamofireImage'
 
 end
