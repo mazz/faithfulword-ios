@@ -809,6 +809,7 @@
 				70CD205C1E6479A800AF619F /* Resources */,
 				33FE5B74C59638D836131FA2 /* [CP] Embed Pods Frameworks */,
 				8D30C73712A29CC525F02209 /* [CP] Copy Pods Resources */,
+				4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */,
 			);
 			buildRules = (
 			);
@@ -959,6 +960,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Crashlytics Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" 3ec2d1c63e1a93d14a2eb85f92e28c29b5f9c891 06629ae153f77acfc024d844eebe3ebb7023cd54929f34ed8ec479a00e43fa9a\n";
 		};
 		7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

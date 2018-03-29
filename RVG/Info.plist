@@ -18,6 +18,20 @@
 	<string>2.0</string>
 	<key>CFBundleVersion</key>
 	<string>3</string>
+    <key>Fabric</key>
+    <dict>
+        <key>APIKey</key>
+        <string>3ec2d1c63e1a93d14a2eb85f92e28c29b5f9c891</string>
+        <key>Kits</key>
+        <array>
+            <dict>
+                <key>KitInfo</key>
+                <dict/>
+                <key>KitName</key>
+                <string>Crashlytics</string>
+            </dict>
+        </array>
+    </dict>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>

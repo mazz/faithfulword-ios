@@ -6,6 +6,8 @@ import Moya
 import UserNotifications
 import L10n_swift
 import RxSwift
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
@@ -26,6 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
             window?.makeKeyAndVisible()
         }, completion: { _ in },
            context: .other)
+
+        Fabric.with([Crashlytics.self])
 
         return true
     }
