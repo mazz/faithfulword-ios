@@ -21,5 +21,7 @@ target 'FaithfulWord' do
     pod 'Swinject'
     pod 'RxDataSources'
     pod 'AlamofireImage'
+    pod 'Fabric'
+    pod 'Crashlytics'
 
 end
