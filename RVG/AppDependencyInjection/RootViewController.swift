@@ -44,15 +44,16 @@ final class RootViewController: UIViewController {
     }
     
     private func showNoWifiAlert() {
-        let alert = UIAlertController(title: "⚠️",
-                                      message: "Wifi connection lost",
-                                      preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok",
-                                     style: .default)
-        alert.addAction(okAction)
-        present(alert,
-                animated: true,
-                completion: nil)
+        print("Wifi connection lost")
+//        let alert = UIAlertController(title: "⚠️",
+//                                      message: "Wifi connection lost",
+//                                      preferredStyle: .alert)
+//        let okAction = UIAlertAction(title: "Ok",
+//                                     style: .default)
+//        alert.addAction(okAction)
+//        present(alert,
+//                animated: true,
+//                completion: nil)
     }
     
 }
