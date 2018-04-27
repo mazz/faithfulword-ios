@@ -29,30 +29,18 @@
                                 </collectionViewFlowLayout>
                                 <cells/>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5gw-fc-Q4z">
-                                <rect key="frame" x="0.0" y="760" width="375" height="52"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="52" id="Yjs-W7-L9N"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="iM4-ei-wzh" firstAttribute="trailing" secondItem="RBa-ce-00p" secondAttribute="trailing" id="35p-Ko-sbw"/>
-                            <constraint firstItem="5gw-fc-Q4z" firstAttribute="leading" secondItem="iM4-ei-wzh" secondAttribute="leading" id="AwB-8D-VN7"/>
                             <constraint firstItem="RBa-ce-00p" firstAttribute="top" secondItem="iM4-ei-wzh" secondAttribute="top" id="Q7N-bL-xh3"/>
                             <constraint firstAttribute="bottom" secondItem="RBa-ce-00p" secondAttribute="bottom" id="S8D-3S-675"/>
-                            <constraint firstAttribute="bottom" secondItem="5gw-fc-Q4z" secondAttribute="bottom" id="ZdT-5H-Txz"/>
-                            <constraint firstItem="5gw-fc-Q4z" firstAttribute="centerX" secondItem="I9q-zN-mfm" secondAttribute="centerX" id="aPW-jv-PSq"/>
-                            <constraint firstItem="5gw-fc-Q4z" firstAttribute="trailing" secondItem="iM4-ei-wzh" secondAttribute="trailing" id="ewe-jg-OaH"/>
                             <constraint firstItem="RBa-ce-00p" firstAttribute="leading" secondItem="iM4-ei-wzh" secondAttribute="leading" id="vKh-xV-W3F"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="iM4-ei-wzh"/>
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="RBa-ce-00p" id="Yq0-N1-VhU"/>
-                        <outlet property="deviceNowPlayingBarContainerView" destination="5gw-fc-Q4z" id="fAI-9c-NU7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="orP-Qp-Olk" userLabel="First Responder" sceneMemberID="firstResponder"/>

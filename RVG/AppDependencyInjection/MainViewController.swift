@@ -8,7 +8,6 @@ public final class MainViewController: UIViewController {
     // MARK: View
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var deviceNowPlayingBarContainerView: UIView!
 
     // MARK: Dependencies
     
@@ -25,7 +24,7 @@ public final class MainViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
-        embedNowPlayingBar()
+//        embedNowPlayingBar()
         registerReusableViews()
         bindToViewModel()
         reactToViewModel()
@@ -34,10 +33,6 @@ public final class MainViewController: UIViewController {
     }
     
     // MARK: Private helpers
-
-    private func embedNowPlayingBar() {
-        deviceNowPlayingBarContainerView.embedFilling(subview: nowPlayingBar)
-    }
 
     private func reactToViewModel() {
         viewModel.sections.asObservable()

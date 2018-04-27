@@ -19,6 +19,8 @@ internal protocol AppUIMaking {
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
     func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController
     func makeSplashScreen() -> SplashScreenViewController
+
+    func makePopupPlayer() -> DemoMusicPlayerController
 }
 
 /// Protocol facade for factory making all settings related UI.
@@ -40,6 +42,13 @@ internal final class UIFactory: UIMaking {
 
 // MARK: <AppUIMaking>
 extension UIFactory: AppUIMaking {
+    func makePopupPlayer() -> DemoMusicPlayerController {
+        let demoMusicPlayerController = DemoMusicPlayerController.make(storyboardName: StoryboardName.popupPlayer)
+        demoMusicPlayerController.viewModel = resolver.resolve(DemoMusicPlayerViewModel.self)
+        return demoMusicPlayerController
+    }
+
+
     func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController {
         let categoryListingViewController = CategoryListingViewController.make(storyboardName: StoryboardName.categoryListing)
         categoryListingViewController.viewModel = resolver.resolve(CategoryListingViewModel.self, argument: categoryType)

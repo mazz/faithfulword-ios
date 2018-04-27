@@ -1,6 +1,7 @@
 import UIKit
 import RxSwift
 import SafariServices
+import LNPopupController
 
 internal enum MainRevealState {
     case closed
@@ -93,7 +94,17 @@ extension MainCoordinator: NavigationCoordinating {
         setup(mainNavigationController)
 
         let playbackViewController = appUIMaking.makePlayer()
-//        mainViewController.plant(playbackViewController, withAnimation: AppAnimations.fade)
+
+//        let nowPlayingBar = DeviceNowPlayingBarView.fromUiNib()
+
+//        nowPlayingBar.translatesAutoresizingMaskIntoConstraints = false
+//        mainNavigationController.view.addSubview(nowPlayingBar)
+
+//        mainNavigationController.view.embedFilling(subview: nowPlayingBar)
+
+//        mainNavigationController.embed(playbackViewController, in: mainNavigationController.view, withAnimation: AppAnimations.fade)
+
+        
 
         //        resettableSectionalNavigatorCoordinator.value.flow(with: { sectionalNavigator in
         //            mainViewController.plant(sectionalNavigator)

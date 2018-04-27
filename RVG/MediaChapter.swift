@@ -10,6 +10,11 @@ public struct MediaChapter: Codable, Playable {
     public var presenterName: String?
     public var sourceMaterial: String?
     public var categoryUuid: String?
+    public var trackNumber: Int64?
+    public var createdAt: Date?
+    public var updatedAt: Date?
+    public var largeThumbnailPath: String?
+    public var smallThumbnailPath: String?
 }
 
 // Define columns so that we can build GRDB requests

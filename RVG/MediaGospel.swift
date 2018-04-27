@@ -1,6 +1,19 @@
 import Foundation
 import GRDB
 
+/*
+ "localizedName": "Σχέδιο σωτηρίας (Greek)",
+ "path": "gospel/el/BibleWayToHeaven-Unattributed-el.mp3",
+ "sourceMaterial": null,
+ "presenterName": "Unattributed",
+ "uuid": "7135d992-1e86-4902-86e6-4e34ea159cd0",
+ "trackNumber": null,
+ "createdAt": "2018-04-17 02:04:13",
+ "largeThumbnailPath": null,
+ "updatedAt": null,
+ "smallThumbnailPath": null
+ */
+
 public struct MediaGospel: Codable, Playable {
     //    var bookId: Int64?
     //    var userId: Int64?
@@ -10,6 +23,11 @@ public struct MediaGospel: Codable, Playable {
     public var presenterName: String?
     public var sourceMaterial: String?
     public var categoryUuid: String?
+    public var trackNumber: Int64?
+    public var createdAt: Date?
+    public var updatedAt: Date?
+    public var largeThumbnailPath: String?
+    public var smallThumbnailPath: String?
 }
 
 // Define columns so that we can build GRDB requests
@@ -22,6 +40,7 @@ extension MediaGospel {
         static let presenterName = Column("presenterName")
         static let sourceMaterial = Column("sourceMaterial")
         static let categoryUuid = Column("categoryUuid")
+        static let trackNumber = Column("trackNumber")
     }
 }
 

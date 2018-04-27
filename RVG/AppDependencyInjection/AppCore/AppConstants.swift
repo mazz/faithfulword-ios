@@ -9,6 +9,7 @@ struct StoryboardName {
     static let mediaListing = "Root"
     static let categoryListing = "Root"
     static let playback = "Playback"
+    static let popupPlayer = "Playback"
 }
 
 struct AnimationConstants {

@@ -81,7 +81,7 @@ public final class DataStore {
     internal var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
         
-        migrator.registerMigration("v2") { db in
+        migrator.registerMigration("v1.3") { db in
             do {
                 try db.create(table: "user") { userTable in
                     print("created: \(userTable)")
@@ -120,6 +120,11 @@ public final class DataStore {
                     chapterTable.column("path", .text)
                     chapterTable.column("presenterName", .text)
                     chapterTable.column("sourceMaterial", .text)
+                    chapterTable.column("trackNumber", .integer)
+                    chapterTable.column("createdAt", .datetime)
+                    chapterTable.column("updatedAt", .datetime)
+                    chapterTable.column("largeThumbnailPath", .text)
+                    chapterTable.column("smallThumbnailPath", .text)
                     chapterTable.column("categoryUuid", .text).references("book", onDelete: .cascade)
                 }
             }
@@ -150,6 +155,11 @@ public final class DataStore {
                     gospelTable.column("path", .text)
                     gospelTable.column("presenterName", .text)
                     gospelTable.column("sourceMaterial", .text)
+                    gospelTable.column("trackNumber", .integer)
+                    gospelTable.column("createdAt", .datetime)
+                    gospelTable.column("updatedAt", .datetime)
+                    gospelTable.column("largeThumbnailPath", .text)
+                    gospelTable.column("smallThumbnailPath", .text)
                     gospelTable.column("categoryUuid", .text).references("gospel", onDelete: .cascade)
                 }
             }
@@ -172,15 +182,20 @@ public final class DataStore {
             }
 
             do {
-                try db.create(table: "mediamusic") { gospelTable in
-                    print("created: \(gospelTable)")
+                try db.create(table: "mediamusic") { musicTable in
+                    print("created: \(musicTable)")
                     //                chapterTable.column("chapterId", .integer).primaryKey()
-                    gospelTable.column("uuid", .text).primaryKey()
-                    gospelTable.column("localizedName", .text)
-                    gospelTable.column("path", .text)
-                    gospelTable.column("presenterName", .text)
-                    gospelTable.column("sourceMaterial", .text)
-                    gospelTable.column("categoryUuid", .text).references("music", onDelete: .cascade)
+                    musicTable.column("uuid", .text).primaryKey()
+                    musicTable.column("localizedName", .text)
+                    musicTable.column("path", .text)
+                    musicTable.column("presenterName", .text)
+                    musicTable.column("sourceMaterial", .text)
+                    musicTable.column("trackNumber", .integer)
+                    musicTable.column("createdAt", .datetime)
+                    musicTable.column("updatedAt", .datetime)
+                    musicTable.column("largeThumbnailPath", .text)
+                    musicTable.column("smallThumbnailPath", .text)
+                    musicTable.column("categoryUuid", .text).references("music", onDelete: .cascade)
                 }
             }
             catch {
@@ -199,12 +214,6 @@ public final class DataStore {
             catch {
                 print("error making languageidentifier table: \(error)")
             }
-//            var uuid: String
-//            let sourceMaterial: String
-//            let languageIdentifier: String
-//            let supported: Bool
-
-            // languageidentifier
         }
         return migrator
     }
@@ -495,7 +504,20 @@ extension DataStore: DataStoring {
                                                             path: chapter.path,
                                                             presenterName: chapter.presenterName,
                                                             sourceMaterial: chapter.sourceMaterial,
-                                                            categoryUuid: book.categoryUuid)
+                                                            categoryUuid: book.categoryUuid,
+                                                            trackNumber: chapter.trackNumber,
+                                                            createdAt: chapter.createdAt,
+                                                            updatedAt: chapter.updatedAt,
+                                                            largeThumbnailPath: chapter.largeThumbnailPath,
+                                                            smallThumbnailPath: chapter.smallThumbnailPath)
+
+                            /*
+ public var trackNumber: Int64?
+ public var createdAt: Date?
+ public var updatedAt: Date?
+ public var largeThumbnailPath: String?
+ public var smallThumbnailPath: String?
+*/
                             try mediaChapter.insert(db)
                         }
                     }
@@ -566,7 +588,12 @@ extension DataStore: DataStoring {
                                                           path: media.path,
                                                           presenterName: media.presenterName,
                                                           sourceMaterial: media.sourceMaterial,
-                                                          categoryUuid: gospel.categoryUuid)
+                                                          categoryUuid: gospel.categoryUuid,
+                                                          trackNumber: media.trackNumber,
+                                                          createdAt: media.createdAt,
+                                                          updatedAt: media.updatedAt,
+                                                          largeThumbnailPath: media.largeThumbnailPath,
+                                                          smallThumbnailPath: media.smallThumbnailPath)
                             try mediaGospel.insert(db)
                         }
                     }
@@ -630,11 +657,16 @@ extension DataStore: DataStoring {
                         print("found music: \(music)")
                         for media in mediaMusic {
                             var mediaMusic = MediaMusic(uuid: media.uuid,
-                                                         localizedName: media.localizedName,
-                                                         path: media.path,
-                                                         presenterName: media.presenterName,
-                                                         sourceMaterial: media.sourceMaterial,
-                                                         categoryUuid: music.categoryUuid)
+                                                        localizedName: media.localizedName,
+                                                        path: media.path,
+                                                        presenterName: media.presenterName,
+                                                        sourceMaterial: media.sourceMaterial,
+                                                        categoryUuid: music.categoryUuid,
+                                                        trackNumber: media.trackNumber,
+                                                        createdAt: media.createdAt,
+                                                        updatedAt: media.updatedAt,
+                                                        largeThumbnailPath: media.largeThumbnailPath,
+                                                        smallThumbnailPath: media.smallThumbnailPath)
                             try mediaMusic.insert(db)
                         }
                     }

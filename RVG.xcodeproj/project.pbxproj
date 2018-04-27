@@ -10,6 +10,7 @@
 		4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */; };
 		4C0F4871202542FA00A8904F /* CategoryListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */; };
 		4C0F48732025709F00A8904F /* CategoryListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F48722025709F00A8904F /* CategoryListingViewController.swift */; };
+		4C10EAEA209164B7008A8B00 /* DemoMusicPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C10EAE9209164B7008A8B00 /* DemoMusicPlayerViewModel.swift */; };
 		4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */; };
 		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
 		4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */; };
@@ -48,6 +49,8 @@
 		4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */; };
 		4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8C11FF60105003F483A /* ProductService.swift */; };
 		4C8EE8C41FF6010F003F483A /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8C31FF6010F003F483A /* DataService.swift */; };
+		4C958E99208D3D6500A71C59 /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C958E98208D3D6500A71C59 /* LNPopupController.framework */; };
+		4C958E9D2090242100A71C59 /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C958E9C2090242000A71C59 /* DemoMusicPlayerController.swift */; };
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
 		4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */; };
 		4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */; };
@@ -176,6 +179,7 @@
 		4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingCoordinator.swift; sourceTree = "<group>"; };
 		4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4C0F48722025709F00A8904F /* CategoryListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingViewController.swift; sourceTree = "<group>"; };
+		4C10EAE9209164B7008A8B00 /* DemoMusicPlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoMusicPlayerViewModel.swift; sourceTree = "<group>"; };
 		4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
 		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
 		4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCoordinator.swift; sourceTree = "<group>"; };
@@ -214,6 +218,8 @@
 		4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Parsing.swift"; sourceTree = "<group>"; };
 		4C8EE8C11FF60105003F483A /* ProductService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductService.swift; sourceTree = "<group>"; };
 		4C8EE8C31FF6010F003F483A /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		4C958E98208D3D6500A71C59 /* LNPopupController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LNPopupController.framework; path = Carthage/Build/iOS/LNPopupController.framework; sourceTree = "<group>"; };
+		4C958E9C2090242000A71C59 /* DemoMusicPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoMusicPlayerController.swift; sourceTree = "<group>"; };
 		4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsModel.swift; sourceTree = "<group>"; };
 		4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetInflating.swift"; sourceTree = "<group>"; };
 		4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceGroupSelectionCell.xib; sourceTree = "<group>"; };
@@ -381,6 +387,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C958E99208D3D6500A71C59 /* LNPopupController.framework in Frameworks */,
 				689880571F16F52600CC2BC5 /* MediaPlayer.framework in Frameworks */,
 				6854EED71F01F649007BB502 /* AVFoundation.framework in Frameworks */,
 				68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */,
@@ -395,6 +402,7 @@
 		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C958E98208D3D6500A71C59 /* LNPopupController.framework */,
 				689880561F16F52600CC2BC5 /* MediaPlayer.framework */,
 				6854EED61F01F649007BB502 /* AVFoundation.framework */,
 				68BE69D71EEBBB5B0082956D /* SafariServices.framework */,
@@ -426,6 +434,7 @@
 				4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */,
 				4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */,
 				4C3998FF20229D6C008E76E8 /* SideMenuViewModel.swift */,
+				4C10EAE9209164B7008A8B00 /* DemoMusicPlayerViewModel.swift */,
 			);
 			path = AppPresentation;
 			sourceTree = "<group>";
@@ -543,6 +552,7 @@
 				4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */,
 				4C7D546C2013DB210038B265 /* MediaListingViewController.swift */,
 				4C3EA13D206B265100310024 /* PlaybackViewController.swift */,
+				4C958E9C2090242000A71C59 /* DemoMusicPlayerController.swift */,
 				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
 				4CCE8C7A1FF4B5C900AFBAF2 /* RootViewController.swift */,
 				4C21A72D20201148000F02CE /* SideMenu.storyboard */,
@@ -810,6 +820,8 @@
 				33FE5B74C59638D836131FA2 /* [CP] Embed Pods Frameworks */,
 				8D30C73712A29CC525F02209 /* [CP] Copy Pods Resources */,
 				4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */,
+				4C958E9A208D3D9700A71C59 /* Run Carthage Copy Frameworks */,
+				4C958E9B2090184A00A71C59 /* Run Carthage Check Outdated */,
 			);
 			buildRules = (
 			);
@@ -975,6 +987,36 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" 3ec2d1c63e1a93d14a2eb85f92e28c29b5f9c891 06629ae153f77acfc024d844eebe3ebb7023cd54929f34ed8ec479a00e43fa9a\n";
 		};
+		4C958E9A208D3D9700A71C59 /* Run Carthage Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/LNPopupController.framework",
+			);
+			name = "Run Carthage Copy Frameworks";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/LNPopupController.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		4C958E9B2090184A00A71C59 /* Run Carthage Check Outdated */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Carthage Check Outdated";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage outdated --xcode-warnings";
+		};
 		7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1025,6 +1067,7 @@
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
+				4C10EAEA209164B7008A8B00 /* DemoMusicPlayerViewModel.swift in Sources */,
 				4CCE8C931FF4BC8200AFBAF2 /* AppConstants.swift in Sources */,
 				4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */,
 				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
@@ -1146,6 +1189,7 @@
 				6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
 				4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */,
+				4C958E9D2090242100A71C59 /* DemoMusicPlayerController.swift in Sources */,
 				4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1316,6 +1360,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = allscripture20;
@@ -1340,6 +1388,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = allscripture20;

@@ -20,28 +20,31 @@ class DemoMusicPlayerController: UIViewController {
 	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 	
 	var timer : Timer?
-	
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
-		
-		let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: nil, action: nil)
-		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-		let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
-		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
-		
-		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10 {
-			popupItem.leftBarButtonItems = [ pause ]
-			popupItem.rightBarButtonItems = [ next ]
-		}
-		else {
-			popupItem.rightBarButtonItems = [ pause, next ]
-		}
-		
-		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
-		
-		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
-	}
-	
+
+    public var viewModel: DemoMusicPlayerViewModel!
+
+
+//    required init?(coder aDecoder: NSCoder) {
+//        super.init(coder: aDecoder)
+
+//        let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: nil, action: nil)
+//        pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
+//        let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
+//        next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
+
+//        if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10 {
+//            popupItem.leftBarButtonItems = [ pause ]
+//            popupItem.rightBarButtonItems = [ next ]
+//        }
+//        else {
+//            popupItem.rightBarButtonItems = [ pause, next ]
+//        }
+
+//        accessibilityDateComponentsFormatter.unitsStyle = .spellOut
+//
+//        timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
+//    }
+
 	var songTitle: String = "" {
 		didSet {
 			if isViewLoaded {

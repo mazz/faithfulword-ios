@@ -6,4 +6,5 @@ target/
 *.ipa
 xcschememanagement.plist
 Pods/
+Carthage/
 .DS_Store
