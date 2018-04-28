@@ -77,7 +77,7 @@ public final class MediaListingViewController: UIViewController {
                 switch item {
                 case let .drillIn(_, iconName, title, showBottomSeparator):
                     let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
-                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
+                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator, showChevron: false)
                     return drillInCell
 
                 }},

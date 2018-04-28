@@ -121,8 +121,8 @@ public final class DataStore {
                     chapterTable.column("presenterName", .text)
                     chapterTable.column("sourceMaterial", .text)
                     chapterTable.column("trackNumber", .integer)
-                    chapterTable.column("createdAt", .datetime)
-                    chapterTable.column("updatedAt", .datetime)
+                    chapterTable.column("createdAt", .text)
+                    chapterTable.column("updatedAt", .text)
                     chapterTable.column("largeThumbnailPath", .text)
                     chapterTable.column("smallThumbnailPath", .text)
                     chapterTable.column("categoryUuid", .text).references("book", onDelete: .cascade)
@@ -156,8 +156,8 @@ public final class DataStore {
                     gospelTable.column("presenterName", .text)
                     gospelTable.column("sourceMaterial", .text)
                     gospelTable.column("trackNumber", .integer)
-                    gospelTable.column("createdAt", .datetime)
-                    gospelTable.column("updatedAt", .datetime)
+                    gospelTable.column("createdAt", .text)
+                    gospelTable.column("updatedAt", .text)
                     gospelTable.column("largeThumbnailPath", .text)
                     gospelTable.column("smallThumbnailPath", .text)
                     gospelTable.column("categoryUuid", .text).references("gospel", onDelete: .cascade)
@@ -191,8 +191,8 @@ public final class DataStore {
                     musicTable.column("presenterName", .text)
                     musicTable.column("sourceMaterial", .text)
                     musicTable.column("trackNumber", .integer)
-                    musicTable.column("createdAt", .datetime)
-                    musicTable.column("updatedAt", .datetime)
+                    musicTable.column("createdAt", .text)
+                    musicTable.column("updatedAt", .text)
                     musicTable.column("largeThumbnailPath", .text)
                     musicTable.column("smallThumbnailPath", .text)
                     musicTable.column("categoryUuid", .text).references("music", onDelete: .cascade)
@@ -509,15 +509,8 @@ extension DataStore: DataStoring {
                                                             createdAt: chapter.createdAt,
                                                             updatedAt: chapter.updatedAt,
                                                             largeThumbnailPath: chapter.largeThumbnailPath,
-                                                            smallThumbnailPath: chapter.smallThumbnailPath)
-
-                            /*
- public var trackNumber: Int64?
- public var createdAt: Date?
- public var updatedAt: Date?
- public var largeThumbnailPath: String?
- public var smallThumbnailPath: String?
-*/
+                                                            smallThumbnailPath: chapter.smallThumbnailPath
+                            )
                             try mediaChapter.insert(db)
                         }
                     }
@@ -593,7 +586,8 @@ extension DataStore: DataStoring {
                                                           createdAt: media.createdAt,
                                                           updatedAt: media.updatedAt,
                                                           largeThumbnailPath: media.largeThumbnailPath,
-                                                          smallThumbnailPath: media.smallThumbnailPath)
+                                                          smallThumbnailPath: media.smallThumbnailPath
+                            )
                             try mediaGospel.insert(db)
                         }
                     }
@@ -666,7 +660,8 @@ extension DataStore: DataStoring {
                                                         createdAt: media.createdAt,
                                                         updatedAt: media.updatedAt,
                                                         largeThumbnailPath: media.largeThumbnailPath,
-                                                        smallThumbnailPath: media.smallThumbnailPath)
+                                                        smallThumbnailPath: media.smallThumbnailPath
+                            )
                             try mediaMusic.insert(db)
                         }
                     }
@@ -703,8 +698,8 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
-                    if let _ = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
-                        try MediaGospel.filter(Column("categoryUuid") == categoryUuid).deleteAll(db)
+                    if let _ = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
+                        try MediaMusic.filter(Column("categoryUuid") == categoryUuid).deleteAll(db)
                     }
                     return .commit
                 }

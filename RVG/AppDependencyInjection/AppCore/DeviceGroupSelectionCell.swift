@@ -7,7 +7,8 @@ final class DeviceGroupSelectionCell: UICollectionViewCell {
     @IBOutlet private weak var iconImageView: UIImageView!
     @IBOutlet private weak var groupSelectionLabel: UILabel!
     @IBOutlet private weak var separatorView: UIView!
-    
+    @IBOutlet private weak var chevronImageView: UIImageView!
+
     private lazy var widthConstraint: NSLayoutConstraint? = { [unowned self] in
         self.contentView.widthAnchor.constraint(equalToConstant: 0)
     }()
@@ -30,10 +31,11 @@ final class DeviceGroupSelectionCell: UICollectionViewCell {
     
     // MARK: Public
     
-    public func populate(iconName: String, label: String, showBottomSeparator: Bool) {
+    public func populate(iconName: String, label: String, showBottomSeparator: Bool, showChevron: Bool = true) {
         iconImageView.image = UIImage.uiAsset(name: iconName)
         groupSelectionLabel.text = label
         separatorView.isHidden = !showBottomSeparator
+        chevronImageView.isHidden = !showChevron
     }
     
     public func setWidth(_ width: CGFloat) {

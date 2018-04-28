@@ -27,3 +27,12 @@ extension ModuleInfo {
     }
 }
 
+struct PopupSettings {
+    static let BarStyle = "PopupSettingsBarStyle"
+    static let InteractionStyle = "PopupSettingsInteractionStyle"
+    static let ProgressViewStyle = "PopupSettingsProgressViewStyle"
+    static let CloseButtonStyle = "PopupSettingsCloseButtonStyle"
+    static let MarqueeStyle = "PopupSettingsMarqueeStyle"
+    static let EnableCustomizations = "PopupSettingsEnableCustomizations"
+
+}

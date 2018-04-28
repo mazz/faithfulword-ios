@@ -8,6 +8,7 @@ import L10n_swift
 import RxSwift
 import Fabric
 import Crashlytics
+import LNPopupController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
@@ -19,7 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
         }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+
+        LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).marqueeScrollEnabled = true
+
         UINavigationBar.appearance().tintColor = UIColor.black
         
         appCoordinator.flow(with: { initialViewController in

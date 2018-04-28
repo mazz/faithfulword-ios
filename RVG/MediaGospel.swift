@@ -24,8 +24,8 @@ public struct MediaGospel: Codable, Playable {
     public var sourceMaterial: String?
     public var categoryUuid: String?
     public var trackNumber: Int64?
-    public var createdAt: Date?
-    public var updatedAt: Date?
+    public var createdAt: String?
+    public var updatedAt: String?
     public var largeThumbnailPath: String?
     public var smallThumbnailPath: String?
 }
@@ -41,6 +41,10 @@ extension MediaGospel {
         static let sourceMaterial = Column("sourceMaterial")
         static let categoryUuid = Column("categoryUuid")
         static let trackNumber = Column("trackNumber")
+        static let createdAt = Column("createdAt")
+        static let updatedAt = Column("updatedAt")
+        static let largeThumbnailPath = Column("largeThumbnailPath")
+        static let smallThumbnailPath = Column("smallThumbnailPath")
     }
 }
 
