@@ -59,9 +59,9 @@ class DemoMusicPlayerController: UIViewController {
             if isViewLoaded {
                 albumNameLabel.text = albumTitle
             }
-            if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
+//            if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
                 popupItem.subtitle = albumTitle
-            }
+//            }
         }
     }
     var albumArt: UIImage = UIImage() {
@@ -83,11 +83,15 @@ class DemoMusicPlayerController: UIViewController {
 
         popupItem.title = songTitle
         popupItem.subtitle = albumTitle
+
+//        timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
     }
 
     @objc func _timerTicked(_ timer: Timer) {
         popupItem.progress += 0.0002;
         popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
+
+
 
         let totalTime = TimeInterval(250)
         popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"

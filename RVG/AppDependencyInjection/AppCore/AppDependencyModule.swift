@@ -92,7 +92,6 @@ internal final class AppDependencyModule {
             AppInfoProvider()
         }
 
-
         container.register(AppCoordinator.self) { resolver in
             AppCoordinator(
                 uiFactory: resolver.resolve(AppUIMaking.self)!,
@@ -144,8 +143,16 @@ internal final class AppDependencyModule {
 
 
     private static func attachMainFlowDependencies(to container: Container) {
+        container.register(PlaybackCoordinator.self) { resolver in
+            PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
+        }
+
         container.register(MediaListingCoordinator.self) { resolver in
-            MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
+            MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+                                    resettablePlaybackCoordinator: Resettable {
+                                        resolver.resolve(PlaybackCoordinator.self)!
+                }
+            )
         }
 
         container.register(CategoryListingCoordinator.self) { resolver in

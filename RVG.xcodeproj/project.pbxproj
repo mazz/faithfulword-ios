@@ -16,6 +16,7 @@
 		4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */; };
 		4C21A72E20201148000F02CE /* SideMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C21A72D20201148000F02CE /* SideMenu.storyboard */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
+		4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
 		4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */; };
 		4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FB20201942008E76E8 /* SideMenuViewController.swift */; };
@@ -185,6 +186,7 @@
 		4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCoordinator.swift; sourceTree = "<group>"; };
 		4C21A72D20201148000F02CE /* SideMenu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SideMenu.storyboard; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
+		4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceGroupSelectionCell.swift; sourceTree = "<group>"; };
 		4C3998FB20201942008E76E8 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -550,6 +552,7 @@
 				4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */,
 				4C381D8D200839A100FD2DEA /* MainViewController.swift */,
 				4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */,
+				4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */,
 				4C7D546C2013DB210038B265 /* MediaListingViewController.swift */,
 				4C3EA13D206B265100310024 /* PlaybackViewController.swift */,
 				4C958E9C2090242000A71C59 /* DemoMusicPlayerController.swift */,
@@ -1183,6 +1186,7 @@
 				4C3EA137206A71D200310024 /* DeviceNowPlayingBarView.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
+				4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */,
 				4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */,
 				68F0F3F91F11EC1B00718AFF /* MediaMusic.swift in Sources */,
 				4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */,
@@ -1366,7 +1370,7 @@
 				);
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = allscripture20;
+				PRODUCT_BUNDLE_IDENTIFIER = fwsaved;
 				PRODUCT_NAME = "Faithful Word";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1394,7 +1398,7 @@
 				);
 				INFOPLIST_FILE = RVG/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = allscripture20;
+				PRODUCT_BUNDLE_IDENTIFIER = fwsaved;
 				PRODUCT_NAME = "Faithful Word";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -9,8 +9,8 @@ public enum SplashAnimationState {
 public final class SplashScreenViewController: UIViewController {
     private (set) public var animationState: SplashAnimationState = .initialized
     private var shouldEndPulsingAnimation: Bool = false
-    public var pulseLogoDuration: TimeInterval = 1.0
-    public var fadeOutDuration: TimeInterval = 1.0
+    public var pulseLogoDuration: TimeInterval = 0.5
+    public var fadeOutDuration: TimeInterval = 0.2
 
     private static let fullAlpha: CGFloat  = 1.0
     private static let lowestAlpha: CGFloat = 0.0

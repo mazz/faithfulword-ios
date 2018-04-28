@@ -328,7 +328,7 @@ extension MainCoordinator {
                 case .aboutUs:
                     print(".aboutUs")
                     self.goToExternalWebBrowser(url: NSURL(
-                        string: "http://faithfulwordbaptist.org/")!
+                        string: "https://www.faithfulwordapp.com/")!
                         as URL)
                 case .share:
                     print(".share")
@@ -339,12 +339,12 @@ extension MainCoordinator {
                 case .donate:
                     print(".donate")
                     self.goToExternalWebBrowser(url: NSURL(
-                        string: "http://faithfulwordbaptist.org/donate.html")!
+                        string: "https://www.faithfulwordapp.com/donate/")!
                         as URL)
                 case .privacyPolicy:
                     print(".privacyPolicy")
                     self.goToExternalWebBrowser(url: NSURL(
-                        string: "http://faithfulwordbaptist.org/privacy.html")!
+                        string: "https://www.faithfulwordapp.com/privacy-policy/")!
                         as URL)
                 case .contactUs:
                     print(".contactUs")
