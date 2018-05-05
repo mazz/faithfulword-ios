@@ -143,13 +143,13 @@ internal final class AppDependencyModule {
     }
 
     private static func attachAssetPlaybackDependencies(to container: Container) {
-        container.register(AssetPlaybackManager.self) { resolver in
-            AssetPlaybackManager()
-        }
-
-        container.register(RemoteCommandManager.self) { resolver in
-            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
-        }
+//        container.register(AssetPlaybackManager.self) { resolver in
+//            AssetPlaybackManager()
+//        }
+//
+//        container.register(RemoteCommandManager.self) { resolver in
+//            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
+//        }
 
         container.register(PlaybackCoordinator.self) { resolver in
             PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
