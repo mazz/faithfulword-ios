@@ -68,6 +68,7 @@ internal final class AppDependencyModule {
         attachAppLevelDependencies(to: container)
         attachSideMenuFlowDependencies(to: container)
         //        attachInitialFlowDependencies(to: container)
+        attachAssetPlaybackDependencies(to: container)
         attachMainFlowDependencies(to: container)
         attachSplashScreenFlowDependencies(to: container)
         //        attachSettingsFlowDependencies(to: container)
@@ -141,11 +142,21 @@ internal final class AppDependencyModule {
         }
     }
 
+    private static func attachAssetPlaybackDependencies(to container: Container) {
+        container.register(AssetPlaybackManager.self) { resolver in
+            AssetPlaybackManager()
+        }
 
-    private static func attachMainFlowDependencies(to container: Container) {
+        container.register(RemoteCommandManager.self) { resolver in
+            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
+        }
+
         container.register(PlaybackCoordinator.self) { resolver in
             PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
         }
+    }
+
+    private static func attachMainFlowDependencies(to container: Container) {
 
         container.register(MediaListingCoordinator.self) { resolver in
             MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,

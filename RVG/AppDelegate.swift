@@ -34,7 +34,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 
         Fabric.with([Crashlytics.self])
 
+        setupAudioSession()
+
         return true
+    }
+
+    private func setupAudioSession() {
+        // Setup AVAudioSession to indicate to the system you how intend to play audio.
+        let audioSession = AVAudioSession.sharedInstance()
+
+        do {
+            try audioSession.setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeDefault)
+        }
+        catch {
+            print("An error occured setting the audio session category: \(error)")
+        }
+
+        // Set the AVAudioSession as active.  This is required so that your application becomes the "Now Playing" app.
+        do {
+            try audioSession.setActive(true, with: [])
+        }
+        catch {
+            print("An Error occured activating the audio session: \(error)")
+        }
     }
 
     // Called when APNs has assigned the device a unique token
