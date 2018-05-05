@@ -276,7 +276,7 @@ extension DataService: ProductDataServicing {
             .map { response -> BookResponse in try! response.map(BookResponse.self) }
             .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
             .flatMap { [unowned self] in self.replacePersistedBooks($0) }
-            .do(onSuccess: { products in
+            .do(onSuccess: { [unowned self] products in
                 self._books.value = products
                 //            self._persistedBooks.value = products
             })
