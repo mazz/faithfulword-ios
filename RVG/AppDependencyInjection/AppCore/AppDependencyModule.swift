@@ -150,6 +150,17 @@ internal final class AppDependencyModule {
 //        container.register(RemoteCommandManager.self) { resolver in
 //            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
 //        }
+        container.register(DemoMusicPlayerViewModel.self) { resolver in
+            DemoMusicPlayerViewModel()
+        }.inObjectScope(.transient)
+
+        container.register(AssetPlaybackService.self) { resolver in
+            AssetPlaybackService()
+        }
+
+        container.register(RemoteCommandService.self) { resolver in
+            RemoteCommandService(assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!)
+        }
 
         container.register(PlaybackCoordinator.self) { resolver in
             PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
@@ -215,7 +226,8 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService: resolver.resolve(LanguageServicing.self)!
             )
-        }
+        }.inObjectScope(.transient)
+
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaType in
             MediaListingViewModel(
                 playlistId: playlistId,
@@ -236,7 +248,7 @@ internal final class AppDependencyModule {
                 languageService:
                 resolver.resolve(LanguageServicing.self)!
             )
-        }
+        }.inObjectScope(.transient)
     }
 
     private static func attachSplashScreenFlowDependencies(to container: Container) {

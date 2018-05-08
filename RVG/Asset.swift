@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 
-struct Asset {
+public struct Asset {
     
     // MARK: Types
     static let nameKey = "AssetName"
@@ -22,3 +22,25 @@ struct Asset {
     /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
     let urlAsset: AVURLAsset
 }
+
+/*
+ public class Asset {
+
+    // MARK: Types
+    static let nameKey = "AssetName"
+
+    // MARK: Properties
+
+    /// The name of the asset to present in the application.
+    var assetName: String
+
+    /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
+    var urlAsset: AVURLAsset
+
+    init(assetName: String, urlAsset: AVURLAsset) {
+        self.assetName = assetName
+        self.urlAsset = urlAsset
+    }
+}
+*/
+

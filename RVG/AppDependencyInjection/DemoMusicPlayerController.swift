@@ -20,7 +20,7 @@ class DemoMusicPlayerController: UIViewController {
 
     let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 
-    var pauseButton: UIBarButtonItem!
+    var playPauseButton: UIBarButtonItem!
     var nextButton: UIBarButtonItem!
 
     var assets = [Asset]()
@@ -29,8 +29,8 @@ class DemoMusicPlayerController: UIViewController {
     // MARK: Fields
 
     public var viewModel: DemoMusicPlayerViewModel!
-//    public var remoteCommandManager: RemoteCommandManager!
-//    public var assetPlaybackManager: AssetPlaybackManager!
+    public var remoteCommandService: RemoteCommandService!
+    public var assetPlaybackService: AssetPlaybackService!
 //    var assetPlaybackManager: AssetPlaybackManager! {
 //        didSet {
 //            // Add the Key-Value Observers needed to keep the UI up to date.
@@ -102,12 +102,12 @@ class DemoMusicPlayerController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        pauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.doPlayPause))
-        pauseButton.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-        nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.nextFwd))
+        playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.doPlayPause))
+        playPauseButton.accessibilityLabel = NSLocalizedString("Pause", comment: "")
+        nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.doNextTrack))
         nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 
-        popupItem.rightBarButtonItems = [ pauseButton, nextButton ]
+        popupItem.rightBarButtonItems = [ playPauseButton, nextButton ]
 
     }
 
@@ -123,7 +123,7 @@ class DemoMusicPlayerController: UIViewController {
 
 //        timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 
-//        remoteCommandManager.activatePlaybackCommands(true)
+        remoteCommandService.activatePlaybackCommands(true)
 
         // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
 //        let notificationCenter = NotificationCenter.default
@@ -265,14 +265,14 @@ class DemoMusicPlayerController: UIViewController {
     }
 
     @objc func doPlayPause() {
-//        assetPlaybackManager.asset = assets[0]
+        assetPlaybackService.asset = assets[0]
 //    assetPlaybackManager.asset = Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))
-//        assetPlaybackManager.togglePlayPause()
+        assetPlaybackService.togglePlayPause()
 //        print("doPlayPause assetPlaybackManager.asset: \(assetPlaybackManager.asset)")
 
     }
 
-    @objc func nextFwd() {
+    @objc func doNextTrack() {
 
     }
 
