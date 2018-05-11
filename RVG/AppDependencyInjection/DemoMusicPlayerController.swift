@@ -123,7 +123,7 @@ class DemoMusicPlayerController: UIViewController {
 
 //        timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 
-        remoteCommandService.activatePlaybackCommands(true)
+//        remoteCommandService.activatePlaybackCommands(true)
 
         // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
 //        let notificationCenter = NotificationCenter.default
@@ -265,9 +265,11 @@ class DemoMusicPlayerController: UIViewController {
     }
 
     @objc func doPlayPause() {
-        assetPlaybackService.asset = assets[0]
+//        assetPlaybackService.asset = assets[0]
+//         viewModel.playerItem.value = AVPlayerItem(url: URL(string: "https://i.imgur.com/9rGrj10.mp4")!)
+        viewModel.urlAsset.value = AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!)
 //    assetPlaybackManager.asset = Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))
-        assetPlaybackService.togglePlayPause()
+//        assetPlaybackService.togglePlayPause()
 //        print("doPlayPause assetPlaybackManager.asset: \(assetPlaybackManager.asset)")
 
     }

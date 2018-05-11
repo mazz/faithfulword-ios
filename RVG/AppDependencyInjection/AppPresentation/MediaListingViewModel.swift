@@ -16,13 +16,29 @@ internal final class MediaListingViewModel {
     public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
 
+    public private(set) var playableItem = Field<Playable?>(nil)
+
     public var drillInEvent: Observable<MediaListingDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
-        return self.selectItemEvent.filterMap { [unowned self] indexPath -> MediaListingDrillInType? in
-            let section = self.sections.value[indexPath.section]
-            let item = section.items[indexPath.item]
+        return self.selectItemEvent
+            .do(onNext: { [weak self] indexPath in
+                let section = self?.sections.value[indexPath.section]
+                let item = section?.items[indexPath.item]
+                print("item: \(item)")
+                if case .drillIn(let type, _, _, _)? = item {
+                    switch type {
+                    case .playable(let item):
+                        print("item: \(item)")
+                        self?.assetPlaybackService.playableItem.value = item
+                    }
+                }
+
+            })
+            .filterMap { [weak self] indexPath -> MediaListingDrillInType? in
+                let section = self?.sections.value[indexPath.section]
+                let item = section?.items[indexPath.item]
             // Don't emit an event for anything that is not a 'drillIn'
-            if case .drillIn(let type, _, _, _) = item {
+                if case .drillIn(let type, _, _, _)? = item {
                 return type
             }
             return nil
@@ -33,14 +49,17 @@ internal final class MediaListingViewModel {
     private let playlistId: String!
     private let mediaType: MediaType!
     private let productService: ProductServicing!
+    private let assetPlaybackService: AssetPlaybackService!
     private let bag = DisposeBag()
 
     internal init(playlistId: String,
                   mediaType: MediaType,
-                  productService: ProductServicing) {
+                  productService: ProductServicing,
+                  assetPlaybackService: AssetPlaybackService) {
         self.playlistId = playlistId
         self.mediaType = mediaType
         self.productService = productService
+        self.assetPlaybackService = assetPlaybackService
 
         setupDatasource()
     }

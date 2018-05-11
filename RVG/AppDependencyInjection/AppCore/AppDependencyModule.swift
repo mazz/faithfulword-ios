@@ -150,13 +150,15 @@ internal final class AppDependencyModule {
 //        container.register(RemoteCommandManager.self) { resolver in
 //            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
 //        }
-        container.register(DemoMusicPlayerViewModel.self) { resolver in
-            DemoMusicPlayerViewModel()
-        }.inObjectScope(.transient)
-
         container.register(AssetPlaybackService.self) { resolver in
             AssetPlaybackService()
         }
+        
+        container.register(DemoMusicPlayerViewModel.self) { resolver in
+            DemoMusicPlayerViewModel(
+//                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
+            )
+        }.inObjectScope(.transient)
 
         container.register(RemoteCommandService.self) { resolver in
             RemoteCommandService(assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!)
@@ -232,7 +234,8 @@ internal final class AppDependencyModule {
             MediaListingViewModel(
                 playlistId: playlistId,
                 mediaType: mediaType,
-                productService: resolver.resolve(ProductServicing.self)!
+                productService: resolver.resolve(ProductServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
             )
             }.inObjectScope(.transient)
         container.register(CategoryListingViewModel.self) { resolver, categoryType in

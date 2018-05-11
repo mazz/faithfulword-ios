@@ -45,8 +45,8 @@ extension UIFactory: AppUIMaking {
     func makePopupPlayer() -> DemoMusicPlayerController {
         let demoMusicPlayerController = DemoMusicPlayerController.make(storyboardName: StoryboardName.popupPlayer)
         demoMusicPlayerController.viewModel = resolver.resolve(DemoMusicPlayerViewModel.self)
-        demoMusicPlayerController.remoteCommandService = resolver.resolve(RemoteCommandService.self)
-        demoMusicPlayerController.assetPlaybackService = resolver.resolve(AssetPlaybackService.self)
+//        demoMusicPlayerController.remoteCommandService = resolver.resolve(RemoteCommandService.self)
+//        demoMusicPlayerController.assetPlaybackService = resolver.resolve(AssetPlaybackService.self)
         return demoMusicPlayerController
     }
 

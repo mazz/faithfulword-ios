@@ -14,6 +14,7 @@
 		4C1F0006209D6F3800938C30 /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0005209D6F3800938C30 /* Asset.swift */; };
 		4C1F000B209FB95E00938C30 /* AssetPlaybackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */; };
 		4C1F000D209FC9B800938C30 /* RemoteCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F000C209FC9B800938C30 /* RemoteCommandService.swift */; };
+		4C1F001420A3668400938C30 /* AVURLAsset+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F001320A3668400938C30 /* AVURLAsset+Rx.swift */; };
 		4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */; };
 		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
 		4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */; };
@@ -33,6 +34,7 @@
 		4C3EA13A206A720D00310024 /* Playback.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C3EA139206A720D00310024 /* Playback.storyboard */; };
 		4C3EA13C206B24A000310024 /* DeviceNowPlayingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3EA13B206B249F00310024 /* DeviceNowPlayingViewModel.swift */; };
 		4C3EA13E206B265100310024 /* PlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3EA13D206B265100310024 /* PlaybackViewController.swift */; };
+		4C5D60F720A51A5E00ED9958 /* 1sec.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4C5D60F620A51A5D00ED9958 /* 1sec.m4a */; };
 		4C5FAD5F2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */; };
 		4C5FAD612031D5B400397BFF /* BibleLanguageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */; };
 		4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD682035258E00397BFF /* LanguageService.swift */; };
@@ -189,6 +191,7 @@
 		4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandManager.swift; sourceTree = "<group>"; };
 		4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPlaybackService.swift; sourceTree = "<group>"; };
 		4C1F000C209FC9B800938C30 /* RemoteCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandService.swift; sourceTree = "<group>"; };
+		4C1F001320A3668400938C30 /* AVURLAsset+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVURLAsset+Rx.swift"; sourceTree = "<group>"; };
 		4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
 		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
 		4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCoordinator.swift; sourceTree = "<group>"; };
@@ -208,6 +211,7 @@
 		4C3EA139206A720D00310024 /* Playback.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Playback.storyboard; sourceTree = "<group>"; };
 		4C3EA13B206B249F00310024 /* DeviceNowPlayingViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceNowPlayingViewModel.swift; sourceTree = "<group>"; };
 		4C3EA13D206B265100310024 /* PlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackViewController.swift; sourceTree = "<group>"; };
+		4C5D60F620A51A5D00ED9958 /* 1sec.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1sec.m4a; sourceTree = "<group>"; };
 		4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MainCoordinator+SideMenuHandling.swift"; path = "AppPresentation/MainCoordinator+SideMenuHandling.swift"; sourceTree = "<group>"; };
 		4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageCoordinator.swift; sourceTree = "<group>"; };
 		4C5FAD682035258E00397BFF /* LanguageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageService.swift; sourceTree = "<group>"; };
@@ -429,6 +433,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4C1F001020A3660000938C30 /* reactive-extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4C1F001320A3668400938C30 /* AVURLAsset+Rx.swift */,
+			);
+			path = "reactive-extensions";
+			sourceTree = "<group>";
+		};
 		4C21A72520161B00000F02CE /* AppPresentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -506,6 +518,7 @@
 		4C21A72820161B3E000F02CE /* AppUtilities */ = {
 			isa = PBXGroup;
 			children = (
+				4C1F001020A3660000938C30 /* reactive-extensions */,
 				4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */,
 				4CCE8C9B1FF55DD600AFBAF2 /* Field.swift */,
 				4CCE8C8A1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift */,
@@ -630,6 +643,7 @@
 			isa = PBXGroup;
 			children = (
 				684C50271F80B51900E243BB /* KJVRVG.entitlements */,
+				4C5D60F620A51A5D00ED9958 /* 1sec.m4a */,
 				70CD20601E6479A800AF619F /* RVG */,
 				70CD20751E6479A800AF619F /* RVGTests */,
 				70CD20801E6479A800AF619F /* RVGUITests */,
@@ -931,6 +945,7 @@
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
 				70CD20671E6479A800AF619F /* Main.storyboard in Resources */,
+				4C5D60F720A51A5E00ED9958 /* 1sec.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -956,6 +971,7 @@
 				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxAVFoundation/RxAVFoundation.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxGRDB/RxGRDB.framework",
@@ -977,6 +993,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAVFoundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGRDB.framework",
@@ -1075,6 +1092,7 @@
 			files = (
 				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
 				4C8EE8C41FF6010F003F483A /* DataService.swift in Sources */,
+				4C1F001420A3668400938C30 /* AVURLAsset+Rx.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
 				4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */,

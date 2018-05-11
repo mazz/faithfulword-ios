@@ -23,5 +23,5 @@ target 'FaithfulWord' do
     pod 'AlamofireImage'
     pod 'Fabric'
     pod 'Crashlytics'
-
+    pod 'RxAVFoundation'
 end

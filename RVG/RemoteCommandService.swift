@@ -46,7 +46,7 @@ public final class RemoteCommandService: NSObject {
         ) {
         self.assetPlaybackService = assetPlaybackService
     }
-
+/*
     deinit {
         activatePlaybackCommands(false)
 //        toggleNextTrackCommand(false)
@@ -60,7 +60,8 @@ public final class RemoteCommandService: NSObject {
 //        toggleDislikeCommand(false)
 //        toggleBookmarkCommand(false)
     }
-
+*/
+    /*
     func activatePlaybackCommands(_ enable: Bool) {
         if enable {
             remoteCommandCenter.playCommand.addTarget(self, action: #selector(RemoteCommandService.handlePlayCommandEvent(_:)))
@@ -81,6 +82,8 @@ public final class RemoteCommandService: NSObject {
         remoteCommandCenter.stopCommand.isEnabled = enable
         remoteCommandCenter.togglePlayPauseCommand.isEnabled = enable
     }
+*/
+
 //
 //    func toggleNextTrackCommand(_ enable: Bool) {
 //        if enable {
@@ -93,6 +96,8 @@ public final class RemoteCommandService: NSObject {
 //        remoteCommandCenter.nextTrackCommand.isEnabled = enable
 //    }
 //
+
+    /*
     func togglePreviousTrackCommand(_ enable: Bool) {
         if enable {
             remoteCommandCenter.previousTrackCommand.addTarget(self, action: #selector(RemoteCommandService.handlePreviousTrackCommandEvent(event:)))
@@ -103,6 +108,9 @@ public final class RemoteCommandService: NSObject {
 
         remoteCommandCenter.previousTrackCommand.isEnabled = enable
     }
+
+
+ */
 //
 //    func toggleSkipForwardCommand(_ enable: Bool, interval: Int = 0) {
 //        if enable {
@@ -198,6 +206,8 @@ public final class RemoteCommandService: NSObject {
 //    // MARK: MPRemoteCommand handler methods.
 //
 //    // MARK: Playback Command Handlers
+
+    /*
     @objc func handlePauseCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         assetPlaybackService.pause()
 
@@ -222,6 +232,8 @@ public final class RemoteCommandService: NSObject {
         return .success
     }
 
+*/
+
 //    // MARK: Track Changing Command Handlers
 //    @objc func handleNextTrackCommandEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
 //        if assetPlaybackService.asset != nil {
@@ -234,6 +246,7 @@ public final class RemoteCommandService: NSObject {
 //        }
 //    }
 //
+    /*
     @objc func handlePreviousTrackCommandEvent(event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus {
         if assetPlaybackService.asset != nil {
             assetPlaybackService.previousTrack()
@@ -244,6 +257,8 @@ public final class RemoteCommandService: NSObject {
             return .noSuchContent
         }
     }
+
+ */
 //
 //    // MARK: Skip Interval Command Handlers
 //    @objc func handleSkipForwardCommandEvent(event: MPSkipIntervalCommandEvent) -> MPRemoteCommandHandlerStatus {

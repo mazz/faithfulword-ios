@@ -2,17 +2,18 @@ import Foundation
 import RxSwift
 import AVFoundation
 import MediaPlayer
+import RxAVFoundation
 
 public protocol AssetPlaybackServicing {
 
-    var player: AVPlayer { get }
+//    var playerItem: Observable<AVPlayerItem?> { get }
+//    var player: AVPlayer { get }
 //    var asset: Asset? { get }
-//    var asset: Field<Asset?> { get }
 
-    func play()
-    func togglePlayPause()
-    func stop()
-    func pause()
+//    func play()
+//    func togglePlayPause()
+//    func stop()
+//    func pause()
 
 //    var asset: Asset { get }
 
@@ -37,6 +38,17 @@ public protocol AssetPlaybackServicing {
 /// Manages all account related things
 public final class AssetPlaybackService: NSObject {
 
+    public var playableItem = Field<Playable?>(nil)
+
+//    private var playerItem = Field<AVPlayerItem?>(nil)
+    private var playerItem: AVPlayerItem? = nil
+    let player = AVPlayer()
+//    private var urlAsset = Field<AVURLAsset?>(nil)
+    private var urlAsset: AVURLAsset? = nil
+
+    private let bag = DisposeBag()
+
+/*
     /// Notification that is posted when the `nextTrack()` is called.
     static let nextTrackNotification = Notification.Name("nextTrackNotification")
 
@@ -123,15 +135,15 @@ public final class AssetPlaybackService: NSObject {
             NotificationCenter.default.post(name: AssetPlaybackService.currentAssetDidChangeNotification, object: nil)
         }
     }
-
-//    private let bag = DisposeBag()
+*/
 
     // MARK: Dependencies
 
     public override init(
         ) {
         super.init()
-
+        bindToMedia()
+/*
         NotificationCenter.default.addObserver(self, selector: #selector(AssetPlaybackService.handleAudioSessionInterruption(notification:)), name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
 
         // Add the Key-Value Observers needed to keep internal state of `AssetPlaybackManager` and `MPNowPlayingInfoCenter` in sync.
@@ -148,35 +160,69 @@ public final class AssetPlaybackService: NSObject {
             self?.playbackPosition = timeElapsed
             self?.percentProgress = timeElapsed / durationInSecods
         })
+ */
     }
 
-    deinit {
-        // Remove all KVO and notification observers.
+//    deinit {
+//        // Remove all KVO and notification observers.
+//
+//        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+//
+//        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem), context: nil)
+//        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.rate), context: nil)
+//
+//        // Remove the periodic time observer.
+//        if let timeObserverToken = timeObserverToken {
+//            player.removeTimeObserver(timeObserverToken)
+//            self.timeObserverToken = nil
+//        }
+//
+//    }
 
-        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+    func bindToMedia() {
+        self.playableItem.asObservable()
+            .filterNils()
+            .subscribe(onNext: { [weak self] playable in
+                if let path = playable.path,
+                    let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
+                {
+                    print("playable set in asset playback service: \(playable)")
+                    self?.urlAsset = AVURLAsset(url: url)
+                    print("self.urlAsset.value set in asset playback service: \(self?.urlAsset)")
 
-        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem), context: nil)
-        player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.rate), context: nil)
+                    self?.urlAsset?.rx.isPlayable
+                        .filter { $0 == true }
+                        .subscribe(onNext: { state in
+                            print("self.urlAsset.isPlayable: \(self?.urlAsset?.isPlayable)")
+                            self?.playerItem = AVPlayerItem(asset: (self?.urlAsset)!, automaticallyLoadedAssetKeys: [
+                                "tracks",
+                                "duration",
+                                "commonMetadata",
+                                "availableMediaCharacteristicsWithMediaSelectionOptions"])
+                            self?.player.replaceCurrentItem(with: self?.playerItem!)
+                        }).disposed(by: (self?.bag)!)
+                } else {
+                    print("error: the playable item has no url path")
+                }
+            }).disposed(by: self.bag)
 
-        // Remove the periodic time observer.
-        if let timeObserverToken = timeObserverToken {
-            player.removeTimeObserver(timeObserverToken)
-            self.timeObserverToken = nil
-        }
+        self.player.rx.status
+            .filter { $0 == .readyToPlay }
+            .subscribe(onNext: { [weak self] status in
+                print("item ready to play")
+                let asset = self?.player.currentItem?.asset as! AVURLAsset
+                print("url: \(asset.url)")
+                self?.player.play()
+            }).disposed(by: self.bag)
+
+        // TODO: bind to changes on self.urlAsset
+        // in the subscribe update the AVPlayerItem
+        // maybe have a separate playerItem dispose bag so to stop
+        // doing KVO we just clobber the playerItemDisposeBag(??)
+
     }
-
-    // MARK: Helpers
-
-    //    private func fetchAccountInfo() {
-    //        dataService.fetchAccountInfo().subscribe(onSuccess: { [unowned self] accountInfo in
-    //            print("Cached Login Flow - Retrieved Passport Account Info: \(accountInfo)")
-    //            self.currentUser?.accountInfo = accountInfo
-    //            self.authStateBehaviorSubject.onNext(.accountInfoRetrieved)
-    //        }).disposed(by: bag)
-    //    }
-
     // MARK: Notification Observing Methods
-
+/*
     @objc func handleAVPlayerItemDidPlayToEndTimeNotification(notification: Notification) {
         player.replaceCurrentItem(with: nil)
     }
@@ -211,9 +257,9 @@ public final class AssetPlaybackService: NSObject {
             }
         }
     }
-
+*/
     // MARK: Key-Value Observing Method
-
+/*
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(AVURLAsset.isPlayable) {
             if asset.urlAsset.isPlayable {
@@ -318,11 +364,17 @@ public final class AssetPlaybackService: NSObject {
         }
 
     }
-
+*/
 }
 
 extension AssetPlaybackService: AssetPlaybackServicing {
+//    public var player: AVPlayer = AVPlayer()
 
+//    public var playerItem: Observable<AVPlayerItem?> {
+//        return _playerItem.asObservable()
+//    }
+
+/*
     // MARK: Playback Control Methods.
 
     public func play() {
@@ -373,6 +425,6 @@ extension AssetPlaybackService: AssetPlaybackServicing {
 
         NotificationCenter.default.post(name: AssetPlaybackService.previousTrackNotification, object: nil, userInfo: [Asset.nameKey: asset.assetName])
     }
-
+*/
 
 }
