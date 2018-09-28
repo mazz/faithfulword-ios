@@ -37,9 +37,9 @@ public final class SplashScreenViewController: UIViewController {
     }
     
     public func remove() {
-        willMove(toParentViewController: nil)
+        willMove(toParent: nil)
         view.removeFromSuperview()
-        removeFromParentViewController()
+        removeFromParent()
     }
 
     public func animateText(_ timeout: TimeInterval = 7.0, completion: (() -> Void)?) {

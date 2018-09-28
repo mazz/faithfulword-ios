@@ -20,7 +20,7 @@ class GospelViewController_depr: BaseClass {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 40
         tableView.register(UINib(nibName: "ChapterTableViewCell", bundle: nil), forCellReuseIdentifier: "ChapterTableViewCellID")
         

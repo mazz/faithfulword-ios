@@ -92,9 +92,9 @@ class PlaybackService : NSObject {
     override init() {
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionInterruption(note:)), name:.AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
-        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionRouteChange(note:)), name:.AVAudioSessionRouteChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleMediaServicesReset), name:.AVAudioSessionMediaServicesWereReset, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionInterruption(note:)), name:AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionRouteChange(note:)), name:AVAudioSession.routeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleMediaServicesReset), name:AVAudioSession.mediaServicesWereResetNotification, object: AVAudioSession.sharedInstance())
     }
 
     class func sharedInstance() -> PlaybackService {
@@ -118,8 +118,8 @@ class PlaybackService : NSObject {
             self.itemEndObserver = nil
         }
         
-        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
-        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionMediaServicesWereReset, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.mediaServicesWereResetNotification, object: AVAudioSession.sharedInstance())
         
         self.currentPlayerItem?.removeObserver(self, forKeyPath: statusKeypath)
         self.currentPlayerItem = nil
@@ -171,11 +171,14 @@ class PlaybackService : NSObject {
                 // AVAudioSessionCategoryPlayback and .allowBluetooth combination will always throw an exception
                 // .allowBluetooth lower quality audio
                 // .allowBluetoothA2DP sounds great however
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback,
-                                                                with: [.allowBluetoothA2DP,
-                                                                       .duckOthers,
-                                                                       .defaultToSpeaker])
+//                try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback,
+//                                                                with: [.allowBluetoothA2DP,
+//                                                                       .duckOthers,
+//                                                                       .defaultToSpeaker])
 
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP,
+                                                                                                          .duckOthers,
+                                                                                                          .defaultToSpeaker])
 //                    .interruptSpokenAudioAndMixWithOthers,
 //                .duckOthers,
 
@@ -296,10 +299,11 @@ class PlaybackService : NSObject {
                     
                     // whenever we load a new track we should
                     // reset the playback position to kCMTimeZero
-                    DispatchQueue.main.async { [unowned self] in self.player?.seek(to: kCMTimeZero) }
+
+                    DispatchQueue.main.async { [unowned self] in self.player?.seek(to: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC))) }
                     
                     if let playbackDisplayDelegate = self.playbackDisplayDelegate {
-                        playbackDisplayDelegate.setCurrentTime(time: CMTimeGetSeconds(kCMTimeZero), duration: CMTimeGetSeconds(currentPlayerItem.duration))
+                        playbackDisplayDelegate.setCurrentTime(time: CMTimeGetSeconds(CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC))), duration: CMTimeGetSeconds(currentPlayerItem.duration))
 
                         playbackDisplayDelegate.setTitle(title: self.contentTitle(mediaIndex: self.mediaIndex!))
                         playbackDisplayDelegate.playbackReady()
@@ -333,7 +337,7 @@ class PlaybackService : NSObject {
     }
 
     func addPlayerItemTimeObserver() {
-        let interval : CMTime = CMTimeMakeWithSeconds(refreshInterval, Int32(NSEC_PER_SEC))
+        let interval : CMTime = CMTimeMakeWithSeconds(refreshInterval, preferredTimescale: Int32(NSEC_PER_SEC))
 
         timeObserverToken = self.player?.addPeriodicTimeObserver(forInterval: interval, queue: DispatchQueue.main, using: { [unowned self] time in
             if let displayDelegate = self.playbackDisplayDelegate {
@@ -367,7 +371,7 @@ class PlaybackService : NSObject {
                 
                 if playbackRepeat == true {
                     DispatchQueue.main.async { [unowned self] in
-                        self.player?.seek(to: kCMTimeZero)
+                        self.player?.seek(to: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)))
                         self.playbackDisplayDelegate?.playbackReady()
                     }
                 } else {
@@ -394,7 +398,7 @@ class PlaybackService : NSObject {
                         // assume we are at end of playerItem array
                         DispatchQueue.main.async {
                             [unowned self] in
-                            self.player?.seek(to: kCMTimeZero,
+                            self.player?.seek(to: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)),
                                               completionHandler: { (Bool) in
                                                 self.playbackDisplayDelegate?.playbackComplete()
                             })
@@ -600,7 +604,7 @@ extension PlaybackService : PlaybackTransportDelegate {
 
     func jumpedToTime(time: TimeInterval) {
         print("PlaybackTransportDelegate jumpedToTime: \(String(time))")
-        self.player?.seek(to: CMTimeMakeWithSeconds(time, Int32(NSEC_PER_SEC)))
+        self.player?.seek(to: CMTimeMakeWithSeconds(time, preferredTimescale: Int32(NSEC_PER_SEC)))
         //        self.player?.seek(to: CMTimeMakeWithSeconds(time, Int32(NSEC_PER_SEC)), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
         isPlaying = false
     }
@@ -618,7 +622,7 @@ extension PlaybackService : PlaybackTransportDelegate {
     func scrubbedToTime(time: TimeInterval) {
         print("PlaybackTransportDelegate scrubbedToTime: \(String(time))")
         self.currentPlayerItem?.cancelPendingSeeks()
-        self.player?.seek(to: CMTimeMakeWithSeconds(time, Int32(NSEC_PER_SEC)), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
+        self.player?.seek(to: CMTimeMakeWithSeconds(time, preferredTimescale: Int32(NSEC_PER_SEC)), toleranceBefore: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)), toleranceAfter: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)))
         self.playbackDisplayDelegate?.setCurrentTime(time: time, duration: CMTimeGetSeconds((self.currentPlayerItem?.duration)!))
         isPlaying = false
         

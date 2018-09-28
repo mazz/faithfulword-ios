@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
         self.dependencyModule.resolver.resolve(AppCoordinator.self)!
         }()
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).marqueeScrollEnabled = true
 
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
         let audioSession = AVAudioSession.sharedInstance()
 
         do {
-            try audioSession.setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeDefault)
+            try audioSession.setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default)
         }
         catch {
             print("An error occured setting the audio session category: \(error)")
@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 
         // Set the AVAudioSession as active.  This is required so that your application becomes the "Now Playing" app.
         do {
-            try audioSession.setActive(true, with: [])
+            try audioSession.setActive(true, options: [])
         }
         catch {
             print("An Error occured activating the audio session: \(error)")

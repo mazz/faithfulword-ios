@@ -7,7 +7,6 @@ target 'FaithfulWord' do
 
     pod 'RxCocoa'
     pod 'IQKeyboardManagerSwift'
-    pod 'ObjectMapper'
     pod 'MBProgressHUD', '~> 1.0.0'
     pod 'FirebaseInstanceID'
     pod 'Firebase/Core'

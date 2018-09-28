@@ -23,14 +23,14 @@ public class SlideOpenAnimationController: NSObject, UIViewControllerAnimatedTra
         UIViewPropertyAnimator.runningPropertyAnimator(withDuration: duration, delay: 0, options: .curveLinear, animations: {
             toView.alpha = 1
             toView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.8)
-            blurView.effect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+            blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
         }, completion: { _ in
             transitionContext.completeTransition(true)
         })
         
         containerView.addSubview(toView)
         toView.addSubview(blurView)
-        toView.sendSubview(toBack: blurView)
+        toView.sendSubviewToBack(blurView)
     }
 }
 

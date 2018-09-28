@@ -26,16 +26,16 @@ public extension UIViewController {
     public func embed(_ viewController: UIViewController,
                       in containerView: UIView,
                       withAnimation animation: AppAnimations.Animatable? = nil) {
-        addChildViewController(viewController)
+        addChild(viewController)
         viewController.view.frame = containerView.bounds
         containerView.addSubview(viewController.view)
         // Animation closure is called if animation argument is passed
         if let animation = animation {
             animation(viewController, {
-                viewController.didMove(toParentViewController: self)
+                viewController.didMove(toParent: self)
             })
         } else {
-            viewController.didMove(toParentViewController: self)
+            viewController.didMove(toParent: self)
         }
     }
     
@@ -60,9 +60,9 @@ public extension UIViewController {
     ///
     /// - Parameter viewController: The view-controller to be removed.
     public func remove(_ viewController: UIViewController) {
-        viewController.willMove(toParentViewController: nil)
+        viewController.willMove(toParent: nil)
         viewController.view.removeFromSuperview()
-        viewController.removeFromParentViewController()
+        viewController.removeFromParent()
     }
     
     /// Replaces an embedded view-controller with new view-controller and animation.

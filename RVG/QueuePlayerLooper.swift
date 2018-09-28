@@ -147,9 +147,9 @@ class QueuePlayerLooper : NSObject, Looper {
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if context == &ObserverContexts.playerStatus {
-            guard let newPlayerStatus = change?[.newKey] as? AVPlayerStatus else { return }
+            guard let newPlayerStatus = change?[.newKey] as? AVPlayer.Status else { return }
 
-            if newPlayerStatus == AVPlayerStatus.failed {
+            if newPlayerStatus == AVPlayer.Status.failed {
                 print("End looping since player has failed with error: \(player?.error)")
                 stop()
             }
@@ -179,7 +179,7 @@ class QueuePlayerLooper : NSObject, Looper {
                     of the queue.
                 */
                 if let itemRemoved = change?[.oldKey] as? AVPlayerItem {
-                    itemRemoved.seek(to: kCMTimeZero)
+                    itemRemoved.seek(to: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)))
 
                     stopObserving()
                     player.insert(itemRemoved, after: nil)
@@ -188,7 +188,7 @@ class QueuePlayerLooper : NSObject, Looper {
             }
         }
         else if context == &ObserverContexts.currentItemStatus {
-            guard let newPlayerItemStatus = change?[.newKey] as? AVPlayerItemStatus else { return }
+            guard let newPlayerItemStatus = change?[.newKey] as? AVPlayerItem.Status else { return }
 
             if newPlayerItemStatus == .failed {
                 print("End looping since player item has failed with error: \(player?.currentItem?.error)")

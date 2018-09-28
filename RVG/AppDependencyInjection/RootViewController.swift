@@ -25,10 +25,10 @@ final class RootViewController: UIViewController {
     ///
     /// - Parameter viewController: The view controller to be embeded.
     internal func plant(_ viewController: UIViewController, withAnimation animation: AppAnimations.Animatable? = nil) {
-        if let residualPresentedViewController = childViewControllers.first?.presentedViewController {
+        if let residualPresentedViewController = children.first?.presentedViewController {
             residualPresentedViewController.dismiss(animated: true, completion: nil)
         }
-        replace(childViewControllers.first, with: viewController, in: view, withAnimation: animation)
+        replace(children.first, with: viewController, in: view, withAnimation: animation)
     }
     
     

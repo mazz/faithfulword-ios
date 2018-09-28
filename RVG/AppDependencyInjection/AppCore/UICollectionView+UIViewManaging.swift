@@ -18,7 +18,7 @@ public extension UICollectionView {
     /// - Parameters headerViewType: Type of view to register as header
     public func registerUi<T: UICollectionReusableView>(headerViewType: T.Type) {
         register(T.nib(in: ModuleInfo.bundle),
-                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                  withReuseIdentifier: T.identifierName)
     }
     

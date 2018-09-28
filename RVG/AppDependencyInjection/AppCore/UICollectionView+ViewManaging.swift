@@ -38,7 +38,7 @@ public extension UICollectionView {
     ///   - bundle: Bundle to load nib from.  Defaults to main bundle.
     public func register<T: UICollectionReusableView>(headerViewType: T.Type, in bundle: Bundle = Bundle.main) {
         register(T.nib(in: bundle),
-                 forSupplementaryViewOfKind: UICollectionElementKindSectionHeader,
+                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                  withReuseIdentifier: T.identifierName)
     }
     
@@ -50,7 +50,7 @@ public extension UICollectionView {
     ///   - indexPath: Index path to dequeue for.
     public func dequeue<T: UICollectionReusableView>(headerViewType: T.Type, for indexPath: IndexPath) -> T {
         let identifier = T.identifierName
-        if let view = dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader,
+        if let view = dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                        withReuseIdentifier: identifier,
                                                        for: indexPath) as? T {
             return view

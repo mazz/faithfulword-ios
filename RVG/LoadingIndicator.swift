@@ -27,7 +27,7 @@ class LoadingIndicator : UIView {
     }
     
     func initilizeIndicator() -> UIActivityIndicatorView {
-        let indicator = UIActivityIndicatorView(activityIndicatorStyle : UIActivityIndicatorViewStyle.whiteLarge)
+        let indicator = UIActivityIndicatorView(style : UIActivityIndicatorView.Style.whiteLarge)
         indicator.layer.cornerRadius=indicator.bounds.width/2
 //        indicator.layer.borderWidth=1
 //        indicator.layer.borderColor=UIColor.white.cgColor

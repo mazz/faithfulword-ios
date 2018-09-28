@@ -42,8 +42,8 @@ class CommonMethodsClass {
     
     //show alert for only display information
     class func showSingleButtonAlertWithoutActionOnAppDelegate (title:String) {
-        let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     

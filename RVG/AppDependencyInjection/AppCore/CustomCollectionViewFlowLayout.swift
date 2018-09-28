@@ -19,7 +19,7 @@ public final class CustomCollectionViewFlowLayout: UICollectionViewFlowLayout {
                 sectionIndexPaths.append(IndexPath(item: 0, section: sectionIndex))
             }
         }
-        context.invalidateSupplementaryElements(ofKind: UICollectionElementKindSectionHeader, at: sectionIndexPaths)
+        context.invalidateSupplementaryElements(ofKind: UICollectionView.elementKindSectionHeader, at: sectionIndexPaths)
         return context
     }
 }

@@ -50,11 +50,11 @@ final class CategoryListingViewModel {
                 var icon: String = "feetprint"
 
                 switch self.categoryListingType {
-                case .gospel:
+                case .gospel?:
                     icon = "feetprint"
-                case .music:
+                case .music?:
                     icon = "disc_icon_white"
-                case .churches:
+                case .churches?:
                     icon = "preaching"
                 default:
                     icon = "feetprint"
@@ -69,19 +69,19 @@ final class CategoryListingViewModel {
             }.disposed(by: self.bag)
 
         switch self.categoryListingType {
-        case .gospel:
+        case .gospel?:
             self.productService.fetchCategoryListing(for: .gospel).subscribe(onSuccess: { listing in
                 self.categoryListing.value = listing
             }) { error in
                 print("fetchCategoryListing failed with error: \(error.localizedDescription)")
                 }.disposed(by: self.bag)
-        case .music:
+        case .music?:
             self.productService.fetchCategoryListing(for: .music).subscribe(onSuccess: { listing in
                 self.categoryListing.value = listing
             }) { error in
                 print("fetchCategoryListing failed with error: \(error.localizedDescription)")
                 }.disposed(by: self.bag)
-        case .churches:
+        case .churches?:
             print("preaching")
         default:
             print("feetprint")

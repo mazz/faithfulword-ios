@@ -49,7 +49,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
             self, selector: #selector(self.onLanguageChanged), name: .L10nLanguageChanged, object: nil
         )
 
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 40
         
         tableView.register(UINib(nibName: "MainMenuTableViewCell", bundle: nil), forCellReuseIdentifier: "MainMenuTableViewCellID")
@@ -236,7 +236,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
         // exclude some activity types from the list (optional)
-        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
+        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
         
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)

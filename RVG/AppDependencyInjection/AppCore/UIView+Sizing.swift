@@ -44,7 +44,7 @@ public extension UIView {
         // dirty view relayout so systemLayoutSizeFitting() will have an impact
         setNeedsLayout()
         layoutIfNeeded()
-        let height = systemLayoutSizeFitting(UILayoutFittingCompressedSize).height
+        let height = systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
         
         removeConstraint(widthConstraint)
         translatesAutoresizingMaskIntoConstraints = originalMaskFlag
@@ -76,7 +76,7 @@ public extension UIView {
         // dirty view relayout so systemLayoutSizeFitting() will have an impact
         setNeedsLayout()
         layoutIfNeeded()
-        let width = systemLayoutSizeFitting(UILayoutFittingCompressedSize).width
+        let width = systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).width
         
         removeConstraint(heightConstraint)
         translatesAutoresizingMaskIntoConstraints = originalMaskFlag
@@ -85,7 +85,7 @@ public extension UIView {
     }
     
     public func canFitContents(inWidth width: CGFloat) -> Bool {
-        let size = self.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+        let size = self.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         return size.width <= width
     }
 }

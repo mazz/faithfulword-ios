@@ -13,7 +13,7 @@ class MediaGospelViewController: BaseClass {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 40
 
         let provider = MoyaProvider<KJVRVGService>()
