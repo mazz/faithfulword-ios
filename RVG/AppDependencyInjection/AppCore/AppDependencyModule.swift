@@ -179,7 +179,8 @@ internal final class AppDependencyModule {
             }.inObjectScope(.container)
 
         container.register(PlaybackCoordinator.self) { resolver in
-            PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
+            PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+                                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!)
         }.inObjectScope(.container)
     }
 

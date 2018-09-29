@@ -1,5 +1,6 @@
 import Foundation
 import RxSwift
+import AVFoundation
 
 internal final class PlaybackCoordinator  {
     // MARK: Dependencies
@@ -11,10 +12,26 @@ internal final class PlaybackCoordinator  {
     internal var navigationController: UINavigationController?
     internal var popupContentController: DemoMusicPlayerController?
 
+    internal let assetPlaybackService: AssetPlaybackServicing?
+
     private let bag = DisposeBag()
 
-    internal init(uiFactory: AppUIMaking) {
+    internal init(uiFactory: AppUIMaking,
+                  assetPlaybackService: AssetPlaybackServicing
+        ) {
         self.uiFactory = uiFactory
+        self.assetPlaybackService = assetPlaybackService
+    }
+
+    public func updatePlaybackAsset(_ playable: Playable) {
+        guard let localizedName = playable.localizedName,
+            let path = playable.path,
+            let assetPlaybackService = self.assetPlaybackService,
+        let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
+        else {
+            return
+        }
+        assetPlaybackService.assetPlaybackManager.asset = Asset(assetName: localizedName, urlAsset: AVURLAsset(url: url))
     }
 }
 

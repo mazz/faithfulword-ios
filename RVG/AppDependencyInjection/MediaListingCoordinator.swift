@@ -10,6 +10,7 @@ public final class MediaListingCoordinator {
     internal var mediaType: MediaType?
     internal var navigationController: UINavigationController?
     internal var mediaListingViewController: MediaListingViewController?
+
     private var mediaListingFlowCompletion: FlowCompletion!
 
     private let bag = DisposeBag()
@@ -74,6 +75,8 @@ extension MediaListingCoordinator: NavigationCoordinating {
                     navigationController.presentPopupBar(withContentViewController: popupController, animated: true, completion: nil)
 
                 }
+
+                self.resettablePlaybackCoordinator.value.updatePlaybackAsset(playable)
             }
 
         }, completion: { _ in

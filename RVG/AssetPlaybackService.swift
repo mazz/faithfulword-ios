@@ -6,6 +6,8 @@ import RxAVFoundation
 
 public protocol AssetPlaybackServicing {
 
+    var assetPlaybackManager: AssetPlaybackManager { get }
+
 //    var playerItem: Observable<AVPlayerItem?> { get }
 //    var player: AVPlayer { get }
 //    internal var assetPlaybackManager: AssetPlaybackManager { get }
@@ -39,8 +41,8 @@ public protocol AssetPlaybackServicing {
 public final class AssetPlaybackService: AssetPlaybackServicing {
 
     // MARK: Dependencies
-    private let assetPlaybackManager: AssetPlaybackManager
-    private let remoteCommandManager: RemoteCommandManager
+    public let assetPlaybackManager: AssetPlaybackManager
+    internal let remoteCommandManager: RemoteCommandManager
 
     public init(assetPlaybackManager: AssetPlaybackManager,
                 remoteCommandManager: RemoteCommandManager) {
