@@ -15,11 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 
     var window: UIWindow?
 
-    /// The instance of `AssetPlaybackManager` that the app uses for managing playback.
-//    let assetPlaybackManager = AssetPlaybackManager()
-//    /// The instance of `RemoteCommandManager` that the app uses for managing remote command events.
-//    var remoteCommandManager: RemoteCommandManager!
-
     private let dependencyModule = AppDependencyModule()
     private lazy var appCoordinator: AppCoordinator = { [unowned self] in
         self.dependencyModule.resolver.resolve(AppCoordinator.self)!
@@ -46,12 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
     }
 
     private func setupAudio() {
-//        // Initializer the `RemoteCommandManager`.
-//        remoteCommandManager = RemoteCommandManager(assetPlaybackManager: assetPlaybackManager)
-//
-//        // Always enable playback commands in MPRemoteCommandCenter.
-//        remoteCommandManager.activatePlaybackCommands(true)
-//
         // Setup AVAudioSession to indicate to the system you how intend to play audio.
         let audioSession = AVAudioSession.sharedInstance()
 

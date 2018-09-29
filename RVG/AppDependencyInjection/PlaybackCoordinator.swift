@@ -27,9 +27,9 @@ internal final class PlaybackCoordinator  {
         guard let localizedName = playable.localizedName,
             let path = playable.path,
             let assetPlaybackService = self.assetPlaybackService,
-        let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
-        else {
-            return
+            let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
+            else {
+                return
         }
         assetPlaybackService.assetPlaybackManager.asset = Asset(assetName: localizedName, urlAsset: AVURLAsset(url: url))
     }

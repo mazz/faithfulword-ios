@@ -48,6 +48,7 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
                 remoteCommandManager: RemoteCommandManager) {
         self.assetPlaybackManager = assetPlaybackManager
         self.remoteCommandManager = remoteCommandManager
+        self.remoteCommandManager.activatePlaybackCommands(true)
     }
 
 //    public var playableItem = Field<Playable?>(nil)
