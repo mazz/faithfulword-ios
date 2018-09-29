@@ -15,7 +15,7 @@ import Cocoa
 import UIKit
 #endif
 
-class AssetPlaybackManager: NSObject {
+public class AssetPlaybackManager: NSObject {
     
     // MARK: Types
     
@@ -86,7 +86,7 @@ class AssetPlaybackManager: NSObject {
     /// The Asset that is currently being loaded for playback.
     var asset: Asset! {
         willSet(newValue) {
-            print("asset newValue willSet : \(newValue)")
+            print("asset newValue willSet : \(String(describing: newValue))")
             if asset != nil {
                 asset.urlAsset.removeObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), context: nil)
             }
@@ -95,7 +95,7 @@ class AssetPlaybackManager: NSObject {
 //            asset = asset
 //        }
         didSet(newValue) {
-            print("asset newValue didSet: \(newValue)")
+            print("asset newValue didSet: \(String(describing: newValue))")
             if asset != nil {
                 asset.urlAsset.addObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), options: [.initial, .new], context: nil)
             }
@@ -116,7 +116,7 @@ class AssetPlaybackManager: NSObject {
         
         #if os(iOS)
         // Add the notification observer needed to respond to audio interruptions.
-        NotificationCenter.default.addObserver(self, selector: #selector(AssetPlaybackManager.handleAudioSessionInterruption(notification:)), name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(AssetPlaybackManager.handleAudioSessionInterruption(notification:)), name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
         #endif
         
         // Add the Key-Value Observers needed to keep internal state of `AssetPlaybackManager` and `MPNowPlayingInfoCenter` in sync.
@@ -124,7 +124,7 @@ class AssetPlaybackManager: NSObject {
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.rate), options: [.new], context: nil)
         
         // Add a periodic time observer to keep `percentProgress` and `playbackPosition` up to date.
-        timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1.0 / 60.0, Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] time in
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1.0 / 60.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] time in
             let timeElapsed = Float(CMTimeGetSeconds(time))
             guard let duration = self?.player.currentItem?.duration else { return }
             
@@ -139,7 +139,7 @@ class AssetPlaybackManager: NSObject {
         // Remove all KVO and notification observers.
         
         #if os(iOS)
-        NotificationCenter.default.removeObserver(self, name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.removeObserver(self, name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
         #endif
         
         player.removeObserver(self, forKeyPath: #keyPath(AVPlayer.currentItem), context: nil)
@@ -213,10 +213,11 @@ class AssetPlaybackManager: NSObject {
         guard asset != nil else { return }
         
         let currentTime = player.currentTime()
-        let offset = CMTimeMakeWithSeconds(interval, 1)
+        let offset = CMTimeMakeWithSeconds(interval, preferredTimescale: 1)
         
         let newTime = CMTimeAdd(currentTime, offset)
-        player.seek(to: newTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero, completionHandler: { (_) in
+        let timeZero = CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC))
+        player.seek(to: newTime, toleranceBefore: timeZero, toleranceAfter: timeZero, completionHandler: { (_) in
             self.updatePlaybackRateMetadata()
         })
     }
@@ -225,10 +226,11 @@ class AssetPlaybackManager: NSObject {
         guard asset != nil else { return }
         
         let currentTime = player.currentTime()
-        let offset = CMTimeMakeWithSeconds(interval, 1)
+        let offset = CMTimeMakeWithSeconds(interval, preferredTimescale: 1)
         
         let newTime = CMTimeSubtract(currentTime, offset)
-        player.seek(to: newTime, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero, completionHandler: { (_) in
+        let timeZero = CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC))
+        player.seek(to: newTime, toleranceBefore: timeZero, toleranceAfter: timeZero, completionHandler: { (_) in
             self.updatePlaybackRateMetadata()
         })
     }
@@ -236,8 +238,9 @@ class AssetPlaybackManager: NSObject {
     func seekTo(_ position: TimeInterval) {
         guard asset != nil else { return }
         
-        let newPosition = CMTimeMakeWithSeconds(position, 1)
-        player.seek(to: newPosition, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero, completionHandler: { (_) in
+        let newPosition = CMTimeMakeWithSeconds(position, preferredTimescale: 1)
+        let timeZero = CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC))
+        player.seek(to: newPosition, toleranceBefore: timeZero, toleranceAfter: timeZero, completionHandler: { (_) in
             self.updatePlaybackRateMetadata()
         })
     }
@@ -344,14 +347,14 @@ class AssetPlaybackManager: NSObject {
     
     @objc func handleAudioSessionInterruption(notification: Notification) {
         guard let userInfo = notification.userInfo, let typeInt = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
-            let interruptionType = AVAudioSessionInterruptionType(rawValue: typeInt) else { return }
+            let interruptionType = AVAudioSession.InterruptionType(rawValue: typeInt) else { return }
         
         switch interruptionType {
             case .began:
                 state = .interrupted
             case .ended:
                 do {
-                    try AVAudioSession.sharedInstance().setActive(true, with: [])
+                    try AVAudioSession.sharedInstance().setActive(true, options: [])
                     
                     if shouldResumePlaybackAfterInterruption == false {
                         shouldResumePlaybackAfterInterruption = true
@@ -361,7 +364,7 @@ class AssetPlaybackManager: NSObject {
                     
                     guard let optionsInt = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
                     
-                    let interruptionOptions = AVAudioSessionInterruptionOptions(rawValue: optionsInt)
+                    let interruptionOptions = AVAudioSession.InterruptionOptions(rawValue: optionsInt)
                     
                     if interruptionOptions.contains(.shouldResume) {
                         play()
@@ -377,7 +380,7 @@ class AssetPlaybackManager: NSObject {
     
     // MARK: Key-Value Observing Method
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(AVURLAsset.isPlayable) {
             if asset.urlAsset.isPlayable {
                 playerItem = AVPlayerItem(asset: asset.urlAsset)

@@ -9,7 +9,7 @@
 import Foundation
 import MediaPlayer
 
-class RemoteCommandManager: NSObject {
+public class RemoteCommandManager: NSObject {
     
     // MARK: Properties
     

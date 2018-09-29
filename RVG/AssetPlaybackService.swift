@@ -8,7 +8,7 @@ public protocol AssetPlaybackServicing {
 
 //    var playerItem: Observable<AVPlayerItem?> { get }
 //    var player: AVPlayer { get }
-//    var asset: Asset? { get }
+//    internal var assetPlaybackManager: AssetPlaybackManager { get }
 
 //    func play()
 //    func togglePlayPause()
@@ -36,17 +36,25 @@ public protocol AssetPlaybackServicing {
 }
 
 /// Manages all account related things
-public final class AssetPlaybackService: NSObject {
+public final class AssetPlaybackService: AssetPlaybackServicing {
 
-    public var playableItem = Field<Playable?>(nil)
+    // MARK: Dependencies
+    private let assetPlaybackManager: AssetPlaybackManager
+    private let remoteCommandManager: RemoteCommandManager
 
-//    private var playerItem = Field<AVPlayerItem?>(nil)
-    private var playerItem: AVPlayerItem? = nil
-    let player = AVPlayer()
-//    private var urlAsset = Field<AVURLAsset?>(nil)
-    private var urlAsset: AVURLAsset? = nil
+    public init(assetPlaybackManager: AssetPlaybackManager,
+                remoteCommandManager: RemoteCommandManager) {
+        self.assetPlaybackManager = assetPlaybackManager
+        self.remoteCommandManager = remoteCommandManager
+    }
 
-    private let bag = DisposeBag()
+//    public var playableItem = Field<Playable?>(nil)
+//
+//    private var playerItem: AVPlayerItem? = nil
+//    let player = AVPlayer()
+//    private var urlAsset: AVURLAsset? = nil
+//
+//    private var bag = DisposeBag()
 
 /*
     /// Notification that is posted when the `nextTrack()` is called.
@@ -139,10 +147,9 @@ public final class AssetPlaybackService: NSObject {
 
     // MARK: Dependencies
 
-    public override init(
-        ) {
-        super.init()
-        bindToMedia()
+    public func start() {
+//        super.init()
+//        bindToMedia()
 /*
         NotificationCenter.default.addObserver(self, selector: #selector(AssetPlaybackService.handleAudioSessionInterruption(notification:)), name: .AVAudioSessionInterruption, object: AVAudioSession.sharedInstance())
 
@@ -179,48 +186,49 @@ public final class AssetPlaybackService: NSObject {
 //
 //    }
 
-    func bindToMedia() {
-        self.playableItem.asObservable()
-            .filterNils()
-            .subscribe(onNext: { [weak self] playable in
-                if let path = playable.path,
-                    let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
-                {
-                    print("playable set in asset playback service: \(playable)")
-                    self?.urlAsset = AVURLAsset(url: url)
-                    print("self.urlAsset.value set in asset playback service: \(self?.urlAsset)")
-
-                    self?.urlAsset?.rx.isPlayable
-                        .filter { $0 == true }
-                        .subscribe(onNext: { state in
-                            print("self.urlAsset.isPlayable: \(self?.urlAsset?.isPlayable)")
-                            self?.playerItem = AVPlayerItem(asset: (self?.urlAsset)!, automaticallyLoadedAssetKeys: [
-                                "tracks",
-                                "duration",
-                                "commonMetadata",
-                                "availableMediaCharacteristicsWithMediaSelectionOptions"])
-                            self?.player.replaceCurrentItem(with: self?.playerItem!)
-                        }).disposed(by: (self?.bag)!)
-                } else {
-                    print("error: the playable item has no url path")
-                }
-            }).disposed(by: self.bag)
-
-        self.player.rx.status
-            .filter { $0 == .readyToPlay }
-            .subscribe(onNext: { [weak self] status in
-                print("item ready to play")
-                let asset = self?.player.currentItem?.asset as! AVURLAsset
-                print("url: \(asset.url)")
-                self?.player.play()
-            }).disposed(by: self.bag)
-
-        // TODO: bind to changes on self.urlAsset
-        // in the subscribe update the AVPlayerItem
-        // maybe have a separate playerItem dispose bag so to stop
-        // doing KVO we just clobber the playerItemDisposeBag(??)
-
-    }
+//    func bindToMedia() {
+//        self.bag = DisposeBag()
+//        self.playableItem.asObservable()
+//            .filterNils()
+//            .subscribe(onNext: { [weak self] playable in
+//                if let path = playable.path,
+//                    let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
+//                {
+//                    print("playable set in asset playback service: \(playable)")
+//                    self?.urlAsset = AVURLAsset(url: url)
+//                    print("self.urlAsset.value set in asset playback service: \(self?.urlAsset)")
+//
+//                    self?.urlAsset?.rx.isPlayable
+//                        .filter { $0 == true }
+//                        .subscribe(onNext: { state in
+//                            print("self.urlAsset.isPlayable: \(self?.urlAsset?.isPlayable)")
+//                            self?.playerItem = AVPlayerItem(asset: (self?.urlAsset)!, automaticallyLoadedAssetKeys: [
+//                                "tracks",
+//                                "duration",
+//                                "commonMetadata",
+//                                "availableMediaCharacteristicsWithMediaSelectionOptions"])
+//                            self?.player.replaceCurrentItem(with: self?.playerItem!)
+//                        }).disposed(by: (self?.bag)!)
+//                } else {
+//                    print("error: the playable item has no url path")
+//                }
+//            }).disposed(by: self.bag)
+//
+//        self.player.rx.status
+//            .filter { $0 == .readyToPlay }
+//            .subscribe(onNext: { [weak self] status in
+//                print("item ready to play")
+//                let asset = self?.player.currentItem?.asset as! AVURLAsset
+//                print("url: \(asset.url)")
+//                self?.player.play()
+//            }).disposed(by: self.bag)
+//
+//        // TODO: bind to changes on self.urlAsset
+//        // in the subscribe update the AVPlayerItem
+//        // maybe have a separate playerItem dispose bag so to stop
+//        // doing KVO we just clobber the playerItemDisposeBag(??)
+//
+//    }
     // MARK: Notification Observing Methods
 /*
     @objc func handleAVPlayerItemDidPlayToEndTimeNotification(notification: Notification) {
@@ -367,7 +375,7 @@ public final class AssetPlaybackService: NSObject {
 */
 }
 
-extension AssetPlaybackService: AssetPlaybackServicing {
+//extension AssetPlaybackService: AssetPlaybackServicing {
 //    public var player: AVPlayer = AVPlayer()
 
 //    public var playerItem: Observable<AVPlayerItem?> {
@@ -427,4 +435,4 @@ extension AssetPlaybackService: AssetPlaybackServicing {
     }
 */
 
-}
+//}

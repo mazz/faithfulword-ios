@@ -57,6 +57,8 @@
 		4C8EE8C41FF6010F003F483A /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8C31FF6010F003F483A /* DataService.swift */; };
 		4C958E99208D3D6500A71C59 /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C958E98208D3D6500A71C59 /* LNPopupController.framework */; };
 		4C958E9D2090242100A71C59 /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C958E9C2090242000A71C59 /* DemoMusicPlayerController.swift */; };
+		4C999C33215F160E002EF2F4 /* AssetPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0003209D6EDC00938C30 /* AssetPlaybackManager.swift */; };
+		4C999C34215F1614002EF2F4 /* RemoteCommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */; };
 		4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */; };
 		4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */; };
 		4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */; };
@@ -1152,6 +1154,7 @@
 				4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */,
 				4CFB84FC2005AEB400FEBB53 /* SettingDrillInCell.swift in Sources */,
 				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
+				4C999C34215F1614002EF2F4 /* RemoteCommandManager.swift in Sources */,
 				4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */,
 				4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */,
 				68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */,
@@ -1227,6 +1230,7 @@
 				4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */,
 				4C958E9D2090242100A71C59 /* DemoMusicPlayerController.swift in Sources */,
 				4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */,
+				4C999C33215F160E002EF2F4 /* AssetPlaybackManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

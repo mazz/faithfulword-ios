@@ -29,8 +29,10 @@ class DemoMusicPlayerController: UIViewController {
     // MARK: Fields
 
     public var viewModel: DemoMusicPlayerViewModel!
-    public var remoteCommandService: RemoteCommandService!
-    public var assetPlaybackService: AssetPlaybackService!
+//    public var assetPlaybackManager: AssetPlaybackManager!
+//    public var remoteCommandManager: RemoteCommandManager!
+
+
 //    var assetPlaybackManager: AssetPlaybackManager! {
 //        didSet {
 //            // Add the Key-Value Observers needed to keep the UI up to date.
@@ -41,10 +43,10 @@ class DemoMusicPlayerController: UIViewController {
 //            // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
 //            let notificationCenter = NotificationCenter.default
 //
-//            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
-//            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
-//            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
-//            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
+////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
+////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
+////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
 //        }
 //    }
 

@@ -93,6 +93,18 @@ internal final class AppDependencyModule {
             AppInfoProvider()
         }
 
+        container.register(AssetPlaybackManager.self) { resolver in
+            AssetPlaybackManager()
+            }.inObjectScope(.container)
+
+        container.register(RemoteCommandManager.self) { resolver in
+            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
+            }.inObjectScope(.container)
+
+        container.register(AssetPlaybackServicing.self) { resolver in
+            AssetPlaybackService(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!, remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!)
+            }.inObjectScope(.container)
+
         container.register(AppCoordinator.self) { resolver in
             AppCoordinator(
                 uiFactory: resolver.resolve(AppUIMaking.self)!,
@@ -110,7 +122,8 @@ internal final class AppDependencyModule {
                 //                },
                 accountService: resolver.resolve(AccountServicing.self)!,
                 productService: resolver.resolve(ProductServicing.self)!,
-                languageService: resolver.resolve(LanguageServicing.self)!
+                languageService: resolver.resolve(LanguageServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
             )
         }
 
@@ -143,30 +156,31 @@ internal final class AppDependencyModule {
     }
 
     private static func attachAssetPlaybackDependencies(to container: Container) {
-//        container.register(AssetPlaybackManager.self) { resolver in
-//            AssetPlaybackManager()
-//        }
-//
-//        container.register(RemoteCommandManager.self) { resolver in
-//            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
-//        }
-        container.register(AssetPlaybackService.self) { resolver in
-            AssetPlaybackService()
-        }
-        
         container.register(DemoMusicPlayerViewModel.self) { resolver in
             DemoMusicPlayerViewModel(
 //                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
             )
-        }.inObjectScope(.transient)
+        }.inObjectScope(.container)
 
-        container.register(RemoteCommandService.self) { resolver in
-            RemoteCommandService(assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!)
-        }
+//        container.register(RemoteCommandService.self) { resolver in
+//            RemoteCommandService(assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!)
+//        }.inObjectScope(.container)
+
+        container.register(AssetPlaybackManager.self) { resolver in
+            AssetPlaybackManager()
+            }.inObjectScope(.container)
+
+        container.register(RemoteCommandManager.self) { resolver in
+            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
+            }.inObjectScope(.container)
+
+        container.register(AssetPlaybackServicing.self) { resolver in
+            AssetPlaybackService(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!, remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!)
+            }.inObjectScope(.container)
 
         container.register(PlaybackCoordinator.self) { resolver in
             PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!)
-        }
+        }.inObjectScope(.container)
     }
 
     private static func attachMainFlowDependencies(to container: Container) {
@@ -235,7 +249,9 @@ internal final class AppDependencyModule {
                 playlistId: playlistId,
                 mediaType: mediaType,
                 productService: resolver.resolve(ProductServicing.self)!,
-                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
+//                assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!,
+//                remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!
             )
             }.inObjectScope(.transient)
         container.register(CategoryListingViewModel.self) { resolver, categoryType in

@@ -24,12 +24,12 @@ internal final class MediaListingViewModel {
             .do(onNext: { [weak self] indexPath in
                 let section = self?.sections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
-                print("item: \(item)")
+                print("item: \(String(describing: item))")
                 if case .drillIn(let type, _, _, _)? = item {
                     switch type {
                     case .playable(let item):
                         print("item: \(item)")
-                        self?.assetPlaybackService.playableItem.value = item
+//                        self?.assetPlaybackService.playableItem.value = item
                     }
                 }
 
@@ -49,17 +49,24 @@ internal final class MediaListingViewModel {
     private let playlistId: String!
     private let mediaType: MediaType!
     private let productService: ProductServicing!
-    private let assetPlaybackService: AssetPlaybackService!
+    private let assetPlaybackService: AssetPlaybackServicing!
+//    private let assetPlaybackManager: AssetPlaybackManager!
+//    private let remoteCommandManager: RemoteCommandManager!
     private let bag = DisposeBag()
 
     internal init(playlistId: String,
                   mediaType: MediaType,
                   productService: ProductServicing,
-                  assetPlaybackService: AssetPlaybackService) {
+                  assetPlaybackService: AssetPlaybackServicing)
+//        assetPlaybackManager: AssetPlaybackManager,
+//        remoteCommandManager: RemoteCommandManager)
+    {
         self.playlistId = playlistId
         self.mediaType = mediaType
         self.productService = productService
         self.assetPlaybackService = assetPlaybackService
+//        self.assetPlaybackManager = assetPlaybackManager
+//        self.remoteCommandManager = remoteCommandManager
 
         setupDatasource()
     }

@@ -28,6 +28,7 @@ internal class AppCoordinator {
     private let accountService: AccountServicing
     private let productService: ProductServicing
     private let languageService: LanguageServicing
+    private let assetPlaybackService: AssetPlaybackServicing
 
     internal init(uiFactory: AppUIMaking,
                   //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
@@ -36,7 +37,8 @@ internal class AppCoordinator {
         //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
         accountService: AccountServicing,
         productService: ProductServicing,
-        languageService: LanguageServicing
+        languageService: LanguageServicing,
+        assetPlaybackService: AssetPlaybackServicing
         ) {
         self.uiFactory = uiFactory
         //        self.resettableInitialCoordinator = resettableInitialCoordinator
@@ -46,6 +48,7 @@ internal class AppCoordinator {
         self.accountService = accountService
         self.productService = productService
         self.languageService = languageService
+        self.assetPlaybackService = assetPlaybackService
     }
 }
 
@@ -63,6 +66,10 @@ extension AppCoordinator: NavigationCoordinating {
 
         // Load splash screen animations, proceed to other flows when completed
         swapInSplashScreenFlow()
+    }
+
+    private func startHandlingAssetPlaybackEvents() {
+//        assetPlaybackService.start()
     }
 
     private func startHandlingAuthEvents() {
@@ -139,6 +146,7 @@ extension AppCoordinator: NavigationCoordinating {
         resettableSplashScreenCoordinator.value.flow(with: { [unowned self] splashScreenFlowViewController in
             self.rootViewController.plant(splashScreenFlowViewController)
         }, completion: { [unowned self] _ in
+            self.startHandlingAssetPlaybackEvents()
             self.startHandlingAuthEvents()
             self.accountService.start()
             
