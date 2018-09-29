@@ -11,7 +11,7 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var songNameLabel: UILabel!
     @IBOutlet weak var albumNameLabel: UILabel!
     @IBOutlet weak var fullPlayPauseButton: UIButton!
-    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var fullPlaybackProgressView: UIProgressView!
 
     @IBOutlet weak var albumArtImageView: UIImageView!
 
@@ -26,6 +26,23 @@ class PopupContentController: UIViewController {
     // MARK: Fields
 
     public var viewModel: PopupContentViewModel!
+
+    var assetPlaybackManager: AssetPlaybackManager! {
+        didSet {
+            // Add the Key-Value Observers needed to keep the UI up to date.
+            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
+            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration), options: NSKeyValueObservingOptions.new, context: nil)
+            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition), options: NSKeyValueObservingOptions.new, context: nil)
+
+            // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
+            let notificationCenter = NotificationCenter.default
+
+            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+        }
+    }
 
     var songTitle: String = "" {
         didSet {
@@ -58,13 +75,6 @@ class PopupContentController: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-
-//        let pauseButton: UIButton = UIButton(type: .custom)
-//        pauseButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
-//        pauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
-//        pauseButton.setImage(UIImage(named: "pause"), for: .normal)
-//        playPauseButton = UIBarButtonItem(customView: pauseButton)
-
         playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
 //        playPauseButton.action = #selector(PopupContentController.doPlayPause)
 
@@ -81,6 +91,9 @@ class PopupContentController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        guard let assetPlaybackService = viewModel.assetPlaybackService else { return }
+        self.assetPlaybackManager = assetPlaybackService.assetPlaybackManager
 
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
@@ -105,117 +118,20 @@ class PopupContentController: UIViewController {
         assets = [Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))]
     }
 
-//    deinit {
-//        // Remove all notification observers.
-//        let notificationCenter = NotificationCenter.default
-//
-//        notificationCenter.removeObserver(self, name: AssetPlaybackManager.nextTrackNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: AssetPlaybackManager.previousTrackNotification, object: nil)
-//    }
+    deinit {
+        // Remove all KVO and notification observers.
+        let notificationCenter = NotificationCenter.default
 
-//    deinit {
-//        // Remove all KVO and notification observers.
-//        let notificationCenter = NotificationCenter.default
-//
-//        notificationCenter.removeObserver(self, name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: AssetPlaybackManager.previousTrackNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: AssetPlaybackManager.nextTrackNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
-//
-//        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress))
-//        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration))
-//        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
-//    }
+        notificationCenter.removeObserver(self, name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
+        notificationCenter.removeObserver(self, name: AssetPlaybackManager.previousTrackNotification, object: nil)
+        notificationCenter.removeObserver(self, name: AssetPlaybackManager.nextTrackNotification, object: nil)
+        notificationCenter.removeObserver(self, name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
 
-    // MARK: Key-Value Observing Method
+        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress))
+        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration))
+        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
+    }
 
-//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-//        if keyPath == #keyPath(AssetPlaybackManager.percentProgress) {
-//            print("#keyPath AssetPlaybackManager.duration: \(assetPlaybackManager.percentProgress)")
-//            progressView.progress = assetPlaybackManager.percentProgress
-//        }
-//        else if keyPath == #keyPath(AssetPlaybackManager.duration) {
-//            print("#keyPath AssetPlaybackManager.duration: \(assetPlaybackManager.duration)")
-////            guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.duration)) else { return }
-//
-////            totalPlaybackDurationTextField.stringValue = stringValue
-//        }
-//        else if keyPath == #keyPath(AssetPlaybackManager.playbackPosition) {
-//            print("#keyPath AssetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
-////            guard let stringValue = accessibilityDateComponentsFormatter.string(from: TimeInterval(assetPlaybackManager.playbackPosition)) else { return }
-//
-////            currentPlaybackPositionTextField.stringValue = stringValue
-////            popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: Double(popupItem.progress) * Double(assetPlaybackManager.duration))!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: Double(assetPlaybackManager.duration))!)"
-//        }
-//        else {
-//            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-//        }
-//    }
-
-    // MARK: Notification Handler Methods
-
-//    @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
-//        if assetPlaybackManager.asset != nil {
-//            print("assetPlaybackManager.asset.assetName: \(assetPlaybackManager.asset.assetName)")
-////            print("assetPlaybackManager.asset.assetName: \(assetPlaybackManager.asset.assetName)")
-////            print("assetPlaybackManager.asset.assetName: \(assetPlaybackManager.asset.assetName)")
-////            print("assetPlaybackManager.asset.assetName: \(assetPlaybackManager.asset.assetName)")
-////            assetNameTextField.stringValue = assetPlaybackManager.asset.assetName
-//
-//            guard let asset = assetPlaybackManager.asset else {
-//                return
-//            }
-//
-//            let urlAsset = asset.urlAsset
-//
-//            let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
-//
-//            let image = UIImage(data: artworkData) ?? UIImage()
-//
-//            albumArtImageView.image = image
-//
-//
-//
-////            for i in assets.startIndex..<assets.endIndex {
-////                if asset.assetName == assets[i].assetName {
-////                    assetListTableView.selectRowIndexes(IndexSet(integer: i), byExtendingSelection: false)
-////                    break
-////                }
-////            }
-//        }
-//        else {
-//            albumArtImageView.image = nil
-////            assetNameTextField.stringValue = "Select Item Below to play"
-////            totalPlaybackDurationTextField.stringValue = "-:--"
-////            currentPlaybackPositionTextField.stringValue = "-:--"
-////            playbackProgressIndicator.doubleValue = 0.0
-////            assetListTableView.deselectAll(nil)
-//        }
-//
-////        updateToolbarItemState()
-//    }
-
-//    @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
-//        guard let assetName = notification.userInfo?[Asset.nameKey] as? String else { return }
-//        guard let assetIndex = assets.index(where: {$0.assetName == assetName}) else { return }
-//
-//        if assetIndex < assets.count - 1 {
-//            assetPlaybackManager.asset = assets[assetIndex + 1]
-//        }
-//    }
-//
-//    @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
-//        guard let assetName = notification.userInfo?[Asset.nameKey] as? String else { return }
-//        guard let assetIndex = assets.index(where: {$0.assetName == assetName}) else { return }
-//
-//        if assetIndex > 0 {
-//            assetPlaybackManager.asset = assets[assetIndex - 1]
-//        }
-//    }
-//
-//    @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
-//        updateToolbarItemState()
-//    }
 
     @objc func _timerTicked(_ timer: Timer) {
         popupItem.progress += 0.0002;
@@ -226,7 +142,7 @@ class PopupContentController: UIViewController {
         let totalTime = TimeInterval(250)
         popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"
 
-        progressView.progress = popupItem.progress
+//        fullPlaybackProgressView.progress = popupItem.progress
 
         if popupItem.progress >= 1.0 {
             timer.invalidate()
@@ -293,5 +209,91 @@ class PopupContentController: UIViewController {
 //            }
 //        }
     }
+
+    // MARK: Key-Value Observing Method
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+
+        guard let assetPlaybackService = viewModel.assetPlaybackService else {
+            return
+        }
+
+        if keyPath == #keyPath(AssetPlaybackManager.percentProgress) {
+            fullPlaybackProgressView.progress = assetPlaybackService.assetPlaybackManager.percentProgress
+        }
+        else if keyPath == #keyPath(AssetPlaybackManager.duration) {
+//            guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackService.assetPlaybackManager.duration)) else { return }
+
+//            totalPlaybackDurationTextField.stringValue = stringValue
+        }
+        else if keyPath == #keyPath(AssetPlaybackManager.playbackPosition) {
+//            guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackService.assetPlaybackManager.playbackPosition)) else { return }
+
+//            currentPlaybackPositionTextField.stringValue = stringValue
+        }
+        else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
+    }
+
+    // MARK: Notification Observer Methods
+
+    @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
+        if assetPlaybackManager.asset != nil {
+//            assetNameTextField.stringValue = assetPlaybackManager.asset.assetName
+//
+//            guard let asset = assetPlaybackManager.asset else {
+//                return
+//            }
+//
+//            let urlAsset = asset.urlAsset
+//
+//            let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
+//
+//            let image = NSImage(data: artworkData) ?? NSImage()
+//
+//            assetCoverArtImageView.image = image
+//
+//            for i in assets.startIndex..<assets.endIndex {
+//                if asset.assetName == assets[i].assetName {
+//                    assetListTableView.selectRowIndexes(IndexSet(integer: i), byExtendingSelection: false)
+//                    break
+//                }
+//            }
+        }
+        else {
+//            assetCoverArtImageView.image = nil
+//            assetNameTextField.stringValue = "Select Item Below to play"
+//            totalPlaybackDurationTextField.stringValue = "-:--"
+//            currentPlaybackPositionTextField.stringValue = "-:--"
+//            playbackProgressIndicator.doubleValue = 0.0
+//            assetListTableView.deselectAll(nil)
+        }
+
+        updateToolbarItemState()
+    }
+
+    @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
+        guard let assetName = notification.userInfo?[Asset.nameKey] as? String else { return }
+        guard let assetIndex = assets.index(where: {$0.assetName == assetName}) else { return }
+
+        if assetIndex < assets.count - 1 {
+            assetPlaybackManager.asset = assets[assetIndex + 1]
+        }
+    }
+
+    @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
+        guard let assetName = notification.userInfo?[Asset.nameKey] as? String else { return }
+        guard let assetIndex = assets.index(where: {$0.assetName == assetName}) else { return }
+
+        if assetIndex > 0 {
+            assetPlaybackManager.asset = assets[assetIndex - 1]
+        }
+    }
+
+    @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
+        updateToolbarItemState()
+    }
+
 }
 

@@ -159,7 +159,7 @@
                         <outlet property="albumArtImageView" destination="MVJ-yU-XRs" id="jZn-J6-RNA"/>
                         <outlet property="albumNameLabel" destination="6lB-9O-dy6" id="yY5-Ph-Ajk"/>
                         <outlet property="fullPlayPauseButton" destination="24I-zf-ayu" id="0vk-Tu-wSy"/>
-                        <outlet property="progressView" destination="LXp-fk-SwY" id="ZsA-Df-jEY"/>
+                        <outlet property="fullPlaybackProgressView" destination="LXp-fk-SwY" id="S27-Fy-6UF"/>
                         <outlet property="songNameLabel" destination="B6t-4N-FaC" id="w1a-3G-2ei"/>
                     </connections>
                 </viewController>

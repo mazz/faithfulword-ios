@@ -53,7 +53,7 @@ extension MediaListingCoordinator: NavigationCoordinating {
 
             if let localizedName = playable.localizedName,
                 let presenterName = playable.presenterName,
-                let thumbImage = UIImage(named: "titus1-9_thumb_lg")
+                let thumbImage = UIImage(named: "Titus1-9")
             {
                 popupController.songTitle = localizedName
                 popupController.albumTitle = presenterName
