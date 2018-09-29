@@ -1,19 +1,16 @@
 //
-//  DemoMusicPlayerController.swift
-//  LNPopupControllerExample
-//
-//  Created by Leo Natan on 8/8/15.
-//  Copyright © 2015 Leo Natan. All rights reserved.
+//  PopupContentController.swift
 //
 
 import UIKit
 import LNPopupController
 import AVFoundation
 
-class DemoMusicPlayerController: UIViewController {
+class PopupContentController: UIViewController {
 
     @IBOutlet weak var songNameLabel: UILabel!
     @IBOutlet weak var albumNameLabel: UILabel!
+    @IBOutlet weak var fullPlayPauseButton: UIButton!
     @IBOutlet weak var progressView: UIProgressView!
 
     @IBOutlet weak var albumArtImageView: UIImageView!
@@ -28,49 +25,7 @@ class DemoMusicPlayerController: UIViewController {
 
     // MARK: Fields
 
-    public var viewModel: DemoMusicPlayerViewModel!
-//    public var assetPlaybackManager: AssetPlaybackManager!
-//    public var remoteCommandManager: RemoteCommandManager!
-
-
-//    var assetPlaybackManager: AssetPlaybackManager! {
-//        didSet {
-//            // Add the Key-Value Observers needed to keep the UI up to date.
-//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
-//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration), options: NSKeyValueObservingOptions.new, context: nil)
-//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition), options: NSKeyValueObservingOptions.new, context: nil)
-//
-//            // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
-//            let notificationCenter = NotificationCenter.default
-//
-////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
-////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
-////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
-////            notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
-//        }
-//    }
-
-//    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-//        coordinator.animateAlongsideTransition(in: self.popupPresentationContainer?.view, animation: { context in
-//            self._setPopupItemButtons(traitCollection: newCollection)
-//        }, completion: nil)
-//    }
-//
-//    private func _setPopupItemButtons(traitCollection: UITraitCollection) {
-//        let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.doPlayPause))
-//        pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-//        let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.nextFwd))
-//        next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
-//
-////        if UserDefaults.standard.object(forKey: PopupSettings.BarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
-////            popupItem.leftBarButtonItems = [ pause ]
-////            popupItem.rightBarButtonItems = [ next ]
-////        }
-////        else {
-//            popupItem.rightBarButtonItems = [ pause, next ]
-////        }
-////        popupBar.marqueeScrollEnabled = true
-//    }
+    public var viewModel: PopupContentViewModel!
 
     var songTitle: String = "" {
         didSet {
@@ -104,9 +59,20 @@ class DemoMusicPlayerController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.doPlayPause))
+//        let pauseButton: UIButton = UIButton(type: .custom)
+//        pauseButton.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+//        pauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
+//        pauseButton.setImage(UIImage(named: "pause"), for: .normal)
+//        playPauseButton = UIBarButtonItem(customView: pauseButton)
+
+        playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
+//        playPauseButton.action = #selector(PopupContentController.doPlayPause)
+
+//for: .normal, style: .plain, barMetrics: .compact)
+
+//        playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
         playPauseButton.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-        nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(DemoMusicPlayerController.doNextTrack))
+        nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(PopupContentController.doNextTrack))
         nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 
         popupItem.rightBarButtonItems = [ playPauseButton, nextButton ]
@@ -115,6 +81,8 @@ class DemoMusicPlayerController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
         songNameLabel.text = songTitle
         albumNameLabel.text = albumTitle
@@ -267,13 +235,36 @@ class DemoMusicPlayerController: UIViewController {
     }
 
     @objc func doPlayPause() {
-//        assetPlaybackService.asset = assets[0]
-//         viewModel.playerItem.value = AVPlayerItem(url: URL(string: "https://i.imgur.com/9rGrj10.mp4")!)
-        viewModel.urlAsset.value = AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!)
-//    assetPlaybackManager.asset = Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))
-//        assetPlaybackService.togglePlayPause()
-//        print("doPlayPause assetPlaybackManager.asset: \(assetPlaybackManager.asset)")
+        guard let playbackService = viewModel.assetPlaybackService,
+        let pauseImage: UIImage = UIImage(named: "pause"),
+        let playImage: UIImage = UIImage(named: "play"),
+        let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
+        let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause")
+        else {
+            return
+        }
 
+        let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
+        let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
+
+        if playbackService.assetPlaybackManager.state == .playing {
+            playPauseButton.image = playImage
+            playPauseButton.accessibilityLabel = accessibilityPlay
+
+            fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+            fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+
+        } else if playbackService.assetPlaybackManager.state == .paused {
+            playPauseButton.image = pauseImage
+            playPauseButton.accessibilityLabel = accessibilityPause
+
+            fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
+            fullPlayPauseButton.accessibilityLabel = accessibilityPause
+        }
+
+        playbackService.assetPlaybackManager.togglePlayPause()
+
+//    assetPlaybackManager.asset = Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))
     }
 
     @objc func doNextTrack() {
@@ -302,6 +293,5 @@ class DemoMusicPlayerController: UIViewController {
 //            }
 //        }
     }
-
 }
 

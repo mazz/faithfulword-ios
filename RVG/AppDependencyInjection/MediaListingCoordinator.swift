@@ -49,7 +49,7 @@ extension MediaListingCoordinator: NavigationCoordinating {
             // do nothing because the bottom popup should appear
             // when the playbackViewController loads
 
-            let popupController = playbackViewController as! DemoMusicPlayerController
+            let popupController = playbackViewController as! PopupContentController
 
             if let localizedName = playable.localizedName,
                 let presenterName = playable.presenterName,

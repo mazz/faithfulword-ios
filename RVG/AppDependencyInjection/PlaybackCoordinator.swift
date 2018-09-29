@@ -10,7 +10,7 @@ internal final class PlaybackCoordinator  {
     internal var playableItem: Playable?
     internal var playbackFlowCompletion: FlowCompletion!
     internal var navigationController: UINavigationController?
-    internal var popupContentController: DemoMusicPlayerController?
+    internal var popupContentController: PopupContentController?
 
     internal let assetPlaybackService: AssetPlaybackServicing?
 

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -43,10 +41,10 @@
             </objects>
             <point key="canvasLocation" x="-583" y="793"/>
         </scene>
-        <!--Demo Music Player Controller-->
+        <!--Popup Content Controller-->
         <scene sceneID="90f-GW-P8J">
             <objects>
-                <viewController storyboardIdentifier="DemoMusicPlayerController" id="CDA-xr-UNl" customClass="DemoMusicPlayerController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PopupContentController" id="CDA-xr-UNl" customClass="PopupContentController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="F2p-42-IQz"/>
                         <viewControllerLayoutGuide type="bottom" id="fIC-Cf-WOR"/>
@@ -70,7 +68,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
                                     <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="LXp-fk-SwY">
-                                        <rect key="frame" x="32" y="422" width="311" height="2.6666666666666856"/>
+                                        <rect key="frame" x="32" y="422" width="311" height="3"/>
                                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -81,17 +79,17 @@
                                         <rect key="frame" x="0.0" y="424" width="375" height="388"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="24I-zf-ayu" userLabel="Play">
-                                                <rect key="frame" x="165.66666666666666" y="172.33333333333337" width="44" height="44"/>
+                                                <rect key="frame" x="165.66666666666666" y="172" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_pause"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="egg-tI-Yhc" userLabel="Next">
-                                                <rect key="frame" x="259.33333333333331" y="172.33333333333337" width="44" height="44"/>
+                                                <rect key="frame" x="259.33333333333331" y="172" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_next"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zAW-fg-84x" userLabel="Prev">
-                                                <rect key="frame" x="72" y="172.33333333333337" width="44" height="44"/>
+                                                <rect key="frame" x="71.666666666666671" y="172" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_prev"/>
                                             </button>
@@ -160,6 +158,7 @@
                     <connections>
                         <outlet property="albumArtImageView" destination="MVJ-yU-XRs" id="jZn-J6-RNA"/>
                         <outlet property="albumNameLabel" destination="6lB-9O-dy6" id="yY5-Ph-Ajk"/>
+                        <outlet property="fullPlayPauseButton" destination="24I-zf-ayu" id="0vk-Tu-wSy"/>
                         <outlet property="progressView" destination="LXp-fk-SwY" id="ZsA-Df-jEY"/>
                         <outlet property="songNameLabel" destination="B6t-4N-FaC" id="w1a-3G-2ei"/>
                     </connections>

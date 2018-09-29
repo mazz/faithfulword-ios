@@ -156,27 +156,11 @@ internal final class AppDependencyModule {
     }
 
     private static func attachAssetPlaybackDependencies(to container: Container) {
-        container.register(DemoMusicPlayerViewModel.self) { resolver in
-            DemoMusicPlayerViewModel(
+        container.register(PopupContentViewModel.self) { resolver in
+            PopupContentViewModel(assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
 //                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
             )
         }.inObjectScope(.container)
-
-//        container.register(RemoteCommandService.self) { resolver in
-//            RemoteCommandService(assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!)
-//        }.inObjectScope(.container)
-
-        container.register(AssetPlaybackManager.self) { resolver in
-            AssetPlaybackManager()
-            }.inObjectScope(.container)
-
-        container.register(RemoteCommandManager.self) { resolver in
-            RemoteCommandManager(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!)
-            }.inObjectScope(.container)
-
-        container.register(AssetPlaybackServicing.self) { resolver in
-            AssetPlaybackService(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!, remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!)
-            }.inObjectScope(.container)
 
         container.register(PlaybackCoordinator.self) { resolver in
             PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,

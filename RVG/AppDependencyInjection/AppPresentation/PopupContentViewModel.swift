@@ -2,18 +2,12 @@ import Foundation
 import AVFoundation
 import RxSwift
 
-public final class DemoMusicPlayerViewModel {
-    public var urlAsset = Field<AVURLAsset?>(nil)
-
-    private let bag = DisposeBag()
-
-//    private let assetPlaybackService: AssetPlaybackService
-    init(
-//        assetPlaybackService: AssetPlaybackService
-        ) {
-//        self.assetPlaybackService = assetPlaybackService
-
-//        setupBindings()
+public final class PopupContentViewModel {
+    // MARK: Fields
+    public let assetPlaybackService: AssetPlaybackServicing?
+    
+    init(assetPlaybackService: AssetPlaybackServicing) {
+        self.assetPlaybackService = assetPlaybackService
     }
 
 //    func setupBindings() {
