@@ -21,11 +21,11 @@ extension User {
 
 // Adopt RowConvertible so that we can fetch players from the database.
 // Implementation is automatically derived from Codable.
-extension User: RowConvertible { }
+extension User: FetchableRecord { }
 
 // Adopt MutablePersistable so that we can create/update/delete players in the database.
 // Implementation is partially derived from Codable.
-extension User: MutablePersistable {
+extension User: MutablePersistableRecord {
     public static let databaseTableName = "user"
     public mutating func didInsert(with rowID: Int64, for column: String?) {
         userId = rowID

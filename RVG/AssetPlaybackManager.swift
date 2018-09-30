@@ -131,6 +131,7 @@ public class AssetPlaybackManager: NSObject {
             let durationInSecods = Float(CMTimeGetSeconds(duration))
             
             self?.playbackPosition = timeElapsed
+            self?.duration = durationInSecods
             self?.percentProgress = timeElapsed / durationInSecods
         })
     }

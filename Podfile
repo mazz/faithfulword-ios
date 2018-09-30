@@ -6,7 +6,6 @@ target 'FaithfulWord' do
     use_frameworks!
 
     pod 'RxCocoa'
-    pod 'IQKeyboardManagerSwift'
     pod 'MBProgressHUD', '~> 1.0.0'
     pod 'FirebaseInstanceID'
     pod 'Firebase/Core'
@@ -19,8 +18,10 @@ target 'FaithfulWord' do
     pod 'SwiftLint'
     pod 'Swinject'
     pod 'RxDataSources'
-    pod 'AlamofireImage'
+    pod 'Alamofire', '~>4.7'
+    pod 'AlamofireImage', '~>3.3'
     pod 'Fabric'
     pod 'Crashlytics'
     pod 'RxAVFoundation'
+    pod 'MarqueeLabel/Swift'
 end

@@ -51,11 +51,11 @@ extension Gospel {
 
 // Adopt RowConvertible so that we can fetch players from the database.
 // Implementation is automatically derived from Codable.
-extension Gospel: RowConvertible { }
+extension Gospel: FetchableRecord { }
 
 // Adopt MutablePersistable so that we can create/update/delete players in the database.
 // Implementation is partially derived from Codable.
-extension Gospel: MutablePersistable {
+extension Gospel: MutablePersistableRecord {
     public static let databaseTableName = "gospel"
     public mutating func didInsert(with rowID: String, for column: String?) {
         categoryUuid = rowID

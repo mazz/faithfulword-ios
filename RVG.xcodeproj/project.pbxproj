@@ -68,6 +68,8 @@
 		4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */; };
 		4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */; };
 		4CA31FAC200E3C0900A94101 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FAB200E3C0900A94101 /* User.swift */; };
+		4CBE0F5221605CA500646F76 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBE0F5121605CA400646F76 /* QuartzCore.framework */; };
+		4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F732160932400646F76 /* SlimSlider.swift */; };
 		4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */; };
 		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
 		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
@@ -245,6 +247,8 @@
 		4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestedNameCell.xib; sourceTree = "<group>"; };
 		4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedNameCell.swift; sourceTree = "<group>"; };
 		4CA31FAB200E3C0900A94101 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		4CBE0F5121605CA400646F76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4CBE0F732160932400646F76 /* SlimSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlimSlider.swift; sourceTree = "<group>"; };
 		4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
@@ -403,6 +407,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CBE0F5221605CA500646F76 /* QuartzCore.framework in Frameworks */,
 				4C958E99208D3D6500A71C59 /* LNPopupController.framework in Frameworks */,
 				689880571F16F52600CC2BC5 /* MediaPlayer.framework in Frameworks */,
 				6854EED71F01F649007BB502 /* AVFoundation.framework in Frameworks */,
@@ -418,6 +423,7 @@
 		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4CBE0F5121605CA400646F76 /* QuartzCore.framework */,
 				4C958E98208D3D6500A71C59 /* LNPopupController.framework */,
 				689880561F16F52600CC2BC5 /* MediaPlayer.framework */,
 				6854EED61F01F649007BB502 /* AVFoundation.framework */,
@@ -535,6 +541,7 @@
 		4C3EA133206A714300310024 /* AppUI */ = {
 			isa = PBXGroup;
 			children = (
+				4CBE0F732160932400646F76 /* SlimSlider.swift */,
 				4C3EA134206A716400310024 /* Playback */,
 			);
 			path = AppUI;
@@ -850,7 +857,6 @@
 				70CD205B1E6479A800AF619F /* Frameworks */,
 				70CD205C1E6479A800AF619F /* Resources */,
 				33FE5B74C59638D836131FA2 /* [CP] Embed Pods Frameworks */,
-				8D30C73712A29CC525F02209 /* [CP] Copy Pods Resources */,
 				4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */,
 				4C958E9A208D3D9700A71C59 /* Run Carthage Copy Frameworks */,
 				4C958E9B2090184A00A71C59 /* Run Carthage Check Outdated */,
@@ -966,9 +972,10 @@
 				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
 				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/L10n-swift/L10n_swift.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
@@ -987,9 +994,10 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/L10n_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
@@ -1066,21 +1074,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8D30C73712A29CC525F02209 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1221,6 +1214,7 @@
 				4C3EA137206A71D200310024 /* DeviceNowPlayingBarView.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
+				4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */,
 				4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */,
 				4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */,
 				68F0F3F91F11EC1B00718AFF /* MediaMusic.swift in Sources */,

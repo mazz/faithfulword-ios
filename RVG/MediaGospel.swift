@@ -50,11 +50,11 @@ extension MediaGospel {
 
 // Adopt RowConvertible so that we can fetch players from the database.
 // Implementation is automatically derived from Codable.
-extension MediaGospel: RowConvertible { }
+extension MediaGospel: FetchableRecord { }
 
 // Adopt MutablePersistable so that we can create/update/delete players in the database.
 // Implementation is partially derived from Codable.
-extension MediaGospel: MutablePersistable {
+extension MediaGospel: MutablePersistableRecord {
     public static let databaseTableName = "mediagospel"
     public mutating func didInsert(with rowID: String, for column: String?) {
         uuid = rowID

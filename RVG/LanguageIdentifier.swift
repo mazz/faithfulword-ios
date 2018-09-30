@@ -20,11 +20,11 @@ extension LanguageIdentifier {
 
 // Adopt RowConvertible so that we can fetch players from the database.
 // Implementation is automatically derived from Codable.
-extension LanguageIdentifier: RowConvertible { }
+extension LanguageIdentifier: FetchableRecord { }
 
 // Adopt MutablePersistable so that we can create/update/delete players in the database.
 // Implementation is partially derived from Codable.
-extension LanguageIdentifier: MutablePersistable {
+extension LanguageIdentifier: MutablePersistableRecord {
     public static let databaseTableName = "languageidentifier"
     public mutating func didInsert(with rowID: String, for column: String?) {
         uuid = rowID

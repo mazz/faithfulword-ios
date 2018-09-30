@@ -11,10 +11,17 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var songNameLabel: UILabel!
     @IBOutlet weak var albumNameLabel: UILabel!
     @IBOutlet weak var fullPlayPauseButton: UIButton!
-    @IBOutlet weak var fullPlaybackProgressView: UIProgressView!
+    @IBOutlet weak var fullPlaybackSlider: UISlider!
 
     @IBOutlet weak var albumArtImageView: UIImageView!
 
+    @IBOutlet weak var currentPlaybackPositionLabel: UILabel!
+    @IBOutlet weak var totalPlaybackDurationLabel: UILabel!
+
+    var estimatedPlaybackPosition: Float = Float(0)
+    var estimatedDuration: Float = Float(0)
+
+    let dateComponentFormatter = DateComponentsFormatter()
     let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 
     var playPauseButton: UIBarButtonItem!
@@ -30,7 +37,7 @@ class PopupContentController: UIViewController {
     var assetPlaybackManager: AssetPlaybackManager! {
         didSet {
             // Add the Key-Value Observers needed to keep the UI up to date.
-            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
+//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
             assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration), options: NSKeyValueObservingOptions.new, context: nil)
             assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition), options: NSKeyValueObservingOptions.new, context: nil)
 
@@ -95,6 +102,15 @@ class PopupContentController: UIViewController {
         guard let assetPlaybackService = viewModel.assetPlaybackService else { return }
         self.assetPlaybackManager = assetPlaybackService.assetPlaybackManager
 
+        dateComponentFormatter.unitsStyle = .positional
+        dateComponentFormatter.allowedUnits = [.minute, .second]
+        dateComponentFormatter.zeroFormattingBehavior = [.pad]
+
+//        fullPlaybackSlider.handlerImage = UIImage(named: "8by8-dkgray")
+//        fullPlaybackSlider.selectedBarColor = UIColor.darkGray
+//        fullPlaybackSlider.unselectedBarColor = UIColor.lightGray
+//        fullPlaybackSlider.setNeedsDisplay()
+
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
         songNameLabel.text = songTitle
@@ -127,7 +143,7 @@ class PopupContentController: UIViewController {
         notificationCenter.removeObserver(self, name: AssetPlaybackManager.nextTrackNotification, object: nil)
         notificationCenter.removeObserver(self, name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
 
-        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress))
+//        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress))
         assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration))
         assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
     }
@@ -213,23 +229,39 @@ class PopupContentController: UIViewController {
     // MARK: Key-Value Observing Method
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == #keyPath(AssetPlaybackManager.duration) {
+            let duration: Float = Float(assetPlaybackManager.duration)
+            print("duration: \(duration)")
+            if !duration.isNaN {
+                estimatedDuration = duration
+                print("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
+                fullPlaybackSlider.minimumValue = Float(0)
+                fullPlaybackSlider.maximumValue = assetPlaybackManager.duration
+//                guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.duration)) else { return }
+//                totalPlaybackDurationLabel.text = stringValue
+            }
 
-        guard let assetPlaybackService = viewModel.assetPlaybackService else {
-            return
-        }
-
-        if keyPath == #keyPath(AssetPlaybackManager.percentProgress) {
-            fullPlaybackProgressView.progress = assetPlaybackService.assetPlaybackManager.percentProgress
-        }
-        else if keyPath == #keyPath(AssetPlaybackManager.duration) {
-//            guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackService.assetPlaybackManager.duration)) else { return }
-
-//            totalPlaybackDurationTextField.stringValue = stringValue
         }
         else if keyPath == #keyPath(AssetPlaybackManager.playbackPosition) {
-//            guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackService.assetPlaybackManager.playbackPosition)) else { return }
+            let playbackPosition: Float = Float(assetPlaybackManager.playbackPosition)
+            print("playbackPosition: \(playbackPosition)")
+            if !playbackPosition.isNaN {
+                estimatedPlaybackPosition = playbackPosition
+                print("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
+                guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.playbackPosition)) else { return }
+                currentPlaybackPositionLabel.text = stringValue
 
-//            currentPlaybackPositionTextField.stringValue = stringValue
+                fullPlaybackSlider.value = assetPlaybackManager.playbackPosition
+
+                if estimatedDuration != 0 {
+                    let remainingTime: Float = Float(estimatedDuration - assetPlaybackManager.playbackPosition)
+                        guard let stringValue = dateComponentFormatter.string(from: TimeInterval(remainingTime)) else { return }
+                        totalPlaybackDurationLabel.text = stringValue
+
+                } else {
+                    totalPlaybackDurationLabel.text = "-:--"
+                }
+            }
         }
         else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -240,20 +272,20 @@ class PopupContentController: UIViewController {
 
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         if assetPlaybackManager.asset != nil {
-//            assetNameTextField.stringValue = assetPlaybackManager.asset.assetName
-//
-//            guard let asset = assetPlaybackManager.asset else {
-//                return
-//            }
-//
-//            let urlAsset = asset.urlAsset
-//
-//            let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
-//
-//            let image = NSImage(data: artworkData) ?? NSImage()
-//
-//            assetCoverArtImageView.image = image
-//
+            songNameLabel.text = assetPlaybackManager.asset.assetName
+
+            guard let asset = assetPlaybackManager.asset else {
+                return
+            }
+
+            let urlAsset = asset.urlAsset
+
+            let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
+
+            let image = UIImage(data: artworkData) ?? UIImage()
+
+            albumArtImageView.image = image
+
 //            for i in assets.startIndex..<assets.endIndex {
 //                if asset.assetName == assets[i].assetName {
 //                    assetListTableView.selectRowIndexes(IndexSet(integer: i), byExtendingSelection: false)
@@ -262,11 +294,15 @@ class PopupContentController: UIViewController {
 //            }
         }
         else {
-//            assetCoverArtImageView.image = nil
-//            assetNameTextField.stringValue = "Select Item Below to play"
-//            totalPlaybackDurationTextField.stringValue = "-:--"
-//            currentPlaybackPositionTextField.stringValue = "-:--"
-//            playbackProgressIndicator.doubleValue = 0.0
+            albumArtImageView.image = nil
+            songNameLabel.text = "Select Item Below to play"
+            totalPlaybackDurationLabel.text = "-:--"
+            currentPlaybackPositionLabel.text = "-:--"
+            fullPlaybackSlider.value = Float(0)
+
+            estimatedPlaybackPosition = Float(0)
+            estimatedDuration = Float(0)
+
 //            assetListTableView.deselectAll(nil)
         }
 

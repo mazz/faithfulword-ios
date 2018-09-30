@@ -1,5 +1,4 @@
 import UIKit
-import IQKeyboardManagerSwift
 import AVFoundation
 import Firebase
 import Moya

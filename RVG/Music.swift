@@ -53,11 +53,11 @@ extension Music {
 
 // Adopt RowConvertible so that we can fetch players from the database.
 // Implementation is automatically derived from Codable.
-extension Music: RowConvertible { }
+extension Music: FetchableRecord { }
 
 // Adopt MutablePersistable so that we can create/update/delete players in the database.
 // Implementation is partially derived from Codable.
-extension Music: MutablePersistable {
+extension Music: MutablePersistableRecord {
     public static let databaseTableName = "music"
     public mutating func didInsert(with rowID: String, for column: String?) {
         categoryUuid = rowID
