@@ -58,6 +58,7 @@
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="MVJ-yU-XRs">
                                         <rect key="frame" x="32" y="79" width="311" height="311"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="MVJ-yU-XRs" secondAttribute="height" multiplier="1:1" priority="900" id="6R7-XT-QIM"/>
                                         </constraints>
@@ -67,9 +68,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ul6-u1-vcL">
-                                        <rect key="frame" x="30" y="422" width="315" height="31"/>
-                                    </slider>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kjz-e8-KVw">
                                         <rect key="frame" x="0.0" y="424" width="375" height="388"/>
                                         <subviews>
@@ -88,7 +86,7 @@
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_prev"/>
                                             </button>
-                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" minimumValueImage="volDown" maximumValueImage="volUp" translatesAutoresizingMaskIntoConstraints="NO" id="CDy-IF-KmA">
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="CDy-IF-KmA">
                                                 <rect key="frame" x="30" y="276" width="315" height="31"/>
                                             </slider>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Song" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B6t-4N-FaC" customClass="MarqueeLabel" customModule="MarqueeLabel">
@@ -151,13 +149,10 @@
                                 <color key="tintColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Kjz-e8-KVw" secondAttribute="bottom" id="GTD-Id-GsO"/>
-                                    <constraint firstItem="ul6-u1-vcL" firstAttribute="leading" secondItem="sgI-EK-or8" secondAttribute="leading" constant="32" id="KK7-ER-Sb8"/>
-                                    <constraint firstItem="ul6-u1-vcL" firstAttribute="top" secondItem="MVJ-yU-XRs" secondAttribute="bottom" constant="32" id="KfB-T9-Skl"/>
-                                    <constraint firstAttribute="trailing" secondItem="ul6-u1-vcL" secondAttribute="trailing" constant="32" id="NUq-Ek-CV3"/>
                                     <constraint firstItem="Kjz-e8-KVw" firstAttribute="leading" secondItem="sgI-EK-or8" secondAttribute="leading" id="Om8-Ys-xie"/>
                                     <constraint firstItem="MVJ-yU-XRs" firstAttribute="leading" secondItem="sgI-EK-or8" secondAttribute="leading" constant="32" id="Stu-gp-tsu"/>
                                     <constraint firstAttribute="trailing" secondItem="MVJ-yU-XRs" secondAttribute="trailing" constant="32" id="eJn-NV-iEY"/>
-                                    <constraint firstItem="Kjz-e8-KVw" firstAttribute="top" secondItem="ul6-u1-vcL" secondAttribute="bottom" constant="-28" id="mQm-Iw-pKt"/>
+                                    <constraint firstItem="Kjz-e8-KVw" firstAttribute="top" secondItem="MVJ-yU-XRs" secondAttribute="bottom" constant="34" id="pOz-bP-tHo"/>
                                     <constraint firstAttribute="trailing" secondItem="Kjz-e8-KVw" secondAttribute="trailing" id="qI1-3k-dZf"/>
                                 </constraints>
                             </view>
@@ -173,13 +168,13 @@
                         <viewLayoutGuide key="safeArea" id="Bof-Kc-zTp"/>
                     </view>
                     <connections>
-                        <outlet property="albumArtImageView" destination="MVJ-yU-XRs" id="jZn-J6-RNA"/>
                         <outlet property="albumNameLabel" destination="6lB-9O-dy6" id="yY5-Ph-Ajk"/>
-                        <outlet property="currentPlaybackPositionLabel" destination="bJH-Gc-pC2" id="1i8-db-6Aw"/>
+                        <outlet property="fullAlbumArtImageView" destination="MVJ-yU-XRs" id="jZn-J6-RNA"/>
+                        <outlet property="fullCurrentPlaybackPositionLabel" destination="bJH-Gc-pC2" id="1i8-db-6Aw"/>
                         <outlet property="fullPlayPauseButton" destination="24I-zf-ayu" id="0vk-Tu-wSy"/>
-                        <outlet property="fullPlaybackSlider" destination="ul6-u1-vcL" id="Iz8-UB-KKJ"/>
+                        <outlet property="fullPlaybackSlider" destination="CDy-IF-KmA" id="5ou-3n-wcv"/>
+                        <outlet property="fullTotalPlaybackDurationLabel" destination="kKF-Ep-3T1" id="U7X-yP-Zey"/>
                         <outlet property="songNameLabel" destination="B6t-4N-FaC" id="w1a-3G-2ei"/>
-                        <outlet property="totalPlaybackDurationLabel" destination="kKF-Ep-3T1" id="U7X-yP-Zey"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tzr-pG-hDn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -192,7 +187,5 @@
         <image name="nowPlaying_next" width="44" height="44"/>
         <image name="nowPlaying_pause" width="44" height="44"/>
         <image name="nowPlaying_prev" width="44" height="44"/>
-        <image name="volDown" width="7" height="9"/>
-        <image name="volUp" width="17" height="14"/>
     </resources>
 </document>

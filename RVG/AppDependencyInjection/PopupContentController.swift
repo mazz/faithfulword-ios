@@ -5,6 +5,8 @@
 import UIKit
 import LNPopupController
 import AVFoundation
+import RxSwift
+import RxCocoa
 
 class PopupContentController: UIViewController {
 
@@ -13,10 +15,10 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var fullPlayPauseButton: UIButton!
     @IBOutlet weak var fullPlaybackSlider: UISlider!
 
-    @IBOutlet weak var albumArtImageView: UIImageView!
+    @IBOutlet weak var fullAlbumArtImageView: UIImageView!
 
-    @IBOutlet weak var currentPlaybackPositionLabel: UILabel!
-    @IBOutlet weak var totalPlaybackDurationLabel: UILabel!
+    @IBOutlet weak var fullCurrentPlaybackPositionLabel: UILabel!
+    @IBOutlet weak var fullTotalPlaybackDurationLabel: UILabel!
 
     var estimatedPlaybackPosition: Float = Float(0)
     var estimatedDuration: Float = Float(0)
@@ -24,6 +26,7 @@ class PopupContentController: UIViewController {
     let dateComponentFormatter = DateComponentsFormatter()
     let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 
+    // bar
     var playPauseButton: UIBarButtonItem!
     var nextButton: UIBarButtonItem!
 
@@ -31,8 +34,17 @@ class PopupContentController: UIViewController {
     var timer : Timer?
 
     // MARK: Fields
+    var scrubbing: Bool = false
+    var playingWhileScrubbing: Bool = false
 
     public var viewModel: PopupContentViewModel!
+
+    private let sliderInUse = Variable<Bool>(false)
+
+//    private let sliderInUse = BehaviorSubject<Bool>(value: false) //ReplaySubject<Bool>.create(bufferSize: 1) //Field<Bool>(false)
+    public let actualPlaybackProgress = Field<Float>(0)
+
+    private var bag = DisposeBag()
 
     var assetPlaybackManager: AssetPlaybackManager! {
         didSet {
@@ -70,10 +82,10 @@ class PopupContentController: UIViewController {
 //            }
         }
     }
-    var albumArt: UIImage = UIImage() {
+    var albumArt: UIImage = UIColor.red.image(size: CGSize(width: 128, height: 128)) {
         didSet {
             if isViewLoaded {
-                albumArtImageView.image = albumArt
+                fullAlbumArtImageView.image = albumArt
             }
             popupItem.image = albumArt
             popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "")
@@ -96,11 +108,59 @@ class PopupContentController: UIViewController {
 
     }
 
+    func bindUI() {
+        fullPlaybackSlider.rx.value.asObservable()
+            .map { Float($0) }
+            .do(onNext: { time in
+                print("time: \(time)")
+            })
+            .distinctUntilChanged()
+            .throttle(0.5, scheduler: MainScheduler.instance)
+            .bind(to: viewModel.sliderScrubEvent)
+            .disposed(by: bag)
+        fullPlaybackSlider.isContinuous = true
+        fullPlaybackSlider.isMultipleTouchEnabled = false
+
+
+        actualPlaybackProgress.asObservable()
+            .filter { [unowned self] _ in !self.sliderInUse.value }
+//            .map { Float($0) }
+//            .debounce(0.1, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] progress in
+                self.fullPlaybackSlider.value = progress
+                print("field progress: \(progress)")
+            })
+            .disposed(by: bag)
+
+        listenForSliderUserEvents()
+    }
+
+    func listenForSliderUserEvents() {
+        let inUseObservable = fullPlaybackSlider.rx
+            .controlEvent([.touchDown, .touchDragInside])
+            .map { true }
+
+        let notInUseObservable = fullPlaybackSlider.rx
+            .controlEvent([.touchUpInside,
+                           .touchUpOutside,
+                           .touchDownRepeat,
+                           .touchDragOutside,
+                           .touchDragEnter,
+                           .touchDragExit,
+                           .touchCancel])
+            .map { false }
+        Observable.merge([inUseObservable, notInUseObservable])
+            .bind(to: sliderInUse)
+            .disposed(by: bag)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         guard let assetPlaybackService = viewModel.assetPlaybackService else { return }
         self.assetPlaybackManager = assetPlaybackService.assetPlaybackManager
+
+        bindUI()
 
         dateComponentFormatter.unitsStyle = .positional
         dateComponentFormatter.allowedUnits = [.minute, .second]
@@ -111,11 +171,12 @@ class PopupContentController: UIViewController {
 //        fullPlaybackSlider.unselectedBarColor = UIColor.lightGray
 //        fullPlaybackSlider.setNeedsDisplay()
 
+
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
         songNameLabel.text = songTitle
         albumNameLabel.text = albumTitle
-        albumArtImageView.image = albumArt
+//        fullAlbumArtImageView.image = albumArt
 
         popupItem.title = songTitle
         popupItem.subtitle = albumTitle
@@ -148,6 +209,11 @@ class PopupContentController: UIViewController {
         assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
     }
 
+    // MARK: Private
+
+    private func reset() {
+        bag = DisposeBag()
+    }
 
     @objc func _timerTicked(_ timer: Timer) {
         popupItem.progress += 0.0002;
@@ -231,10 +297,10 @@ class PopupContentController: UIViewController {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(AssetPlaybackManager.duration) {
             let duration: Float = Float(assetPlaybackManager.duration)
-            print("duration: \(duration)")
+//            print("duration: \(duration)")
             if !duration.isNaN {
                 estimatedDuration = duration
-                print("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
+//                print("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
                 fullPlaybackSlider.minimumValue = Float(0)
                 fullPlaybackSlider.maximumValue = assetPlaybackManager.duration
 //                guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.duration)) else { return }
@@ -244,22 +310,23 @@ class PopupContentController: UIViewController {
         }
         else if keyPath == #keyPath(AssetPlaybackManager.playbackPosition) {
             let playbackPosition: Float = Float(assetPlaybackManager.playbackPosition)
-            print("playbackPosition: \(playbackPosition)")
+//            print("playbackPosition: \(playbackPosition)")
             if !playbackPosition.isNaN {
                 estimatedPlaybackPosition = playbackPosition
-                print("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
+//                print("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
                 guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.playbackPosition)) else { return }
-                currentPlaybackPositionLabel.text = stringValue
+                fullCurrentPlaybackPositionLabel.text = stringValue
 
-                fullPlaybackSlider.value = assetPlaybackManager.playbackPosition
+                actualPlaybackProgress.value = assetPlaybackManager.playbackPosition
+//                fullPlaybackSlider.value = assetPlaybackManager.playbackPosition
 
                 if estimatedDuration != 0 {
                     let remainingTime: Float = Float(estimatedDuration - assetPlaybackManager.playbackPosition)
                         guard let stringValue = dateComponentFormatter.string(from: TimeInterval(remainingTime)) else { return }
-                        totalPlaybackDurationLabel.text = stringValue
+                        fullTotalPlaybackDurationLabel.text = stringValue
 
                 } else {
-                    totalPlaybackDurationLabel.text = "-:--"
+                    fullTotalPlaybackDurationLabel.text = "-:--"
                 }
             }
         }
@@ -282,9 +349,10 @@ class PopupContentController: UIViewController {
 
             let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
 
-            let image = UIImage(data: artworkData) ?? UIImage()
+            let image = UIImage(data: artworkData) ?? UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
 
-            albumArtImageView.image = image
+//            fullAlbumArtImageView.image = image
+            albumArt = image
 
 //            for i in assets.startIndex..<assets.endIndex {
 //                if asset.assetName == assets[i].assetName {
@@ -294,10 +362,11 @@ class PopupContentController: UIViewController {
 //            }
         }
         else {
-            albumArtImageView.image = nil
+
+            albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
             songNameLabel.text = "Select Item Below to play"
-            totalPlaybackDurationLabel.text = "-:--"
-            currentPlaybackPositionLabel.text = "-:--"
+            fullTotalPlaybackDurationLabel.text = "-:--"
+            fullCurrentPlaybackPositionLabel.text = "-:--"
             fullPlaybackSlider.value = Float(0)
 
             estimatedPlaybackPosition = Float(0)
@@ -332,4 +401,3 @@ class PopupContentController: UIViewController {
     }
 
 }
-

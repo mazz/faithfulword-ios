@@ -57,6 +57,7 @@ extension MediaListingCoordinator: NavigationCoordinating {
             {
                 popupController.songTitle = localizedName
                 popupController.albumTitle = presenterName
+//                popupController.albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
                 popupController.albumArt = thumbImage
                 popupController.popupItem.accessibilityHint = NSLocalizedString("Tap to Expand the Mini Player", comment: "")
 

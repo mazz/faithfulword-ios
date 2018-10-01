@@ -70,6 +70,7 @@
 		4CA31FAC200E3C0900A94101 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FAB200E3C0900A94101 /* User.swift */; };
 		4CBE0F5221605CA500646F76 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBE0F5121605CA400646F76 /* QuartzCore.framework */; };
 		4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F732160932400646F76 /* SlimSlider.swift */; };
+		4CBE0F762161747200646F76 /* Color+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F752161747100646F76 /* Color+Image.swift */; };
 		4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */; };
 		4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */; };
 		4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */; };
@@ -249,6 +250,7 @@
 		4CA31FAB200E3C0900A94101 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4CBE0F5121605CA400646F76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4CBE0F732160932400646F76 /* SlimSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlimSlider.swift; sourceTree = "<group>"; };
+		4CBE0F752161747100646F76 /* Color+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Image.swift"; sourceTree = "<group>"; };
 		4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDependencyModule.swift; sourceTree = "<group>"; };
@@ -534,6 +536,7 @@
 				4CCE8C6C1FF4B2DB00AFBAF2 /* Resettable.swift */,
 				4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */,
 				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
+				4CBE0F752161747100646F76 /* Color+Image.swift */,
 			);
 			path = AppUtilities;
 			sourceTree = "<group>";
@@ -1151,6 +1154,7 @@
 				4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */,
 				4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */,
 				68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */,
+				4CBE0F762161747200646F76 /* Color+Image.swift in Sources */,
 				4C39990020229D6C008E76E8 /* SideMenuViewModel.swift in Sources */,
 				4CCE8C9A1FF5579200AFBAF2 /* AppInfoProviding.swift in Sources */,
 				4C5FAD792037B04200397BFF /* UIViewController+Alerting.swift in Sources */,
