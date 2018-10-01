@@ -124,7 +124,8 @@ public class AssetPlaybackManager: NSObject {
         player.addObserver(self, forKeyPath: #keyPath(AVPlayer.rate), options: [.new], context: nil)
         
         // Add a periodic time observer to keep `percentProgress` and `playbackPosition` up to date.
-        timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1.0 / 60.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] time in
+//        timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1.0 / 60.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] time in
+            timeObserverToken = player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.5, preferredTimescale: Int32(NSEC_PER_SEC)), queue: DispatchQueue.main, using: { [weak self] time in
             let timeElapsed = Float(CMTimeGetSeconds(time))
             guard let duration = self?.player.currentItem?.duration else { return }
             
