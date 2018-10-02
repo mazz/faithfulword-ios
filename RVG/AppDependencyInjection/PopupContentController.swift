@@ -7,11 +7,12 @@ import LNPopupController
 import AVFoundation
 import RxSwift
 import RxCocoa
+import MarqueeLabel
 
 class PopupContentController: UIViewController {
 
-    @IBOutlet weak var songNameLabel: UILabel!
-    @IBOutlet weak var albumNameLabel: UILabel!
+    @IBOutlet weak var songNameLabel: MarqueeLabel!
+    @IBOutlet weak var albumNameLabel: MarqueeLabel!
     @IBOutlet weak var fullPlayPauseButton: UIButton!
     @IBOutlet weak var fullPlaybackSlider: UISlider!
 
@@ -109,6 +110,8 @@ class PopupContentController: UIViewController {
     }
 
     func bindUI() {
+        reset()
+
         fullPlaybackSlider.rx.value.asObservable()
             .map { Float($0) }
             .do(onNext: { time in
@@ -168,7 +171,8 @@ class PopupContentController: UIViewController {
         dateComponentFormatter.zeroFormattingBehavior = [.pad]
 
 //        fullPlaybackSlider.handlerImage = UIImage(named: "8by8-dkgray")
-//        fullPlaybackSlider.selectedBarColor = UIColor.darkGray
+        fullPlaybackSlider.thumbTintColor = UIColor.darkGray
+
 //        fullPlaybackSlider.unselectedBarColor = UIColor.lightGray
 //        fullPlaybackSlider.setNeedsDisplay()
 
@@ -176,7 +180,12 @@ class PopupContentController: UIViewController {
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
         songNameLabel.text = songTitle
+        songNameLabel.fadeLength = 10.0
+        songNameLabel.speed = .duration(8.0)
+
         albumNameLabel.text = albumTitle
+        albumNameLabel.fadeLength = 10.0
+        albumNameLabel.speed = .duration(8.0)
 //        fullAlbumArtImageView.image = albumArt
 
         popupItem.title = songTitle
@@ -324,7 +333,7 @@ class PopupContentController: UIViewController {
                 if estimatedDuration != 0 {
                     let remainingTime: Float = Float(estimatedDuration - assetPlaybackManager.playbackPosition)
                         guard let stringValue = dateComponentFormatter.string(from: TimeInterval(remainingTime)) else { return }
-                        fullTotalPlaybackDurationLabel.text = stringValue
+                        fullTotalPlaybackDurationLabel.text = String("-").appending(stringValue)
 
                 } else {
                     fullTotalPlaybackDurationLabel.text = "-:--"
