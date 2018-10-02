@@ -85,29 +85,27 @@ public class AssetPlaybackManager: NSObject {
     
     /// The Asset that is currently being loaded for playback.
     var asset: Asset! {
-        willSet(newValue) {
-            print("asset newValue willSet : \(String(describing: newValue))")
+        willSet {
             if asset != nil {
+                print("asset willSet: \(String(describing: asset))")
                 asset.urlAsset.removeObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), context: nil)
             }
         }
-//        set {
-//            asset = asset
-//        }
-        didSet(newValue) {
-            print("asset newValue didSet: \(String(describing: newValue))")
+        didSet {
             if asset != nil {
+                print("asset didSet: \(String(describing: asset))")
                 asset.urlAsset.addObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), options: [.initial, .new], context: nil)
             }
             else {
                 // Unload currentItem so that the state is updated globally.
+                print("asset didSet nil: \(String(describing: asset))")
                 player.replaceCurrentItem(with: nil)
             }
-            
+
             NotificationCenter.default.post(name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
         }
     }
-    
+
     // MARK: Initialization
     
     override init() {

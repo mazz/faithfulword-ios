@@ -31,6 +31,7 @@ internal final class PlaybackCoordinator  {
             else {
                 return
         }
+        assetPlaybackService.assetPlaybackManager.stop()
         assetPlaybackService.assetPlaybackManager.asset = Asset(assetName: localizedName, urlAsset: AVURLAsset(url: url))
     }
 }
