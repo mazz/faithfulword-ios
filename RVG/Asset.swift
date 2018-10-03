@@ -18,7 +18,8 @@ public struct Asset {
     
     /// The name of the asset to present in the application.
     let assetName: String
-    
+    let artist: String
+
     /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
     let urlAsset: AVURLAsset
 }

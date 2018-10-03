@@ -80,11 +80,17 @@
                                                 <rect key="frame" x="218" y="89.5" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_next"/>
+                                                <connections>
+                                                    <action selector="handleUserDidPressForwardButton:" destination="CDA-xr-UNl" eventType="touchUpInside" id="jiq-Ab-ydk"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zAW-fg-84x" userLabel="Prev">
                                                 <rect key="frame" x="58" y="89.5" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_prev"/>
+                                                <connections>
+                                                    <action selector="handleUserDidPressBackwardButton:" destination="CDA-xr-UNl" eventType="touchUpInside" id="JN8-Kr-2eG"/>
+                                                </connections>
                                             </button>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="CDy-IF-KmA">
                                                 <rect key="frame" x="60" y="140" width="200" height="31"/>

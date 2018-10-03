@@ -25,6 +25,7 @@ internal final class PlaybackCoordinator  {
 
     public func updatePlaybackAsset(_ playable: Playable) {
         guard let localizedName = playable.localizedName,
+            let presenterName = playable.presenterName,
             let path = playable.path,
             let assetPlaybackService = self.assetPlaybackService,
             let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
@@ -32,7 +33,9 @@ internal final class PlaybackCoordinator  {
                 return
         }
         assetPlaybackService.assetPlaybackManager.stop()
-        assetPlaybackService.assetPlaybackManager.asset = Asset(assetName: localizedName, urlAsset: AVURLAsset(url: url))
+        assetPlaybackService.assetPlaybackManager.asset = Asset(assetName: localizedName,
+                                                                artist: presenterName,
+                                                                urlAsset: AVURLAsset(url: url))
     }
 }
 

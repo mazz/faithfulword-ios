@@ -31,8 +31,8 @@ class PopupContentController: UIViewController {
     var playPauseButton: UIBarButtonItem!
     var nextButton: UIBarButtonItem!
 
-    var assets = [Asset]()
-    var timer : Timer?
+    public var playbackAsset: Asset!
+    public var playlistAssets = [Asset]()
 
     // MARK: Fields
     var scrubbing: Bool = false
@@ -95,14 +95,14 @@ class PopupContentController: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
+        playPauseButton = UIBarButtonItem(image: UIImage(named: "play"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
 //        playPauseButton.action = #selector(PopupContentController.doPlayPause)
 
 //for: .normal, style: .plain, barMetrics: .compact)
 
 //        playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
-        playPauseButton.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-        nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(PopupContentController.doNextTrack))
+        playPauseButton.accessibilityLabel = NSLocalizedString("Play", comment: "")
+        nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(PopupContentController.handleUserDidPressForwardButton))
         nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 
         popupItem.rightBarButtonItems = [ playPauseButton, nextButton ]
@@ -170,12 +170,7 @@ class PopupContentController: UIViewController {
         dateComponentFormatter.allowedUnits = [.minute, .second]
         dateComponentFormatter.zeroFormattingBehavior = [.pad]
 
-//        fullPlaybackSlider.handlerImage = UIImage(named: "8by8-dkgray")
         fullPlaybackSlider.thumbTintColor = UIColor.darkGray
-
-//        fullPlaybackSlider.unselectedBarColor = UIColor.lightGray
-//        fullPlaybackSlider.setNeedsDisplay()
-
 
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
@@ -191,18 +186,14 @@ class PopupContentController: UIViewController {
         popupItem.title = songTitle
         popupItem.subtitle = albumTitle
 
-//        timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
-
-//        remoteCommandService.activatePlaybackCommands(true)
-
         // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
 //        let notificationCenter = NotificationCenter.default
 //
 //        notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
 //        notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
 
-
-        assets = [Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))]
+        assetPlaybackManager.stop()
+        assetPlaybackManager.asset = playbackAsset
     }
 
     deinit {
@@ -223,23 +214,6 @@ class PopupContentController: UIViewController {
 
     private func reset() {
         bag = DisposeBag()
-    }
-
-    @objc func _timerTicked(_ timer: Timer) {
-        popupItem.progress += 0.0002;
-        popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
-
-
-
-        let totalTime = TimeInterval(250)
-        popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"
-
-//        fullPlaybackProgressView.progress = popupItem.progress
-
-        if popupItem.progress >= 1.0 {
-            timer.invalidate()
-            popupPresentationContainer?.dismissPopupBar(animated: true, completion: nil)
-        }
     }
 
     @objc func doPlayPause() {
@@ -275,31 +249,51 @@ class PopupContentController: UIViewController {
 //    assetPlaybackManager.asset = Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))
     }
 
-    @objc func doNextTrack() {
+    // MARK: Target-Action Methods
 
+    @IBAction func handleUserDidPressBackwardButton(_ sender: Any) {
+        if assetPlaybackManager.playbackPosition < 5.0 {
+            // If the currently playing asset is less than 5 seconds into playback then skip to the previous `Asset`.
+            assetPlaybackManager.previousTrack()
+        }
+        else {
+            // Otherwise seek back to the beginning of the currently playing `Asset`.
+            assetPlaybackManager.seekTo(0)
+        }
     }
+
+    @IBAction func handleUserDidPressForwardButton(_ sender: Any) {
+        assetPlaybackManager.nextTrack()
+    }
+
+
+//    @objc func doNextTrack() {
+//
+//    }
+
+
 
     @objc func updateToolbarItemState() {
         print("updateToolbarItemState")
-//        if assetPlaybackManager.asset == nil {
+        if assetPlaybackManager.asset == nil {
 //            backwardButton.isEnabled = false
-//            playPauseButton.isEnabled = false
-//            forwardButton.isEnabled = false
-//
-//            playPauseButton.image = #imageLiteral(resourceName: "Play")
-//        }
-//        else {
+            playPauseButton.isEnabled = false
+            nextButton.isEnabled = false
+
+            playPauseButton.image = UIImage(named: "play")
+        }
+        else {
 //            backwardButton.isEnabled = true
-//            playPauseButton.isEnabled = true
-//            forwardButton.isEnabled = true
-//
-//            if assetPlaybackManager.player.rate == 0 {
-//                playPauseButton.image = #imageLiteral(resourceName: "Play")
-//            }
-//            else {
-//                playPauseButton.image = #imageLiteral(resourceName: "Pause")
-//            }
-//        }
+            playPauseButton.isEnabled = true
+            nextButton.isEnabled = true
+
+            if assetPlaybackManager.state != .playing {
+                playPauseButton.image = UIImage(named: "play")
+            }
+            else {
+                playPauseButton.image = UIImage(named: "pause")
+            }
+        }
     }
 
     // MARK: Key-Value Observing Method
@@ -350,6 +344,10 @@ class PopupContentController: UIViewController {
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         if assetPlaybackManager.asset != nil {
             songNameLabel.text = assetPlaybackManager.asset.assetName
+            albumNameLabel.text = assetPlaybackManager.asset.artist
+
+            songTitle = assetPlaybackManager.asset.assetName
+            albumTitle = assetPlaybackManager.asset.artist
 
             guard let asset = assetPlaybackManager.asset else {
                 return
@@ -390,19 +388,19 @@ class PopupContentController: UIViewController {
 
     @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
         guard let assetName = notification.userInfo?[Asset.nameKey] as? String else { return }
-        guard let assetIndex = assets.index(where: {$0.assetName == assetName}) else { return }
+        guard let assetIndex = playlistAssets.index(where: {$0.assetName == assetName}) else { return }
 
-        if assetIndex < assets.count - 1 {
-            assetPlaybackManager.asset = assets[assetIndex + 1]
+        if assetIndex < playlistAssets.count - 1 {
+            assetPlaybackManager.asset = playlistAssets[assetIndex + 1]
         }
     }
 
     @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
         guard let assetName = notification.userInfo?[Asset.nameKey] as? String else { return }
-        guard let assetIndex = assets.index(where: {$0.assetName == assetName}) else { return }
+        guard let assetIndex = playlistAssets.index(where: {$0.assetName == assetName}) else { return }
 
         if assetIndex > 0 {
-            assetPlaybackManager.asset = assets[assetIndex - 1]
+            assetPlaybackManager.asset = playlistAssets[assetIndex - 1]
         }
     }
 
