@@ -48,7 +48,20 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
                 remoteCommandManager: RemoteCommandManager) {
         self.assetPlaybackManager = assetPlaybackManager
         self.remoteCommandManager = remoteCommandManager
+        // default features true
         self.remoteCommandManager.activatePlaybackCommands(true)
+        self.remoteCommandManager.toggleNextTrackCommand(true)
+        self.remoteCommandManager.togglePreviousTrackCommand(true)
+        self.remoteCommandManager.toggleChangePlaybackPositionCommand(true)
+        // leave these off because there is not enough room on the lock screen
+        self.remoteCommandManager.toggleSkipForwardCommand(false)
+        self.remoteCommandManager.toggleSkipBackwardCommand(false)
+        self.remoteCommandManager.toggleSeekForwardCommand(false)
+        self.remoteCommandManager.toggleSeekBackwardCommand(false)
+        self.remoteCommandManager.toggleLikeCommand(false)
+        self.remoteCommandManager.toggleDislikeCommand(false)
+        self.remoteCommandManager.toggleBookmarkCommand(false)
+
     }
 
 //    public var playableItem = Field<Playable?>(nil)
