@@ -181,7 +181,7 @@ public class AssetPlaybackManager: NSObject {
     func togglePlayPause() {
         guard asset != nil else { return }
         
-        if player.rate == 1.0 {
+        if player.rate != 0.0 {
             pause()
         }
         else {
