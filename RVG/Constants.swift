@@ -20,3 +20,8 @@ let getFolders = "folder/"
 let aboutUs = "about-us/"
 let privacyPolicy = "privacy-policy/"
 let contactUs = "contact-us/"
+
+enum UserPrefs: String {
+    case playbackSpeed
+}
+

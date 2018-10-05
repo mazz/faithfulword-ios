@@ -9,10 +9,16 @@ import RxSwift
 import RxCocoa
 import MarqueeLabel
 
+enum PlaybackSpeed {
+    case oneX
+    case onePointTwoFiveX
+    case onePointFiveX
+}
+
 class PopupContentController: UIViewController {
 
-    @IBOutlet weak var songNameLabel: MarqueeLabel!
-    @IBOutlet weak var albumNameLabel: MarqueeLabel!
+    @IBOutlet weak var fullSongNameLabel: MarqueeLabel!
+    @IBOutlet weak var fullAlbumNameLabel: MarqueeLabel!
     @IBOutlet weak var fullPlayPauseButton: UIButton!
     @IBOutlet weak var fullPlaybackSlider: UISlider!
 
@@ -20,6 +26,9 @@ class PopupContentController: UIViewController {
 
     @IBOutlet weak var fullCurrentPlaybackPositionLabel: UILabel!
     @IBOutlet weak var fullTotalPlaybackDurationLabel: UILabel!
+    @IBOutlet weak var fullRepeatButton: UIButton!
+    @IBOutlet weak var fullDownloadShareButton: UIButton!
+    @IBOutlet weak var fullToggleSpeedButton: UIButton!
 
     var estimatedPlaybackPosition: Float = Float(0)
     var estimatedDuration: Float = Float(0)
@@ -47,6 +56,10 @@ class PopupContentController: UIViewController {
 
     private var bag = DisposeBag()
 
+    var playbackRepeat : Bool?
+    //    var muteVolume : Bool?
+    var playbackSpeed: PlaybackSpeed = .oneX
+
     var assetPlaybackManager: AssetPlaybackManager! {
         didSet {
             // Add the Key-Value Observers needed to keep the UI up to date.
@@ -67,7 +80,7 @@ class PopupContentController: UIViewController {
     var songTitle: String = "" {
         didSet {
             if isViewLoaded {
-                songNameLabel.text = songTitle
+                fullSongNameLabel.text = songTitle
             }
 
             popupItem.title = songTitle
@@ -76,7 +89,7 @@ class PopupContentController: UIViewController {
     var albumTitle: String = "" {
         didSet {
             if isViewLoaded {
-                albumNameLabel.text = albumTitle
+                fullAlbumNameLabel.text = albumTitle
             }
 //            if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
                 popupItem.subtitle = albumTitle
@@ -174,13 +187,13 @@ class PopupContentController: UIViewController {
 
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
-        songNameLabel.text = songTitle
-        songNameLabel.fadeLength = 10.0
-        songNameLabel.speed = .duration(8.0)
+        fullSongNameLabel.text = songTitle
+        fullSongNameLabel.fadeLength = 10.0
+        fullSongNameLabel.speed = .duration(8.0)
 
-        albumNameLabel.text = albumTitle
-        albumNameLabel.fadeLength = 10.0
-        albumNameLabel.speed = .duration(8.0)
+        fullAlbumNameLabel.text = albumTitle
+        fullAlbumNameLabel.fadeLength = 10.0
+        fullAlbumNameLabel.speed = .duration(8.0)
 //        fullAlbumArtImageView.image = albumArt
 
         popupItem.title = songTitle
@@ -251,6 +264,29 @@ class PopupContentController: UIViewController {
 
     // MARK: Target-Action Methods
 
+    @IBAction func togglePlaybackSpeed(_ sender: Any) {
+        var speedTitle: String
+
+        //        switch speed {
+        if playbackSpeed == .oneX {
+            playbackSpeed = .onePointTwoFiveX
+            speedTitle = "1.25"
+            fullToggleSpeedButton.setTitle(speedTitle.appending("x"), for: .normal)
+        }
+        else if playbackSpeed == .onePointTwoFiveX {
+            playbackSpeed = .onePointFiveX
+            speedTitle = "1.5"
+            fullToggleSpeedButton.setTitle(speedTitle.appending("x"), for: .normal)
+        }
+        else if playbackSpeed == .onePointFiveX {
+            playbackSpeed = .oneX
+            speedTitle = "1.0"
+            fullToggleSpeedButton.setTitle(speedTitle.appending("x"), for: .normal)
+        }
+
+//        PlaybackService.sharedInstance().playbackSpeed = playbackSpeed
+    }
+
     @IBAction func handleUserDidPressBackwardButton(_ sender: Any) {
         if assetPlaybackManager.playbackPosition < 5.0 {
             // If the currently playing asset is less than 5 seconds into playback then skip to the previous `Asset`.
@@ -296,6 +332,31 @@ class PopupContentController: UIViewController {
         }
     }
 
+    @objc func emptyUIState() {
+        if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
+
+            print("print rate: \(String(describing:playbackSpeed))")
+            switch playbackSpeed {
+            case 1.0:
+                self.playbackSpeed = .oneX
+            case 1.25:
+                self.playbackSpeed = .onePointTwoFiveX
+            case 1.5:
+                self.playbackSpeed = .onePointFiveX
+            default:
+                self.playbackSpeed = .oneX
+            }
+
+            fullToggleSpeedButton.setTitle(String(describing:playbackSpeed).appending("x"), for: .normal)
+        }
+        fullCurrentPlaybackPositionLabel.text = "-:--"
+        fullTotalPlaybackDurationLabel.text = "-:--"
+        fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
+
+        updateToolbarItemState()
+
+        //        self.repeatButton.setImage(#imageLiteral(resourceName: "repeat"), for: .normal)
+    }
     // MARK: Key-Value Observing Method
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -330,6 +391,7 @@ class PopupContentController: UIViewController {
                         fullTotalPlaybackDurationLabel.text = String("-").appending(stringValue)
 
                 } else {
+                    fullCurrentPlaybackPositionLabel.text = "-:--"
                     fullTotalPlaybackDurationLabel.text = "-:--"
                 }
             }
@@ -343,8 +405,8 @@ class PopupContentController: UIViewController {
 
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         if assetPlaybackManager.asset != nil {
-            songNameLabel.text = assetPlaybackManager.asset.assetName
-            albumNameLabel.text = assetPlaybackManager.asset.artist
+            fullSongNameLabel.text = assetPlaybackManager.asset.assetName
+            fullAlbumNameLabel.text = assetPlaybackManager.asset.artist
 
             songTitle = assetPlaybackManager.asset.assetName
             albumTitle = assetPlaybackManager.asset.artist
@@ -372,7 +434,8 @@ class PopupContentController: UIViewController {
         else {
 
             albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
-            songNameLabel.text = "Select Item Below to play"
+            fullSongNameLabel.text = "--"
+            fullAlbumNameLabel.text = "--"
             fullTotalPlaybackDurationLabel.text = "-:--"
             fullCurrentPlaybackPositionLabel.text = "-:--"
             fullPlaybackSlider.value = Float(0)
@@ -380,6 +443,7 @@ class PopupContentController: UIViewController {
             estimatedPlaybackPosition = Float(0)
             estimatedDuration = Float(0)
 
+            emptyUIState()
 //            assetListTableView.deselectAll(nil)
         }
 
