@@ -7,8 +7,8 @@ public protocol Playable {
     var presenterName : String? { get set }
     var sourceMaterial : String? { get set }
     var trackNumber : Int64? { get set }
-    var createdAt : String? { get set }
-    var updatedAt : String? { get set }
+    var createdAt : Double? { get set }
+    var updatedAt : Double? { get set }
     var largeThumbnailPath : String? { get set }
     var smallThumbnailPath : String? { get set }
 }

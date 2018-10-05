@@ -24,8 +24,8 @@ public struct MediaGospel: Codable, Playable {
     public var sourceMaterial: String?
     public var categoryUuid: String?
     public var trackNumber: Int64?
-    public var createdAt: String?
-    public var updatedAt: String?
+    public var createdAt: Double?
+    public var updatedAt: Double?
     public var largeThumbnailPath: String?
     public var smallThumbnailPath: String?
 }

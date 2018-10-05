@@ -3,9 +3,10 @@ import Moya
 import L10n_swift
 import Alamofire
 
-private enum DataServiceError: Error {
+public enum DataServiceError: Error {
     case noSession
     case noAccessToken
+    case decodeFailed
 }
 
 public protocol UserDataServicing {
