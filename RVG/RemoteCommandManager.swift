@@ -281,7 +281,7 @@ public class RemoteCommandManager: NSObject {
     @objc func handleLikeCommandEvent(event: MPFeedbackCommandEvent) -> MPRemoteCommandHandlerStatus {
         
         if assetPlaybackManager.asset != nil {
-            print("Did recieve likeCommand for \(assetPlaybackManager.asset.assetName)")
+            print("Did recieve likeCommand for \(assetPlaybackManager.asset.name)")
             return .success
         }
         else {
@@ -292,7 +292,7 @@ public class RemoteCommandManager: NSObject {
     @objc func handleDislikeCommandEvent(event: MPFeedbackCommandEvent) -> MPRemoteCommandHandlerStatus {
         
         if assetPlaybackManager.asset != nil {
-            print("Did recieve dislikeCommand for \(assetPlaybackManager.asset.assetName)")
+            print("Did recieve dislikeCommand for \(assetPlaybackManager.asset.name)")
             return .success
         }
         else {
@@ -303,7 +303,7 @@ public class RemoteCommandManager: NSObject {
     @objc func handleBookmarkCommandEvent(event: MPFeedbackCommandEvent) -> MPRemoteCommandHandlerStatus {
         
         if assetPlaybackManager.asset != nil {
-            print("Did recieve bookmarkCommand for \(assetPlaybackManager.asset.assetName)")
+            print("Did recieve bookmarkCommand for \(assetPlaybackManager.asset.name)")
             return .success
         }
         else {

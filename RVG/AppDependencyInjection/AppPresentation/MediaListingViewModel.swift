@@ -29,7 +29,7 @@ internal final class MediaListingViewModel {
                     switch type {
                     case .playable(let item):
                         print("item: \(item)")
-//                        self?.assetPlaybackService.playableItem.value = item
+                        self?.assetPlaybackService.playableItem.value = item
                     }
                 }
 
@@ -79,8 +79,8 @@ internal final class MediaListingViewModel {
                 switch self.mediaType {
                 case .audioChapter?:
                     icon = "chapter"
-                case .audioSermon?:
-                    icon = "feet"
+//                case .audioSermon?:
+//                    icon = "feet"
                 case .audioGospel?:
                     icon = "double_feetprint_icon_white"
                 case .audioMusic?:
@@ -100,20 +100,23 @@ internal final class MediaListingViewModel {
         case .audioChapter?:
             self.productService.fetchChapters(for: self.playlistId).subscribe(onSuccess: { chapters in
                 self.media.value = chapters
+                self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
                 print("fetchChapters failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
-        case .audioSermon?:
-            print("fetch .audioSermon")
+//        case .audioSermon?:
+//            print("fetch .audioSermon")
         case .audioGospel?:
             self.productService.fetchMediaGospel(for: playlistId).subscribe(onSuccess: { mediaGospel in
                 self.media.value = mediaGospel
+                self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
                 print("fetchChapters failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
         case .audioMusic?:
             self.productService.fetchMediaMusic(for: playlistId).subscribe(onSuccess: { mediaMusic in
                 self.media.value = mediaMusic
+                self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
                 print("fetchChapters failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)

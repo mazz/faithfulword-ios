@@ -62,33 +62,33 @@ extension MediaListingCoordinator: NavigationCoordinating {
                 popupController.popupItem.accessibilityHint = NSLocalizedString("Tap to Expand the Mini Player", comment: "")
 
                 // generate single playable
-                guard let localizedName = playable.localizedName,
-                    let path = playable.path,
-                    let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
-                    else {
-                        return
-                }
-
-                popupController.playbackAsset = Asset(assetName: localizedName,
-                                                      artist: presenterName,
-                                                      urlAsset: AVURLAsset(url: url))
+//                guard let localizedName = playable.localizedName,
+//                    let path = playable.path,
+//                    let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
+//                    else {
+//                        return
+//                }
+//
+//                popupController.playbackAsset = Asset(assetName: localizedName,
+//                                                      artist: presenterName,
+//                                                      urlAsset: AVURLAsset(url: url))
 
                 // generate playlist
-                var assets = [Asset]()
-
-                let enumerator = playlist.enumerated()
-                assets = enumerator.compactMap { playable in
-                    guard let localizedName = playable.1.localizedName,
-                        let presenterName = playable.1.presenterName,
-                        let path = playable.1.path,
-                        let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return nil }
-                        return Asset(assetName: localizedName,
-                                     artist: presenterName,
-                                     urlAsset: AVURLAsset(url: url))
-                }
+//                var assets = [Asset]()
+//
+//                let enumerator = playlist.enumerated()
+//                assets = enumerator.compactMap { playable in
+//                    guard let localizedName = playable.1.localizedName,
+//                        let presenterName = playable.1.presenterName,
+//                        let path = playable.1.path,
+//                        let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return nil }
+//                        return Asset(assetName: localizedName,
+//                                     artist: presenterName,
+//                                     urlAsset: AVURLAsset(url: url))
+//                }
                 //                Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))
 
-                popupController.playlistAssets = assets
+//                popupController.playlistAssets = assets
 
                 if let navigationController = self.navigationController {
                     navigationController.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
@@ -124,39 +124,39 @@ extension MediaListingCoordinator: NavigationCoordinating {
         //        self.resettablePlaybackCoordinator.value.playableItem = playable
         self.resettablePlaybackCoordinator.value.navigationController = self.navigationController!
 
-        var playables: [Playable] = []
+//        var playables: [Playable] = []
         // hack? assume this playable comes from this controllers' viewmodel
-        if let viewController = mediaListingViewController {
-            let array = viewController.viewModel.sections.value[0].items
-            array.map { mediaListingItemType -> Void in
-                print("mediaListingItemType: \(mediaListingItemType)")
-                if case .drillIn(let type, _, _, _) = mediaListingItemType {
-                    switch type {
-                    case .playable(let item):
-                        print("item: \(item)")
-                        playables.append(item)
-                        //                        self?.assetPlaybackService.playableItem.value = item
-                    }
-                }
-                //                return result
-            }
-            print("playables: \(playables)")
-            
-            //                let filteredArray = mediaListingItemType.filter {
-            //                    switch $0 {
-            //                    case let .WithString(value):
-            //                        return value == "C"
-            //                    default:
-            //                        return false
-            //                    }
-            //                }
-            //                mediaListingItemType.
-            //                mediaListingItemType.drillIn(type, _, _, _)//.drillIn(type, _, _, _).item()
-            //            }
+//        if let viewController = mediaListingViewController {
+////            let array = viewController.viewModel.sections.value[0].items
+////            array.map { mediaListingItemType -> Void in
+////                print("mediaListingItemType: \(mediaListingItemType)")
+////                if case .drillIn(let type, _, _, _) = mediaListingItemType {
+////                    switch type {
+////                    case .playable(let item):
+////                        print("item: \(item)")
+////                        playables.append(item)
+////                        //                        self?.assetPlaybackService.playableItem.value = item
+////                    }
+////                }
+////                //                return result
+////            }
+//            print("playables: \(playables)")
+//
+//            //                let filteredArray = mediaListingItemType.filter {
+//            //                    switch $0 {
+//            //                    case let .WithString(value):
+//            //                        return value == "C"
+//            //                    default:
+//            //                        return false
+//            //                    }
+//            //                }
+//            //                mediaListingItemType.
+//            //                mediaListingItemType.drillIn(type, _, _, _)//.drillIn(type, _, _, _).item()
+//            //            }
+//
+//        }
 
-        }
-
-        swapInPlaybackFlow(for: playable, playlist: playables)
+        swapInPlaybackFlow(for: playable, playlist: (mediaListingViewController?.viewModel.media.value)!)
 
         //        let popupContentController = self.uiFactory.makePopupPlayer()
         //        popupContentController.songTitle = localizedName

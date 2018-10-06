@@ -15,7 +15,7 @@ public protocol Playable {
 
 enum MediaType {
     case audioChapter
-    case audioSermon
+//    case audioSermon
     case audioGospel
     case audioMusic
 }

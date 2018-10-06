@@ -13,12 +13,14 @@ public struct Asset {
     
     // MARK: Types
     static let nameKey = "AssetName"
-    
+    static let uuidKey = "uuid"
+
     // MARK: Properties
     
     /// The name of the asset to present in the application.
-    let assetName: String
+    let name: String
     let artist: String
+    let uuid: String
 
     /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
     let urlAsset: AVURLAsset

@@ -25,16 +25,16 @@ internal final class PlaybackCoordinator  {
 
     public func updatePlaybackAsset(_ playable: Playable) {
         guard let localizedName = playable.localizedName,
-            let presenterName = playable.presenterName,
-            let path = playable.path,
+            let presenterName: String = playable.presenterName,
+            let path: String = playable.path,
             let assetPlaybackService = self.assetPlaybackService,
             let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
-            else {
-                return
-        }
+            else { return }
+
         assetPlaybackService.assetPlaybackManager.stop()
-        assetPlaybackService.assetPlaybackManager.asset = Asset(assetName: localizedName,
+        assetPlaybackService.assetPlaybackManager.asset = Asset(name: localizedName,
                                                                 artist: presenterName,
+                                                                uuid: playable.uuid,
                                                                 urlAsset: AVURLAsset(url: url))
     }
 }

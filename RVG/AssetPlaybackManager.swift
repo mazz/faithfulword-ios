@@ -200,13 +200,13 @@ public class AssetPlaybackManager: NSObject {
     func nextTrack() {
         guard asset != nil else { return }
         
-        NotificationCenter.default.post(name: AssetPlaybackManager.nextTrackNotification, object: nil, userInfo: [Asset.nameKey: asset.assetName])
+        NotificationCenter.default.post(name: AssetPlaybackManager.nextTrackNotification, object: nil, userInfo: [Asset.uuidKey: asset.uuid])
     }
     
     func previousTrack() {
         guard asset != nil else { return }
         
-        NotificationCenter.default.post(name: AssetPlaybackManager.previousTrackNotification, object: nil, userInfo: [Asset.nameKey: asset.assetName])
+        NotificationCenter.default.post(name: AssetPlaybackManager.previousTrackNotification, object: nil, userInfo: [Asset.uuidKey: asset.uuid])
     }
     
     func skipForward(_ interval: TimeInterval) {
@@ -278,7 +278,7 @@ public class AssetPlaybackManager: NSObject {
         
         var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
         
-        let title = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyTitle, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? asset.assetName
+        let title = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyTitle, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? asset.name
         let album = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyAlbumName, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? "Unknown"
         let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
         

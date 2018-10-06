@@ -7,6 +7,8 @@ import RxAVFoundation
 public protocol AssetPlaybackServicing {
 
     var assetPlaybackManager: AssetPlaybackManager { get }
+    var playableItem: Field<Playable?> { get }
+    var playables: Field<[Playable]> { get }
 
 //    var playerItem: Observable<AVPlayerItem?> { get }
 //    var player: AVPlayer { get }
@@ -39,6 +41,10 @@ public protocol AssetPlaybackServicing {
 
 /// Manages all account related things
 public final class AssetPlaybackService: AssetPlaybackServicing {
+    // MARK: Fields
+
+    public private(set) var playableItem = Field<Playable?>(nil)
+    public private(set) var playables = Field<[Playable]>([])
 
     // MARK: Dependencies
     public let assetPlaybackManager: AssetPlaybackManager
