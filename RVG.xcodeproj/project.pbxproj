@@ -19,6 +19,10 @@
 		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
 		4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */; };
 		4C21A72E20201148000F02CE /* SideMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C21A72D20201148000F02CE /* SideMenu.storyboard */; };
+		4C250392216867050069AB49 /* DownloadDataServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C250391216867050069AB49 /* DownloadDataServicing.swift */; };
+		4C250394216868120069AB49 /* String+Hashing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C250393216868120069AB49 /* String+Hashing.swift */; };
+		4C2503962168686C0069AB49 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2503952168686C0069AB49 /* Security.framework */; };
+		4C2503982168691A0069AB49 /* DownloadServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503972168691A0069AB49 /* DownloadServicing.swift */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
@@ -201,6 +205,10 @@
 		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
 		4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCoordinator.swift; sourceTree = "<group>"; };
 		4C21A72D20201148000F02CE /* SideMenu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SideMenu.storyboard; sourceTree = "<group>"; };
+		4C250391216867050069AB49 /* DownloadDataServicing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadDataServicing.swift; sourceTree = "<group>"; };
+		4C250393216868120069AB49 /* String+Hashing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hashing.swift"; sourceTree = "<group>"; };
+		4C2503952168686C0069AB49 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		4C2503972168691A0069AB49 /* DownloadServicing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadServicing.swift; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -409,6 +417,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C2503962168686C0069AB49 /* Security.framework in Frameworks */,
 				4CBE0F5221605CA500646F76 /* QuartzCore.framework in Frameworks */,
 				4C958E99208D3D6500A71C59 /* LNPopupController.framework in Frameworks */,
 				689880571F16F52600CC2BC5 /* MediaPlayer.framework in Frameworks */,
@@ -425,6 +434,7 @@
 		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C2503952168686C0069AB49 /* Security.framework */,
 				4CBE0F5121605CA400646F76 /* QuartzCore.framework */,
 				4C958E98208D3D6500A71C59 /* LNPopupController.framework */,
 				689880561F16F52600CC2BC5 /* MediaPlayer.framework */,
@@ -492,6 +502,8 @@
 				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
 				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
 				4C8EE8C31FF6010F003F483A /* DataService.swift */,
+				4C250391216867050069AB49 /* DownloadDataServicing.swift */,
+				4C2503972168691A0069AB49 /* DownloadServicing.swift */,
 				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
 				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
 				4C5FAD682035258E00397BFF /* LanguageService.swift */,
@@ -537,6 +549,7 @@
 				4CCE8C7C1FF4B60400AFBAF2 /* RxReachability.swift */,
 				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
 				4CBE0F752161747100646F76 /* Color+Image.swift */,
+				4C250393216868120069AB49 /* String+Hashing.swift */,
 			);
 			path = AppUtilities;
 			sourceTree = "<group>";
@@ -1109,6 +1122,7 @@
 				4C619BCF20265CC700E70B6E /* Categorizable.swift in Sources */,
 				4CCE8C981FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift in Sources */,
 				681E11811ED13B1400B028DD /* BookResponse.swift in Sources */,
+				4C250392216867050069AB49 /* DownloadDataServicing.swift in Sources */,
 				683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */,
 				683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */,
 				4C3EA13C206B24A000310024 /* DeviceNowPlayingViewModel.swift in Sources */,
@@ -1142,6 +1156,7 @@
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */,
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
+				4C250394216868120069AB49 /* String+Hashing.swift in Sources */,
 				4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */,
 				4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */,
 				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
@@ -1218,6 +1233,7 @@
 				4C3EA137206A71D200310024 /* DeviceNowPlayingBarView.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
+				4C2503982168691A0069AB49 /* DownloadServicing.swift in Sources */,
 				4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */,
 				4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */,
 				4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */,

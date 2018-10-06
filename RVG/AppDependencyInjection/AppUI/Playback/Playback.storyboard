@@ -154,6 +154,9 @@
                                                     <constraint firstAttribute="height" constant="37.5" id="ydk-1F-Fmb"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="download_icon_black"/>
+                                                <connections>
+                                                    <action selector="download:" destination="CDA-xr-UNl" eventType="touchUpInside" id="0ke-4A-HAf"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

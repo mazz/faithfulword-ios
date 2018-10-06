@@ -8,6 +8,7 @@ import AVFoundation
 import RxSwift
 import RxCocoa
 import MarqueeLabel
+import Moya
 
 enum PlaybackSpeed {
     case oneX
@@ -263,6 +264,30 @@ class PopupContentController: UIViewController {
     }
 
     // MARK: Target-Action Methods
+
+    @IBAction func download(_ sender: Any) {
+        let provider = MoyaProvider<FileWebService>(plugins: [NetworkLoggerPlugin(verbose: WebService.verbose)])
+        let urlString: String = playbackAsset?.urlAsset.url.absoluteString ?? ""
+
+        provider.request(FileWebService.download(url: urlString, fileName: nil), callbackQueue: nil, progress: { progressResponse in
+            print("progressResponse: \(progressResponse)")
+        }) { result in
+            print("result: \(result)")
+            switch result {
+            case let .success(response):
+                let statusCode = response.statusCode
+                if let dataString: String = String(data: response.data, encoding: .utf8) {
+                    print(".success: \(dataString)")
+                    print(".success statusCode: \(statusCode)")
+                }
+
+            case .failure(_):
+                if let error = result.error {
+                    print(".failure: \(String(describing: error.errorDescription)))")
+                }
+            }
+        }
+    }
 
     @IBAction func togglePlaybackSpeed(_ sender: Any) {
         var speedTitle: String
