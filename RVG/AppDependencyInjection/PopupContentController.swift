@@ -247,36 +247,9 @@ class PopupContentController: UIViewController {
     }
 
     @objc func doPlayPause() {
-        guard let playbackService = viewModel.assetPlaybackService,
-            let pauseImage: UIImage = UIImage(named: "pause"),
-            let playImage: UIImage = UIImage(named: "play"),
-            let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
-            let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause")
-            else {
-                return
-        }
+        assetPlaybackManager.togglePlayPause()
 
-        let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
-        let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
-
-        if playbackService.assetPlaybackManager.state == .playing {
-            playPauseButton.image = playImage
-            playPauseButton.accessibilityLabel = accessibilityPlay
-
-            fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-            fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-
-        } else if playbackService.assetPlaybackManager.state == .paused {
-            playPauseButton.image = pauseImage
-            playPauseButton.accessibilityLabel = accessibilityPause
-
-            fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
-            fullPlayPauseButton.accessibilityLabel = accessibilityPause
-        }
-
-        playbackService.assetPlaybackManager.togglePlayPause()
-
-        //    assetPlaybackManager.asset = Asset(assetName: "Psalm2-DD", urlAsset: AVURLAsset(url: URL(string: "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0002-Psalms-en.mp3")!))
+//        updateToolbarItemState()
     }
 
     // MARK: Target-Action Methods
@@ -350,8 +323,13 @@ class PopupContentController: UIViewController {
 
 
 
-    @objc func updateToolbarItemState() {
-        print("updateToolbarItemState")
+    @objc func updateTransportUIState() {
+        guard let pauseImage: UIImage = UIImage(named: "pause"),
+            let playImage: UIImage = UIImage(named: "play"),
+            let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
+            let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause")
+            else { return }
+        print("updateTransportUIState")
         if assetPlaybackManager.asset == nil {
             //            backwardButton.isEnabled = false
             playPauseButton.isEnabled = false
@@ -371,6 +349,24 @@ class PopupContentController: UIViewController {
                 playPauseButton.image = UIImage(named: "pause")
             }
         }
+
+        let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
+        let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
+
+        if assetPlaybackManager.state == .playing {
+            playPauseButton.image = pauseImage
+            playPauseButton.accessibilityLabel = accessibilityPause
+
+            fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
+            fullPlayPauseButton.accessibilityLabel = accessibilityPause
+        } else if assetPlaybackManager.state == .paused {
+            playPauseButton.image = playImage
+            playPauseButton.accessibilityLabel = accessibilityPlay
+
+            fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+            fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+        }
+
     }
 
     @objc func emptyUIState() {
@@ -394,7 +390,7 @@ class PopupContentController: UIViewController {
         fullTotalPlaybackDurationLabel.text = "-:--"
         fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
 
-        updateToolbarItemState()
+        updateTransportUIState()
 
         //        self.repeatButton.setImage(#imageLiteral(resourceName: "repeat"), for: .normal)
     }
@@ -488,7 +484,7 @@ class PopupContentController: UIViewController {
             //            assetListTableView.deselectAll(nil)
         }
 
-        updateToolbarItemState()
+//        updateToolbarItemState()
     }
 
     @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
@@ -539,7 +535,7 @@ class PopupContentController: UIViewController {
     }
 
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
-        updateToolbarItemState()
+        updateTransportUIState()
     }
 
 }
