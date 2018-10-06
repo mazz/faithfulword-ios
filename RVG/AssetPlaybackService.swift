@@ -46,6 +46,9 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
 
     public init(assetPlaybackManager: AssetPlaybackManager,
                 remoteCommandManager: RemoteCommandManager) {
+
+
+
         self.assetPlaybackManager = assetPlaybackManager
         self.remoteCommandManager = remoteCommandManager
         // default features true
@@ -62,6 +65,24 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
         self.remoteCommandManager.toggleDislikeCommand(false)
         self.remoteCommandManager.toggleBookmarkCommand(false)
 
+        // Set the AVAudioSession as active.  This is required so that your application becomes the "Now Playing" app.
+        do {
+            try AVAudioSession.sharedInstance().setActive(true, options: [])
+        }
+        catch {
+            print("An Error occured activating the audio session: \(error)")
+        }
+
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP,
+                                                                                                 .duckOthers,
+                                                                                                 .defaultToSpeaker])
+            //            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+        } catch {
+            print("AVAudioSession error: \(error)")
+        }
+
+        UIApplication.shared.beginBackgroundTask {}
     }
 
 //    public var playableItem = Field<Playable?>(nil)

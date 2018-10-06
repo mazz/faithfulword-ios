@@ -34,28 +34,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 
         Fabric.with([Crashlytics.self])
 
-        setupAudio()
+//        setupAudioSession()
 
         return true
     }
 
-    private func setupAudio() {
+    private func setupAudioSession() {
         // Setup AVAudioSession to indicate to the system you how intend to play audio.
         let audioSession = AVAudioSession.sharedInstance()
 
         do {
-            try audioSession.setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default)
+            //            try audioSession.setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default)
+//            try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP,
+//                                                                              .duckOthers,
+//                                                                              .defaultToSpeaker])
+
+//            try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP,
+//                                                                              .duckOthers,
+//                                                                              .defaultToSpeaker])
+
+//            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: .default [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
+
         }
         catch {
             print("An error occured setting the audio session category: \(error)")
-        }
-
-        // Set the AVAudioSession as active.  This is required so that your application becomes the "Now Playing" app.
-        do {
-            try audioSession.setActive(true, options: [])
-        }
-        catch {
-            print("An Error occured activating the audio session: \(error)")
         }
     }
 
@@ -92,32 +94,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
                                           apnsToken: apnsToken,
                                           preferredLanguage: preferredLanguage,
                                           userAgent: userAgent)) { result in
-            switch result {
-            case let .success(moyaResponse):
-                do {
-                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
-                    let data = moyaResponse.data
-                    //                    var parsedObject: BookResponse
-     
-                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                    print("json: \(json)")
-                    if let jsonObject = json as? [String:Any] {
-                        print("jsonObject: \(jsonObject)")
-                    }
-                }
-                catch {
-                    print("error: \(error)")
-                }
-     
-            case let .failure(error):
-                print(".failure: \(error)")
-                // this means there was a network failure - either the request
-                // wasn't sent (connectivity), or no response was received (server
-                // timed out).  If the server responds with a 4xx or 5xx error, that
-                // will be sent as a ".success"-ful response.
-                //                errorClosure(error)
-                print(".failure")
-            }
+                                            switch result {
+                                            case let .success(moyaResponse):
+                                                do {
+                                                    try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
+                                                    let data = moyaResponse.data
+                                                    //                    var parsedObject: BookResponse
+
+                                                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+                                                    print("json: \(json)")
+                                                    if let jsonObject = json as? [String:Any] {
+                                                        print("jsonObject: \(jsonObject)")
+                                                    }
+                                                }
+                                                catch {
+                                                    print("error: \(error)")
+                                                }
+
+                                            case let .failure(error):
+                                                print(".failure: \(error)")
+                                                // this means there was a network failure - either the request
+                                                // wasn't sent (connectivity), or no response was received (server
+                                                // timed out).  If the server responds with a 4xx or 5xx error, that
+                                                // will be sent as a ".success"-ful response.
+                                                //                errorClosure(error)
+                                                print(".failure")
+                                            }
         }
     }
 
@@ -140,8 +142,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-//        Messaging.messaging().shouldEstablishDirectChannel = false
-//        print("Disconnected from FCM.")
+        //        Messaging.messaging().shouldEstablishDirectChannel = false
+        //        print("Disconnected from FCM.")
         
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.

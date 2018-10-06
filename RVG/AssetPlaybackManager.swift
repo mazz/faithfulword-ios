@@ -346,26 +346,27 @@ public class AssetPlaybackManager: NSObject {
     #if os(iOS)
     
     @objc func handleAudioSessionInterruption(notification: Notification) {
+        print("handleAudioSessionInterruption notification.userInfo: \(notification.userInfo!)")
         guard let userInfo = notification.userInfo, let typeInt = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
             let interruptionType = AVAudioSession.InterruptionType(rawValue: typeInt) else { return }
-        
+
         switch interruptionType {
             case .began:
                 state = .interrupted
             case .ended:
                 do {
                     try AVAudioSession.sharedInstance().setActive(true, options: [])
-                    
+
                     if shouldResumePlaybackAfterInterruption == false {
                         shouldResumePlaybackAfterInterruption = true
-                        
+
                         return
                     }
-                    
+
                     guard let optionsInt = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
-                    
+
                     let interruptionOptions = AVAudioSession.InterruptionOptions(rawValue: optionsInt)
-                    
+
                     if interruptionOptions.contains(.shouldResume) {
                         play()
                     }
