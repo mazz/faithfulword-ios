@@ -91,6 +91,8 @@ class PopupContentController: UIViewController {
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
+
         }
     }
 
@@ -546,7 +548,7 @@ class PopupContentController: UIViewController {
         let playables: [Playable] = assetPlaybackService.playables.value
 
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
-        guard let assetIndex = playables.index(where: { $0.localizedName == assetUuid }) else { return }
+        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
 
         if assetIndex > 0 {
             let playable: Playable = playables[assetIndex - 1]
@@ -568,4 +570,13 @@ class PopupContentController: UIViewController {
         updateTransportUIState()
     }
 
+    @objc func handleAVPlayerItemDidPlayToEndTimeNotification(notification: Notification) {
+        if self.repeatMode == .repeatOff {
+//            self.handleRemoteCommandNextTrackNotification(notification: notification)
+            NotificationCenter.default.post(name: AssetPlaybackManager.nextTrackNotification, object: nil, userInfo: [Asset.uuidKey: playbackAsset.uuid])
+        } else if self.repeatMode == .repeatOne {
+            assetPlaybackManager.seekTo(0)
+            assetPlaybackManager.play()
+        }
+    }
 }
