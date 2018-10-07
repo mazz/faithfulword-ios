@@ -12,3 +12,17 @@ import RxSwift
 protocol DownloadServicing {
     func fetchDownload() -> Single<Void>
 }
+
+
+public final class DownloadService {
+    public init() { }
+}
+
+
+extension DownloadService: DownloadServicing {
+    func fetchDownload() -> Single<Void> {
+        print("fetchDownload")
+        return Single.just(())
+    }
+
+}
