@@ -69,17 +69,25 @@ extension DownloadDataService: FileDownloadDataServicing {
 }
 
 public enum FileWebService {
-    case download(url: String, fileName: String?)
+    case download(url: String, filename: String?, fileExtension: String?)
 
     var localLocation: URL {
         switch self {
-        case .download(let url, let fileName):
-            let fileKey: String = url.MD5hex // use url's md5 as local file name
+        case .download(let url, let filename, let fileExtension):
+
+            var fileKey: String!
+
+            if let filename = filename {
+                fileKey = filename
+                fileKey = fileKey.replacingOccurrences(of: " ", with: "_")
+            } else {
+                fileKey = url.MD5hex // use url's md5 as local file name
+            }
             let directory: URL = FileSystem.savedDirectory
             var filePath: URL = directory.appendingPathComponent(fileKey)
-            if let name = fileName {
+            if let ext = fileExtension {
                 // append path extension if exit
-                let pathExtension: String = (name as NSString).pathExtension.lowercased()
+                let pathExtension: String = (ext as NSString).pathExtension.lowercased()
                 filePath = filePath.appendingPathExtension(pathExtension)
             }
             print("filePath: \(filePath)")
@@ -97,21 +105,21 @@ extension FileWebService: TargetType {
 
     public var baseURL: URL {
         switch self {
-        case .download(let url, _):
+        case .download(let url, _, _):
             return URL(string: url)!
         }
     }
 
     public var path: String {
         switch self {
-        case .download(_, _):
+        case .download(_, _, _):
             return ""
         }
     }
 
     public var method: Moya.Method {
         switch self {
-        case .download(_, _):
+        case .download(_, _, _):
             return .get
         }
     }
@@ -129,7 +137,7 @@ extension FileWebService: TargetType {
 
     public var task: Task {
         switch self {
-        case .download(_, _):
+        case .download(_, _, _):
             return .downloadDestination(downloadDestination)
         }
     }

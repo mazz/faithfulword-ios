@@ -10,6 +10,7 @@ public final class PopupContentViewModel {
     // MARK: Playback action handling
 
     public var sliderScrubEvent = PublishSubject<Float>()
+    public var repeatButtonTapEvent = PublishSubject<RepeatSetting>()
 
     init(assetPlaybackService: AssetPlaybackServicing) {
         self.assetPlaybackService = assetPlaybackService
@@ -25,7 +26,18 @@ public final class PopupContentViewModel {
                     assetPlaybackManager.seekTo(Double(scrubValue))
                 }
             })
-            .disposed(by: self.bag)
+            .disposed(by: bag)
+
+        repeatButtonTapEvent.asObservable()
+            .subscribe({ currentSetting in
+                print("currentSetting: \(currentSetting)")
+                if let assetPlaybackService = self.assetPlaybackService,
+                    let repeatSetting = currentSetting.element {
+                    let assetPlaybackManager = assetPlaybackService.assetPlaybackManager
+                    assetPlaybackManager.repeatState = repeatSetting
+                }
+            })
+            .disposed(by: bag)
 //            .filterNils()
 //            .subscribe(
 

@@ -16,6 +16,12 @@ enum PlaybackSpeed {
     case onePointFiveX
 }
 
+public enum RepeatSetting {
+    case repeatOff
+    case repeatOne
+    case repeatAll
+}
+
 class PopupContentController: UIViewController {
 
     @IBOutlet weak var fullSongNameLabel: MarqueeLabel!
@@ -55,7 +61,15 @@ class PopupContentController: UIViewController {
     private let sliderInUse = Variable<Bool>(false)
 
     //    private let sliderInUse = BehaviorSubject<Bool>(value: false) //ReplaySubject<Bool>.create(bufferSize: 1) //Field<Bool>(false)
-    public let actualPlaybackProgress = Field<Float>(0)
+    internal let actualPlaybackProgress = Field<Float>(0)
+//    internal let repeatState = Field<RepeatSetting>(.none)
+
+    private var repeatMode: RepeatSetting = .repeatOff {
+        didSet {
+            self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
+        }
+    }
+
 
     private var bag = DisposeBag()
 
@@ -127,6 +141,20 @@ class PopupContentController: UIViewController {
 
     func bindUI() {
         reset()
+
+        fullRepeatButton.rx.tap
+            .map { [unowned self] _ in //self.repeatMode
+                var repeatSetting: RepeatSetting!
+                if self.repeatMode == .repeatOff {
+                    repeatSetting = .repeatOne
+                } else if self.repeatMode == .repeatOne {
+                    repeatSetting = .repeatOff
+                }
+                self.repeatMode = repeatSetting
+                return self.repeatMode
+            }
+            .bind(to: viewModel.repeatButtonTapEvent)
+            .disposed(by: bag)
 
         fullPlaybackSlider.rx.value.asObservable()
             .map { Float($0) }
@@ -256,26 +284,28 @@ class PopupContentController: UIViewController {
 
     @IBAction func download(_ sender: Any) {
         let provider = MoyaProvider<FileWebService>(plugins: [NetworkLoggerPlugin(verbose: WebService.verbose)])
-        let urlString: String = playbackAsset?.urlAsset.url.absoluteString ?? ""
 
-        provider.request(FileWebService.download(url: urlString, fileName: nil), callbackQueue: nil, progress: { progressResponse in
-            print("progressResponse: \(progressResponse)")
-        }) { result in
-            print("result: \(result)")
-            switch result {
-            case let .success(response):
-                let statusCode = response.statusCode
-                if let dataString: String = String(data: response.data, encoding: .utf8) {
-                    print(".success: \(dataString)")
-                    print(".success statusCode: \(statusCode)")
-                }
+        if let urlString: String = playbackAsset?.urlAsset.url.absoluteString {
+            provider.request(FileWebService.download(url: urlString, filename: playbackAsset.uuid, fileExtension: nil), callbackQueue: nil, progress: { progressResponse in
+                print("progressResponse: \(progressResponse)")
+            }) { result in
+                print("result: \(result)")
+                switch result {
+                case let .success(response):
+                    let statusCode = response.statusCode
+                    if let dataString: String = String(data: response.data, encoding: .utf8) {
+                        print(".success: \(dataString)")
+                        print(".success statusCode: \(statusCode)")
+                    }
 
-            case .failure(_):
-                if let error = result.error {
-                    print(".failure: \(String(describing: error.errorDescription)))")
+                case .failure(_):
+                    if let error = result.error {
+                        print(".failure: \(String(describing: error.errorDescription)))")
+                    }
                 }
             }
         }
+
     }
 
     @IBAction func togglePlaybackSpeed(_ sender: Any) {

@@ -51,6 +51,7 @@ public class AssetPlaybackManager: NSObject {
     
     /// A token obtained from calling `player`'s `addPeriodicTimeObserverForInterval(_:queue:usingBlock:)` method.
     private var timeObserverToken: Any?
+    private var itemEndObserverToken: Any?
     
     /// The progress in percent for the playback of `asset`.  This is marked as `dynamic` so that this property can be observed using KVO.
     @objc dynamic var percentProgress: Float = 0
@@ -63,6 +64,7 @@ public class AssetPlaybackManager: NSObject {
     
     /// The state that the internal `AVPlayer` is in.
     var state: AssetPlaybackManager.playbackState = .initial
+    var repeatState: RepeatSetting = .repeatOff
     
     /// A Bool for tracking if playback should be resumed after an interruption.  See README.md for more information.
     private var shouldResumePlaybackAfterInterruption = true
@@ -133,6 +135,8 @@ public class AssetPlaybackManager: NSObject {
             self?.duration = durationInSecods
             self?.percentProgress = timeElapsed / durationInSecods
         })
+
+//        itemEndObserverToken
     }
     
     deinit {
@@ -150,8 +154,68 @@ public class AssetPlaybackManager: NSObject {
             player.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
         }
+
+        if let itemEndObserverToken = itemEndObserverToken {
+            NotificationCenter.default.removeObserver(itemEndObserverToken, name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+            self.itemEndObserverToken = nil
+        }
     }
-    
+
+    func addItemEndObserverForPlayerItem(item : AVPlayerItem) {
+        //        itemEndObserver = NSNotification.defaultCenter().addOb
+        let center = NotificationCenter.default
+
+        itemEndObserverToken = center.addObserver(self, selector: #selector(PlaybackService.playerItemDidReachEnd(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
+
+    }
+
+    @objc func playerItemDidReachEnd(note : NSNotification) {
+        print("playerItemDidReachEnd note: \(note)")
+
+//        if let item: AVPlayerItem = note.object as? AVPlayerItem {
+//            //            playbackForward(itemEnded: item)
+//            if item == self.currentPlayerItem {
+//
+//                if playbackRepeat == true {
+//                    DispatchQueue.main.async { [unowned self] in
+//                        self.player?.seek(to: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)))
+//                        self.playbackDisplayDelegate?.playbackReady()
+//                    }
+//                } else {
+//                    if let nextAsset: AVAsset = self.fetchNextAsset(currentAsset: self.currentAsset!) {
+//
+//                        //                        self.currentPlayerItem = AVPlayerItem(asset: asset, automaticallyLoadedAssetKeys: keys)
+//
+//                        if let nextIndex: Int = (self.assets?.index(of: nextAsset)) {
+//
+//                            // stop observing the current item
+//                            // and play next item
+//                            // queueing on main dispatch queue seems to fix
+//                            // a race condition where the timeObserverToken
+//                            // would outlast self.player in the case where
+//                            // the user scrubs to the end of the track
+//                            // but scrubs back quickly
+//                            DispatchQueue.main.async { [unowned self] in
+//                                self.playbackToNextItem(currentAsset: self.currentAsset!, nextIndex: nextIndex)
+//                            }
+//
+//                        }
+//                    } else {
+//                        // could not advance to next item
+//                        // assume we are at end of playerItem array
+//                        DispatchQueue.main.async {
+//                            [unowned self] in
+//                            self.player?.seek(to: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)),
+//                                              completionHandler: { (Bool) in
+//                                                self.playbackDisplayDelegate?.playbackComplete()
+//                            })
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+    }
     // MARK: Playback Control Methods.
     
     func play() {

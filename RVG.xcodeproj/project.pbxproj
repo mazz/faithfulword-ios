@@ -23,6 +23,7 @@
 		4C250394216868120069AB49 /* String+Hashing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C250393216868120069AB49 /* String+Hashing.swift */; };
 		4C2503962168686C0069AB49 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2503952168686C0069AB49 /* Security.framework */; };
 		4C2503982168691A0069AB49 /* DownloadServicing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503972168691A0069AB49 /* DownloadServicing.swift */; };
+		4C25039A2169A1760069AB49 /* AnyObserverMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503992169A1760069AB49 /* AnyObserverMaking.swift */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
@@ -209,6 +210,7 @@
 		4C250393216868120069AB49 /* String+Hashing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hashing.swift"; sourceTree = "<group>"; };
 		4C2503952168686C0069AB49 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4C2503972168691A0069AB49 /* DownloadServicing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadServicing.swift; sourceTree = "<group>"; };
+		4C2503992169A1760069AB49 /* AnyObserverMaking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyObserverMaking.swift; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -550,6 +552,7 @@
 				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
 				4CBE0F752161747100646F76 /* Color+Image.swift */,
 				4C250393216868120069AB49 /* String+Hashing.swift */,
+				4C2503992169A1760069AB49 /* AnyObserverMaking.swift */,
 			);
 			path = AppUtilities;
 			sourceTree = "<group>";
@@ -1133,6 +1136,7 @@
 				4C39990220229E02008E76E8 /* SideMenuSectionViewModel.swift in Sources */,
 				4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */,
 				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
+				4C25039A2169A1760069AB49 /* AnyObserverMaking.swift in Sources */,
 				4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */,
 				4CFB85022005B66300FEBB53 /* CellContentLayoutStyle.swift in Sources */,
 				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
