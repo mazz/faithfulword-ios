@@ -56,7 +56,8 @@ class PopupContentController: UIViewController {
     var scrubbing: Bool = false
     var playingWhileScrubbing: Bool = false
 
-    public var viewModel: PopupContentViewModel!
+    public var playbackViewModel: PlaybackControlsViewModel!
+    public var downloadingViewModel: DownloadingViewModel!
 
     private let sliderInUse = Variable<Bool>(false)
 
@@ -155,7 +156,7 @@ class PopupContentController: UIViewController {
                 self.repeatMode = repeatSetting
                 return self.repeatMode
             }
-            .bind(to: viewModel.repeatButtonTapEvent)
+            .bind(to: playbackViewModel.repeatButtonTapEvent)
             .disposed(by: bag)
 
         fullPlaybackSlider.rx.value.asObservable()
@@ -165,7 +166,7 @@ class PopupContentController: UIViewController {
             })
             .distinctUntilChanged()
             .throttle(0.3, scheduler: MainScheduler.instance)
-            .bind(to: viewModel.sliderScrubEvent)
+            .bind(to: playbackViewModel.sliderScrubEvent)
             .disposed(by: bag)
         fullPlaybackSlider.isContinuous = true
         fullPlaybackSlider.isMultipleTouchEnabled = false
@@ -207,7 +208,10 @@ class PopupContentController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let assetPlaybackService = viewModel.assetPlaybackService,
+        // assetPlaybackService.playableItem should be valid pointer
+        // because it should be set when the user taps a row in MediaListingViewModel
+        
+        guard let assetPlaybackService = playbackViewModel.assetPlaybackService,
             let item: Playable = assetPlaybackService.playableItem.value,
             let path: String = item.path,
             let localizedName: String = item.localizedName,
@@ -216,6 +220,7 @@ class PopupContentController: UIViewController {
             else { return }
         self.assetPlaybackManager = assetPlaybackService.assetPlaybackManager
 
+        // stop because there could an asset currently playing
         assetPlaybackManager.stop()
 
         playbackAsset = Asset(name: localizedName,
@@ -520,7 +525,7 @@ class PopupContentController: UIViewController {
     }
 
     @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
-        guard let assetPlaybackService = viewModel.assetPlaybackService else { return }
+        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
         let playables: [Playable] = assetPlaybackService.playables.value
 
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
@@ -544,7 +549,7 @@ class PopupContentController: UIViewController {
     }
 
     @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
-        guard let assetPlaybackService = viewModel.assetPlaybackService else { return }
+        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
         let playables: [Playable] = assetPlaybackService.playables.value
 
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }

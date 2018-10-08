@@ -22,21 +22,6 @@ internal final class PlaybackCoordinator  {
         self.uiFactory = uiFactory
         self.assetPlaybackService = assetPlaybackService
     }
-
-    public func updatePlaybackAsset(_ playable: Playable) {
-        guard let localizedName = playable.localizedName,
-            let presenterName: String = playable.presenterName,
-            let path: String = playable.path,
-            let assetPlaybackService = self.assetPlaybackService,
-            let url = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
-            else { return }
-
-        assetPlaybackService.assetPlaybackManager.stop()
-        assetPlaybackService.assetPlaybackManager.asset = Asset(name: localizedName,
-                                                                artist: presenterName,
-                                                                uuid: playable.uuid,
-                                                                urlAsset: AVURLAsset(url: url))
-    }
 }
 
 extension PlaybackCoordinator: NavigationCoordinating {

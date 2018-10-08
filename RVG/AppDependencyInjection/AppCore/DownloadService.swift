@@ -15,7 +15,15 @@ protocol DownloadServicing {
 
 
 public final class DownloadService {
-    public init() { }
+
+    // MARK: Fields
+
+    // MARK: Dependencies
+    private let downloadDataService: FileDownloadDataServicing
+
+    public init(downloadDataService: FileDownloadDataServicing) {
+        self.downloadDataService = downloadDataService
+    }
 }
 
 

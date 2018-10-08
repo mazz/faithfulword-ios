@@ -44,7 +44,7 @@ internal final class UIFactory: UIMaking {
 extension UIFactory: AppUIMaking {
     func makePopupPlayer() -> PopupContentController {
         let popupContentController = PopupContentController.make(storyboardName: StoryboardName.popupPlayer)
-        popupContentController.viewModel = resolver.resolve(PopupContentViewModel.self)
+        popupContentController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
 //        demoMusicPlayerController.assetPlaybackManager = resolver.resolve(AssetPlaybackManager.self)
 //        demoMusicPlayerController.remoteCommandManager = resolver.resolve(RemoteCommandManager.self)
         return popupContentController

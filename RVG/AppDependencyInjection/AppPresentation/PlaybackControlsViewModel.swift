@@ -2,7 +2,7 @@ import Foundation
 import AVFoundation
 import RxSwift
 
-public final class PopupContentViewModel {
+public final class PlaybackControlsViewModel {
     // MARK: Fields
     public let assetPlaybackService: AssetPlaybackServicing?
     private var bag = DisposeBag()
@@ -38,17 +38,5 @@ public final class PopupContentViewModel {
                 }
             })
             .disposed(by: bag)
-//            .filterNils()
-//            .subscribe(
-
-//        urlAsset.asObservable()
-//            .filterNils()
-//            .subscribe(onNext: { urlAsset in
-//            print("url asset: \(urlAsset)")
-//        }, onError: { error in
-//            print("url asset error: \(error)")
-//        }, onCompleted: {
-//
-//        }).disposed(by: self.bag)
     }
 }

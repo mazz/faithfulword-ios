@@ -10,7 +10,7 @@
 		4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */; };
 		4C0F4871202542FA00A8904F /* CategoryListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */; };
 		4C0F48732025709F00A8904F /* CategoryListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F48722025709F00A8904F /* CategoryListingViewController.swift */; };
-		4C10EAEA209164B7008A8B00 /* PopupContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C10EAE9209164B7008A8B00 /* PopupContentViewModel.swift */; };
+		4C10EAEA209164B7008A8B00 /* PlaybackControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C10EAE9209164B7008A8B00 /* PlaybackControlsViewModel.swift */; };
 		4C1F0006209D6F3800938C30 /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0005209D6F3800938C30 /* Asset.swift */; };
 		4C1F000B209FB95E00938C30 /* AssetPlaybackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */; };
 		4C1F000D209FC9B800938C30 /* RemoteCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F000C209FC9B800938C30 /* RemoteCommandService.swift */; };
@@ -24,6 +24,7 @@
 		4C2503962168686C0069AB49 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2503952168686C0069AB49 /* Security.framework */; };
 		4C2503982168691A0069AB49 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503972168691A0069AB49 /* DownloadService.swift */; };
 		4C25039A2169A1760069AB49 /* AnyObserverMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503992169A1760069AB49 /* AnyObserverMaking.swift */; };
+		4C25039C216BE0360069AB49 /* DownloadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25039B216BE0360069AB49 /* DownloadingViewModel.swift */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
@@ -195,7 +196,7 @@
 		4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingCoordinator.swift; sourceTree = "<group>"; };
 		4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4C0F48722025709F00A8904F /* CategoryListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingViewController.swift; sourceTree = "<group>"; };
-		4C10EAE9209164B7008A8B00 /* PopupContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupContentViewModel.swift; sourceTree = "<group>"; };
+		4C10EAE9209164B7008A8B00 /* PlaybackControlsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsViewModel.swift; sourceTree = "<group>"; };
 		4C1F0003209D6EDC00938C30 /* AssetPlaybackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPlaybackManager.swift; sourceTree = "<group>"; };
 		4C1F0005209D6F3800938C30 /* Asset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
 		4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandManager.swift; sourceTree = "<group>"; };
@@ -211,6 +212,7 @@
 		4C2503952168686C0069AB49 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4C2503972168691A0069AB49 /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
 		4C2503992169A1760069AB49 /* AnyObserverMaking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyObserverMaking.swift; sourceTree = "<group>"; };
+		4C25039B216BE0360069AB49 /* DownloadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadingViewModel.swift; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -470,11 +472,12 @@
 				4CCE8C801FF4B7C500AFBAF2 /* BooksViewModel.swift */,
 				4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */,
 				4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */,
-				4C10EAE9209164B7008A8B00 /* PopupContentViewModel.swift */,
+				4C10EAE9209164B7008A8B00 /* PlaybackControlsViewModel.swift */,
 				4C3EA13B206B249F00310024 /* DeviceNowPlayingViewModel.swift */,
 				4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */,
 				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
 				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
+				4C25039B216BE0360069AB49 /* DownloadingViewModel.swift */,
 				4C5FAD6E20369A5500397BFF /* RadioListSectionViewModel.swift */,
 				4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */,
 				4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */,
@@ -1113,7 +1116,7 @@
 				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
 				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
-				4C10EAEA209164B7008A8B00 /* PopupContentViewModel.swift in Sources */,
+				4C10EAEA209164B7008A8B00 /* PlaybackControlsViewModel.swift in Sources */,
 				4CCE8C931FF4BC8200AFBAF2 /* AppConstants.swift in Sources */,
 				4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */,
 				4CD63DFB1ED4CBAD00C4E2EC /* SessionError.swift in Sources */,
@@ -1185,6 +1188,7 @@
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
 				4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */,
 				4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */,
+				4C25039C216BE0360069AB49 /* DownloadingViewModel.swift in Sources */,
 				4C1F000B209FB95E00938C30 /* AssetPlaybackService.swift in Sources */,
 				4C1F0006209D6F3800938C30 /* Asset.swift in Sources */,
 				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,

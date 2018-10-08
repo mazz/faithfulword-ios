@@ -69,6 +69,7 @@ internal final class AppDependencyModule {
         attachSideMenuFlowDependencies(to: container)
         //        attachInitialFlowDependencies(to: container)
         attachAssetPlaybackDependencies(to: container)
+        attachDownloadingDependencies(to: container)
         attachMainFlowDependencies(to: container)
         attachSplashScreenFlowDependencies(to: container)
         //        attachSettingsFlowDependencies(to: container)
@@ -156,8 +157,8 @@ internal final class AppDependencyModule {
     }
 
     private static func attachAssetPlaybackDependencies(to container: Container) {
-        container.register(PopupContentViewModel.self) { resolver in
-            PopupContentViewModel(assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
+        container.register(PlaybackControlsViewModel.self) { resolver in
+            PlaybackControlsViewModel(assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
 //                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
             )
         }.inObjectScope(.container)
@@ -166,6 +167,17 @@ internal final class AppDependencyModule {
             PlaybackCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
                                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!)
         }.inObjectScope(.container)
+    }
+
+    private static func attachDownloadingDependencies(to container: Container) {
+
+        container.register(DownloadDataService.self) { resolver in
+            return DownloadDataService(fileWebService: MoyaProvider<FileWebService>())
+            }.inObjectScope(.container)
+
+        container.register(DownloadServicing.self) { resolver in
+            return DownloadService(downloadDataService: resolver.resolve(FileDownloadDataServicing.self)!)
+            }.inObjectScope(.container)
     }
 
     private static func attachMainFlowDependencies(to container: Container) {
@@ -253,6 +265,11 @@ internal final class AppDependencyModule {
                 resolver.resolve(LanguageServicing.self)!
             )
         }.inObjectScope(.transient)
+
+        container.register(DownloadingViewModel.self) { resolver in
+            DownloadingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
+            }.inObjectScope(.transient)
+
     }
 
     private static func attachSplashScreenFlowDependencies(to container: Container) {

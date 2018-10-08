@@ -16,7 +16,7 @@ import RxSwift
 //
 //}
 
-protocol FileDownloadDataServicing {
+public protocol FileDownloadDataServicing {
     func downloadFile(url: String) -> Single<Void>
 }
 
@@ -61,7 +61,7 @@ public final class DownloadDataService {
 
 
 extension DownloadDataService: FileDownloadDataServicing {
-    func downloadFile(url: String) -> Single<Void> {
+    public func downloadFile(url: String) -> Single<Void> {
         print("downloadFile url: \(url)")
         return Single.just(())
     }
