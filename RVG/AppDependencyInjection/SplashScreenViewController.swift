@@ -19,7 +19,7 @@ public final class SplashScreenViewController: UIViewController {
     @IBOutlet weak var manyLanguagesLabel: UILabel!
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.manyLanguagesLabel.alpha = SplashScreenViewController.lowestAlpha
+        self.manyLanguagesLabel.alpha = SplashScreenViewController.fullAlpha
     }
     
     public static func create() -> SplashScreenViewController {
@@ -53,11 +53,11 @@ public final class SplashScreenViewController: UIViewController {
                 withDuration: pulseLogoDuration,
                 delay: 0.0,
                 options: .curveEaseInOut,
-                animations: { [weak self] in
-                    self?.manyLanguagesLabel.alpha = SplashScreenViewController.fullAlpha
+                animations: { 
+//                    self?.manyLanguagesLabel.alpha = SplashScreenViewController.fullAlpha
                 },
                 completion: { _ in
-                    let delay = DispatchTime.now() + Double(Int64(3) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
+                    let delay = DispatchTime.now() + Double(Int64(1) * Int64(NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
                     DispatchQueue.main.asyncAfter(deadline: delay) {
                         fadeOut()
                     }
@@ -78,7 +78,6 @@ public final class SplashScreenViewController: UIViewController {
                 }
             )
         }
-
         fadeIn()
     }
 }
