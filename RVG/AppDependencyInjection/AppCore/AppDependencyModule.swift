@@ -170,8 +170,7 @@ internal final class AppDependencyModule {
     }
 
     private static func attachDownloadingDependencies(to container: Container) {
-
-        container.register(DownloadDataService.self) { resolver in
+        container.register(FileDownloadDataServicing.self) { resolver in
             return DownloadDataService(fileWebService: MoyaProvider<FileWebService>())
             }.inObjectScope(.container)
 

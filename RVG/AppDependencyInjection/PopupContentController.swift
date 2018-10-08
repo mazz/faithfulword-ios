@@ -10,7 +10,7 @@ import RxCocoa
 import MarqueeLabel
 import Moya
 
-enum PlaybackSpeed {
+public enum PlaybackSpeed {
     case oneX
     case onePointTwoFiveX
     case onePointFiveX
@@ -20,6 +20,14 @@ public enum RepeatSetting {
     case repeatOff
     case repeatOne
     case repeatAll
+}
+
+public enum DownloadSetting {
+    case initial
+    case downloadingInitiated
+    case downloadingInProgress
+    case downloadingComplete
+    case downloadingFailed
 }
 
 class PopupContentController: UIViewController {
@@ -70,7 +78,13 @@ class PopupContentController: UIViewController {
             self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
         }
     }
+    private var downloadMode: DownloadSetting = .initial {
+        didSet {
+            print("dowload mode set to: \(downloadMode)")
 
+//            self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
+        }
+    }
 
     private var bag = DisposeBag()
 
@@ -144,6 +158,18 @@ class PopupContentController: UIViewController {
 
     func bindUI() {
         reset()
+
+        fullDownloadShareButton.rx.tap
+            .map { [unowned self] _ in //self.repeatMode
+                var downloadSetting: DownloadSetting!
+                if self.downloadMode == .initial {
+                    downloadSetting = .downloadingInitiated
+                }
+                self.downloadMode = downloadSetting
+                return self.downloadMode
+            }
+            .bind(to: downloadingViewModel.downloadButtonTapEvent)
+            .disposed(by: bag)
 
         fullRepeatButton.rx.tap
             .map { [unowned self] _ in //self.repeatMode

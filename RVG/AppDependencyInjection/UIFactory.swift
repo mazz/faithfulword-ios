@@ -45,6 +45,7 @@ extension UIFactory: AppUIMaking {
     func makePopupPlayer() -> PopupContentController {
         let popupContentController = PopupContentController.make(storyboardName: StoryboardName.popupPlayer)
         popupContentController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
+        popupContentController.downloadingViewModel = resolver.resolve(DownloadingViewModel.self)
 //        demoMusicPlayerController.assetPlaybackManager = resolver.resolve(AssetPlaybackManager.self)
 //        demoMusicPlayerController.remoteCommandManager = resolver.resolve(RemoteCommandManager.self)
         return popupContentController

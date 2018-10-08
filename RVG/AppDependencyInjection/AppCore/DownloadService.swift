@@ -13,7 +13,6 @@ protocol DownloadServicing {
     func fetchDownload() -> Single<Void>
 }
 
-
 public final class DownloadService {
 
     // MARK: Fields
@@ -25,7 +24,6 @@ public final class DownloadService {
         self.downloadDataService = downloadDataService
     }
 }
-
 
 extension DownloadService: DownloadServicing {
     func fetchDownload() -> Single<Void> {

@@ -13,8 +13,7 @@ import RxSwift
 
 internal final class DownloadingViewModel {
     // MARK: Fields
-
-    public private(set) var playableItem = Field<Playable?>(nil)
+    public var downloadButtonTapEvent = PublishSubject<DownloadSetting>()
 
     // MARK: Dependencies
     private let downloadService: DownloadServicing!
@@ -24,11 +23,20 @@ internal final class DownloadingViewModel {
     {
         self.downloadService = downloadService
 
-        setupDatasource()
+        setupBindings()
     }
 
-    private func setupDatasource() {
-
+    private func setupBindings() {
+        downloadButtonTapEvent.asObservable()
+            .subscribe({ currentSetting in
+                print("currentSetting: \(currentSetting)")
+                if let downloadService = self.downloadService,
+                    let dowloadSetting = currentSetting.element {
+                    //                    let assetPlaybackManager = assetPlaybackService.assetPlaybackManager
+                    //                    assetPlaybackManager.repeatState = repeatSetting
+                }
+            })
+            .disposed(by: bag)
     }
 }
 
