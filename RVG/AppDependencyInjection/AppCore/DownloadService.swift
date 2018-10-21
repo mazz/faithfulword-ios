@@ -10,12 +10,29 @@ import Foundation
 import RxSwift
 
 protocol DownloadServicing {
-    func fetchDownload() -> Single<Void>
+    var progress: Observable<Float> { get }
+    var state: Observable<FileDownloadState> { get }
+    var fileDownload: Observable<FileDownload> { get }
+    func fetchDownload(url: String, filename: String) -> Single<Void>
 }
 
 public final class DownloadService {
 
-    // MARK: Fields
+    // MARK: Fields(
+    private let bag = DisposeBag()
+
+//    public private(set) var media = Field<[Playable]>([])
+    public var progress: Observable<Float> {
+        return downloadDataService.progress
+    }
+
+    public var fileDownload: Observable<FileDownload> {
+        return downloadDataService.fileDownload
+    }
+
+    public var state: Observable<FileDownloadState> {
+        return downloadDataService.state
+    }
 
     // MARK: Dependencies
     private let downloadDataService: FileDownloadDataServicing
@@ -26,9 +43,10 @@ public final class DownloadService {
 }
 
 extension DownloadService: DownloadServicing {
-    func fetchDownload() -> Single<Void> {
+
+    func fetchDownload(url: String, filename: String) -> Single<Void> {
         print("fetchDownload")
-        return Single.just(())
+        return downloadDataService.downloadFile(url: url, filename: filename)
     }
 
 }

@@ -165,7 +165,13 @@ class PopupContentController: UIViewController {
                 if self.downloadMode == .initial {
                     downloadSetting = .downloadingInitiated
                 }
+                else if self.downloadMode == .downloadingInitiated {
+                    downloadSetting = .downloadingInitiated
+                }
                 self.downloadMode = downloadSetting
+
+                // FIXME: HACK: probably a better way to sync the download view model
+                self.downloadingViewModel.downloadAsset = self.playbackAsset
                 return self.downloadMode
             }
             .bind(to: downloadingViewModel.downloadButtonTapEvent)
@@ -196,7 +202,6 @@ class PopupContentController: UIViewController {
             .disposed(by: bag)
         fullPlaybackSlider.isContinuous = true
         fullPlaybackSlider.isMultipleTouchEnabled = false
-
 
         actualPlaybackProgress.asObservable()
             .observeOn(MainScheduler.instance)
@@ -236,7 +241,7 @@ class PopupContentController: UIViewController {
 
         // assetPlaybackService.playableItem should be valid pointer
         // because it should be set when the user taps a row in MediaListingViewModel
-        
+
         guard let assetPlaybackService = playbackViewModel.assetPlaybackService,
             let item: Playable = assetPlaybackService.playableItem.value,
             let path: String = item.path,
@@ -316,28 +321,29 @@ class PopupContentController: UIViewController {
     // MARK: Target-Action Methods
 
     @IBAction func download(_ sender: Any) {
-        let provider = MoyaProvider<FileWebService>(plugins: [NetworkLoggerPlugin(verbose: WebService.verbose)])
-
-        if let urlString: String = playbackAsset?.urlAsset.url.absoluteString {
-            provider.request(FileWebService.download(url: urlString, filename: playbackAsset.uuid, fileExtension: nil), callbackQueue: nil, progress: { progressResponse in
-                print("progressResponse: \(progressResponse)")
-            }) { result in
-                print("result: \(result)")
-                switch result {
-                case let .success(response):
-                    let statusCode = response.statusCode
-                    if let dataString: String = String(data: response.data, encoding: .utf8) {
-                        print(".success: \(dataString)")
-                        print(".success statusCode: \(statusCode)")
-                    }
-
-                case .failure(_):
-                    if let error = result.error {
-                        print(".failure: \(String(describing: error.errorDescription)))")
-                    }
-                }
-            }
-        }
+        print("download action")
+//        let provider = MoyaProvider<FileWebService>(plugins: [NetworkLoggerPlugin(verbose: WebService.verbose)])
+//
+//        if let urlString: String = playbackAsset?.urlAsset.url.absoluteString {
+//            provider.request(FileWebService.download(url: urlString, filename: playbackAsset.uuid, fileExtension: nil), callbackQueue: nil, progress: { progressResponse in
+//                print("progressResponse: \(progressResponse)")
+//            }) { result in
+//                print("result: \(result)")
+//                switch result {
+//                case let .success(response):
+//                    let statusCode = response.statusCode
+//                    if let dataString: String = String(data: response.data, encoding: .utf8) {
+//                        print(".success: \(dataString)")
+//                        print(".success statusCode: \(statusCode)")
+//                    }
+//
+//                case .failure(_):
+//                    if let error = result.error {
+//                        print(".failure: \(String(describing: error.errorDescription)))")
+//                    }
+//                }
+//            }
+//        }
 
     }
 

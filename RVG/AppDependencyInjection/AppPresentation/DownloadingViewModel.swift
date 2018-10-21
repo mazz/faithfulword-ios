@@ -13,6 +13,10 @@ import RxSwift
 
 internal final class DownloadingViewModel {
     // MARK: Fields
+    public var downloadAsset: Asset? = nil
+    public private(set) var downloadProgress: Field<Float> = Field<Float>(0)
+//    public private(set) var downloadProgress: Field<Float> = Field<Float>(0)
+
     public var downloadButtonTapEvent = PublishSubject<DownloadSetting>()
 
     // MARK: Dependencies
@@ -31,11 +35,29 @@ internal final class DownloadingViewModel {
             .subscribe({ currentSetting in
                 print("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
-                    let dowloadSetting = currentSetting.element {
-                    //                    let assetPlaybackManager = assetPlaybackService.assetPlaybackManager
-                    //                    assetPlaybackManager.repeatState = repeatSetting
+                    let downloadAsset = self.downloadAsset {
+
+                        downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid)
                 }
             })
+            .disposed(by: bag)
+
+        downloadService.progress
+            .next({ progress in
+                print("downloadService progress: \(progress)")
+                self.downloadProgress.value = progress
+            })
+            .disposed(by: bag)
+
+        downloadService.state.next { downloadState in
+            print("downloadState: \(downloadState)")
+            }
+            .disposed(by: bag)
+
+
+        downloadService.fileDownload.next { fileDownload in
+            print("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress))")
+            }
             .disposed(by: bag)
     }
 }
