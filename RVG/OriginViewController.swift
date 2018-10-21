@@ -13,7 +13,7 @@ import RxSwift
 import UserNotifications
 import Firebase
 
-class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVersioning, UNUserNotificationCenterDelegate, MessagingDelegate {
+class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVersioning, UNUserNotificationCenterDelegate {
     
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
@@ -107,7 +107,8 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
             completionHandler: {_, _ in })
         
         FirebaseApp.configure()
-        Messaging.messaging().delegate = self
+        Messaging.messaging().delegate = self as! MessagingDelegate
+//        FIRMessaging.messaging().delegate = self
         Messaging.messaging().shouldEstablishDirectChannel = true
     }
     
@@ -355,13 +356,14 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
     func updatePushToken(fcmToken: String,
                          apnsToken: String,
                          preferredLanguage: String,
-                         userAgent: String) {
+                         userAgent: String,
+        userVersion: String) {
         let provider = MoyaProvider<KJVRVGService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
         provider.request(.pushTokenUpdate(fcmToken: fcmToken,
                                           apnsToken: apnsToken,
                                           preferredLanguage: preferredLanguage,
-                                          userAgent: userAgent)) { result in
+                                          userAgent: userAgent, userVersion: userVersion)) { result in
                                             switch result {
                                             case let .success(moyaResponse):
                                                 do {
@@ -409,7 +411,7 @@ extension OriginViewController {
             self.updatePushToken(fcmToken: fcmToken,
                                  apnsToken: apnsTokenString,
                                  preferredLanguage: L10n.shared.preferredLanguage,
-                                 userAgent: Device.userAgent())
+                                 userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
         }
     }
     

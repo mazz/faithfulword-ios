@@ -5,7 +5,7 @@ public enum KJVRVGService {
     case churches
     case churchesMediaSermons(cid: String)
     case appVersions
-    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String)
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String)
     case musicMedia(uuid: String) // "/music/{mid}/media"
     case music(languageId: String)
     case languagesSupported
@@ -28,7 +28,7 @@ extension KJVRVGService: TargetType {
             return "/churches"
         case .churchesMediaSermons(let cid):
             return "/churches/\(cid)/media/sermon"
-        case .pushTokenUpdate(_, _, _, _):
+        case .pushTokenUpdate(_, _, _, _, _):
             return "/device/pushtoken/update"
         case .appVersions:
             return "/app/versions"
@@ -91,11 +91,13 @@ extension KJVRVGService: TargetType {
         case .pushTokenUpdate(let fcmToken,
                               let apnsToken,
                               let preferredLanguage,
-                              let userAgent):
+                              let userAgent,
+                              let userVersion):
             return ["fcmToken": fcmToken,
                     "apnsToken": apnsToken,
                     "preferredLanguage": preferredLanguage,
-                    "userAgent": userAgent]
+                    "userAgent": userAgent,
+                    "userVersion": userVersion]
         }
     }
     public var parameterEncoding: ParameterEncoding {
@@ -126,12 +128,14 @@ extension KJVRVGService: TargetType {
         case .pushTokenUpdate(let fcmToken,
                               let apnsToken,
                               let preferredLanguage,
-                              let userAgent):
+                              let userAgent,
+                              let userVersion):
             let pushTokenJson = [
                 "fcmToken": fcmToken,
                 "apnsToken": apnsToken,
                 "preferredLanguage": preferredLanguage,
-                "userAgent": userAgent
+                "userAgent": userAgent,
+                "userVersion": userVersion
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
         case .booksChapterMedia(let uuid, let languageId):
@@ -168,11 +172,12 @@ extension KJVRVGService: TargetType {
         case .books(let languageId):
             return .requestParameters(parameters:  ["language-id": languageId],
                                       encoding: URLEncoding.default)
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent):
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion):
             return .requestParameters(parameters:  ["fcmToken": fcmToken,
                                                     "apnsToken": apnsToken,
                                                     "preferredLanguage": preferredLanguage,
-                                                    "userAgent": userAgent],
+                                                    "userAgent": userAgent,
+                                                    "userVersion": userVersion],
                                       encoding: JSONEncoding.default)
         case .languagesSupported:
             return .requestPlain

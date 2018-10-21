@@ -79,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
                 self.updatePushToken(fcmToken: firebaseToken,
                                      apnsToken: apnsTokenString,
                                      preferredLanguage: L10n.shared.preferredLanguage,
-                                     userAgent: Device.userAgent())
+                                     userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
             }
         }
     }
@@ -87,13 +87,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
     func updatePushToken(fcmToken: String,
                          apnsToken: String,
                          preferredLanguage: String,
-                         userAgent: String) {
+                         userAgent: String,
+                         userVersion: String) {
         let provider = MoyaProvider<KJVRVGService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
         provider.request(.pushTokenUpdate(fcmToken: fcmToken,
                                           apnsToken: apnsToken,
                                           preferredLanguage: preferredLanguage,
-                                          userAgent: userAgent)) { result in
+                                          userAgent: userAgent, userVersion: userVersion)) { result in
                                             switch result {
                                             case let .success(moyaResponse):
                                                 do {
