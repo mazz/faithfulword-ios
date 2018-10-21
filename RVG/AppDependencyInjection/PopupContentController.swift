@@ -279,7 +279,13 @@ class PopupContentController: UIViewController {
         fullAlbumNameLabel.text = albumTitle
         fullAlbumNameLabel.fadeLength = 10.0
         fullAlbumNameLabel.speed = .duration(8.0)
-        //        fullAlbumArtImageView.image = albumArt
+
+        fullAlbumArtImageView.layer.shadowColor = UIColor.darkGray.cgColor
+        fullAlbumArtImageView.layer.shadowOffset = CGSize(width: 2, height: 4)
+        fullAlbumArtImageView.layer.shadowOpacity = 0.8
+        fullAlbumArtImageView.layer.shadowRadius = 4.0
+        fullAlbumArtImageView.clipsToBounds = false
+//        fullAlbumArtImageView.image = albumArt
 
         popupItem.title = songTitle
         popupItem.subtitle = albumTitle

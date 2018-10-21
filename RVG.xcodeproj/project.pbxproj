@@ -13,7 +13,6 @@
 		4C10EAEA209164B7008A8B00 /* PlaybackControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C10EAE9209164B7008A8B00 /* PlaybackControlsViewModel.swift */; };
 		4C1F0006209D6F3800938C30 /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0005209D6F3800938C30 /* Asset.swift */; };
 		4C1F000B209FB95E00938C30 /* AssetPlaybackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */; };
-		4C1F000D209FC9B800938C30 /* RemoteCommandService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F000C209FC9B800938C30 /* RemoteCommandService.swift */; };
 		4C1F001420A3668400938C30 /* AVURLAsset+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F001320A3668400938C30 /* AVURLAsset+Rx.swift */; };
 		4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */; };
 		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
@@ -201,7 +200,6 @@
 		4C1F0005209D6F3800938C30 /* Asset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Asset.swift; sourceTree = "<group>"; };
 		4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandManager.swift; sourceTree = "<group>"; };
 		4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPlaybackService.swift; sourceTree = "<group>"; };
-		4C1F000C209FC9B800938C30 /* RemoteCommandService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCommandService.swift; sourceTree = "<group>"; };
 		4C1F001320A3668400938C30 /* AVURLAsset+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVURLAsset+Rx.swift"; sourceTree = "<group>"; };
 		4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+BaseMaking.swift"; sourceTree = "<group>"; };
 		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
@@ -629,7 +627,6 @@
 				68B2B1011F56486C00D986D4 /* KJVRVGService.swift */,
 				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
 				4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */,
-				4C1F000C209FC9B800938C30 /* RemoteCommandService.swift */,
 			);
 			name = Service;
 			sourceTree = "<group>";
@@ -1196,7 +1193,6 @@
 				4C5FAD7120369A5600397BFF /* RadioListViewModeling.swift in Sources */,
 				4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */,
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
-				4C1F000D209FC9B800938C30 /* RemoteCommandService.swift in Sources */,
 				68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */,
 				4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
