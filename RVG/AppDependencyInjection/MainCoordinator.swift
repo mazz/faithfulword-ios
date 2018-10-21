@@ -319,8 +319,8 @@ extension MainCoordinator {
                 case .gospel:
                     print(".soulwinning")
                     self.goToCategoryFlow(categoryType: .gospel)
-//                case .preaching:
-//                    print(".preaching")
+                case .preaching:
+                    print(".preaching")
                     self.goToCategoryFlow(categoryType: .churches)
                 case .music:
                     print(".music")
