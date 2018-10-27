@@ -9,6 +9,7 @@ import RxSwift
 import RxCocoa
 import MarqueeLabel
 import Moya
+import UICircularProgressRing
 
 public enum PlaybackSpeed {
     case oneX
@@ -20,14 +21,6 @@ public enum RepeatSetting {
     case repeatOff
     case repeatOne
     case repeatAll
-}
-
-public enum DownloadSetting {
-    case initial
-    case downloadingInitiated
-    case downloadingInProgress
-    case downloadingComplete
-    case downloadingFailed
 }
 
 class PopupContentController: UIViewController {
@@ -42,8 +35,10 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var fullCurrentPlaybackPositionLabel: UILabel!
     @IBOutlet weak var fullTotalPlaybackDurationLabel: UILabel!
     @IBOutlet weak var fullRepeatButton: UIButton!
-    @IBOutlet weak var fullDownloadShareButton: UIButton!
+    @IBOutlet weak var fullDownloadButton: UIButton!
+    @IBOutlet weak var fullShareButton: UIButton!
     @IBOutlet weak var fullToggleSpeedButton: UIButton!
+    @IBOutlet weak var fullDownloadProgress: UICircularProgressRing!
 
     var estimatedPlaybackPosition: Float = Float(0)
     var estimatedDuration: Float = Float(0)
@@ -78,13 +73,14 @@ class PopupContentController: UIViewController {
             self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
         }
     }
-    private var downloadMode: DownloadSetting = .initial {
-        didSet {
-            print("dowload mode set to: \(downloadMode)")
 
-//            self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
-        }
-    }
+//    private var downloadMode: FileDownloadState = .initial {
+//        didSet {
+//            print("dowload mode set to: \(downloadMode)")
+//
+////            self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
+//        }
+//    }
 
     private var bag = DisposeBag()
 
@@ -157,28 +153,42 @@ class PopupContentController: UIViewController {
     }
 
     func bindUI() {
-        reset()
+        resetUIBindings()
 
-        fullDownloadShareButton.rx.tap
-            .map { [unowned self] _ in //self.repeatMode
-                var downloadSetting: DownloadSetting!
-                if self.downloadMode == .initial {
-                    downloadSetting = .downloadingInitiated
-                }
-                else if self.downloadMode == .downloadingInitiated {
-                    downloadSetting = .downloadingInitiated
-                }
-                self.downloadMode = downloadSetting
+        // hide download button during download and completion
+        downloadingViewModel.downloadState.asObservable()
+            .map { fileDownloadState in
+                print("fileDownloadState: \(fileDownloadState)")
+                return fileDownloadState == .inProgress || fileDownloadState == .complete
+            }
+            .bind(to: fullDownloadButton.rx.isHidden )
+            .disposed(by: bag)
 
+        // set progress UI during download
+        downloadingViewModel.fileDownload.asObservable()
+            .observeOn(MainScheduler.instance)
+            .filterNils()
+            .subscribe(onNext: { fileDownload in
+
+                self.fullDownloadProgress.maxValue = UICircularProgressRing.ProgressValue(Float(fileDownload.totalCount))
+                self.fullDownloadProgress.value = UICircularProgressRing.ProgressValue(Float(fileDownload.completedCount))
+                print("downloadingViewModel.fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress))")
+            })
+            .disposed(by: bag)
+
+        // initiate download
+        fullDownloadButton.rx.tap
+            .map { [unowned self] _ in
                 // FIXME: HACK: probably a better way to sync the download view model
                 self.downloadingViewModel.downloadAsset = self.playbackAsset
-                return self.downloadMode
+                return .initial
             }
             .bind(to: downloadingViewModel.downloadButtonTapEvent)
             .disposed(by: bag)
 
+        // bind repeat track state
         fullRepeatButton.rx.tap
-            .map { [unowned self] _ in //self.repeatMode
+            .map { [unowned self] _ in
                 var repeatSetting: RepeatSetting!
                 if self.repeatMode == .repeatOff {
                     repeatSetting = .repeatOne
@@ -191,6 +201,10 @@ class PopupContentController: UIViewController {
             .bind(to: playbackViewModel.repeatButtonTapEvent)
             .disposed(by: bag)
 
+        // when the user scrubs, limit the frequency of the
+        // sending of the scrub event to every 0.3 seconds
+        // in order to send a little more frequently than
+        // how frequently the slider playback position is updated
         fullPlaybackSlider.rx.value.asObservable()
             .map { Float($0) }
             .do(onNext: { time in
@@ -203,6 +217,8 @@ class PopupContentController: UIViewController {
         fullPlaybackSlider.isContinuous = true
         fullPlaybackSlider.isMultipleTouchEnabled = false
 
+        // check to update the slider position around every 0.4 seconds
+        // as long as the user is not scrubbing
         actualPlaybackProgress.asObservable()
             .observeOn(MainScheduler.instance)
             .filter { [unowned self] _ in !self.sliderInUse.value }
@@ -262,33 +278,11 @@ class PopupContentController: UIViewController {
 
         //        playables = assetPlaybackService.playables.value
 
-        bindUI()
-
-        dateComponentFormatter.unitsStyle = .positional
-        dateComponentFormatter.allowedUnits = [.minute, .second]
-        dateComponentFormatter.zeroFormattingBehavior = [.pad]
-
-        fullPlaybackSlider.thumbTintColor = UIColor.darkGray
 
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
-        fullSongNameLabel.text = songTitle
-        fullSongNameLabel.fadeLength = 10.0
-        fullSongNameLabel.speed = .duration(8.0)
-
-        fullAlbumNameLabel.text = albumTitle
-        fullAlbumNameLabel.fadeLength = 10.0
-        fullAlbumNameLabel.speed = .duration(8.0)
-
-        fullAlbumArtImageView.layer.shadowColor = UIColor.darkGray.cgColor
-        fullAlbumArtImageView.layer.shadowOffset = CGSize(width: 2, height: 4)
-        fullAlbumArtImageView.layer.shadowOpacity = 0.8
-        fullAlbumArtImageView.layer.shadowRadius = 4.0
-        fullAlbumArtImageView.clipsToBounds = false
-//        fullAlbumArtImageView.image = albumArt
-
-        popupItem.title = songTitle
-        popupItem.subtitle = albumTitle
+        resetUIDefaults()
+        bindUI()
 
         // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
         //        let notificationCenter = NotificationCenter.default
@@ -314,8 +308,65 @@ class PopupContentController: UIViewController {
 
     // MARK: Private
 
-    private func reset() {
+    private func resetUIBindings() {
         bag = DisposeBag()
+    }
+
+    private func resetUIDefaults() {
+        dateComponentFormatter.unitsStyle = .positional
+        dateComponentFormatter.allowedUnits = [.minute, .second]
+        dateComponentFormatter.zeroFormattingBehavior = [.pad]
+
+        fullPlaybackSlider.thumbTintColor = UIColor.darkGray
+
+        fullSongNameLabel.text = songTitle
+        fullSongNameLabel.fadeLength = 10.0
+        fullSongNameLabel.speed = .duration(8.0)
+
+        fullAlbumNameLabel.text = albumTitle
+        fullAlbumNameLabel.fadeLength = 10.0
+        fullAlbumNameLabel.speed = .duration(8.0)
+
+        fullAlbumArtImageView.layer.shadowColor = UIColor.darkGray.cgColor
+        fullAlbumArtImageView.layer.shadowOffset = CGSize(width: 2, height: 4)
+        fullAlbumArtImageView.layer.shadowOpacity = 0.8
+        fullAlbumArtImageView.layer.shadowRadius = 4.0
+        fullAlbumArtImageView.clipsToBounds = false
+        //        fullAlbumArtImageView.image = albumArt
+
+        popupItem.title = songTitle
+        popupItem.subtitle = albumTitle
+
+        fullDownloadProgress.value = UICircularProgressRing.ProgressValue(Float(0))
+        fullDownloadProgress.ringStyle = .ontop
+        fullDownloadProgress.innerRingColor = UIColor(red: 0.0, green: 150.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+        fullDownloadProgress.outerRingColor = .lightGray
+        fullDownloadProgress.outerRingWidth = 4.0
+        fullDownloadProgress.innerRingWidth = 4.0
+
+        // emptyUIState
+
+        if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
+
+            print("print rate: \(String(describing:playbackSpeed))")
+            switch playbackSpeed {
+            case 1.0:
+                self.playbackSpeed = .oneX
+            case 1.25:
+                self.playbackSpeed = .onePointTwoFiveX
+            case 1.5:
+                self.playbackSpeed = .onePointFiveX
+            default:
+                self.playbackSpeed = .oneX
+            }
+
+            fullToggleSpeedButton.setTitle(String(describing:playbackSpeed).appending("x"), for: .normal)
+        }
+        fullCurrentPlaybackPositionLabel.text = "-:--"
+        fullTotalPlaybackDurationLabel.text = "-:--"
+        fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
+
+        updateTransportUIState()
     }
 
     @objc func doPlayPause() {
@@ -555,7 +606,9 @@ class PopupContentController: UIViewController {
             estimatedPlaybackPosition = Float(0)
             estimatedDuration = Float(0)
 
-            emptyUIState()
+//            emptyUIState()
+            resetUIDefaults()
+            
             //            assetListTableView.deselectAll(nil)
         }
 
@@ -583,6 +636,12 @@ class PopupContentController: UIViewController {
                                   uuid: playable.uuid,
                                   urlAsset: AVURLAsset(url: url))
             assetPlaybackManager.asset = playbackAsset
+
+            //reset UI
+            resetUIDefaults()
+//            bindUI()
+            assetPlaybackManager.seekTo(0)
+//            assetPlaybackManager.play()
         }
     }
 
@@ -606,6 +665,12 @@ class PopupContentController: UIViewController {
                                   uuid: playable.uuid,
                                   urlAsset: AVURLAsset(url: url))
             assetPlaybackManager.asset = playbackAsset
+
+            //reset UI
+            resetUIDefaults()
+//            bindUI()
+            assetPlaybackManager.seekTo(0)
+//            assetPlaybackManager.play()
         }
     }
 

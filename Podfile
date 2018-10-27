@@ -24,4 +24,5 @@ target 'FaithfulWord' do
     pod 'Crashlytics'
     pod 'RxAVFoundation'
     pod 'MarqueeLabel/Swift'
+    pod 'UICircularProgressRing'
 end

@@ -104,7 +104,7 @@ public enum FileDownloadError: Error {
 
 public protocol FileDownloadDataServicing {
     var state: Observable<FileDownloadState> { get }
-    var progress: Observable<Float> { get }
+//    var progress: Observable<Float> { get }
     var fileDownload: Observable<FileDownload> { get }
     func downloadFile(url: String, filename: String) -> Single<Void>
 }
@@ -113,7 +113,7 @@ public final class DownloadDataService {
 
     // MARK: Fields
     private var stateSubject = BehaviorSubject<FileDownloadState>(value: .initial)
-    private var progressSubject: PublishSubject = PublishSubject<Float>()
+//    private var progressSubject: PublishSubject = PublishSubject<Float>()
     private var fileDownloadSubject: PublishSubject = PublishSubject<FileDownload>()
     private let fileWebService: MoyaProvider<FileWebService>!
 
@@ -170,9 +170,9 @@ extension DownloadDataService: FileDownloadDataServicing {
         return stateSubject.asObservable()
     }
 
-    public var progress: Observable<Float> {
-        return progressSubject.asObservable()
-    }
+//    public var progress: Observable<Float> {
+//        return progressSubject.asObservable()
+//    }
 
     public var fileDownload: Observable<FileDownload> {
         return fileDownloadSubject.asObservable()
@@ -205,7 +205,7 @@ extension DownloadDataService: FileDownloadDataServicing {
 //        target.dow
         self.internalRequest = fileWebService.request(fileService, callbackQueue: nil, progress: { progressResponse in
 
-            self.progressSubject.onNext(Float(progressResponse.progress))
+//            self.progressSubject.onNext(Float(progressResponse.progress))
 
             if let totalUnitCount = progressResponse.progressObject?.totalUnitCount,
                 let completedUnitCount = progressResponse.progressObject?.completedUnitCount,
@@ -250,7 +250,6 @@ extension DownloadDataService: FileDownloadDataServicing {
         }
         return Single.just(())
     }
-
 }
 
 public enum FileWebService {

@@ -13,11 +13,15 @@ import RxSwift
 
 internal final class DownloadingViewModel {
     // MARK: Fields
-    public var downloadAsset: Asset? = nil
-    public private(set) var downloadProgress: Field<Float> = Field<Float>(0)
-//    public private(set) var downloadProgress: Field<Float> = Field<Float>(0)
 
-    public var downloadButtonTapEvent = PublishSubject<DownloadSetting>()
+    // the asset that the user intends to download
+    public var downloadAsset: Asset? = nil
+    // the tap event initiated by the user
+    public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
+    // the progress of the current download
+    public var fileDownload = Field<FileDownload?>(nil)
+    // the state of the current download
+    public var downloadState = Field<FileDownloadState>(.initial)
 
     // MARK: Dependencies
     private let downloadService: DownloadServicing!
@@ -26,7 +30,6 @@ internal final class DownloadingViewModel {
     internal init(downloadService: DownloadServicing)
     {
         self.downloadService = downloadService
-
         setupBindings()
     }
 
@@ -42,20 +45,24 @@ internal final class DownloadingViewModel {
             })
             .disposed(by: bag)
 
-        downloadService.progress
-            .next({ progress in
-                print("downloadService progress: \(progress)")
-                self.downloadProgress.value = progress
-            })
-            .disposed(by: bag)
+//        downloadService.progress
+//            .next({ progress in
+//                print("downloadService progress: \(progress)")
+//                self.downloadProgress.value = progress
+//            })
+//            .disposed(by: bag)
 
         downloadService.state.next { downloadState in
             print("downloadState: \(downloadState)")
+            self.downloadState.value = downloadState
             }
             .disposed(by: bag)
 
 
         downloadService.fileDownload.next { fileDownload in
+
+            self.fileDownload.value = fileDownload
+
             print("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress))")
             }
             .disposed(by: bag)

@@ -115,6 +115,7 @@ PODS:
   - RxSwift (4.3.1)
   - SwiftLint (0.27.0)
   - Swinject (2.5.0)
+  - UICircularProgressRing (4.0.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
@@ -136,6 +137,7 @@ DEPENDENCIES:
   - RxSwift
   - SwiftLint
   - Swinject
+  - UICircularProgressRing
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -168,6 +170,7 @@ SPEC REPOS:
     - RxSwift
     - SwiftLint
     - Swinject
+    - UICircularProgressRing
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
@@ -199,7 +202,8 @@ SPEC CHECKSUMS:
   RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
   SwiftLint: 3207c1faa2240bf8973b191820a116113cd11073
   Swinject: 82cdb851f63f91bba974e3eca1d69780f2f7677e
+  UICircularProgressRing: dd448c3ff2176e3b2ba3f100f329c489a5389571
 
-PODFILE CHECKSUM: fa0cfdd1e6e028b197dd9b72acdc9738754dd851
+PODFILE CHECKSUM: d298bd548506ef8cf1ee9b9bca4912b0d760f535
 
 COCOAPODS: 1.5.3

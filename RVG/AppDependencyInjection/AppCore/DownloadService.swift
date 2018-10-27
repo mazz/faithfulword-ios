@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol DownloadServicing {
-    var progress: Observable<Float> { get }
+//    var progress: Observable<Float> { get }
     var state: Observable<FileDownloadState> { get }
     var fileDownload: Observable<FileDownload> { get }
     func fetchDownload(url: String, filename: String) -> Single<Void>
@@ -22,9 +22,9 @@ public final class DownloadService {
     private let bag = DisposeBag()
 
 //    public private(set) var media = Field<[Playable]>([])
-    public var progress: Observable<Float> {
-        return downloadDataService.progress
-    }
+//    public var progress: Observable<Float> {
+//        return downloadDataService.progress
+//    }
 
     public var fileDownload: Observable<FileDownload> {
         return downloadDataService.fileDownload

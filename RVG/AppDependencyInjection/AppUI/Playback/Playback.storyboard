@@ -141,7 +141,7 @@
                                                     <constraint firstAttribute="width" constant="60" id="KDu-NJ-cRy"/>
                                                 </constraints>
                                                 <state key="normal" title="1.0x">
-                                                    <color key="titleColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="titleColor" red="0.0" green="0.58823529411764708" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="togglePlaybackSpeed:" destination="CDA-xr-UNl" eventType="touchUpInside" id="Egu-Aj-T1R"/>
@@ -154,13 +154,21 @@
                                                     <constraint firstAttribute="height" constant="37.5" id="ydk-1F-Fmb"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="download_icon_black"/>
-                                                <connections>
-                                                    <action selector="download:" destination="CDA-xr-UNl" eventType="touchUpInside" id="0ke-4A-HAf"/>
-                                                </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BHb-do-Bad" customClass="UICircularProgressRing" customModule="UICircularProgressRing">
+                                                <rect key="frame" x="141.5" y="14.5" width="37.5" height="37.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="37.5" id="OHo-wi-ifQ"/>
+                                                    <constraint firstAttribute="height" constant="37.5" id="ghU-wp-GZS"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="shouldShowValueText" value="NO"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
+                                            <constraint firstItem="BHb-do-Bad" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="0.3:1" id="03N-cX-glH"/>
                                             <constraint firstItem="zAW-fg-84x" firstAttribute="centerX" secondItem="Kjz-e8-KVw" secondAttribute="centerX" multiplier="3:6" id="043-OR-g8A"/>
                                             <constraint firstItem="egg-tI-Yhc" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1:1.15" id="3Sf-Ys-liL"/>
                                             <constraint firstItem="Rp0-OT-67e" firstAttribute="leading" secondItem="Kjz-e8-KVw" secondAttribute="leading" constant="20" id="49h-Av-5e4"/>
@@ -178,6 +186,7 @@
                                             <constraint firstItem="B6t-4N-FaC" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1:4" id="ea8-nH-XWd"/>
                                             <constraint firstItem="B6t-4N-FaC" firstAttribute="leading" secondItem="Kjz-e8-KVw" secondAttribute="leading" constant="32" id="fJU-Km-Jvi"/>
                                             <constraint firstItem="kKF-Ep-3T1" firstAttribute="centerY" secondItem="CDy-IF-KmA" secondAttribute="centerY" id="g4f-wb-k3W"/>
+                                            <constraint firstItem="BHb-do-Bad" firstAttribute="centerX" secondItem="Kjz-e8-KVw" secondAttribute="centerX" id="hFh-9p-rTF"/>
                                             <constraint firstItem="zAW-fg-84x" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1:1.15" id="l7A-iF-533"/>
                                             <constraint firstItem="CDy-IF-KmA" firstAttribute="top" secondItem="24I-zf-ayu" secondAttribute="bottom" constant="8" id="lqd-ST-GNJ"/>
                                             <constraint firstItem="B6t-4N-FaC" firstAttribute="centerX" secondItem="Kjz-e8-KVw" secondAttribute="centerX" id="mSK-P5-ZVU"/>
@@ -217,7 +226,8 @@
                         <outlet property="fullAlbumArtImageView" destination="MVJ-yU-XRs" id="jZn-J6-RNA"/>
                         <outlet property="fullAlbumNameLabel" destination="6lB-9O-dy6" id="YlD-u5-E9X"/>
                         <outlet property="fullCurrentPlaybackPositionLabel" destination="bJH-Gc-pC2" id="1i8-db-6Aw"/>
-                        <outlet property="fullDownloadShareButton" destination="1dQ-qe-0Qs" id="RvX-AU-8Tc"/>
+                        <outlet property="fullDownloadButton" destination="1dQ-qe-0Qs" id="RvX-AU-8Tc"/>
+                        <outlet property="fullDownloadProgress" destination="BHb-do-Bad" id="701-x0-zTr"/>
                         <outlet property="fullPlayPauseButton" destination="24I-zf-ayu" id="0vk-Tu-wSy"/>
                         <outlet property="fullPlaybackSlider" destination="CDy-IF-KmA" id="5ou-3n-wcv"/>
                         <outlet property="fullRepeatButton" destination="Rp0-OT-67e" id="szt-uu-qIg"/>
