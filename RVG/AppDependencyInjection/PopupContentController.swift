@@ -155,12 +155,23 @@ class PopupContentController: UIViewController {
     func bindUI() {
         resetUIBindings()
 
-        // hide download button during download and completion
+        // hide progress button on completion or initial
         downloadingViewModel.downloadState.asObservable()
             .map { fileDownloadState in
-                print("fileDownloadState: \(fileDownloadState)")
-                return fileDownloadState == .inProgress || fileDownloadState == .complete
-            }
+                fileDownloadState != .inProgress }
+            .bind(to: fullDownloadProgress.rx.isHidden )
+            .disposed(by: bag)
+
+        // set image name based on state
+        downloadingViewModel.downloadImageNameEvent.asObservable()
+            .map { UIImage(named: $0) }
+            .bind(to: fullDownloadButton.rx.image(for: .normal))
+            .disposed(by: bag)
+
+
+        // hide download button during download
+        downloadingViewModel.downloadState.asObservable()
+            .map { fileDownloadState in fileDownloadState == .inProgress }
             .bind(to: fullDownloadButton.rx.isHidden )
             .disposed(by: bag)
 
@@ -282,13 +293,8 @@ class PopupContentController: UIViewController {
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
 
         resetUIDefaults()
+        resetDownloadingViewModel()
         bindUI()
-
-        // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
-        //        let notificationCenter = NotificationCenter.default
-        //
-        //        notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
-        //        notificationCenter.addObserver(self, selector: #selector(DemoMusicPlayerController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
 
     }
 
@@ -369,6 +375,11 @@ class PopupContentController: UIViewController {
         updateTransportUIState()
     }
 
+    func resetDownloadingViewModel() {
+        downloadingViewModel.downloadState.value = .initial
+        downloadingViewModel.downloadImageNameEvent.value = "download_icon_black"
+    }
+
     @objc func doPlayPause() {
         assetPlaybackManager.togglePlayPause()
 
@@ -376,33 +387,6 @@ class PopupContentController: UIViewController {
     }
 
     // MARK: Target-Action Methods
-
-    @IBAction func download(_ sender: Any) {
-        print("download action")
-//        let provider = MoyaProvider<FileWebService>(plugins: [NetworkLoggerPlugin(verbose: WebService.verbose)])
-//
-//        if let urlString: String = playbackAsset?.urlAsset.url.absoluteString {
-//            provider.request(FileWebService.download(url: urlString, filename: playbackAsset.uuid, fileExtension: nil), callbackQueue: nil, progress: { progressResponse in
-//                print("progressResponse: \(progressResponse)")
-//            }) { result in
-//                print("result: \(result)")
-//                switch result {
-//                case let .success(response):
-//                    let statusCode = response.statusCode
-//                    if let dataString: String = String(data: response.data, encoding: .utf8) {
-//                        print(".success: \(dataString)")
-//                        print(".success statusCode: \(statusCode)")
-//                    }
-//
-//                case .failure(_):
-//                    if let error = result.error {
-//                        print(".failure: \(String(describing: error.errorDescription)))")
-//                    }
-//                }
-//            }
-//        }
-
-    }
 
     @IBAction func togglePlaybackSpeed(_ sender: Any) {
         var speedTitle: String
@@ -608,7 +592,8 @@ class PopupContentController: UIViewController {
 
 //            emptyUIState()
             resetUIDefaults()
-            
+            resetDownloadingViewModel()
+
             //            assetListTableView.deselectAll(nil)
         }
 
@@ -639,6 +624,7 @@ class PopupContentController: UIViewController {
 
             //reset UI
             resetUIDefaults()
+            resetDownloadingViewModel()
 //            bindUI()
             assetPlaybackManager.seekTo(0)
 //            assetPlaybackManager.play()
@@ -668,6 +654,7 @@ class PopupContentController: UIViewController {
 
             //reset UI
             resetUIDefaults()
+            resetDownloadingViewModel()
 //            bindUI()
             assetPlaybackManager.seekTo(0)
 //            assetPlaybackManager.play()

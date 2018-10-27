@@ -22,7 +22,8 @@ internal final class DownloadingViewModel {
     public var fileDownload = Field<FileDownload?>(nil)
     // the state of the current download
     public var downloadState = Field<FileDownloadState>(.initial)
-
+    // the state of the download button image name
+    public let downloadImageNameEvent = Field<String>("download_icon_black")
     // MARK: Dependencies
     private let downloadService: DownloadServicing!
     private let bag = DisposeBag()
@@ -40,21 +41,25 @@ internal final class DownloadingViewModel {
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
 
-                        downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid)
+                    downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid)
                 }
             })
             .disposed(by: bag)
 
-//        downloadService.progress
-//            .next({ progress in
-//                print("downloadService progress: \(progress)")
-//                self.downloadProgress.value = progress
-//            })
-//            .disposed(by: bag)
+        //        downloadService.progress
+        //            .next({ progress in
+        //                print("downloadService progress: \(progress)")
+        //                self.downloadProgress.value = progress
+        //            })
+        //            .disposed(by: bag)
 
         downloadService.state.next { downloadState in
             print("downloadState: \(downloadState)")
             self.downloadState.value = downloadState
+
+            if self.downloadState.value == .complete {
+                self.downloadImageNameEvent.value = "share-box"
+            }
             }
             .disposed(by: bag)
 

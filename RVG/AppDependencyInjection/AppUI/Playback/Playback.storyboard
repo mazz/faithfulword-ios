@@ -156,7 +156,7 @@
                                                 <state key="normal" title="Button" image="download_icon_black"/>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BHb-do-Bad" customClass="UICircularProgressRing" customModule="UICircularProgressRing">
-                                                <rect key="frame" x="141.5" y="14.5" width="37.5" height="37.5"/>
+                                                <rect key="frame" x="141.5" y="171" width="37.5" height="37.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="37.5" id="OHo-wi-ifQ"/>
                                                     <constraint firstAttribute="height" constant="37.5" id="ghU-wp-GZS"/>
@@ -168,7 +168,7 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="BHb-do-Bad" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="0.3:1" id="03N-cX-glH"/>
+                                            <constraint firstItem="BHb-do-Bad" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1.7:1" id="03N-cX-glH"/>
                                             <constraint firstItem="zAW-fg-84x" firstAttribute="centerX" secondItem="Kjz-e8-KVw" secondAttribute="centerX" multiplier="3:6" id="043-OR-g8A"/>
                                             <constraint firstItem="egg-tI-Yhc" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1:1.15" id="3Sf-Ys-liL"/>
                                             <constraint firstItem="Rp0-OT-67e" firstAttribute="leading" secondItem="Kjz-e8-KVw" secondAttribute="leading" constant="20" id="49h-Av-5e4"/>
