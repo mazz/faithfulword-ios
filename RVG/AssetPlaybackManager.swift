@@ -127,11 +127,10 @@ public class AssetPlaybackManager: NSObject {
             let timeElapsed = Float(CMTimeGetSeconds(time))
             guard let duration = self?.player.currentItem?.duration else { return }
             
-            let durationInSecods = Float(CMTimeGetSeconds(duration))
-            
+            let durationInSeconds = Float(CMTimeGetSeconds(duration))
             self?.playbackPosition = timeElapsed
-            self?.duration = durationInSecods
-            self?.percentProgress = timeElapsed / durationInSecods
+            self?.duration = durationInSeconds
+            self?.percentProgress = timeElapsed / durationInSeconds
         })
 
     }
@@ -262,7 +261,13 @@ public class AssetPlaybackManager: NSObject {
         
         player.rate = 1.0
     }
-    
+
+    func playbackRate(_ rate: Float) {
+        guard asset != nil else { return }
+
+        player.rate = rate
+    }
+
     // MARK: MPNowPlayingInforCenter Management Methods
     
     func updateGeneralMetadata() {

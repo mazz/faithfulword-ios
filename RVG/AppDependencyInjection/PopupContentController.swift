@@ -233,8 +233,7 @@ class PopupContentController: UIViewController {
         actualPlaybackProgress.asObservable()
             .observeOn(MainScheduler.instance)
             .filter { [unowned self] _ in !self.sliderInUse.value }
-            //            .map { Float($0) }
-            .debounce(0.4, scheduler: MainScheduler.instance)
+            .debounce(0.2, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] progress in
                 self.fullPlaybackSlider.value = progress
                 print("field progress: \(progress)")
@@ -389,7 +388,7 @@ class PopupContentController: UIViewController {
     // MARK: Target-Action Methods
 
     @IBAction func togglePlaybackSpeed(_ sender: Any) {
-        var speedTitle: String
+        var speedTitle: String = "1.0"
 
         //        switch speed {
         if playbackSpeed == .oneX {
@@ -407,8 +406,9 @@ class PopupContentController: UIViewController {
             speedTitle = "1.0"
             fullToggleSpeedButton.setTitle(speedTitle.appending("x"), for: .normal)
         }
-
-        //        PlaybackService.sharedInstance().playbackSpeed = playbackSpeed
+        if let rate = Float(speedTitle) {
+            assetPlaybackManager.playbackRate(rate)
+        }
     }
 
     @IBAction func handleUserDidPressBackwardButton(_ sender: Any) {
@@ -522,7 +522,6 @@ class PopupContentController: UIViewController {
         }
         else if keyPath == #keyPath(AssetPlaybackManager.playbackPosition) {
             let playbackPosition: Float = Float(assetPlaybackManager.playbackPosition)
-            //            print("playbackPosition: \(playbackPosition)")
             if !playbackPosition.isNaN {
                 estimatedPlaybackPosition = playbackPosition
                 //                print("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
@@ -530,7 +529,6 @@ class PopupContentController: UIViewController {
                 fullCurrentPlaybackPositionLabel.text = stringValue
 
                 actualPlaybackProgress.value = assetPlaybackManager.playbackPosition
-                //                fullPlaybackSlider.value = assetPlaybackManager.playbackPosition
 
                 if estimatedDuration != 0 {
                     let remainingTime: Float = Float(estimatedDuration - assetPlaybackManager.playbackPosition)
