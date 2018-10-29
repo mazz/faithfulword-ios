@@ -46,29 +46,28 @@ internal final class DownloadingViewModel {
             })
             .disposed(by: bag)
 
-        //        downloadService.progress
-        //            .next({ progress in
-        //                print("downloadService progress: \(progress)")
-        //                self.downloadProgress.value = progress
-        //            })
-        //            .disposed(by: bag)
-
-        downloadService.state.next { downloadState in
-            print("downloadState: \(downloadState)")
-            self.downloadState.value = downloadState
-
-            if self.downloadState.value == .complete {
-                self.downloadImageNameEvent.value = "share-box"
-            }
-            }
-            .disposed(by: bag)
-
+//        downloadService.state.next { downloadState in
+//            print("downloadState: \(downloadState)")
+//            self.downloadState.value = downloadState
+//
+//            if self.downloadState.value == .complete {
+//                self.downloadImageNameEvent.value = "share-box"
+//            }
+//            }
+//            .disposed(by: bag)
 
         downloadService.fileDownload.next { fileDownload in
 
+            // in-flight fileDownload
             self.fileDownload.value = fileDownload
 
-            print("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress))")
+            // fileDownload state
+            self.downloadState.value = fileDownload.state
+            if self.downloadState.value == .complete {
+                self.downloadImageNameEvent.value = "share-box"
+            }
+
+            print("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state) )")
             }
             .disposed(by: bag)
     }

@@ -16,26 +16,30 @@ public protocol FileDownloading {
     var progress: Float { get }
     var totalCount: Int64 { get }
     var completedCount: Int64 { get }
+    var state: FileDownloadState { get }
 }
 
 public final class FileDownload {
     // MARK: Fields
     public let url: URL
     public let localUrl: URL
-    public let progress: Float
-    public let totalCount: Int64
-    public let completedCount: Int64
+    public var progress: Float
+    public var totalCount: Int64
+    public var completedCount: Int64
+    public var state: FileDownloadState
 
     public init(url: URL,
                 localUrl: URL,
                 progress: Float,
                 totalCount: Int64,
-                completedCount: Int64) {
+                completedCount: Int64,
+                state: FileDownloadState) {
         self.url = url
         self.localUrl = localUrl
         self.progress = progress
         self.totalCount = totalCount
         self.completedCount = completedCount
+        self.state = state
     }
 
 //    public var url: URL {
@@ -79,6 +83,7 @@ public enum FileDownloadState {
     case inProgress
     case cancelling
     case complete
+    case error
 }
 
 public enum FileDownloadError: Error {
@@ -119,6 +124,8 @@ public final class DownloadDataService {
 
     // the current download request
     private var internalRequest: Cancellable?
+    // the current file download
+    private var internalFileDownload: FileDownload?
 
     public init(fileWebService: MoyaProvider<FileWebService>) {
         self.fileWebService = fileWebService
@@ -184,9 +191,12 @@ extension DownloadDataService: FileDownloadDataServicing {
             else { return }
         switch currentState {
         case .initial, .cancelling, .complete: return
-        case .initiating, .inProgress:
+        case .initiating, .inProgress, .error:
+            if let internalFileDownload = self.internalFileDownload {
+                internalFileDownload.state = .cancelling
+                self.fileDownloadSubject.onNext(internalFileDownload)
+            }
             stateSubject.onNext(.cancelling)
-//            internalWebsocket.close()
             if let internalRequest = internalRequest {
                 internalRequest.cancel()
             }
@@ -200,28 +210,35 @@ extension DownloadDataService: FileDownloadDataServicing {
 
         let fileService: FileWebService = FileWebService.download(url: url, filename: filename, fileExtension: nil)
         let downloadLocation: URL = fileService.downloadLocation
+        if let remoteUrl = URL(string: url) {
+            self.internalFileDownload = FileDownload(url: remoteUrl,
+                                                     localUrl: downloadLocation,
+                                                     progress: Float(0),
+                                                     totalCount: Int64(0),
+                                                     completedCount: Int64(0),
+                                                     state: .initiating)
+        } else { return Single.error(FileDownloadError.downloadFailed("could not create remoteUrl")) }
 
-//        target.localLocation
-//        target.dow
+
         self.internalRequest = fileWebService.request(fileService, callbackQueue: nil, progress: { progressResponse in
 
 //            self.progressSubject.onNext(Float(progressResponse.progress))
 
             if let totalUnitCount = progressResponse.progressObject?.totalUnitCount,
-                let completedUnitCount = progressResponse.progressObject?.completedUnitCount,
-                let remoteUrl = URL(string: url)
-            {
-                self.fileDownloadSubject.onNext(FileDownload(url: remoteUrl,
-                                                             localUrl: downloadLocation,
-                                                             progress: Float(progressResponse.progress),
-                                                             totalCount: totalUnitCount,
-                                                             completedCount: completedUnitCount))
+                let completedUnitCount = progressResponse.progressObject?.completedUnitCount {
+                if let state = try? self.stateSubject.value() {
+
+                    if let internalFileDownload = self.internalFileDownload {
+                        internalFileDownload.progress = Float(progressResponse.progress)
+                        internalFileDownload.totalCount = totalUnitCount
+                        internalFileDownload.completedCount = completedUnitCount
+                        internalFileDownload.state = state
+
+                        self.fileDownloadSubject.onNext(internalFileDownload)
+                    }
+                }
+
             }
-//            progressResponse.progressObject?.completedUnitCount
-//            if progressObject = progressResponse.progressObject {
-//            }
-            // progressResponse.progressObject?.completedUnitCount
-            // progressResponse.progressObject?.totalUnitCount
             if Float(progressResponse.progress) > 0.0 && Float(progressResponse.progress) < 1.0 {
                 self.stateSubject.onNext(.inProgress)
             }
@@ -237,12 +254,22 @@ extension DownloadDataService: FileDownloadDataServicing {
                     print(".success statusCode: \(statusCode)")
 
                     if statusCode == Int(200) {
+                        if let internalFileDownload = self.internalFileDownload {
+                            internalFileDownload.state = .complete
+
+                            self.fileDownloadSubject.onNext(internalFileDownload)
+                        }
                         self.stateSubject.onNext(.complete)
                     }
                 }
 
             case .failure(_):
                 if let error = result.error {
+                    if let internalFileDownload = self.internalFileDownload {
+                        internalFileDownload.state = .error
+
+                        self.fileDownloadSubject.onNext(internalFileDownload)
+                    }
                     print(".failure: \(String(describing: error.errorDescription)))")
                     self.stateSubject.onError(FileDownloadError.internalFailure(error))
                 }

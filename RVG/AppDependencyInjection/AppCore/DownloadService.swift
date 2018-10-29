@@ -21,6 +21,8 @@ public final class DownloadService {
     // MARK: Fields(
     private let bag = DisposeBag()
 
+//    private let downloadMap: [String: Observable<FileDownload>] = [:]
+
 //    public private(set) var media = Field<[Playable]>([])
 //    public var progress: Observable<Float> {
 //        return downloadDataService.progress
