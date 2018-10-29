@@ -11,7 +11,7 @@ import RxSwift
 
 protocol DownloadServicing {
 //    var progress: Observable<Float> { get }
-    var state: Observable<FileDownloadState> { get }
+//    var state: Observable<FileDownloadState> { get }
     var fileDownload: Observable<FileDownload> { get }
     func fetchDownload(url: String, filename: String) -> Single<Void>
 }
@@ -32,9 +32,9 @@ public final class DownloadService {
         return downloadDataService.fileDownload
     }
 
-    public var state: Observable<FileDownloadState> {
-        return downloadDataService.state
-    }
+//    public var state: Observable<FileDownloadState> {
+//        return downloadDataService.state
+//    }
 
     // MARK: Dependencies
     private let downloadDataService: FileDownloadDataServicing
