@@ -91,6 +91,7 @@ public enum FileDownloadError: Error {
     case internalFailure(Error?)
     case downloadFailed(String)
     case unknown(String)
+    case missingDownload(String)
 
     public var errorDescription: String? {
         switch self {
@@ -98,8 +99,10 @@ public enum FileDownloadError: Error {
             return "Internal file downloading error: \(String(describing: error))"
         case .downloadFailed(let reason):
             return "Download failed due to \(reason)"
-        case .unknown(let reason):
+        case .unknown:
             return "Download failed, reason unknown"
+        case .missingDownload:
+            return "download not found"
         }
     }
 }

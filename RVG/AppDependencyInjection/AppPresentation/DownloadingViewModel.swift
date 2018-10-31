@@ -22,10 +22,14 @@ internal final class DownloadingViewModel {
     public var fileDownload = Field<FileDownload?>(nil)
 
     public var observableDownload: Observable<FileDownload> {
+//        return downloadService.activeDownload(filename: downloadAsset?.uuid)
         var download: Observable<FileDownload>!
-
+//
         if let downloadAsset = self.downloadAsset {
             download = downloadService.activeDownload(filename: downloadAsset.uuid)
+                .catchError({ error in
+                    throw error
+                })
         }
         return download
     }
@@ -52,9 +56,8 @@ internal final class DownloadingViewModel {
                     let downloadAsset = self.downloadAsset {
 
                     downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid)
-//                    fileDownload = downloadService.activeDownload(filename: downloadAsset.uuid)
 
-                    self.observableDownload.next { download in
+                    self.observableDownload.subscribe(onNext: { download in
                         self.fileDownload.value = download
                         // fileDownload state
                         self.downloadState.value = download.state
@@ -63,8 +66,11 @@ internal final class DownloadingViewModel {
                         }
 
                         print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
-                        }
-                        .disposed(by: self.bag)
+                        print("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
+                    }, onError: { error in
+                        self.fileDownload.value = nil
+                    })
+                    .disposed(by: self.bag)
                 }
             })
             .disposed(by: bag)
