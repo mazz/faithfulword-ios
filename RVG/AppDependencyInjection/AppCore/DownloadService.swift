@@ -8,12 +8,14 @@
 
 import Foundation
 import RxSwift
+import Moya
 
 protocol DownloadServicing {
 //    var progress: Observable<Float> { get }
 //    var state: Observable<FileDownloadState> { get }
     var fileDownload: Observable<FileDownload> { get }
     func fetchDownload(url: String, filename: String) -> Single<Void>
+    func activeDownload(filename: String) -> Observable<FileDownload>
 }
 
 public final class DownloadService {
@@ -21,7 +23,7 @@ public final class DownloadService {
     // MARK: Fields(
     private let bag = DisposeBag()
 
-//    private let downloadMap: [String: Observable<FileDownload>] = [:]
+    private var downloadMap: [String: DownloadDataService] = [:]
 
 //    public private(set) var media = Field<[Playable]>([])
 //    public var progress: Observable<Float> {
@@ -48,7 +50,21 @@ extension DownloadService: DownloadServicing {
 
     func fetchDownload(url: String, filename: String) -> Single<Void> {
         print("fetchDownload")
-        return downloadDataService.downloadFile(url: url, filename: filename)
+
+
+        let downloadDataService: DownloadDataService = DownloadDataService(fileWebService: MoyaProvider<FileWebService>())
+        downloadMap[filename] = downloadDataService
+        if let service = downloadMap[filename] {
+            return service.downloadFile(url: url, filename: filename)
+        } else { return Single.just(()) }
     }
 
+    func activeDownload(filename: String) -> Observable<FileDownload> {
+        var download: Observable<FileDownload>!
+        if let service = downloadMap[filename] {
+            download = service.fileDownload
+        }
+
+        return download
+    }
 }

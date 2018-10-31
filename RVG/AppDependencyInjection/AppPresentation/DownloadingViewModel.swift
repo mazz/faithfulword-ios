@@ -20,6 +20,16 @@ internal final class DownloadingViewModel {
     public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
     // the progress of the current download
     public var fileDownload = Field<FileDownload?>(nil)
+
+    public var observableDownload: Observable<FileDownload> {
+        var download: Observable<FileDownload>!
+
+        if let downloadAsset = self.downloadAsset {
+            download = downloadService.activeDownload(filename: downloadAsset.uuid)
+        }
+        return download
+    }
+
     // the state of the current download
     public var downloadState = Field<FileDownloadState>(.initial)
     // the state of the download button image name
@@ -42,33 +52,21 @@ internal final class DownloadingViewModel {
                     let downloadAsset = self.downloadAsset {
 
                     downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid)
+//                    fileDownload = downloadService.activeDownload(filename: downloadAsset.uuid)
+
+                    self.observableDownload.next { download in
+                        self.fileDownload.value = download
+                        // fileDownload state
+                        self.downloadState.value = download.state
+                        if self.downloadState.value == .complete {
+                            self.downloadImageNameEvent.value = "share-box"
+                        }
+
+                        print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
+                        }
+                        .disposed(by: self.bag)
                 }
             })
-            .disposed(by: bag)
-
-//        downloadService.state.next { downloadState in
-//            print("downloadState: \(downloadState)")
-//            self.downloadState.value = downloadState
-//
-//            if self.downloadState.value == .complete {
-//                self.downloadImageNameEvent.value = "share-box"
-//            }
-//            }
-//            .disposed(by: bag)
-
-        downloadService.fileDownload.next { fileDownload in
-
-            // in-flight fileDownload
-            self.fileDownload.value = fileDownload
-
-            // fileDownload state
-            self.downloadState.value = fileDownload.state
-            if self.downloadState.value == .complete {
-                self.downloadImageNameEvent.value = "share-box"
-            }
-
-            print("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state) )")
-            }
             .disposed(by: bag)
     }
 }
