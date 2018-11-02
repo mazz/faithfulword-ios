@@ -184,7 +184,7 @@ class PopupContentController: UIViewController {
             }
 
             if self.downloadingViewModel.downloadState.value == .complete {
-                self.downloadingViewModel.downloadImageNameEvent.value = "share-box"
+                self.downloadingViewModel.downloadImageNameEvent.value = "share_ic"
             }
 
             print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
@@ -366,6 +366,8 @@ class PopupContentController: UIViewController {
         //        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress))
         assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration))
         assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
+
+        resetUIBindings()
     }
 
     // MARK: Private
