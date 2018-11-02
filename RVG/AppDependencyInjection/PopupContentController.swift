@@ -167,7 +167,9 @@ class PopupContentController: UIViewController {
 
         
         //downloadingViewModel.downloadAsset should be set before observing download
-        downloadingViewModel.observableDownload.subscribe(onNext: { download in
+        downloadingViewModel.observableDownload
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { download in
             self.downloadingViewModel.fileDownload.value = download
             // fileDownload state
             self.downloadingViewModel.downloadState.value = download.state
@@ -193,6 +195,7 @@ class PopupContentController: UIViewController {
 
         // hide progress button on completion or initial
         downloadingViewModel.downloadState.asObservable()
+            .observeOn(MainScheduler.instance)
             .map { fileDownloadState in
                 fileDownloadState != .inProgress }
             .bind(to: fullDownloadProgress.rx.isHidden )
@@ -200,22 +203,24 @@ class PopupContentController: UIViewController {
 
         // hide progress stop button on completion or initial
         downloadingViewModel.downloadState.asObservable()
+            .observeOn(MainScheduler.instance)
             .map { fileDownloadState in
                 fileDownloadState != .inProgress }
             .bind(to: fullProgressDownloadButton.rx.isHidden )
             .disposed(by: bag)
 
-        // set image name based on state
-        downloadingViewModel.downloadImageNameEvent.asObservable()
-            .map { UIImage(named: $0) }
-            .bind(to: fullDownloadButton.rx.image(for: .normal))
-            .disposed(by: bag)
-
-
         // hide download button during download
         downloadingViewModel.downloadState.asObservable()
+            .observeOn(MainScheduler.instance)
             .map { fileDownloadState in fileDownloadState == .inProgress }
             .bind(to: fullDownloadButton.rx.isHidden )
+            .disposed(by: bag)
+
+        // set image name based on state
+        downloadingViewModel.downloadImageNameEvent.asObservable()
+            .observeOn(MainScheduler.instance)
+            .map { UIImage(named: $0) }
+            .bind(to: fullDownloadButton.rx.image(for: .normal))
             .disposed(by: bag)
 
         // set progress UI during download
@@ -266,6 +271,7 @@ class PopupContentController: UIViewController {
         // in order to send a little more frequently than
         // how frequently the slider playback position is updated
         fullPlaybackSlider.rx.value.asObservable()
+            .observeOn(MainScheduler.instance)
             .map { Float($0) }
             .do(onNext: { time in
                 print("time: \(time)")
