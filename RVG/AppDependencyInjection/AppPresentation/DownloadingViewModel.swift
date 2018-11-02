@@ -63,7 +63,7 @@ internal final class DownloadingViewModel {
             .disposed(by: bag)
 
         downloadButtonTapEvent.asObservable()
-            .subscribe({ currentSetting in
+            .subscribe(onNext: { currentSetting in
                 print("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
@@ -78,14 +78,20 @@ internal final class DownloadingViewModel {
                             self.downloadImageNameEvent.value = "share-box"
                             downloadService.removeDownload(filename: downloadAsset.uuid)
                         }
+                        else if self.downloadState.value == .error {
+                            downloadService.removeDownload(filename: downloadAsset.uuid)
+                        }
 
-//                        print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
+                        //                        print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
                         print("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
                     }, onError: { error in
+                        print("observableDownload error: \(error)")
                         self.fileDownload.value = nil
                     })
                     .disposed(by: self.bag)
                 }
+            }, onError: { error in
+                print("downloadButtonTapEvent error: \(error)")
             })
             .disposed(by: bag)
     }

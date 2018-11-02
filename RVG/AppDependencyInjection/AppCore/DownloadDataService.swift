@@ -261,16 +261,18 @@ extension DownloadDataService: FileDownloadDataServicing {
                 if let dataString: String = String(data: response.data, encoding: .utf8) {
                     print(".success: \(dataString)")
                     print(".success statusCode: \(statusCode)")
-
-                    if statusCode == Int(200) {
-                        if let internalFileDownload = self.internalFileDownload {
+                    if let internalFileDownload = self.internalFileDownload {
+                        if statusCode >= Int(200) && statusCode < 400 {
                             internalFileDownload.state = .complete
                             self.fileDownloadSubject.onNext(internalFileDownload)
+                            //                        self.stateSubject.onNext(.complete)
                         }
-//                        self.stateSubject.onNext(.complete)
+                        else if statusCode >= Int(400) {
+                            internalFileDownload.state = .error
+                            self.fileDownloadSubject.onNext(internalFileDownload)
+                        }
                     }
                 }
-
             case .failure(_):
                 if let error = result.error {
                     if let internalFileDownload = self.internalFileDownload {
