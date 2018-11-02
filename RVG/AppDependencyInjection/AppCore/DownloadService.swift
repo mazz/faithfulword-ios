@@ -17,6 +17,8 @@ protocol DownloadServicing {
     var downloadMap: [String: DownloadDataService] { get }
     func fetchDownload(url: String, filename: String) -> Single<Void>
     func activeDownload(filename: String) -> Observable<FileDownload>
+    func cancelDownload(filename: String) -> Single<Void>
+    func removeDownload(filename: String) -> Single<Void>
 }
 
 public final class DownloadService {
@@ -48,7 +50,6 @@ public final class DownloadService {
 }
 
 extension DownloadService: DownloadServicing {
-
     func fetchDownload(url: String, filename: String) -> Single<Void> {
         print("fetchDownload")
 
@@ -68,6 +69,31 @@ extension DownloadService: DownloadServicing {
             result = Observable.error(FileDownloadError.missingDownload("no download for filename: \(filename)"))
         }
 
+        return result
+    }
+
+    func cancelDownload(filename: String) -> Single<Void> {
+        var result: Single<Void> = Single.just(())
+
+        if let service = downloadMap[filename] {
+            service.cancel()
+
+            // seems reasonable that cancelled downloads are removed
+            result = removeDownload(filename: filename)
+        } else {
+            result = Single.error(FileDownloadError.missingDownload("download could not be cancelled"))
+        }
+        return result
+    }
+
+    func removeDownload(filename: String) -> Single<Void> {
+        var result: Single<Void> = Single.just(())
+
+        if downloadMap[filename] != nil {
+            downloadMap[filename] = nil
+        } else {
+            result = Single.error(FileDownloadError.missingDownload("download could not be removed"))
+        }
         return result
     }
 }

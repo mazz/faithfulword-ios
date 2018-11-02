@@ -18,6 +18,8 @@ internal final class DownloadingViewModel {
     public var downloadAsset: Asset? = nil
     // the tap event initiated by the user
     public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
+    // the tap event initiated by the user
+    public var cancelDownloadButtonTapEvent = PublishSubject<FileDownloadState>()
     // the progress of the current download
     public var fileDownload = Field<FileDownload?>(nil)
 
@@ -49,6 +51,17 @@ internal final class DownloadingViewModel {
     }
 
     private func setupBindings() {
+
+        cancelDownloadButtonTapEvent.asObservable()
+            .subscribe({ currentSetting in
+                print("currentSetting: \(currentSetting)")
+                if let downloadService = self.downloadService,
+                    let downloadAsset = self.downloadAsset {
+                    downloadService.cancelDownload(filename: downloadAsset.uuid)
+                }
+            })
+            .disposed(by: bag)
+
         downloadButtonTapEvent.asObservable()
             .subscribe({ currentSetting in
                 print("currentSetting: \(currentSetting)")
@@ -63,9 +76,10 @@ internal final class DownloadingViewModel {
                         self.downloadState.value = download.state
                         if self.downloadState.value == .complete {
                             self.downloadImageNameEvent.value = "share-box"
+                            downloadService.removeDownload(filename: downloadAsset.uuid)
                         }
 
-                        print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
+//                        print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
                         print("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
                     }, onError: { error in
                         self.fileDownload.value = nil

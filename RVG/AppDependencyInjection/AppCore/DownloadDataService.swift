@@ -82,6 +82,7 @@ public enum FileDownloadState {
     case initiating
     case inProgress
     case cancelling
+    case cancelled
     case complete
     case error
     case unknown
@@ -90,8 +91,8 @@ public enum FileDownloadState {
 public enum FileDownloadError: Error {
     case internalFailure(Error?)
     case downloadFailed(String)
-    case unknown(String)
     case missingDownload(String)
+    case unknown(String)
 
     public var errorDescription: String? {
         switch self {
@@ -196,15 +197,14 @@ extension DownloadDataService: FileDownloadDataServicing {
     public func cancel() {
         if let internalFileDownload = self.internalFileDownload {
             switch internalFileDownload.state {
-            case .initial, .cancelling, .complete: return
+            case .initial, .cancelling, .cancelled, .complete: return
             case .initiating, .inProgress, .error, .unknown:
-                if let internalFileDownload = self.internalFileDownload {
-                    internalFileDownload.state = .cancelling
-                    self.fileDownloadSubject.onNext(internalFileDownload)
-                }
                 //            stateSubject.onNext(.cancelling)
-                if let internalRequest = internalRequest {
+                if let internalRequest = internalRequest,
+                    let internalFileDownload = self.internalFileDownload {
                     internalRequest.cancel()
+                    internalFileDownload.state = .cancelled
+                    self.fileDownloadSubject.onNext(internalFileDownload)
                 }
             }
         } else { return }

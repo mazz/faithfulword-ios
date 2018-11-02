@@ -141,7 +141,7 @@
                                                     <constraint firstAttribute="width" constant="60" id="KDu-NJ-cRy"/>
                                                 </constraints>
                                                 <state key="normal" title="1.0x">
-                                                    <color key="titleColor" red="0.0" green="0.58823529411764708" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="titleColor" red="0.08235294118" green="0.4941176471" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="togglePlaybackSpeed:" destination="CDA-xr-UNl" eventType="touchUpInside" id="Egu-Aj-T1R"/>
@@ -165,6 +165,14 @@
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="shouldShowValueText" value="NO"/>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z64-eW-1OQ" userLabel="Full Progress Download Button">
+                                                <rect key="frame" x="153.5" y="183" width="13" height="13"/>
+                                                <color key="backgroundColor" red="0.082352941176470587" green="0.49411764705882355" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="13" id="jQq-Pr-5vE"/>
+                                                    <constraint firstAttribute="height" constant="13" id="xGa-UZ-hbr"/>
+                                                </constraints>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
@@ -178,6 +186,8 @@
                                             <constraint firstAttribute="trailing" secondItem="6lB-9O-dy6" secondAttribute="trailing" constant="32" id="B2o-IU-sjp"/>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="BPH-1o-ftR"/>
                                             <constraint firstItem="1dQ-qe-0Qs" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1.7:1" id="Gw8-l8-v9C"/>
+                                            <constraint firstItem="BHb-do-Bad" firstAttribute="centerY" secondItem="Z64-eW-1OQ" secondAttribute="centerY" id="K6z-LW-nJQ"/>
+                                            <constraint firstItem="BHb-do-Bad" firstAttribute="centerX" secondItem="Z64-eW-1OQ" secondAttribute="centerX" id="Kwr-K0-jQu"/>
                                             <constraint firstItem="24I-zf-ayu" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1:1.15" id="Rj9-va-B5U"/>
                                             <constraint firstItem="bJH-Gc-pC2" firstAttribute="leading" secondItem="Kjz-e8-KVw" secondAttribute="leading" constant="8" id="WWi-4d-wiz"/>
                                             <constraint firstAttribute="trailing" secondItem="kKF-Ep-3T1" secondAttribute="trailing" constant="8" id="YRT-BR-ntM"/>
@@ -230,6 +240,7 @@
                         <outlet property="fullDownloadProgress" destination="BHb-do-Bad" id="701-x0-zTr"/>
                         <outlet property="fullPlayPauseButton" destination="24I-zf-ayu" id="0vk-Tu-wSy"/>
                         <outlet property="fullPlaybackSlider" destination="CDy-IF-KmA" id="5ou-3n-wcv"/>
+                        <outlet property="fullProgressDownloadButton" destination="Z64-eW-1OQ" id="tDP-QP-fg3"/>
                         <outlet property="fullRepeatButton" destination="Rp0-OT-67e" id="szt-uu-qIg"/>
                         <outlet property="fullSongNameLabel" destination="B6t-4N-FaC" id="AGQ-AT-fTi"/>
                         <outlet property="fullToggleSpeedButton" destination="rIc-v1-SES" id="tdB-2R-wOb"/>

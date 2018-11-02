@@ -39,6 +39,7 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var fullShareButton: UIButton!
     @IBOutlet weak var fullToggleSpeedButton: UIButton!
     @IBOutlet weak var fullDownloadProgress: UICircularProgressRing!
+    @IBOutlet weak var fullProgressDownloadButton: UIButton!
 
     var estimatedPlaybackPosition: Float = Float(0)
     var estimatedDuration: Float = Float(0)
@@ -56,6 +57,9 @@ class PopupContentController: UIViewController {
     //    public var playlistAssets = [Asset]()
 
     // MARK: Fields
+    // the state of the download button image name
+//    public let downloadImageNameEvent = Field<String>("download_icon_black")
+
     var scrubbing: Bool = false
     var playingWhileScrubbing: Bool = false
 
@@ -155,11 +159,50 @@ class PopupContentController: UIViewController {
     func bindUI() {
         resetUIBindings()
 
+        // set image name based on state
+//        downloadImageNameEvent.asObservable()
+//            .map { UIImage(named: $0) }
+//            .bind(to: fullDownloadButton.rx.image(for: .normal))
+//            .disposed(by: bag)
+
+        
+        //downloadingViewModel.downloadAsset should be set before observing download
+        downloadingViewModel.observableDownload.subscribe(onNext: { download in
+            self.downloadingViewModel.fileDownload.value = download
+            // fileDownload state
+            self.downloadingViewModel.downloadState.value = download.state
+
+            if self.downloadingViewModel.downloadState.value == .initial {
+                self.downloadingViewModel.downloadImageNameEvent.value = "download_icon_black"
+            }
+
+            if self.downloadingViewModel.downloadState.value == .cancelled {
+                self.downloadingViewModel.downloadImageNameEvent.value = "download_icon_black"
+                self.downloadingViewModel.downloadState.value = .initial
+            }
+
+            if self.downloadingViewModel.downloadState.value == .complete {
+                self.downloadingViewModel.downloadImageNameEvent.value = "share-box"
+            }
+
+            print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
+//            print("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
+        })
+        .disposed(by: self.bag)
+
+
         // hide progress button on completion or initial
         downloadingViewModel.downloadState.asObservable()
             .map { fileDownloadState in
                 fileDownloadState != .inProgress }
             .bind(to: fullDownloadProgress.rx.isHidden )
+            .disposed(by: bag)
+
+        // hide progress stop button on completion or initial
+        downloadingViewModel.downloadState.asObservable()
+            .map { fileDownloadState in
+                fileDownloadState != .inProgress }
+            .bind(to: fullProgressDownloadButton.rx.isHidden )
             .disposed(by: bag)
 
         // set image name based on state
@@ -183,7 +226,7 @@ class PopupContentController: UIViewController {
 
                 self.fullDownloadProgress.maxValue = UICircularProgressRing.ProgressValue(Float(fileDownload.totalCount))
                 self.fullDownloadProgress.value = UICircularProgressRing.ProgressValue(Float(fileDownload.completedCount))
-                print("downloadingViewModel.fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress))")
+                print("downloadingViewModel.fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
             })
             .disposed(by: bag)
 
@@ -195,6 +238,12 @@ class PopupContentController: UIViewController {
                 return .initial
             }
             .bind(to: downloadingViewModel.downloadButtonTapEvent)
+            .disposed(by: bag)
+
+        // cancel download
+        fullProgressDownloadButton.rx.tap
+            .map { return .cancelling }
+            .bind(to: downloadingViewModel.cancelDownloadButtonTapEvent)
             .disposed(by: bag)
 
         // bind repeat track state
@@ -286,6 +335,8 @@ class PopupContentController: UIViewController {
                               urlAsset: AVURLAsset(url: url))
         assetPlaybackManager.asset = playbackAsset
 
+        downloadingViewModel.downloadAsset = self.playbackAsset
+
         //        playables = assetPlaybackService.playables.value
 
 
@@ -344,10 +395,10 @@ class PopupContentController: UIViewController {
 
         fullDownloadProgress.value = UICircularProgressRing.ProgressValue(Float(0))
         fullDownloadProgress.ringStyle = .ontop
-        fullDownloadProgress.innerRingColor = UIColor(red: 0.0, green: 150.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+        fullDownloadProgress.innerRingColor = UIColor(red: 21.0/255.0, green: 126.0/255.0, blue: 251.0/255.0, alpha: 1.0)
         fullDownloadProgress.outerRingColor = .lightGray
-        fullDownloadProgress.outerRingWidth = 4.0
-        fullDownloadProgress.innerRingWidth = 4.0
+        fullDownloadProgress.outerRingWidth = 3.0
+        fullDownloadProgress.innerRingWidth = 3.0
 
         // emptyUIState
 
@@ -660,6 +711,7 @@ class PopupContentController: UIViewController {
     }
 
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
+        print("handlePlayerRateDidChangeNotification notification: \(notification)")
         updateTransportUIState()
     }
 
