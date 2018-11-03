@@ -36,7 +36,6 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var fullTotalPlaybackDurationLabel: UILabel!
     @IBOutlet weak var fullRepeatButton: UIButton!
     @IBOutlet weak var fullDownloadButton: UIButton!
-    @IBOutlet weak var fullShareButton: UIButton!
     @IBOutlet weak var fullToggleSpeedButton: UIButton!
     @IBOutlet weak var fullDownloadProgress: UICircularProgressRing!
     @IBOutlet weak var fullProgressDownloadButton: UIButton!
@@ -159,14 +158,57 @@ class PopupContentController: UIViewController {
     func bindUI() {
         resetUIBindings()
 
-        // set image name based on state
-//        downloadImageNameEvent.asObservable()
-//            .map { UIImage(named: $0) }
-//            .bind(to: fullDownloadButton.rx.image(for: .normal))
-//            .disposed(by: bag)
+        // setup sharing button and UIActivityViewController
+        // once the download finishes
+        downloadingViewModel.fileDownloadCompleteEvent.asObservable()
+            .observeOn(MainScheduler.instance)
+            .subscribe({ download in
+                self.fullDownloadButton.rx.tap
+                    .observeOn(MainScheduler.instance)
+                    .bind {
+                        // copy file to temp dir to rename it
+                        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+                        // generate temp file url path
+                        if let lastPathComponent = self.downloadingViewModel.fileDownload.value?.url.lastPathComponent {
+                            let temporaryFileURL = temporaryDirectoryURL.appendingPathComponent(lastPathComponent)
+                            print("temporaryFileURL: \(temporaryFileURL)")
 
+                            // capture the audio file as a Data blob and then write it
+                            // to temp dir
+
+                            if let localDownload = self.downloadingViewModel.fileDownload.value {
+                                do {
+                                    let audioData: Data = try Data(contentsOf: localDownload.localUrl, options: .uncached)
+                                    try audioData.write(to: temporaryFileURL, options: .atomicWrite)
+                                } catch {
+                                    print("error writing temp audio file: \(error)")
+                                    return
+                                }
+
+                                let activityViewController = UIActivityViewController(activityItems: ["Shared via the Faithful Word App: https://faithfulwordapp.com/", temporaryFileURL], applicationActivities: nil)
+
+                                activityViewController.excludedActivityTypes = [
+                                    .addToReadingList,
+                                    .openInIBooks,
+                                    .print,
+                                    .saveToCameraRoll,
+                                    .postToWeibo,
+                                    .postToFlickr,
+                                    .postToVimeo,
+                                    .postToTencentWeibo]
+
+                                self.present(activityViewController, animated: true, completion: {})
+                            }
+
+                        }
+                }
+                .disposed(by: self.bag)
+            })
+            .disposed(by: bag)
         
         //downloadingViewModel.downloadAsset should be set before observing download
+        // this chunk is needed when the user opens the full screen UI while
+        // the download has already started
         downloadingViewModel.observableDownload
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { download in
@@ -174,21 +216,8 @@ class PopupContentController: UIViewController {
             // fileDownload state
             self.downloadingViewModel.downloadState.value = download.state
 
-            if self.downloadingViewModel.downloadState.value == .initial {
-                self.downloadingViewModel.downloadImageNameEvent.value = "download_icon_black"
-            }
-
-            if self.downloadingViewModel.downloadState.value == .cancelled {
-                self.downloadingViewModel.downloadImageNameEvent.value = "download_icon_black"
-                self.downloadingViewModel.downloadState.value = .initial
-            }
-
-            if self.downloadingViewModel.downloadState.value == .complete {
-                self.downloadingViewModel.downloadImageNameEvent.value = "share_ic"
-            }
-
-            print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
-//            print("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
+            self.downloadingViewModel.updateDownloadState(filename: self.playbackAsset.uuid, downloadState: download.state)
+                print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
         })
         .disposed(by: self.bag)
 
@@ -237,9 +266,9 @@ class PopupContentController: UIViewController {
 
         // initiate download
         fullDownloadButton.rx.tap
-            .map { [unowned self] _ in
+            .map { //[unowned self] _ in
                 // FIXME: HACK: probably a better way to sync the download view model
-                self.downloadingViewModel.downloadAsset = self.playbackAsset
+//                self.downloadingViewModel.downloadAsset = self.playbackAsset
                 return .initial
             }
             .bind(to: downloadingViewModel.downloadButtonTapEvent)
@@ -404,7 +433,7 @@ class PopupContentController: UIViewController {
         fullDownloadProgress.value = UICircularProgressRing.ProgressValue(Float(0))
         fullDownloadProgress.ringStyle = .ontop
         fullDownloadProgress.innerRingColor = UIColor(red: 21.0/255.0, green: 126.0/255.0, blue: 251.0/255.0, alpha: 1.0)
-        fullDownloadProgress.outerRingColor = .lightGray
+        fullDownloadProgress.outerRingColor = UIColor(white: 0.8, alpha: 1.0)
         fullDownloadProgress.outerRingWidth = 3.0
         fullDownloadProgress.innerRingWidth = 3.0
 

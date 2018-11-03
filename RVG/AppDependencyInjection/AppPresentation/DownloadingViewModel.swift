@@ -20,6 +20,8 @@ internal final class DownloadingViewModel {
     public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
     // the tap event initiated by the user
     public var cancelDownloadButtonTapEvent = PublishSubject<FileDownloadState>()
+    // the tap event for the download share button
+    public var fileDownloadCompleteEvent = PublishSubject<FileDownload>()
     // the progress of the current download
     public var fileDownload = Field<FileDownload?>(nil)
 
@@ -51,7 +53,6 @@ internal final class DownloadingViewModel {
     }
 
     private func setupBindings() {
-
         cancelDownloadButtonTapEvent.asObservable()
             .subscribe({ currentSetting in
                 print("currentSetting: \(currentSetting)")
@@ -74,13 +75,8 @@ internal final class DownloadingViewModel {
                         self.fileDownload.value = download
                         // fileDownload state
                         self.downloadState.value = download.state
-                        if self.downloadState.value == .complete {
-                            self.downloadImageNameEvent.value = "share-box"
-                            downloadService.removeDownload(filename: downloadAsset.uuid)
-                        }
-                        else if self.downloadState.value == .error {
-                            downloadService.removeDownload(filename: downloadAsset.uuid)
-                        }
+
+                        self.updateDownloadState(filename: downloadAsset.uuid, downloadState: download.state)
 
                         //                        print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
                         print("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
@@ -94,6 +90,36 @@ internal final class DownloadingViewModel {
                 print("downloadButtonTapEvent error: \(error)")
             })
             .disposed(by: bag)
+    }
+
+    public func updateDownloadState(filename: String, downloadState: FileDownloadState) {
+        if let downloadAsset = self.downloadAsset {
+            switch downloadState {
+            case .initial:
+                self.downloadImageNameEvent.value = "download_icon_black"
+            case .initiating:
+                break
+            case .inProgress:
+                break
+            case .cancelling:
+                break
+            case .cancelled:
+                downloadService.removeDownload(filename: downloadAsset.uuid)
+                self.downloadState.value = .initial
+            case .complete:
+                self.downloadImageNameEvent.value = "share-box"
+                downloadService.removeDownload(filename: downloadAsset.uuid)
+                self.downloadButtonTapEvent.dispose()
+                if let download = self.fileDownload.value {
+                    self.fileDownloadCompleteEvent.onNext(download)
+                }
+            case .error:
+                downloadService.removeDownload(filename: downloadAsset.uuid)
+                self.downloadState.value = .initial
+            case .unknown:
+                break
+            }
+        }
     }
 }
 

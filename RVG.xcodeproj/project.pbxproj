@@ -879,6 +879,7 @@
 				4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */,
 				4C958E9A208D3D9700A71C59 /* Run Carthage Copy Frameworks */,
 				4C958E9B2090184A00A71C59 /* Run Carthage Check Outdated */,
+				4C2F8028218D473700EBA81A /* swiftlint */,
 			);
 			buildRules = (
 			);
@@ -1048,6 +1049,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" 3ec2d1c63e1a93d14a2eb85f92e28c29b5f9c891 06629ae153f77acfc024d844eebe3ebb7023cd54929f34ed8ec479a00e43fa9a\n";
+		};
+		4C2F8028218D473700EBA81A /* swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		4C958E9A208D3D9700A71C59 /* Run Carthage Copy Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
