@@ -30,7 +30,7 @@ public protocol AccountDataServicing {
 public protocol ProductDataServicing {
     var books: Observable<[Book]> { get }
 
-    func chapters(for bookUuid: String) -> Single<[Playable]>
+    func chapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]>
     func fetchAndObserveBooks(offset: Int, limit: Int) -> Single<[Book]>
     func deletePersistedBooks() -> Single<Void>
 
@@ -119,25 +119,8 @@ extension DataService: AccountDataServicing {
 
 }
 
-extension DataService: ProductDataServicing {
-    public func chapters(for bookUuid: String) -> Single<[Playable]> {
-        switch self.networkStatus.value {
-        case .notReachable:
-            return dataStore.fetchChapters(for: bookUuid)
-        case .reachable(_):
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language))
-            let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
-                try! response.map(MediaChapterResponse.self)
-            }
-            let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
-                self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
-            }
-            return storedChapters
-        case .unknown:
-            return dataStore.fetchChapters(for: bookUuid)
-        }
-    }
 
+extension DataService: ProductDataServicing {
     public var books: Observable<[Book]> {
         switch self.networkStatus.value {
         case .notReachable:
@@ -152,9 +135,28 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    //    public var persistedBooks: Observable<[Book]> {
-    //        return _persistedBooks.asObservable()
-    //    }
+    public func chapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]> {
+        switch self.networkStatus.value {
+        case .notReachable:
+            return dataStore.fetchChapters(for: bookUuid)
+        case .reachable(_):
+//            let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
+//            let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
+//            print("self._responseMap: \(self._responseMap)")
+
+            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
+            let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
+                try! response.map(MediaChapterResponse.self)
+            }
+            let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
+                self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
+            }
+            return storedChapters
+        case .unknown:
+            return dataStore.fetchChapters(for: bookUuid)
+        }
+    }
+
 
     public func fetchAndObserveBooks(offset: Int, limit: Int) -> Single<[Book]> {
         let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)

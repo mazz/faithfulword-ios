@@ -30,7 +30,7 @@ public protocol ProductServicing {
 
     func deleteBooks() -> Single<Void>
 
-    func fetchChapters(for bookUuid: String) -> Single<[Playable]>
+    func fetchChapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]>
     func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]>
     func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
     func fetchBibleLanguages() -> Single<[LanguageIdentifier]>
@@ -61,8 +61,8 @@ public final class ProductService {
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
 
-    public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
-        return dataService.chapters(for: bookUuid)
+    public func fetchChapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]> {
+        return dataService.chapters(for: bookUuid, offset: offset, limit: limit)
     }
 
     public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {

@@ -11,7 +11,10 @@ public enum KJVRVGService {
     case languagesSupported
     case gospels(languageId: String) // v1.1/gospels?language-id=en
     case gospelsMedia(uuid: String) // v1.1/gospels/{gid}/media
-    case booksChapterMedia(uuid: String, languageId: String) // v1.1/books/{bid}/media?language-id=en
+    // v1.1/books/{bid}/media?language-id=en
+    // v1.2/books/{bid}/media?language-id=en
+    // v1.3/books/{bid}/media?language-id=en&offset=1&limit=50
+    case booksChapterMedia(uuid: String, languageId: String, offset: Int, limit: Int)
     // v1.1/books?language-id=en
     // v1.2/books?language-id=en
     // v1.3/books?language-id=en&offset=1&limit=50
@@ -45,7 +48,7 @@ extension KJVRVGService: TargetType {
             return "/gospels"
         case .gospelsMedia(let uuid):
             return "/gospels/\(uuid)/media"
-        case .booksChapterMedia(let uuid, _):
+        case .booksChapterMedia(let uuid, _, _, _):
             return "/books/\(uuid)/media"
         case .books(_, _, _):
             return "/books"
@@ -83,8 +86,8 @@ extension KJVRVGService: TargetType {
             return nil
         case .music(let languageId):
             return ["language-id": languageId]
-        case .booksChapterMedia(_, let languageId):
-            return ["language-id": languageId]
+        case .booksChapterMedia(_, let languageId, let offset, let limit):
+            return ["language-id": languageId, "offset": offset, "limit": limit]
         case .books(let languageId, let offset, let limit):
             return ["language-id": languageId, "offset": offset, "limit": limit]
         case .gospelsMedia(_):
@@ -141,8 +144,8 @@ extension KJVRVGService: TargetType {
                 "userVersion": userVersion
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
-        case .booksChapterMedia(let uuid, let languageId):
-            return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\"}".utf8Encoded
+        case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
+            return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .gospels(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
         case .gospelsMedia(let uuid):
@@ -186,9 +189,11 @@ extension KJVRVGService: TargetType {
                                       encoding: JSONEncoding.default)
         case .languagesSupported:
             return .requestPlain
-        case .booksChapterMedia(let uuid, let languageId):
+        case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
             return .requestParameters(parameters:  ["uuid": uuid,
-                                                    "language-id": languageId],
+                                                    "language-id": languageId,
+                                                    "offset": offset,
+                                                    "limit": limit],
                                       encoding: URLEncoding.default)
         case .gospels(let languageId):
             return .requestParameters(parameters:  ["language-id": languageId],

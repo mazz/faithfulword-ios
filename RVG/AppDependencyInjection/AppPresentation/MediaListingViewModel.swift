@@ -98,7 +98,7 @@ internal final class MediaListingViewModel {
 
         switch self.mediaType {
         case .audioChapter?:
-            self.productService.fetchChapters(for: self.playlistId).subscribe(onSuccess: { chapters in
+            self.productService.fetchChapters(for: self.playlistId, offset: 1, limit: 50).subscribe(onSuccess: { chapters in
                 self.media.value = chapters
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
