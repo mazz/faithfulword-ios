@@ -19,9 +19,6 @@ public enum ProductServiceError: Error {
     case resourceLoadFailed
 }
 
-/// Combines product information from the cloud and the local data store.
-/// The cloud is considered the source of truth.
-/// The local data store is used for speed and when the cloud is not accessible.
 public protocol ProductServicing {
 
     /// List of products registered to the user's Passport account
@@ -29,29 +26,7 @@ public protocol ProductServicing {
     //    var userChapters: Field<[Playable]> { get }
     //    var persistedUserBooks: Field<[Book]> { get }
 
-
-    /// Adds a device to a user's account.
-    ///
-    /// - Parameters:
-    ///   - productName: User selected name of the product
-    ///   - productId: GUID of the device to add to the account
-    ///   - productType: The product type
-    /// - Returns: Observable emits PassportAddProductResponse when product is successfully added.
-    //    func addProduct(productName: String,
-    //                    productId: String,
-    //                    productType: String,
-    //                    deviceId: String) -> Single<Void>
-
-    /// When a Product is available by ID, it will be returned, when not
-    ///  in the users passport account, it will be nil
-    /// - Parameter identifier: the Product ID of the UserProduct
-    /// - Returns: the UserProduct, nil when not added to account
-    //    func availability(of identifier: String) -> Observable<UserProduct?>
-
-    /// Updates the products associated with the gose user account
-    ///
-    /// - Returns: Returns Success or Error
-    func fetchBooks() -> Single<Void>
+    func fetchBooks(offset: Int, limit: Int) -> Single<Void>
 
     func deleteBooks() -> Single<Void>
 
@@ -61,20 +36,6 @@ public protocol ProductServicing {
     func fetchBibleLanguages() -> Single<[LanguageIdentifier]>
 
     func fetchCategoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
-
-    /// Updates the attributes of a user's product.
-    ///
-    /// - Parameters:
-    ///   - settings: The settings to update on the product.
-    ///   - productId: The ID of the product to update.
-    /// - Returns: Single which emits when the product was succesfully updated.
-    //    func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void>
-
-    /// Gets the list of suggested names for a product type and current locale
-    ///
-    /// - Parameter productType: The type of product for contextual name suggestions
-    //    func suggestedNames(for productType: ProductType) -> Single<[String]>
-
 }
 
 public final class ProductService {
@@ -142,8 +103,8 @@ extension ProductService: ProductServicing {
     //            }
     //    }
 
-    public func fetchBooks() -> Single<Void> {
-        return dataService.fetchAndObserveBooks().take(1).asSingle().toVoid()
+    public func fetchBooks(offset: Int, limit: Int) -> Single<Void> {
+        return dataService.fetchAndObserveBooks(offset: offset, limit: limit).take(1).asSingle().toVoid()
     }
 
     public func deleteBooks() -> Single<Void> {

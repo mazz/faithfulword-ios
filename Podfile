@@ -10,7 +10,7 @@ target 'FaithfulWord' do
     pod 'FirebaseInstanceID'
     pod 'Firebase/Core'
     pod 'Firebase/Messaging'
-    pod 'Firebase/Crash'
+#    pod 'Firebase/Crash'
     pod 'Moya/RxSwift'
     pod 'RxSwift'
     pod 'RxGRDB'

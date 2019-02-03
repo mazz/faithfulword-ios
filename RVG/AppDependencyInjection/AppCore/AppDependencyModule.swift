@@ -124,7 +124,8 @@ internal final class AppDependencyModule {
                 accountService: resolver.resolve(AccountServicing.self)!,
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService: resolver.resolve(LanguageServicing.self)!,
-                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxReachable.self)!
             )
         }
 

@@ -7,6 +7,7 @@ public enum DataServiceError: Error {
     case noSession
     case noAccessToken
     case decodeFailed
+    case offsetOutofRange
 }
 
 public protocol UserDataServicing {
@@ -54,13 +55,15 @@ public protocol AccountDataServicing {
 public protocol ProductDataServicing {
     /// Permanent observable emitting product arrays
     var books: Observable<[Book]> { get }
+    // keep state of last call to manage optimizations
+//    var responseMap: [String: DownloadDataService] { get }
     //    var persistedBooks: Observable<[Book]> { get }
 
     /// Fetches the latest products from the cloud.arrays
     ///
     /// - Returns: Permanent observable emitting product arrays
     func chapters(for bookUuid: String) -> Single<[Playable]>
-    func fetchAndObserveBooks() -> Observable<[Book]>
+    func fetchAndObserveBooks(offset: Int, limit: Int) -> Observable<[Book]>
     func deletePersistedBooks() -> Single<Void>
 
     func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
@@ -102,40 +105,12 @@ public final class DataService {
     private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
     private let bag = DisposeBag()
 
-    // MARK: User
-
+    // MARK: UserDataServicing
     private var _languageIdentifier = Field<String>("test init identifier")
-
-    // MARK: Session
-
     private var _session = Field<String?>(nil)
-    //    private var assertingSession: Single<GoseSession> {
-    //        guard let value = _session.value else {
-    //            assertionFailure("No session. Must call this function after login so a session exists.")
-    //            return Single.error(DataServiceError.noSession)
-    //        }
-    //
-    //        return Single.just(value)
-    //    }
-    //    private var assertingSessionWithToken: Single<GoseSession> {
-    //        return assertingSession
-    //            .map { session -> GoseSession in
-    //                if session.accessToken == nil {
-    //                    assertionFailure("No user access token. Passport must have not provided one.")
-    //                    throw DataServiceError.noAccessToken
-    //                }
-    //
-    //                return session
-    //        }
-    //    }
-
-    // MARK: Account
-
-    //    private var _musicServiceAccounts = Field<[MusicServiceAccount]>([])
-
-    // MARK: Product
-
+    // MARK: ProductDataServicing
     private var _books = Field<[Book]>([])
+    private var _responseMap: [String: Response] = [:]
     private var _persistedBooks = Field<[Book]>([])
 
     public init(
@@ -147,7 +122,7 @@ public final class DataService {
         self.reachability = reachability
 
         reactToReachability()
-        loadInMemoryCache()
+//        loadInMemoryCache()
     }
 
     // MARK: Helpers
@@ -188,47 +163,7 @@ extension DataService: AccountDataServicing {
             })
     }
 
-    //    public func fetchRemoteServiceMap(for user: GigyaUser) -> Single<RemoteServiceMap> {
-    //        return galapagosNetworking.rx.request(.remoteServices(gigyaUserId: user.uid))
-    //            .parse(type: RemoteServiceMap.self)
-    //            .do(onNext: { map in
-    //                GoseLog.debug("RemoteServiceMap: \(map)")
-    //            })
-    //    }
-
     public var session: Observable<String?> { return _session.asObservable() }
-    //    public var musicServiceAccounts: Observable<[MusicServiceAccount]> { return _musicServiceAccounts.asObservable() }
-
-    //    public func fetchSession(for user: GigyaUser, idToken: String) -> Single<GoseSession> {
-    //        return passportNetworking.rx.request(.tokens(user: user, idToken: idToken))
-    //            .parse(type: PassportAccountSession.self)
-    //            .flatMap { [unowned self] in self.dataStore.addPerson(goseSession: $0) }
-    //            .do(onNext: { [unowned self] session in
-    //                self._session.value = session
-    //            })
-    //    }
-
-    //    public func deleteSession() -> Single<Void> {
-    //        self._session.value = nil
-    //        return dataStore.deletePersistedUser()
-    //    }
-
-    //    public func fetchAccountInfo() -> Single<PassportAccountInfo> {
-    //        return assertingSession
-    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accountInfo(gosePersonId: $0.gosePersonId)) }
-    //            .parse(type: PassportAccountInfo.self)
-    //    }
-    //
-    //    public func fetchMusicServiceAccounts() -> Observable<[MusicServiceAccount]> {
-    //        return assertingSession
-    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accounts(gosePersonId: $0.gosePersonId)) }
-    //            .map([MusicServiceAccount].self)
-    //            .do(onNext: { [unowned self] accounts in
-    //                self._musicServiceAccounts.value = accounts
-    //            })
-    //            .asObservable()
-    //            .flatMap { [unowned self] _ in self.musicServiceAccounts }
-    //    }
 
     // MARK: Helpers
 
@@ -271,17 +206,61 @@ extension DataService: ProductDataServicing {
     //        return _persistedBooks.asObservable()
     //    }
 
-    public func fetchAndObserveBooks() -> Observable<[Book]> {
-        return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
-            //            .catchError { _ in Single.just(product) }
-            .map { response -> BookResponse in try! response.map(BookResponse.self) }
-            .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
-            .flatMap { [unowned self] in self.replacePersistedBooks($0) }
-            .do(onSuccess: { [unowned self] products in
-                self._books.value = products
-                //            self._persistedBooks.value = products
-            })
-            .asObservable()
+    public func fetchAndObserveBooks(offset: Int, limit: Int) -> Observable<[Book]> {
+        let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
+        let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
+        print("self._responseMap: \(self._responseMap)")
+        
+        if let cachedResponse: Response = self._responseMap[requestKey] {
+            do {
+                let bookResponse: BookResponse = try cachedResponse.map(BookResponse.self)
+                let totalEntries: Int = bookResponse.totalEntries
+                if offset >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return Single.error(DataServiceError.offsetOutofRange).asObservable()
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
+        switch self.networkStatus.value {
+        case .reachable(_):
+            return self.kjvrvgNetworking.rx.request(request)
+                //            .catchError { _ in Single.just(product) }
+                .map { [unowned self] response -> BookResponse in
+                    do {
+                        // cache response for the next call
+                        self._responseMap[requestKey] = response
+                        return try response.map(BookResponse.self)
+                    } catch {
+                        throw DataServiceError.decodeFailed
+                    }
+                }
+                .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
+                .flatMap { [unowned self] in self.appendPersistedBooks($0) }
+                .do(onSuccess: { [unowned self] products in
+                    self._books.value = products
+                    //            self._persistedBooks.value = products
+                })
+                .asObservable()
+        case .notReachable:
+            return dataStore.fetchBooks().asObservable()
+        case .unknown:
+            return dataStore.fetchBooks().asObservable()
+        }
+//            .flatMap { [unowned self] in self.appendPersistedBooks($0) }
+//            .map({ books in
+//                return self.dataStore.fetchBooks()
+//            })
+//            .map({ books in
+//                return books
+//            })
+//            .do(onSuccess: { [unowned self] products in
+//                self._books.value = self.dataStore.fetchBooks()
+//                //            self._persistedBooks.value = products
+//            })
+//            .asObservable()
     }
 
     public func deletePersistedBooks() -> Single<Void> {
@@ -397,6 +376,15 @@ extension DataService: ProductDataServicing {
         return dataStore.deleteAllBooks()
             .flatMap { [unowned self] in self.dataStore.addBooks(books: books) }
     }
+    
+    private func appendPersistedBooks(_ books: [Book]) -> Single<[Book]> {
+        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
+        
+        return self.dataStore.addBooks(books: books)
+//            .do(onSuccess: { [unowned self] books in
+//                return self.dataStore.fetchBooks()
+//            })
+    }
 
     private func loadBooks() -> Observable<[Book]> {
         return dataStore.fetchBooks()
@@ -453,81 +441,4 @@ extension DataService: ProductDataServicing {
                 }
             }).disposed(by: bag)
     }
-
-    //    public func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void> {
-    //        return passportNetworking.rx
-    //            .request(.updateProductSettings(productId: productId, settings: settings))
-    //            .checkStatusCode()
-    //            .toVoid()
-    //            .asObservable()
-    //            .flatMap { [unowned self] in self.fetchAndObserveProducts() }
-    //            .take(1).asSingle()
-    //            .toVoid()
-    //    }
-
-    //    public func addProduct(productName: String, productId: String, productType: String) -> Single<Void> {
-    //        return assertingSession
-    //            .flatMap { [unowned self] session in
-    //                self.passportNetworking.rx.request(.addProduct(
-    //                    gosePersonId: session.gosePersonId,
-    //                    productId: productId,
-    //                    productType: productType
-    //                    ))
-    //            }
-    //            .checkStatusCode()
-    //            .toVoid()
-    //            .asObservable()
-    //            .flatMap { [unowned self] in self.fetchAndObserveProducts() }
-    //            .take(1).asSingle()
-    //            .toVoid()
-    //    }
-
-
-    // MARK: Helpers
-
-    // TODO CASTLE-4433 SR/SG - Can delete once products endpoint response includes Settings object
-    //    private func productsWithSettings(products: [UserProduct]) -> Single<[UserProduct]> {
-    //        // When products is empty, the single would error due to no element
-    //        if products.isEmpty { return Single.just(products) }
-    //
-    //        let newProducts = products.map { [unowned self] product -> Observable<UserProduct> in
-    //            return self.fetchSettings(for: product.productId)
-    //                .map {
-    //                    UserProduct(
-    //                        productId: product.productId,
-    //                        productType: product.productType,
-    //                        persons: product.persons,
-    //                        settings: $0
-    //                    )
-    //                }
-    //                .catchError { _ in Single.just(product) }
-    //                .asObservable()
-    //        }
-    //
-    //        return Observable.combineLatest(newProducts).take(1).asSingle()
-    //    }
-    //
-    //    private func fetchSettings(for productId: String) -> Single<ProductSettings> {
-    //        return passportNetworking.rx.request(.getProductSettings(productId: productId))
-    //            .parse(type: ProductSettings.self)
-    //    }
-    //
-    //    private func replacePersistedProducts(_ products: [UserProduct]) -> Single<[UserProduct]> {
-    //        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
-    //        return dataStore.deleteGosePerson()
-    //            .flatMap { [unowned self] in self.assertingSession }
-    //            .flatMap { [unowned self] in self.dataStore.addProducts(goseSession: $0, products: products) }
-    //    }
-    //
-    //    private func loadProducts(with session: GoseSession) -> Single<[UserProduct]> {
-    //        return dataStore.fetchAccountDevices(gosePersonId: session.gosePersonId)
-    //            .do(
-    //                onNext: { [weak self] products in
-    //                    self?._products.value = products
-    //                },
-    //                onError: { [weak self] error in
-    //                    GoseLog.error(error.localizedDescription)
-    //                    self?._products.value = []
-    //            })
-    //    }
 }

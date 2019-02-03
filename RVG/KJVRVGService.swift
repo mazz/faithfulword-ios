@@ -12,7 +12,10 @@ public enum KJVRVGService {
     case gospels(languageId: String) // v1.1/gospels?language-id=en
     case gospelsMedia(uuid: String) // v1.1/gospels/{gid}/media
     case booksChapterMedia(uuid: String, languageId: String) // v1.1/books/{bid}/media?language-id=en
-    case books(languageId: String) // v1.1/books?language-id=en
+    // v1.1/books?language-id=en
+    // v1.2/books?language-id=en
+    // v1.3/books?language-id=en&offset=1&limit=50
+    case books(languageId: String, offset: Int, limit: Int)
 }
 
 
@@ -44,7 +47,7 @@ extension KJVRVGService: TargetType {
             return "/gospels/\(uuid)/media"
         case .booksChapterMedia(let uuid, _):
             return "/books/\(uuid)/media"
-        case .books(_):
+        case .books(_, _, _):
             return "/books"
         }
     }
@@ -82,8 +85,8 @@ extension KJVRVGService: TargetType {
             return ["language-id": languageId]
         case .booksChapterMedia(_, let languageId):
             return ["language-id": languageId]
-        case .books(let languageId):
-            return ["language-id": languageId]
+        case .books(let languageId, let offset, let limit):
+            return ["language-id": languageId, "offset": offset, "limit": limit]
         case .gospelsMedia(_):
             return nil
         case .gospels(let languageId):
@@ -148,8 +151,8 @@ extension KJVRVGService: TargetType {
             return "{\"uuid\": \(uuid),\"}".utf8Encoded
         case .music(let languageId):
             return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
-        case .books(let languageId):
-            return "{\"language-id\": \"\(languageId)\"}".utf8Encoded
+        case .books(let languageId, let offset, let limit):
+            return "{\"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .languagesSupported:
             return "Half measures are as bad as nothing at all.".utf8Encoded
         }
@@ -169,8 +172,10 @@ extension KJVRVGService: TargetType {
         case .music(let languageId):
             return .requestParameters(parameters:  ["language-id": languageId],
                                       encoding: URLEncoding.default)
-        case .books(let languageId):
-            return .requestParameters(parameters:  ["language-id": languageId],
+        case .books(let languageId, let offset, let limit):
+            return .requestParameters(parameters:  ["language-id": languageId,
+                                                    "offset": offset,
+                                                    "limit": limit],
                                       encoding: URLEncoding.default)
         case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion):
             return .requestParameters(parameters:  ["fcmToken": fcmToken,

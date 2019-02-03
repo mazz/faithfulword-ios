@@ -774,6 +774,7 @@ extension DataStore: DataStoring {
 
     // MARK: Books
 
+    // always return ALL books, even when appending
     public func addBooks(books: [Book]) -> Single<[Book]> {
         return Single.create { [unowned self] single in
             do {
@@ -789,7 +790,11 @@ extension DataStore: DataStoring {
                     }
                     return .commit
                 }
-                single(.success(books))
+                var fetchBooks: [Book] = []
+                try self.dbPool.read { db in
+                    fetchBooks = try Book.fetchAll(db)
+                }
+                single(.success(fetchBooks))
             } catch {
                 print(error)
                 single(.error(error))
@@ -801,11 +806,11 @@ extension DataStore: DataStoring {
     public func fetchBooks() -> Single<[Book]> {
         return Single.create { [unowned self] single in
             do {
-                var books: [Book] = []
+                var fetchBooks: [Book] = []
                 try self.dbPool.read { db in
-                    books = try Book.fetchAll(db)
+                    fetchBooks = try Book.fetchAll(db)
                 }
-                single(.success(books))
+                single(.success(fetchBooks))
             } catch {
                 print(error)
                 single(.error(error))

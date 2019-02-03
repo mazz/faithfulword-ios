@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
         }, completion: { _ in },
            context: .other)
 
-        Fabric.with([Crashlytics.self])
+//        Fabric.with([Crashlytics.self])
 
 //        setupAudioSession()
 
