@@ -2,26 +2,6 @@ import RxSwift
 import GRDB
 import L10n_swift
 
-//private enum GoseDataStoreError: Swift.Error, LocalizedError {
-//    case personNotFound
-//
-//    public var errorDescription: String? {
-//        switch self {
-//        case .personNotFound:
-//            return "Data Store error - Gose Person not found"
-//        }
-//    }
-//}
-
-
-/// Factory for Realm with default config
-//internal typealias RealmProvider = () -> Realm
-//public typealias GoseSessionFactory = ( _ accessToken: String?,
-//                                        _ tokenType: GoseSessionTokenType?,
-//                                        _ expiresIn: Int?,
-//                                        _ refreshToken: String?,
-//                                        _ gosePersonId: String) -> GoseSession
-
 /// Protocol for storing and retrieving data from Realm database
 public protocol DataStoring {
     //    func latestCachedUser() -> Single<String?>
@@ -30,9 +10,6 @@ public protocol DataStoring {
 //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
     func fetchUserLanguage() -> Single<String>
-
-    /// Fetch a list of products associated to a gose person from Realm database, returns nil if gose person not found
-    //    func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]>
     
     func addBooks(books: [Book]) -> Single<[Book]>
     func fetchBooks() -> Single<[Book]>
@@ -58,11 +35,6 @@ public protocol DataStoring {
                      for categoryListType: CategoryListingType) -> Single<[Categorizable]>
     func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void>
     func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]>
-
-    /// Add or update a gose person to Realm database
-    //    func addPerson(goseSession: GoseSession) -> Single<GoseSession>
-    /// Delete gose persons from Realm database
-    //    func deleteGosePerson() -> Single<Void>
 }
 
 /// Storage class holding reference to realm object
@@ -217,27 +189,6 @@ public final class DataStore {
         }
         return migrator
     }
-
-    //    private let realm: RealmProvider
-    //    public var dbQueue: DatabaseQueue {
-    //        let documentDir: URL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-    //        let fileUrl = documentDir.appendingPathComponent("model").appendingPathExtension("sqlite")
-    //        print("fileUrl.absoluteString: \(fileUrl.absoluteString)")
-    //        let dbQueue: DatabaseQueue = try! DatabaseQueue(path: fileUrl.absoluteString)
-    //        return dbQueue
-    //    }
-    
-    //    internal init?() {
-    //        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! as NSString
-    //        let databasePath = documentsPath.appendingPathComponent("db.sqlite")
-    //        do {
-    //            try openDatabase(atPath: databasePath)
-    //        } catch {
-    //            print("error making db pool, need to bail now: \(error)")
-    //        }
-    ////        self.dbPool = try openDatabase(atPath: databasePath)
-    //        return nil
-    //    }
     
     internal func openDatabase(atPath path: String) throws -> DatabasePool {
         // Connect to the database
@@ -250,36 +201,6 @@ public final class DataStore {
         
         return dbPool
     }
-
-    //        try DatabaseQueue(path: "/path/to/database.sqlite")
-    //    internal init(realm: @escaping RealmProvider) {
-    //        self.realm = realm
-    //    }
-    
-    //    private func getPersistedPerson(gosePersonId: String?) -> PersistedGosePerson? {
-    //        let realmInstance = realm()
-    //        let result: PersistedGosePerson?
-    //        if let gosePersonId = gosePersonId {
-    //            let gosePersonPredicate = NSPredicate(format: "personId = %@", "\(gosePersonId)")
-    //            result = realmInstance.objects(PersistedGosePerson.self).filter(gosePersonPredicate).first
-    //        } else {
-    //            result = realmInstance.objects(PersistedGosePerson.self).first
-    //        }
-    //        return result
-    //    }
-    
-    //    private func fetchGosePerson(gosePersonId: String?, goseSessionFactory: @escaping GoseSessionFactory) -> Single<GoseSession?> {
-    //        let realmInstance = realm()
-    //        return Single.create { [unowned self] single in
-    //            // If ID != nil, fetch the current gose person as there will always be at most one persisted gose person
-    //            if let person = gosePersonId != nil ? self.getPersistedPerson(gosePersonId: gosePersonId!) : realmInstance.objects(PersistedGosePerson.self).first {
-    //                single(.success( goseSessionFactory(person.accessToken, GoseSessionTokenType(rawValue: person.tokenType ?? ""), person.expiresIn.value, person.refreshToken, person.personId) ))
-    //            } else {
-    //                single(.error(GoseDataStoreError.personNotFound))
-    //            }
-    //            return Disposables.create {}
-    //        }
-    //    }
 }
 
 
@@ -288,17 +209,6 @@ public final class DataStore {
 extension DataStore: DataStoring {
 
     //MARK: User
-
-    //    public func latestCachedUser() -> Single<String?> {
-    //        guard let goseUser = getPersistedPerson(gosePersonId: nil) else { return Single.just(nil) }
-    //
-    //        return Single.just(goseSessionFactory(goseUser.accessToken,
-    //                                              GoseSessionTokenType(rawValue: goseUser.tokenType ?? ""),
-    //                                              goseUser.expiresIn.value, goseUser.refreshToken,
-    //                                              goseUser.personId))
-    //
-    //        return Single.just("")
-    //    }
 
     public func addUser(session: String) -> Single<String> {
         return Single.create { [unowned self] single in
@@ -362,44 +272,6 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
-    //    public func fetchAccountDevices(gosePersonId: String) -> Single<[UserProduct]> {
-    //        return Single.create { [unowned self] single in
-    //            var associatedProducts: [UserProduct] = []
-    //            let person = self.getPersistedPerson(gosePersonId: gosePersonId)
-    //
-    //            if person != nil {
-    //                let products = person!.associatedProducts
-    //                associatedProducts = products.map { product -> UserProduct in
-    //                    let settings = ProductSettings(name: product.settings?.name)
-    //                    return UserProduct(productId: product.productId, productType: product.productType, persons: [:], settings: settings)
-    //                }
-    //                single(.success(associatedProducts))
-    //            } else {
-    //                single(.error(GoseDataStoreError.personNotFound))
-    //            }
-    //            return Disposables.create {}
-    //        }
-    //    }
-
-    //    public func deleteGosePerson() -> Single<Void> {
-    //        let realmInstance = realm()
-    //        return Single.create { single in
-    //            let persons = realmInstance.objects(PersistedGosePerson.self)
-    //
-    //            do {
-    //                try realmInstance.write {
-    //                    realmInstance.delete(persons)
-    //                }
-    //            } catch let error {
-    //                single(.error(error))
-    //            }
-    //
-    //            single(.success(()))
-    //
-    //            return Disposables.create {}
-    //        }
-    //    }
 
     // MARK: Categories
 
@@ -838,38 +710,4 @@ extension DataStore: DataStoring {
             return Disposables.create()
         }
     }
-    
-    
-    
-    // This should follow the pattern of returning the object it adds in case it gets sanitized or something.
-    //    func addPerson(goseSession: GoseSession) -> Single<GoseSession> {
-    //        let realmInstance = realm()
-    //        return Single.create { [unowned self] single in
-    //            do {
-    //                let persistedPerson = self.getPersistedPerson(gosePersonId: goseSession.gosePersonId)
-    //
-    //                let persisted = PersistedGosePerson(session: goseSession)
-    //
-    //                try realmInstance.write {
-    //                    if let persistedPerson = persistedPerson {
-    //                        // If the person is already in the Realm database it won't be added
-    //                        if !persisted.isEqual(persistedPerson) {
-    //                            persistedPerson.personId = goseSession.gosePersonId
-    //                            persistedPerson.accessToken = goseSession.accessToken
-    //                            persistedPerson.refreshToken = goseSession.refreshToken
-    //                            persistedPerson.expiresIn = RealmOptional<Int>(goseSession.expiresIn)
-    //                            persistedPerson.associatedProducts = List<PersistedProduct>()
-    //                        }
-    //                    } else {
-    //                        realmInstance.add(persisted)
-    //                    }
-    //                }
-    //                single(.success(goseSession))
-    //            } catch let error {
-    //                GoseLog.error("add person error: \(error)")
-    //                single(.error(error))
-    //            }
-    //            return Disposables.create {}
-    //        }
-    //    }
 }

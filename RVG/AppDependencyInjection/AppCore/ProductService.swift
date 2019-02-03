@@ -104,7 +104,7 @@ extension ProductService: ProductServicing {
     //    }
 
     public func fetchBooks(offset: Int, limit: Int) -> Single<Void> {
-        return dataService.fetchAndObserveBooks(offset: offset, limit: limit).take(1).asSingle().toVoid()
+        return dataService.fetchAndObserveBooks(offset: offset, limit: limit).toVoid()
     }
 
     public func deleteBooks() -> Single<Void> {

@@ -22,48 +22,16 @@ public protocol AccountDataServicing {
     /// Permanent observable providing session objects.
     var session: Observable<String?> { get }
 
-    /// Permanent observable providing a list of MusicServiceAccounts.
-    //    var musicServiceAccounts: Observable<[MusicServiceAccount]> { get }
-
-    /// Downloads the user's session from Passport.
-    ///
-    /// - Parameters:
-    ///   - user: The Gigya user object for which the session is required.
-    ///   - idToken: The Gigya token obtained for the user.
-    /// - Returns: Single with the session object.
     func fetchSession() -> Single<String>
 
-    /// Delete's the user's session from disk.
-    ///
-    /// - Returns: Single indicating success or failure.
-    //    @discardableResult func deleteSession() -> Single<Void>
-
-    //    func fetchRemoteServiceMap(for user: GigyaUser) -> Single<RemoteServiceMap>
-
-    /// Fetch the account object for a given GosePerson from Passport.
-    ///
-    /// - Returns: Single with the account info object.
-    //    func fetchAccountInfo() -> Single<PassportAccountInfo>
-
-    /// Fetches MusicServiceAccounts from Passport.
-    ///
-    /// - Returns: Either a permanent observable of MusicServiceAccounts or an erroring observable based on the success of the routine. Waits until the fetch routing completes before emitting anything.
-    //    func fetchMusicServiceAccounts() -> Observable<[MusicServiceAccount]>
 }
 
 /// Provides product related data to the app
 public protocol ProductDataServicing {
-    /// Permanent observable emitting product arrays
     var books: Observable<[Book]> { get }
-    // keep state of last call to manage optimizations
-//    var responseMap: [String: DownloadDataService] { get }
-    //    var persistedBooks: Observable<[Book]> { get }
 
-    /// Fetches the latest products from the cloud.arrays
-    ///
-    /// - Returns: Permanent observable emitting product arrays
     func chapters(for bookUuid: String) -> Single<[Playable]>
-    func fetchAndObserveBooks(offset: Int, limit: Int) -> Observable<[Book]>
+    func fetchAndObserveBooks(offset: Int, limit: Int) -> Single<[Book]>
     func deletePersistedBooks() -> Single<Void>
 
     func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
@@ -71,24 +39,6 @@ public protocol ProductDataServicing {
     func bibleLanguages() -> Single<[LanguageIdentifier]>
 
     func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
-
-
-    /// Updates the settings of a user's product.
-    ///
-    /// - Parameters:
-    ///   - settings: The settings to change for the particular product.
-    ///   - productId: The ID of the product to update.
-    /// - Returns: Single which emits when the product was succesfully updated.
-    //    func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void>
-
-    /// Associates with a product with an account.
-    ///
-    /// - Parameters:
-    ///   - productName: Name of the product
-    ///   - productId: ID of the product
-    ///   - productType: Type of the product
-    /// - Returns: Success/Failure single
-    //    func addProduct(productName: String, productId: String, productType: String) -> Single<Void>
 }
 
 public final class DataService {
@@ -122,7 +72,7 @@ public final class DataService {
         self.reachability = reachability
 
         reactToReachability()
-//        loadInMemoryCache()
+        loadInMemoryCache()
     }
 
     // MARK: Helpers
@@ -206,7 +156,7 @@ extension DataService: ProductDataServicing {
     //        return _persistedBooks.asObservable()
     //    }
 
-    public func fetchAndObserveBooks(offset: Int, limit: Int) -> Observable<[Book]> {
+    public func fetchAndObserveBooks(offset: Int, limit: Int) -> Single<[Book]> {
         let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
         let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
         print("self._responseMap: \(self._responseMap)")
@@ -217,7 +167,7 @@ extension DataService: ProductDataServicing {
                 let totalEntries: Int = bookResponse.totalEntries
                 if offset >= totalEntries {
                     print(DataServiceError.offsetOutofRange)
-                    return Single.error(DataServiceError.offsetOutofRange).asObservable()
+                    return Single.error(DataServiceError.offsetOutofRange)
                 }
             } catch {
                 print(DataServiceError.decodeFailed)
@@ -243,11 +193,11 @@ extension DataService: ProductDataServicing {
                     self._books.value = products
                     //            self._persistedBooks.value = products
                 })
-                .asObservable()
+//                .asObservable()
         case .notReachable:
-            return dataStore.fetchBooks().asObservable()
+            return Single.just(self._books.value) //dataStore.fetchBooks()
         case .unknown:
-            return dataStore.fetchBooks().asObservable()
+            return Single.just(self._books.value) //dataStore.fetchBooks()
         }
 //            .flatMap { [unowned self] in self.appendPersistedBooks($0) }
 //            .map({ books in
