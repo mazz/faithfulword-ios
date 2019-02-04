@@ -388,7 +388,13 @@ extension DataStore: DataStoring {
                     }
                     return .commit
                 }
-                single(.success(chapters))
+                var fetchChapters: [Playable] = []
+                //                let chapters: [Playable]!
+                try self.dbPool.read { db in
+                    fetchChapters = try MediaChapter.filter(Column("categoryUuid") == bookUuid).fetchAll(db)
+                }
+                single(.success(fetchChapters))
+//                single(.success(chapters))
             } catch {
                 print(error)
                 single(.error(error))
@@ -402,7 +408,6 @@ extension DataStore: DataStoring {
     public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
-
                 var fetchChapters: [Playable] = []
                 //                let chapters: [Playable]!
                 try self.dbPool.read { db in

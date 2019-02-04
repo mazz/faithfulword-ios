@@ -139,7 +139,7 @@ extension DataService: ProductDataServicing {
         var mediaChapterResponse: MediaChapterResponse!
         var previousOffset = 0
         
-        if let cachedResponse: Response = self._responseMap["mediaChapterResponse"] {
+        if let cachedResponse: Response = self._responseMap[bookUuid] {
             do {
                 mediaChapterResponse = try cachedResponse.map(MediaChapterResponse.self)
                 let totalEntries: Int = mediaChapterResponse.totalEntries
@@ -170,7 +170,7 @@ extension DataService: ProductDataServicing {
             let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
             let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
                 do {
-                    self._responseMap["mediaChapterResponse"] = response
+                    self._responseMap[bookUuid] = response
                     return try response.map(MediaChapterResponse.self)
                 } catch {
                     throw DataServiceError.decodeFailed
@@ -178,7 +178,7 @@ extension DataService: ProductDataServicing {
             }
             let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
                 print("mediaChapterResponse.result: \(mediaChapterResponse.result)")
-                return self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
+                return self.appendPersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
             }
             return storedChapters
         case .unknown:
@@ -385,12 +385,17 @@ extension DataService: ProductDataServicing {
     }
 
     private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
-        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
-    }
-    
-    private func appendPersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addChapters(chapters: chapters, for: bookUuid) }
+    }
+
+//    private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+//        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
+//    }
+    
+    private func appendPersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+//        let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
+        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
     }
 
     private func replacePersistedMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
