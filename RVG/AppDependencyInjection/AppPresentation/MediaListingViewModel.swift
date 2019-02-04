@@ -109,7 +109,7 @@ internal final class MediaListingViewModel {
     func fetchMedia(offset: Int, limit: Int) {
         switch self.mediaType {
         case .audioChapter?:
-            self.productService.fetchChapters(for: self.playlistId, offset: offset, limit: limit).subscribe(onSuccess: { chapters in
+            self.productService.fetchChapters(for: self.playlistId, stride: 50).subscribe(onSuccess: { chapters in
                 self.media.value = chapters
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in

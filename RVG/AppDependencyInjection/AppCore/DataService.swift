@@ -30,7 +30,7 @@ public protocol AccountDataServicing {
 public protocol ProductDataServicing {
     var books: Observable<[Book]> { get }
 
-    func chapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]>
+    func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]>
     func fetchAndObserveBooks(stride: Int) -> Single<[Book]>
     func deletePersistedBooks() -> Single<Void>
 
@@ -134,8 +134,31 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    public func chapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]> {
-        print("chapters offset \(offset) limit \(limit)")
+    public func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]> {
+        
+        var mediaChapterResponse: MediaChapterResponse!
+        var previousOffset = 0
+        
+        if let cachedResponse: Response = self._responseMap["mediaChapterResponse"] {
+            do {
+                mediaChapterResponse = try cachedResponse.map(MediaChapterResponse.self)
+                let totalEntries: Int = mediaChapterResponse.totalEntries
+                let cachedPageNumber: Int = mediaChapterResponse.pageNumber
+                let cachedPageSize: Int = mediaChapterResponse.pageSize
+                
+                let loadedSoFar: Int = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
+//        print("chapters offset \(offset) limit \(limit)")
         switch self.networkStatus.value {
         case .notReachable:
             return dataStore.fetchChapters(for: bookUuid)
@@ -144,9 +167,14 @@ extension DataService: ProductDataServicing {
 //            let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
 //            print("self._responseMap: \(self._responseMap)")
 
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
+            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
             let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
-                try! response.map(MediaChapterResponse.self)
+                do {
+                    self._responseMap["mediaChapterResponse"] = response
+                    return try response.map(MediaChapterResponse.self)
+                } catch {
+                    throw DataServiceError.decodeFailed
+                }
             }
             let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
                 print("mediaChapterResponse.result: \(mediaChapterResponse.result)")
