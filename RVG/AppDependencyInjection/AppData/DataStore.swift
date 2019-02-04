@@ -403,12 +403,12 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
 
-                var chapters: [Playable] = []
+                var fetchChapters: [Playable] = []
                 //                let chapters: [Playable]!
                 try self.dbPool.read { db in
-                    chapters = try MediaChapter.filter(Column("categoryUuid") == bookUuid).fetchAll(db)
+                    fetchChapters = try MediaChapter.filter(Column("categoryUuid") == bookUuid).fetchAll(db)
                 }
-                single(.success(chapters))
+                single(.success(fetchChapters))
             } catch {
                 print(error)
                 single(.error(error))

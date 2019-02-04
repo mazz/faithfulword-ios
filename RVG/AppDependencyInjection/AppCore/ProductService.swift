@@ -26,7 +26,7 @@ public protocol ProductServicing {
     //    var userChapters: Field<[Playable]> { get }
     //    var persistedUserBooks: Field<[Book]> { get }
 
-    func fetchBooks(offset: Int, limit: Int) -> Single<Void>
+    func fetchBooks(stride: Int) -> Single<Void>
 
     func deleteBooks() -> Single<Void>
 
@@ -103,8 +103,8 @@ extension ProductService: ProductServicing {
     //            }
     //    }
 
-    public func fetchBooks(offset: Int, limit: Int) -> Single<Void> {
-        return dataService.fetchAndObserveBooks(offset: offset, limit: limit).toVoid()
+    public func fetchBooks(stride: Int) -> Single<Void> {
+        return dataService.fetchAndObserveBooks(stride: stride).toVoid()
     }
 
     public func deleteBooks() -> Single<Void> {

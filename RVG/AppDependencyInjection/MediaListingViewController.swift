@@ -108,3 +108,32 @@ extension MediaListingViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: 0.1, height: 0.1)
     }
 }
+
+extension MediaListingViewController: UIScrollViewDelegate {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        //        print("scrollViewDidEndDecelerating scrollView: \(scrollView)")
+        
+        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+        //        print("offset diff: \(offsetDiff)")
+        print("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+        //        if scrollView.contentSize.height - scrollView.contentOffset.y <
+        
+        if offsetDiff - collectionView.frame.size.height <= 20.0 {
+            print("fetch!")
+            viewModel.fetchMoreMedia()
+        }
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        //        print("scrollViewDidEndDragging scrollView: \(scrollView)")
+        
+        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+        //        print("offset diff: \(offsetDiff)")
+        print("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+        
+        if offsetDiff - collectionView.frame.size.height <= 20.0 {
+            print("fetch!")
+            viewModel.fetchMoreMedia()
+        }
+    }
+}

@@ -31,7 +31,7 @@ public protocol ProductDataServicing {
     var books: Observable<[Book]> { get }
 
     func chapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]>
-    func fetchAndObserveBooks(offset: Int, limit: Int) -> Single<[Book]>
+    func fetchAndObserveBooks(stride: Int) -> Single<[Book]>
     func deletePersistedBooks() -> Single<Void>
 
     func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
@@ -50,7 +50,6 @@ public final class DataService {
     private let reachability: RxReachable!
 
     // MARK: Fields
-
 
     private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
     private let bag = DisposeBag()
@@ -136,6 +135,7 @@ extension DataService: ProductDataServicing {
     }
 
     public func chapters(for bookUuid: String, offset: Int, limit: Int) -> Single<[Playable]> {
+        print("chapters offset \(offset) limit \(limit)")
         switch self.networkStatus.value {
         case .notReachable:
             return dataStore.fetchChapters(for: bookUuid)
@@ -149,7 +149,8 @@ extension DataService: ProductDataServicing {
                 try! response.map(MediaChapterResponse.self)
             }
             let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
-                self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
+                print("mediaChapterResponse.result: \(mediaChapterResponse.result)")
+                return self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
             }
             return storedChapters
         case .unknown:
@@ -157,17 +158,24 @@ extension DataService: ProductDataServicing {
         }
     }
 
-
-    public func fetchAndObserveBooks(offset: Int, limit: Int) -> Single<[Book]> {
-        let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
-        let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
-        print("self._responseMap: \(self._responseMap)")
+    public func fetchAndObserveBooks(stride: Int) -> Single<[Book]> {
+        /// optimization for when the user has already fetched all items
+//        let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
+//        print("self._responseMap: \(self._responseMap)")
+        var bookResponse: BookResponse!
+        var previousOffset = 0
         
-        if let cachedResponse: Response = self._responseMap[requestKey] {
+        if let cachedResponse: Response = self._responseMap["booksResponse"] {
             do {
-                let bookResponse: BookResponse = try cachedResponse.map(BookResponse.self)
+                bookResponse = try cachedResponse.map(BookResponse.self)
                 let totalEntries: Int = bookResponse.totalEntries
-                if offset >= totalEntries {
+                let cachedPageNumber: Int = bookResponse.pageNumber
+                let cachedPageSize: Int = bookResponse.pageSize
+                
+                let loadedSoFar: Int = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                if loadedSoFar >= totalEntries {
                     print(DataServiceError.offsetOutofRange)
                     return Single.error(DataServiceError.offsetOutofRange)
                 }
@@ -175,21 +183,29 @@ extension DataService: ProductDataServicing {
                 print(DataServiceError.decodeFailed)
             }
         }
-        
+//        else {
+//            // we are making the first call to fetch books
+//            request = .books(languageId: L10n.shared.language, offset: 1, limit: stride)
+//        }
+
+        /// if we got to this point we know there are more items to be fetched
         switch self.networkStatus.value {
         case .reachable(_):
-            return self.kjvrvgNetworking.rx.request(request)
+            // bookResponse should not be nil because otherwise DataServiceError.decodeFailed would have happened
+            return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
                 //            .catchError { _ in Single.just(product) }
                 .map { [unowned self] response -> BookResponse in
                     do {
                         // cache response for the next call
-                        self._responseMap[requestKey] = response
+                        self._responseMap["booksResponse"] = response
                         return try response.map(BookResponse.self)
                     } catch {
                         throw DataServiceError.decodeFailed
                     }
                 }
-                .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
+                .flatMap { bookResponse -> Single<[Book]> in
+                    return Single.just(bookResponse.result)
+                }
                 .flatMap { [unowned self] in self.appendPersistedBooks($0) }
                 .do(onSuccess: { [unowned self] products in
                     self._books.value = products
@@ -201,18 +217,6 @@ extension DataService: ProductDataServicing {
         case .unknown:
             return Single.just(self._books.value) //dataStore.fetchBooks()
         }
-//            .flatMap { [unowned self] in self.appendPersistedBooks($0) }
-//            .map({ books in
-//                return self.dataStore.fetchBooks()
-//            })
-//            .map({ books in
-//                return books
-//            })
-//            .do(onSuccess: { [unowned self] products in
-//                self._books.value = self.dataStore.fetchBooks()
-//                //            self._persistedBooks.value = products
-//            })
-//            .asObservable()
     }
 
     public func deletePersistedBooks() -> Single<Void> {
@@ -353,6 +357,10 @@ extension DataService: ProductDataServicing {
     }
 
     private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
+    }
+    
+    private func appendPersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addChapters(chapters: chapters, for: bookUuid) }
     }
