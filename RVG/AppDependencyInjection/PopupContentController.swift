@@ -356,7 +356,7 @@ class PopupContentController: UIViewController {
             let item: Playable = assetPlaybackService.playableItem.value,
             let path: String = item.path,
             let localizedName: String = item.localizedName,
-            let presenterName: String = item.presenterName,
+            let presenterName: String = item.presenterName ?? self.albumTitle,
             let url: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
             else { return }
         self.assetPlaybackManager = assetPlaybackService.assetPlaybackManager
