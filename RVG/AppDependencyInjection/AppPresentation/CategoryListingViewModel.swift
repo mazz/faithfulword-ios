@@ -29,6 +29,10 @@ final class CategoryListingViewModel {
         }
     }
 
+    public func fetchMoreCategories() {
+        self.fetchCategoryListing(stride: 50)
+    }
+
     // MARK: Dependencies
 
     private let categoryListingType: CategoryListingType!
@@ -68,15 +72,19 @@ final class CategoryListingViewModel {
                 ]
             }.disposed(by: self.bag)
 
+        self.fetchCategoryListing(stride: 50)
+    }
+    
+    func fetchCategoryListing(stride: Int) {
         switch self.categoryListingType {
         case .gospel?:
-            self.productService.fetchCategoryListing(for: .gospel).subscribe(onSuccess: { listing in
+            self.productService.fetchCategoryListing(for: .gospel, stride: 50).subscribe(onSuccess: { listing in
                 self.categoryListing.value = listing
             }) { error in
                 print("fetchCategoryListing failed with error: \(error.localizedDescription)")
                 }.disposed(by: self.bag)
         case .music?:
-            self.productService.fetchCategoryListing(for: .music).subscribe(onSuccess: { listing in
+            self.productService.fetchCategoryListing(for: .music, stride: 50).subscribe(onSuccess: { listing in
                 self.categoryListing.value = listing
             }) { error in
                 print("fetchCategoryListing failed with error: \(error.localizedDescription)")
@@ -86,6 +94,5 @@ final class CategoryListingViewModel {
         default:
             print("feetprint")
         }
-
     }
 }

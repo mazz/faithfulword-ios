@@ -51,7 +51,7 @@ class GospelViewController_depr: BaseClass {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
-        provider.request(.gospels(languageId: L10n.shared.language)) { result in
+        provider.request(.gospels(languageId: L10n.shared.language, offset: 1, limit: 50)) { result in
             print("gospels: \(result)")
             switch result {
             case let .success(moyaResponse):

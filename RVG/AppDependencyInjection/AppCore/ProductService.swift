@@ -23,11 +23,11 @@ public protocol ProductServicing {
     func deleteBooks() -> Single<Void>
 
     func fetchChapters(for bookUuid: String, stride: Int) -> Single<[Playable]>
-    func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]>
+    func fetchMediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]>
     func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
     func fetchBibleLanguages() -> Single<[LanguageIdentifier]>
 
-    func fetchCategoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
+    func fetchCategoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]>
 }
 
 public final class ProductService {
@@ -57,8 +57,8 @@ extension ProductService: ProductServicing {
         return dataService.chapters(for: bookUuid, stride: stride)
     }
 
-    public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {
-        return dataService.mediaGospel(for: categoryUuid)
+    public func fetchMediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
+        return dataService.mediaGospel(for: categoryUuid, stride: stride)
     }
 
     public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
@@ -77,8 +77,8 @@ extension ProductService: ProductServicing {
         return dataService.deletePersistedBooks()
     }
 
-    public func fetchCategoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]> {
-        return dataService.categoryListing(for: categoryType)
+    public func fetchCategoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]> {
+        return dataService.categoryListing(for: categoryType, stride: stride)
     }
     //func fetchChapters(for bookUuid: String) -> Single<[Playable]>
 }

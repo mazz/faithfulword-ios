@@ -47,7 +47,7 @@ internal final class MediaListingViewModel {
 
     public func fetchMoreMedia() {
         print("fetchMoreMedia")
-        fetchMedia(offset: self.sections.value[0].items.count, limit: 50)
+        fetchMedia(stride: 100)
 //        productService.fetchBooks(offset: self.sections.value[0].items.count, limit: 50).asObservable()
 //            .subscribeAndDispose(by: self.bag)
     }
@@ -103,13 +103,13 @@ internal final class MediaListingViewModel {
                 ]
             }.disposed(by: bag)
         
-        fetchMedia(offset: 1, limit: 50)
+        fetchMedia(stride: 100)
     }
     
-    func fetchMedia(offset: Int, limit: Int) {
+    func fetchMedia(stride: Int) {
         switch self.mediaType {
         case .audioChapter?:
-            self.productService.fetchChapters(for: self.playlistId, stride: 50).subscribe(onSuccess: { chapters in
+            self.productService.fetchChapters(for: self.playlistId, stride: 100).subscribe(onSuccess: { chapters in
                 self.media.value = chapters
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
@@ -118,7 +118,7 @@ internal final class MediaListingViewModel {
             //        case .audioSermon?:
         //            print("fetch .audioSermon")
         case .audioGospel?:
-            self.productService.fetchMediaGospel(for: playlistId).subscribe(onSuccess: { mediaGospel in
+            self.productService.fetchMediaGospel(for: playlistId, stride: 100).subscribe(onSuccess: { mediaGospel in
                 self.media.value = mediaGospel
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in

@@ -302,7 +302,20 @@ extension DataStore: DataStoring {
                     }
                     return .commit
                 }
-                single(.success(categoryList))
+                var fetchCategoryList: [Categorizable] = []
+                try self.dbPool.read { db in
+                    switch categoryListType {
+                    case .gospel:
+                        print("fetch .gospel")
+                        fetchCategoryList = try Gospel.fetchAll(db)
+                    case .music:
+                        print("fetch .music")
+                        fetchCategoryList = try Music.fetchAll(db)
+                    case .churches:
+                        print(".churches")
+                    }
+                }
+                single(.success(fetchCategoryList))
             } catch {
                 print(error)
                 single(.error(error))
@@ -339,20 +352,20 @@ extension DataStore: DataStoring {
     public func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]> {
         return Single.create { [unowned self] single in
             do {
-                var categoryList: [Categorizable] = []
+                var fetchCategoryList: [Categorizable] = []
                 try self.dbPool.read { db in
                     switch categoryListingType {
                     case .gospel:
                         print("fetch .gospel")
-                        categoryList = try Gospel.fetchAll(db)
+                        fetchCategoryList = try Gospel.fetchAll(db)
                     case .music:
                         print("fetch .music")
-                        categoryList = try Music.fetchAll(db)
+                        fetchCategoryList = try Music.fetchAll(db)
                     case .churches:
                         print(".churches")
                     }
                 }
-                single(.success(categoryList))
+                single(.success(fetchCategoryList))
             } catch {
                 print(error)
                 single(.error(error))
@@ -470,7 +483,13 @@ extension DataStore: DataStoring {
                     }
                     return .commit
                 }
-                single(.success(mediaGospel))
+                
+                // return ALL entries
+                var fetchMediaGospel: [Playable] = []
+                try self.dbPool.read { db in
+                    fetchMediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
+                }
+                single(.success(fetchMediaGospel))
             } catch {
                 print(error)
                 single(.error(error))
@@ -483,11 +502,11 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
 
-                var mediaGospel: [Playable] = []
+                var fetchMediaGospel: [Playable] = []
                 try self.dbPool.read { db in
-                    mediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
+                    fetchMediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
                 }
-                single(.success(mediaGospel))
+                single(.success(fetchMediaGospel))
             } catch {
                 print(error)
                 single(.error(error))
