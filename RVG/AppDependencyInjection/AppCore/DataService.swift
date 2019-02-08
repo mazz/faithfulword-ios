@@ -84,7 +84,9 @@ public final class DataService {
         
         self.loadCategory(for: .gospel)
             .subscribeAndDispose(by: bag)
-//        self.loadCategory(for: .music)
+        self.loadCategory(for: .music)
+            .subscribeAndDispose(by: bag)
+
 //        self.loadCategory(for: .mediaItems)
     }
 }
@@ -516,9 +518,32 @@ extension DataService: ProductDataServicing {
             case .notReachable:
                 categoryListing = dataStore.fetchCategoryList(for: categoryType)
             case .reachable(_):
-                if musicLoadedSoFar < musicTotalEntries || musicFetchState == .hasNotFetched {
+                var cachedMusicItems: [Categorizable]!
+
+                // get cached music array
+                let categorizableMap: [String: [Categorizable]] = self._categories.value
+                if let musicResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                    cachedMusicItems = musicResult
+                } else {
+                    cachedMusicItems = []
+                }
+                
+                // we should try to determine if we need to fetch more items
+                // AND if we should then determine the next page offset should be fetched
+                
+                // fetch more == false if
+                // - cacheedMusicItems.count < stride
+                
+                // fetch more == true if
+                // - cacheedMusicItems.count divides evenly into stride(no remainder)
+                
+                let modulo: Int = cachedMusicItems.count % stride
+                if modulo == 0 {
+                    musicPreviousOffset = (cachedMusicItems.count / stride)
+                }
+                if (musicLoadedSoFar < musicTotalEntries || musicFetchState == .hasNotFetched) && (cachedMusicItems.count == 0 || modulo == 0) {
                     print("reachable")
-                    categoryListing = self.kjvrvgNetworking.rx.request(.music(languageId: L10n.shared.language, offset: musicPreviousOffset, limit: stride))
+                    categoryListing = self.kjvrvgNetworking.rx.request(.music(languageId: L10n.shared.language, offset: musicPreviousOffset + 1, limit: stride))
                         .map { response -> MusicResponse in
                             do {
                                 // cache response for the next call
@@ -532,8 +557,20 @@ extension DataService: ProductDataServicing {
                             return Single.just(musicResponse.result)
                         }
                         .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
+                        .do(onSuccess: { [unowned self] categorizable in
+                            var categorizableMap: [String: [Categorizable]] = self._categories.value
+                            categorizableMap[String(describing: categoryType)] = categorizable
+                            self._categories.value = categorizableMap
+                            //            self._persistedBooks.value = products
+                        })
                 } else {
-                    categoryListing = dataStore.fetchCategoryList(for: categoryType)
+                    // return back cached gospel array
+                    let categorizableMap: [String: [Categorizable]] = self._categories.value
+                    if let musicResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                        categoryListing = Single.just(musicResult) // dataStore.fetchCategoryList(for: categoryType)
+                    } else {
+                        categoryListing = dataStore.fetchCategoryList(for: categoryType)
+                    }
                 }
             }
         case .mediaItems:
