@@ -320,8 +320,8 @@ extension MainCoordinator {
                     print(".soulwinning")
                     self.goToCategoryFlow(categoryType: .gospel)
                 case .preaching:
-                    print(".preaching")
-                    self.goToCategoryFlow(categoryType: .churches)
+                    print(".mediaItems")
+                    self.goToCategoryFlow(categoryType: .mediaItems)
                 case .music:
                     print(".music")
                     self.goToCategoryFlow(categoryType: .music)

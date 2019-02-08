@@ -295,8 +295,8 @@ extension DataStore: DataStoring {
                                 var storeMusic: Music = category as! Music
                                 storeMusic.userId = user.userId
                                 try storeMusic.insert(db)
-                            case .churches:
-                                print("writing .churches")
+                            case .mediaItems:
+                                print("writing .mediaItems")
                             }
                         }
                     }
@@ -311,8 +311,8 @@ extension DataStore: DataStoring {
                     case .music:
                         print("fetch .music")
                         fetchCategoryList = try Music.fetchAll(db)
-                    case .churches:
-                        print(".churches")
+                    case .mediaItems:
+                        print(".mediaItems")
                     }
                 }
                 single(.success(fetchCategoryList))
@@ -335,8 +335,8 @@ extension DataStore: DataStoring {
                     case .music:
                         print("delete .music")
                         try Music.deleteAll(db)
-                    case .churches:
-                        print(".churches")
+                    case .mediaItems:
+                        print(".mediaItems")
                     }
                     return .commit
                 }
@@ -361,8 +361,8 @@ extension DataStore: DataStoring {
                     case .music:
                         print("fetch .music")
                         fetchCategoryList = try Music.fetchAll(db)
-                    case .churches:
-                        print(".churches")
+                    case .mediaItems:
+                        print(".mediaItems")
                     }
                 }
                 single(.success(fetchCategoryList))

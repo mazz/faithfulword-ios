@@ -58,7 +58,7 @@ final class CategoryListingViewModel {
                     icon = "feetprint"
                 case .music?:
                     icon = "disc_icon_white"
-                case .churches?:
+                case .mediaItems?:
                     icon = "preaching"
                 default:
                     icon = "feetprint"
@@ -89,8 +89,8 @@ final class CategoryListingViewModel {
             }) { error in
                 print("fetchCategoryListing failed with error: \(error.localizedDescription)")
                 }.disposed(by: self.bag)
-        case .churches?:
-            print("preaching")
+        case .mediaItems?:
+            print("mediaItems")
         default:
             print("feetprint")
         }

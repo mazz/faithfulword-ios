@@ -59,6 +59,8 @@ public final class DataService {
     private var _session = Field<String?>(nil)
     // MARK: ProductDataServicing
     private var _books = Field<[Book]>([])
+    private var _categories = Field<[String: [Categorizable]]>([:])
+    
     private var _responseMap: [String: Response] = [:]
     private var _persistedBooks = Field<[Book]>([])
 
@@ -79,6 +81,11 @@ public final class DataService {
     private func loadInMemoryCache() {
         self.loadBooks()
             .subscribeAndDispose(by: bag)
+        
+        self.loadCategory(for: .gospel)
+            .subscribeAndDispose(by: bag)
+//        self.loadCategory(for: .music)
+//        self.loadCategory(for: .mediaItems)
     }
 }
 
@@ -138,6 +145,8 @@ extension DataService: ProductDataServicing {
         }
     }
 
+    
+    
     public func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]> {
         
         var mediaChapterResponse: MediaChapterResponse!
@@ -383,6 +392,7 @@ extension DataService: ProductDataServicing {
         var gospelFetchState: FetchState = .hasNotFetched
         var musicFetchState: FetchState = .hasNotFetched
         
+        /// optimization where we cache responses to avoid unnecessary network fetches
         if let cachedResponse: Response = self._responseMap[String(describing: categoryType)] {
             do {
                 switch categoryType {
@@ -423,8 +433,8 @@ extension DataService: ProductDataServicing {
                         //                        return Single.error(DataServiceError.offsetOutofRange)
                         return dataStore.fetchCategoryList(for: categoryType)
                     }
-                case .churches:
-                    print(".churches")
+                case .mediaItems:
+                    print(".mediaItems")
                 }
                 //                categoryResponse = try cachedResponse.map(MediaGospelResponse.self)
             } catch {
@@ -440,7 +450,31 @@ extension DataService: ProductDataServicing {
             case .notReachable:
                 categoryListing = dataStore.fetchCategoryList(for: categoryType)
             case .reachable(_):
-                if gospelLoadedSoFar < gospelTotalEntries || gospelFetchState == .hasNotFetched {
+                var cachedGospelItems: [Categorizable]!
+                
+                // get cached gospel array
+                let categorizableMap: [String: [Categorizable]] = self._categories.value
+                if let gospelResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                    cachedGospelItems = gospelResult
+                } else {
+                    cachedGospelItems = []
+                }
+
+                // we should try to determine if we need to fetch more items
+                // AND if we should then determine the next page offset should be fetched
+                
+                // fetch more == false if
+                // - cacheedGospelItems.count < stride
+                
+                // fetch more == true if
+                // - cacheedGospelItems.count divides evenly into stride(no remainder)
+                
+                let modulo: Int = cachedGospelItems.count % stride
+                if modulo == 0 {
+                    gospelPreviousOffset = (cachedGospelItems.count / stride)
+                }
+
+                if (gospelLoadedSoFar < gospelTotalEntries || gospelFetchState == .hasNotFetched) && (cachedGospelItems.count == 0 || modulo == 0) {
                     print("reachable")
                     categoryListing = self.kjvrvgNetworking.rx.request(.gospels(languageId: L10n.shared.language, offset: gospelPreviousOffset + 1, limit: stride))
                         .map { response -> GospelResponse in
@@ -456,8 +490,22 @@ extension DataService: ProductDataServicing {
                             return Single.just(gospelResponse.result)
                         }
                         .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
+                        .do(onSuccess: { [unowned self] categorizable in
+                            var categorizableMap: [String: [Categorizable]] = self._categories.value
+                            categorizableMap[String(describing: categoryType)] = categorizable
+                            self._categories.value = categorizableMap
+                            //            self._persistedBooks.value = products
+                        })
                 } else {
-                    categoryListing = dataStore.fetchCategoryList(for: categoryType)
+                    // return back cached gospel array
+                    let categorizableMap: [String: [Categorizable]] = self._categories.value
+//                    let gospelResult: [Categorizable]
+                    
+                    if let gospelResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                        categoryListing = Single.just(gospelResult) // dataStore.fetchCategoryList(for: categoryType)
+                    } else {
+                        categoryListing = dataStore.fetchCategoryList(for: categoryType)
+                    }
                 }
             }
         case .music:
@@ -488,14 +536,13 @@ extension DataService: ProductDataServicing {
                     categoryListing = dataStore.fetchCategoryList(for: categoryType)
                 }
             }
-        case .churches:
-            print(".churches")
+        case .mediaItems:
+            print(".mediaItems")
         }
         return categoryListing
     }
 
     // MARK: Private helpers
-
     private func replacePersistedBooks(_ books: [Book]) -> Single<[Book]> {
         // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
         return dataStore.deleteAllBooks()
@@ -525,6 +572,18 @@ extension DataService: ProductDataServicing {
                 onError: { [weak self] error in
                     print("error: \(error.localizedDescription)")
                     self?._books.value = []
+            })
+            .asObservable()
+    }
+
+    private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<[Categorizable]> {
+        return dataStore.fetchCategoryList(for: categoryListingType)
+            .do(onSuccess: { [weak self] categorizable in
+                var categorizableMap: [String: [Categorizable]] = self?._categories.value ?? [:]
+                categorizableMap[String(describing: categoryListingType)] = categorizable
+                self?._categories.value = categorizableMap
+                }, onError: { error in
+                    self._categories.value =  [:]
             })
             .asObservable()
     }
