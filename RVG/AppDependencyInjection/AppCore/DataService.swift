@@ -35,7 +35,7 @@ public protocol ProductDataServicing {
     func deletePersistedBooks() -> Single<Void>
 
     func mediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]>
-    func mediaMusic(for categoryUuid: String) -> Single<[Playable]>
+    func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]>
     func bibleLanguages() -> Single<[LanguageIdentifier]>
 
     func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]>
@@ -394,24 +394,121 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    public func mediaMusic(for categoryUuid: String) -> Single<[Playable]> {
+    public func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
+        var mediaMusicResponse: MediaMusicResponse!
+        var previousOffset = 0
+        var totalEntries = -1
+        var loadedSoFar = -1
+        var fetchState: FetchState = .hasNotFetched
+        
+        if let cachedResponse: Response = self._responseMap[categoryUuid] {
+            do {
+                fetchState = .hasFetched
+                
+                mediaMusicResponse = try cachedResponse.map(MediaMusicResponse.self)
+                totalEntries = mediaMusicResponse.totalEntries
+                let cachedPageNumber: Int = mediaMusicResponse.pageNumber
+                let cachedPageSize: Int = mediaMusicResponse.pageSize
+                
+                loadedSoFar = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                // assume we've loaded at least once, so return the local db instead
+                //                if loadedSoFar == stride {
+                //                    return self.dataStore.fetchMediaMusic(for: categoryUuid)
+                //                }
+                if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return dataStore.fetchMediaMusic(for: categoryUuid)
+                    //                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
         switch self.networkStatus.value {
         case .notReachable:
+            
             return dataStore.fetchMediaMusic(for: categoryUuid)
         case .reachable(_):
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
-            let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
-                try! response.map(MediaMusicResponse.self)
+            var cachedMedia: [Playable]!
+            
+            // get cached music media array
+            let mediaMap: [String: [Playable]] = self._media.value
+            if let result: [Playable] = mediaMap[String(describing: categoryUuid)] {
+                cachedMedia = result
+            } else {
+                cachedMedia = []
             }
-            let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
-                //                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
-                self.replacePersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
+            
+            
+            // we should try to determine if we need to fetch more items
+            // AND if we should then determine the next page offset should be fetched
+            
+            // fetch more == false if
+            // - cacheedMusicItems.count < stride
+            
+            // fetch more == true if
+            // - cacheedMusicItems.count divides evenly into stride(no remainder)
+            
+            let modulo: Int = cachedMedia.count % stride
+            if modulo == 0 {
+                previousOffset = (cachedMedia.count / stride)
             }
-            return storedMediaMusic
+            
+            if (loadedSoFar < totalEntries) || (fetchState == .hasNotFetched) && (cachedMedia.count == 0 || modulo == 0) {
+                let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+                let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
+                    do {
+                        self._responseMap[categoryUuid] = response
+                        return try response.map(MediaMusicResponse.self)
+                    } catch {
+                        throw DataServiceError.decodeFailed
+                    }
+                }
+                let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
+                    self.appendPersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
+                    }
+                    .do(onSuccess: { [unowned self] playble in
+                        var mediaMap: [String: [Playable]] = self._media.value
+                        mediaMap[categoryUuid] = playble
+                        self._media.value = mediaMap
+                    })
+                return storedMediaMusic
+            } else {
+                // return back cached music media array
+                let mediaMap: [String: [Playable]] = self._media.value
+                //                    let gospelResult: [Categorizable]
+                
+                if let result: [Playable] = mediaMap[categoryUuid] {
+                    return Single.just(result) // dataStore.fetchCategoryList(for: categoryType)
+                } else {
+                    return dataStore.fetchMediaMusic(for: categoryUuid)
+                }
+            }
         case .unknown:
             return dataStore.fetchMediaMusic(for: categoryUuid)
         }
     }
+//    public func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
+//        switch self.networkStatus.value {
+//        case .notReachable:
+//            return dataStore.fetchMediaMusic(for: categoryUuid)
+//        case .reachable(_):
+//            let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+//            let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
+//                try! response.map(MediaMusicResponse.self)
+//            }
+//            let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
+//                //                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+//                self.replacePersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
+//            }
+//            return storedMediaMusic
+//        case .unknown:
+//            return dataStore.fetchMediaMusic(for: categoryUuid)
+//        }
+//    }
 
     public func bibleLanguages() -> Single<[LanguageIdentifier]> {
         switch self.networkStatus.value {
@@ -777,6 +874,10 @@ extension DataService: ProductDataServicing {
     private func replacePersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteMediaMusic(for: categoryUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid) }
+    }
+
+    private func appendPersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
+        return self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid)
     }
 
     private func replacePersistedBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {

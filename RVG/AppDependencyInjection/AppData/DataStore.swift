@@ -501,7 +501,6 @@ extension DataStore: DataStoring {
     public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
-
                 var fetchMediaGospel: [Playable] = []
                 try self.dbPool.read { db in
                     fetchMediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
@@ -563,7 +562,15 @@ extension DataStore: DataStoring {
                     }
                     return .commit
                 }
-                single(.success(mediaMusic))
+                
+                // return ALL entries
+                var fetchMediaMusic: [Playable] = []
+                try self.dbPool.read { db in
+                    fetchMediaMusic = try MediaMusic.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
+                }
+                single(.success(fetchMediaMusic))
+//
+//                single(.success(mediaMusic))
             } catch {
                 print(error)
                 single(.error(error))
@@ -575,12 +582,11 @@ extension DataStore: DataStoring {
     public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
-
-                var mediaGospel: [Playable] = []
+                var fetchMediaMusic: [Playable] = []
                 try self.dbPool.read { db in
-                    mediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
+                    fetchMediaMusic = try MediaMusic.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
                 }
-                single(.success(mediaGospel))
+                single(.success(fetchMediaMusic))
             } catch {
                 print(error)
                 single(.error(error))

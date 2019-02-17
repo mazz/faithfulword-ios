@@ -113,7 +113,7 @@ internal final class MediaListingViewModel {
                 self.media.value = chapters
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
-                print("fetchChapters failed with error: \(error.localizedDescription)")
+                print("audioChapter failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
             //        case .audioSermon?:
         //            print("fetch .audioSermon")
@@ -122,14 +122,14 @@ internal final class MediaListingViewModel {
                 self.media.value = mediaGospel
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
-                print("fetchChapters failed with error: \(error.localizedDescription)")
+                print("audioGospel failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
         case .audioMusic?:
-            self.productService.fetchMediaMusic(for: playlistId).subscribe(onSuccess: { mediaMusic in
+            self.productService.fetchMediaMusic(for: playlistId, stride: 100).subscribe(onSuccess: { mediaMusic in
                 self.media.value = mediaMusic
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
-                print("fetchChapters failed with error: \(error.localizedDescription)")
+                print("audioMusic failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
         default:
             print("default")

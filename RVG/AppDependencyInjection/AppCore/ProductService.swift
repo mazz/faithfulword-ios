@@ -24,7 +24,7 @@ public protocol ProductServicing {
 
     func fetchChapters(for bookUuid: String, stride: Int) -> Single<[Playable]>
     func fetchMediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]>
-    func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
+    func fetchMediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]>
     func fetchBibleLanguages() -> Single<[LanguageIdentifier]>
 
     func fetchCategoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]>
@@ -61,8 +61,8 @@ extension ProductService: ProductServicing {
         return dataService.mediaGospel(for: categoryUuid, stride: stride)
     }
 
-    public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
-        return dataService.mediaMusic(for: categoryUuid)
+    public func fetchMediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
+        return dataService.mediaMusic(for: categoryUuid, stride: stride)
     }
 
     public func fetchBibleLanguages() -> Single<[LanguageIdentifier]> {
