@@ -82,40 +82,28 @@ public final class DataService {
     private func loadInMemoryCache() {
         self.loadBooks()
             .subscribeAndDispose(by: bag)
-//            .do(onNext: { stringArray in
-//                print("music loadCategory: \(stringArray)")
-//            })
-//            .map {
-//                $0.map { uuid -> Single<[Playable]> in
-//                    let playables: Single<[Playable]> = self.dataStore.fetchMediaMusic(for: uuid)
-//                    return playables
-//                }
-//            }
-//            .subscribe { stringArray in
-//                print("music playables loadCategory: \(stringArray)")
 
         self.loadCategory(for: .music)
-            .subscribe { musicItems in
-                print("loadCategory musicItems: \((musicItems))")
-            }
-            .disposed(by: bag)
+            .do(onNext: { uuid in
+                self.dataStore.fetchMediaMusic(for: uuid)
+                    .subscribe(onSuccess: { playableArray in
+                        var mediaMap: [String: [Playable]] = self._media.value
+                        mediaMap[uuid] = playableArray
+                        self._media.value = mediaMap
+                })
+            })
+            .subscribeAndDispose(by: bag)
 
         self.loadCategory(for: .gospel)
-            .subscribe { _ in
-                print("loadCategory")
-            }
-            .disposed(by: bag)
-
-        
-//            .subscribeAndDispose(by: bag)
-//        self.loadCategory(for: .music)
-//            .subscribeAndDispose(by: bag)
-        
-        
-//        self.loadGospelMedia(for: categoryUuid)
-//            .subscribeAndDispose(by: bag)
-
-//        self.loadCategory(for: .mediaItems)
+            .do(onNext: { uuid in
+                self.dataStore.fetchMediaGospel(for: uuid)
+                    .subscribe(onSuccess: { playableArray in
+                        var mediaMap: [String: [Playable]] = self._media.value
+                        mediaMap[uuid] = playableArray
+                        self._media.value = mediaMap
+                    })
+            })
+            .subscribeAndDispose(by: bag)
     }
 }
 
@@ -502,24 +490,6 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchMediaMusic(for: categoryUuid)
         }
     }
-//    public func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
-//        switch self.networkStatus.value {
-//        case .notReachable:
-//            return dataStore.fetchMediaMusic(for: categoryUuid)
-//        case .reachable(_):
-//            let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
-//            let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
-//                try! response.map(MediaMusicResponse.self)
-//            }
-//            let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
-//                //                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
-//                self.replacePersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
-//            }
-//            return storedMediaMusic
-//        case .unknown:
-//            return dataStore.fetchMediaMusic(for: categoryUuid)
-//        }
-//    }
 
     public func bibleLanguages() -> Single<[LanguageIdentifier]> {
         switch self.networkStatus.value {
@@ -743,14 +713,11 @@ extension DataService: ProductDataServicing {
 
     // MARK: Private helpers
     private func replacePersistedBooks(_ books: [Book]) -> Single<[Book]> {
-        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
         return dataStore.deleteAllBooks()
             .flatMap { [unowned self] in self.dataStore.addBooks(books: books) }
     }
     
     private func appendPersistedBooks(_ books: [Book]) -> Single<[Book]> {
-        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
-        
         return self.dataStore.addBooks(books: books)
 //            .do(onSuccess: { [unowned self] books in
 //                return self.dataStore.fetchBooks()
@@ -774,212 +741,21 @@ extension DataService: ProductDataServicing {
             })
             .asObservable()
     }
-
-    
-    
-    
-    
-//    well you gave me a couple tools to learn on my own, the foo thing, the fatalError()
-    
-    
-//    private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<[Categorizable]> {
     private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<String> {
-//        return dataStore.fetchCategoryList(for: categoryListingType)
-//            .do(onSuccess: { [unowned self] categorizable in
-//                var categoryMap: [String: [Categorizable]] = self._categories.value
-//                categoryMap[String(describing: categoryListingType)] = categorizable
-//                self._categories.value = categoryMap
-//            })
-//            .asObservable()
-
-        
-        let firstGo: Single<[Categorizable]> = dataStore.fetchCategoryList(for: categoryListingType) // to Single<[Categorizable]>
-        
-        let bazz = firstGo
+        return dataStore.fetchCategoryList(for: categoryListingType)
+            .do(onSuccess: { [unowned self] categorizable in
+                var categoryMap: [String: [Categorizable]] = self._categories.value
+                categoryMap[String(describing: categoryListingType)] = categorizable
+                self._categories.value = categoryMap
+            })
             .map { categorizableArray in
                 return categorizableArray.map { categorizable -> String in
                     print("categorizable: \((categorizable))")
                     return categorizable.categoryUuid
                 }
             }
-//            .map { $0 }
             .asObservable()
             .flatMap { Observable.from($0) }
-        
-//            .map { $0.map { uuid -> Single<[Playable]> in
-////                var media: [String: Single<[Playable]>] = [:]
-////                if let playables = self.dataStore.fetchMediaMusic(for: uuid) {
-////                    self._media[uuid] = self.dataStore.fetchMediaMusic(for: uuid)
-////                }
-//                var mediaMap: [String: Single<[Playable]>] = [:]
-//                mediaMap[uuid] = self.dataStore.fetchMediaMusic(for: uuid)
-////                self._media.value = mediaMap
-//
-//                return self.dataStore.fetchMediaMusic(for: uuid)
-//                }
-//        }
-//
-        
-        
-        
-//        let firstGo: Single<[Categorizable]> = dataStore.fetchCategoryList(for: categoryListingType) // to Single<[Categorizable]>
-//
-//        let bazz = firstGo
-//            .map { categorizableArray in
-//                return categorizableArray.map { categorizable -> String in
-//                    print("categorizable: \((categorizable))")
-//                    return categorizable.categoryUuid
-//                }
-//            }
-//            .map { $0.map { uuid -> Single<[Playable]> in
-//                    return self.dataStore.fetchMediaMusic(for: uuid)
-//                }
-//        }
-        
-        
-//            .map { uuidArray in
-//                return uuidArray.map { thing -> Single<[Playable]> in
-//                    return self.dataStore.fetchMediaMusic(for: thing)
-//                }
-//        }
-        
-//            .map { $0.map { $0 } }
-        
-        
-        
-//        let firstGo: Single<[Categorizable]> = dataStore.fetchCategoryList(for: categoryListingType)
-//
-//        let foo = firstGo
-//            .map { $0.map { $0.categoryUuid } }
-//            .map { $0.map { self.dataStore.fetchMediaMusic(for: $0) } }
-        
-
-//        fatalError()
-        return bazz
-        
-//            .map { uuidArray in
-//                return uuidArray.map { categoryUuid -> String in
-//                    let playables: Single<[Playable]> = self.dataStore.fetchMediaMusic(for: categoryUuid)
-//                    print(playables)
-//                    return categoryUuid
-//                }
-//            }
-//            firstGo.do(onSuccess: { [unowned self] categorizable in
-//                var categoryMap: [String: [Categorizable]] = self._categories.value
-//                categoryMap[String(describing: categoryListingType)] = categorizable
-//                self._categories.value = categoryMap
-//            })
-//            .map { $0.map { $0.categoryUuid } }  // to Single<String>
-//            .map { $0.map { self.dataStore.fetchMediaMusic(for: $0) } } // to Single<[Playable]>
-//
-//
-//        let foo = firstGo
-//            .map {
-//                $0.map {
-//                    $0.categoryUuid
-//                }
-//            }
-//            .map {
-//                $0.map {
-//                    self.dataStore.fetchMediaMusic(for: $0)
-//                }
-//        }
-
-//        return bazz
-//        fatalError()
-
-/*
-        let firstGo: Single<[Categorizable]> = dataStore.fetchCategoryList(for: categoryListingType)
-        
-        let foo = firstGo
-            .map { $0.map { $0.categoryUuid } }
-            .map { $0.map { self.dataStore.fetchMediaMusic(for: $0) } }
-        
-        fatalError()
-*/
-        
-//        return dataStore.fetchCategoryList(for: categoryListingType)
-//            .do(onSuccess: { [unowned self] categorizable in
-//                var categoryMap: [String: [Categorizable]] = self._categories.value
-//                categoryMap[String(describing: categoryListingType)] = categorizable
-//                self._categories.value = categoryMap
-//            })
-//            .asObservable()
-        
-//        return dataStore.fetchCategoryList(for: categoryListingType)
-//            .do(onSuccess: { [unowned self] categorizable in
-//                var categoryMap: [String: [Categorizable]] = self._categories.value
-//                categoryMap[String(describing: categoryListingType)] = categorizable
-//                self._categories.value = categoryMap
-//            })
-//            .asObservable()
-        
-        
-//        return dataStore.fetchCategoryList(for: categoryListingType)
-//            .flatMap({ [unowned self] categorizableArray -> Single<[Playable]> in
-////                print(categorizableArray)
-//
-//
-//                //                var playableArray: Single<[Playable]>
-////                return Single.just($0.)
-////                return self.dataStore.fetchMediaMusic(for: $0.categoryUuid)
-//                return Single.just([])
-//            })
-////            .map({ categorizableArray -> Single<[Categorizable]> in
-////                print("categorizableArray: \(categorizableArray)")
-////
-////                return Single.just(categorizableArray)
-////            })
-//
-//        .toVoid()
-
-//            .map { [unowned self] categorizableArray -> Single<Categorizable> in
-//                return categorizableArray.map { [unowned self] categorizable -> Single<Playable> in
-//                    let cat: Categorizable = categorizable as Categorizable
-//                    return self.dataStore.fetchMediaMusic(for: cat.categoryUuid)
-//                }
-//            }
-//            .toVoid()
-        
-        
-//        let playables: Single<[Playable]> = catList.flatMap { [unowned self] categorizable -> Single<[Playable]> in  self.dataStore.fetchMediaMusic(for: categorizable.categoryUuid) }
-        
-        
-        
-//        let catListMap = catList.map { mapResult in
-//            print("mapResult: \(mapResult)")
-//        }
-//        let thing: Single<[Playable]> = catList.map { categorizables in
-//                print("categorizables: \(categorizables)")
-//            let categorizables: [Categorizable] = categorizables.map { categorizable in
-//                    print("categorizable: \(categorizable)")
-//                    let mediaMusic: Single<[Playable]> = self.dataStore.fetchMediaMusic(for: categorizable.categoryUuid)
-//                let media: Single<[Playable]> = mediaMusic.flatMap { media in
-//                        print("media: \(media)")
-//                        return media
-//                    }
-//                    return media
-//                }
-//            }
-//
-//        return thing.toVoid()
-        
-        
-        
-//        let categoryList: Single<[Categorizable]> = dataStore.fetchCategoryList(for: categoryListingType)
-
-//        let categoryList: Single<[Categorizable]> =
-
-
-//        return dataStore.fetchCategoryList(for: categoryListingType)
-//            .do(onSuccess: { [weak self] categorizable in
-//                var categorizableMap: [String: [Categorizable]] = self?._categories.value ?? [:]
-//                categorizableMap[String(describing: categoryListingType)] = categorizable
-//                self?._categories.value = categorizableMap
-//                }, onError: { error in
-//                    self._categories.value =  [:]
-//            })
-//            .asObservable()
     }
 
     private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
