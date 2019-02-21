@@ -783,7 +783,7 @@ extension DataService: ProductDataServicing {
     
     
 //    private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<[Categorizable]> {
-    private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<[Playable]> {
+    private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<String> {
 //        return dataStore.fetchCategoryList(for: categoryListingType)
 //            .do(onSuccess: { [unowned self] categorizable in
 //                var categoryMap: [String: [Categorizable]] = self._categories.value
@@ -802,13 +802,9 @@ extension DataService: ProductDataServicing {
                     return categorizable.categoryUuid
                 }
             }
-            .map { $0
-        }
-            .flatMap { Single.zip($0.map { self.dataStore.fetchMediaMusic(for: $0)
-                
-            })
-                
-        }.map { $0.flatMap { $0 } }
+//            .map { $0 }
+            .asObservable()
+            .flatMap { Observable.from($0) }
         
 //            .map { $0.map { uuid -> Single<[Playable]> in
 ////                var media: [String: Single<[Playable]>] = [:]
@@ -859,7 +855,7 @@ extension DataService: ProductDataServicing {
         
 
 //        fatalError()
-        return bazz.asObservable()
+        return bazz
         
 //            .map { uuidArray in
 //                return uuidArray.map { categoryUuid -> String in
