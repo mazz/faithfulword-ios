@@ -36,7 +36,7 @@ public protocol ProductDataServicing {
 
     func mediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]>
     func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]>
-    func bibleLanguages() -> Single<[LanguageIdentifier]>
+    func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]>
 
     func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]>
 }
@@ -491,7 +491,35 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    public func bibleLanguages() -> Single<[LanguageIdentifier]> {
+    public func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]> {
+        var languageResponse: LanguagesSupportedResponse!
+        var previousOffset = 0
+        var totalEntries = -1
+        var loadedSoFar = -1
+        var fetchState: FetchState = .hasNotFetched
+        
+        if let cachedResponse: Response = self._responseMap["languagesResponse"] {
+            do {
+                fetchState = .hasFetched
+                
+                languageResponse = try cachedResponse.map(LanguagesSupportedResponse.self)
+                totalEntries = languageResponse.totalEntries
+                let cachedPageNumber: Int = languageResponse.pageNumber
+                let cachedPageSize: Int = languageResponse.pageSize
+                
+                loadedSoFar = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
+        
         switch self.networkStatus.value {
         case .unknown:
             return dataStore.fetchBibleLanguages()
@@ -499,9 +527,15 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchBibleLanguages()
         case .reachable(_):
             //        var categoryListing: Single<[LanguageIdentifier]> = Single.just([])
-            return self.kjvrvgNetworking.rx.request(.languagesSupported)
+            return self.kjvrvgNetworking.rx.request(.languagesSupported(offset: previousOffset + 1, limit: stride))
                 .map { response -> LanguagesSupportedResponse in
-                    try! response.map(LanguagesSupportedResponse.self)
+                    do {
+                        // cache response for the next call
+                        self._responseMap["languagesResponse"] = response
+                        return try response.map(LanguagesSupportedResponse.self)
+                    } catch {
+                        throw DataServiceError.decodeFailed
+                    }
                 }.flatMap { languagesSupportedResponse -> Single<[LanguageIdentifier]> in
                     print("languagesSupportedResponse.result: \(languagesSupportedResponse.result)")
                     return Single.just(languagesSupportedResponse.result)

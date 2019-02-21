@@ -14,8 +14,10 @@ public enum KJVRVGService {
     // v1.2/music?language-id=en
     // v1.3/music?language-id=en&offset=1&limit=50
     case music(languageId: String, offset: Int, limit: Int)
-    case languagesSupported
-    
+    // v1.1/languages/supported
+    // v1.2/languages/supported
+    // v1.3/languages/supported?offset=1&limit=50
+    case languagesSupported(offset: Int, limit: Int)
     // v1.1/gospels?language-id=en
     // v1.2/gospels?language-id=en
     // v1.3/gospels?language-id=en&offset=1&limit=50
@@ -55,7 +57,7 @@ extension KJVRVGService: TargetType {
             return "/music/\(uuid)/media"
         case .music(_, _, _):
             return "/music"
-        case .languagesSupported:
+        case .languagesSupported(_, _):
             return "/languages/supported"
         case .gospels(_, _, _):
             return "/gospels"
@@ -93,8 +95,9 @@ extension KJVRVGService: TargetType {
             return nil
         case .appVersions:
             return nil
-        case .languagesSupported:
-            return nil
+        case .languagesSupported(let offset, let limit):
+            return ["offset": offset,
+                    "limit": limit]
         case .musicMedia(_, let offset, let limit):
             return ["offset": offset, "limit": limit]
         case .music(let languageId, let offset, let limit):
@@ -173,8 +176,8 @@ extension KJVRVGService: TargetType {
             return "{\"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .books(let languageId, let offset, let limit):
             return "{\"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
-        case .languagesSupported:
-            return "Half measures are as bad as nothing at all.".utf8Encoded
+        case .languagesSupported(let offset, let limit):
+            return "{\"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         }
     }
     public var task: Task {
@@ -208,8 +211,10 @@ extension KJVRVGService: TargetType {
                                                     "userAgent": userAgent,
                                                     "userVersion": userVersion],
                                       encoding: JSONEncoding.default)
-        case .languagesSupported:
-            return .requestPlain
+        case .languagesSupported(let offset, let limit):
+            return .requestParameters(parameters:  ["offset": offset,
+                                                    "limit": limit],
+                                      encoding: URLEncoding.default)
         case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
             return .requestParameters(parameters:  ["uuid": uuid,
                                                     "language-id": languageId,

@@ -34,9 +34,6 @@ internal final class LanguageViewModel: RadioListViewModeling {
 
     private var datasource = Field<[(section: RadioListSectionViewModel, languageIdentifiers: [String])]>([])
 
-//    public var sections: Observable<[RadioListSectionViewModel]> {
-//        return internalSections.asObservable()
-//    }
 
     public var sections: Observable<[RadioListSectionViewModel]> {
         //        return datasource.asObservable()
@@ -51,6 +48,10 @@ internal final class LanguageViewModel: RadioListViewModeling {
 
     public func item(at indexPath: IndexPath) -> RadioListItemType {
         return datasource.value[indexPath.section].section.items[indexPath.item]
+    }
+
+    public func fetchMoreItems() {
+        fetchLanguages(stride: 100)
     }
 
     // MARK: Dependencies
@@ -70,7 +71,7 @@ internal final class LanguageViewModel: RadioListViewModeling {
     // MARK: Private helpers
 
     private func setupDatasource() {
-        productService.fetchBibleLanguages().asObservable()
+        productService.fetchBibleLanguages(stride: 100).asObservable()
             .map { $0.map {
                 (RadioListItemType.selectable(header: String("\($0.sourceMaterial) (\(self.localizedString(identifier: $0.languageIdentifier))) "), isSelected: false), $0.languageIdentifier)
                 }
@@ -99,5 +100,10 @@ internal final class LanguageViewModel: RadioListViewModeling {
         let languageID = Bundle.main.preferredLocalizations[0]// [[NSBundle mainBundle] preferredLocalizations].firstObject;
         let locale = NSLocale(localeIdentifier: languageID)
         return locale.displayName(forKey: NSLocale.Key.identifier, value: identifier)!
+    }
+    
+    func fetchLanguages(stride: Int) {
+        productService.fetchBibleLanguages(stride: stride).asObservable()
+            .subscribeAndDispose(by: self.bag)
     }
 }
