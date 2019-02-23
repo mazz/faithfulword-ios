@@ -37,15 +37,26 @@ public protocol DataStoring {
     func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]>
 }
 
+public enum DataStoreError: Error {
+    case databaseOpenFailed
+}
+
 /// Storage class holding reference to realm object
 public final class DataStore {
 
+    internal var _dbPool: DatabasePool?
+    
     // MARK: Dependencies
     public var dbPool: DatabasePool {
-        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! as NSString
-        let databasePath = documentsPath.appendingPathComponent("db.sqlite")
-        print("databasePath: \(databasePath)")
-        return try! openDatabase(atPath: databasePath)
+        let documentsURL: URL = getDocumentsDirectory()
+            let databasePath = documentsURL.appendingPathComponent("db.sqlite")
+            return try! openDatabase(atPath: databasePath.absoluteString)
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
     }
     
     /// The DatabaseMigrator that defines the database schema.
@@ -191,15 +202,26 @@ public final class DataStore {
     }
     
     internal func openDatabase(atPath path: String) throws -> DatabasePool {
-        // Connect to the database
-        // See https://github.com/groue/GRDB.swift/#database-connections
-        let dbPool = try DatabasePool(path: path)
+        var resultPool: DatabasePool!
         
-        // Use DatabaseMigrator to define the database schema
-        // See https://github.com/groue/GRDB.swift/#migrations
-        try migrator.migrate(dbPool)
-        
-        return dbPool
+        if let databasePool = _dbPool {
+            resultPool = databasePool
+            return resultPool
+        } else {
+            // Connect to the database
+            // See https://github.com/groue/GRDB.swift/#database-connections
+            _dbPool = try DatabasePool(path: path)
+            print("new _dbPool at databasePath: \(path)")
+
+            if let databasePool = _dbPool {
+                // Use DatabaseMigrator to define the database schema
+                // See https://github.com/groue/GRDB.swift/#migrations
+                try migrator.migrate(databasePool)
+                resultPool = databasePool
+                return resultPool
+            }
+        }
+        return resultPool
     }
 }
 
