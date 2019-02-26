@@ -258,8 +258,8 @@ class PopupContentController: UIViewController {
             .filterNils()
             .subscribe(onNext: { fileDownload in
 
-                self.fullDownloadProgress.maxValue = UICircularProgressRing.ProgressValue(Float(fileDownload.totalCount))
-                self.fullDownloadProgress.value = UICircularProgressRing.ProgressValue(Float(fileDownload.completedCount))
+                self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
+                self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
                 print("downloadingViewModel.fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
             })
             .disposed(by: bag)
@@ -430,8 +430,8 @@ class PopupContentController: UIViewController {
         popupItem.title = songTitle
         popupItem.subtitle = albumTitle
 
-        fullDownloadProgress.value = UICircularProgressRing.ProgressValue(Float(0))
-        fullDownloadProgress.ringStyle = .ontop
+        fullDownloadProgress.value = CGFloat(0)
+        fullDownloadProgress.style = .ontop
         fullDownloadProgress.innerRingColor = UIColor(red: 21.0/255.0, green: 126.0/255.0, blue: 251.0/255.0, alpha: 1.0)
         fullDownloadProgress.outerRingColor = UIColor(white: 0.8, alpha: 1.0)
         fullDownloadProgress.outerRingWidth = 3.0
