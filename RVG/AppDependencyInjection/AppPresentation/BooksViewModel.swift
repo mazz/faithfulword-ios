@@ -7,7 +7,6 @@ internal final class BooksViewModel {
     public var title = Field<String>(NSLocalizedString("Bible", comment: "").l10n()) //{
 //        return Observable.just(NSLocalizedString("Bible", comment: "").l10n())
 //    }
-
     public func section(at index: Int) -> BooksSectionViewModel {
         return sections.value[index]
     }
@@ -32,6 +31,11 @@ internal final class BooksViewModel {
         }
     }
     
+    public func fetchMoreBooks() {
+        productService.fetchBooks(stride: 50).asObservable()
+            .subscribeAndDispose(by: self.bag)
+    }
+    
     // MARK: Dependencies
     
     private let productService: ProductServicing
@@ -48,7 +52,7 @@ internal final class BooksViewModel {
         self.languageService.userLanguage.asObservable()
             .next { [unowned self] identifier in
                 self.title.value = NSLocalizedString("Bible", comment: "").l10n()
-                productService.fetchBooks().asObservable()
+                productService.fetchBooks(stride: 50).asObservable()
                     .subscribeAndDispose(by: self.bag)
         }.disposed(by: bag)
 

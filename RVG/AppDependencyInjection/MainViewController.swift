@@ -26,10 +26,10 @@ public final class MainViewController: UIViewController {
         self.automaticallyAdjustsScrollViewInsets = false
 //        embedNowPlayingBar()
         registerReusableViews()
+//        viewModel.setupDatasource()
         bindToViewModel()
         reactToViewModel()
 //        reactToContentSizeChange()
-
     }
     
     // MARK: Private helpers
@@ -108,5 +108,34 @@ extension MainViewController {
             residualPresentedViewController.dismiss(animated: true, completion: nil)
         }
         replace(children.first, with: viewController, in: view, withAnimation: animation)
+    }
+}
+
+extension MainViewController: UIScrollViewDelegate {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        print("scrollViewDidEndDecelerating scrollView: \(scrollView)")
+        
+        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+//        print("offset diff: \(offsetDiff)")
+        print("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+//        if scrollView.contentSize.height - scrollView.contentOffset.y <
+        
+        if offsetDiff - collectionView.frame.size.height <= 20.0 {
+            print("fetch!")
+            viewModel.fetchMoreBooks()
+        }
+    }
+    
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//        print("scrollViewDidEndDragging scrollView: \(scrollView)")
+        
+        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+//        print("offset diff: \(offsetDiff)")
+        print("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+        
+        if offsetDiff - collectionView.frame.size.height <= 20.0 {
+            print("fetch!")
+            viewModel.fetchMoreBooks()
+        }
     }
 }

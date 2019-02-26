@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import RxSwift
 import L10n_swift
+import Alamofire
 
 /// Coordinator in charge of navigating between the two main states of the app.
 /// Operates on the level of the rootViewController and switches between the
@@ -15,6 +16,7 @@ internal class AppCoordinator {
     
     private var rootViewController: RootViewController!
     private var sideMenuViewController: SideMenuViewController!
+    private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
     private let bag = DisposeBag()
     
     
@@ -29,6 +31,7 @@ internal class AppCoordinator {
     private let productService: ProductServicing
     private let languageService: LanguageServicing
     private let assetPlaybackService: AssetPlaybackServicing
+    private let reachability: RxReachable
 
     internal init(uiFactory: AppUIMaking,
                   //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
@@ -38,7 +41,8 @@ internal class AppCoordinator {
         accountService: AccountServicing,
         productService: ProductServicing,
         languageService: LanguageServicing,
-        assetPlaybackService: AssetPlaybackServicing
+        assetPlaybackService: AssetPlaybackServicing,
+        reachability: RxReachable
         ) {
         self.uiFactory = uiFactory
         //        self.resettableInitialCoordinator = resettableInitialCoordinator
@@ -49,6 +53,9 @@ internal class AppCoordinator {
         self.productService = productService
         self.languageService = languageService
         self.assetPlaybackService = assetPlaybackService
+        self.reachability = reachability
+        
+        reactToReachability()
     }
 }
 
@@ -101,17 +108,31 @@ extension AppCoordinator: NavigationCoordinating {
             print("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
             L10n.shared.language = userLanguage
 
-            self.productService.fetchBooks().subscribe(onSuccess: { [unowned self] in
-                if self.productService.userBooks.value.count > 0 {
-                    print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
+//            self.swapInMainFlow()
+
+            switch self.networkStatus.value {
+            case .notReachable:
+                self.swapInMainFlow()
+            case .reachable(_):
+                self.productService.deleteBooks().subscribe(onSuccess: { [unowned self] in
                     self.swapInMainFlow()
-                } else {
-                    self.swapInAccountSetupFlow()
-                }
-                }, onError: { [unowned self] error in
-                    print("Check user products failed with error: \(error.localizedDescription)")
-                    self.swapInMainFlow()
-            }).disposed(by: self.bag)
+                })
+            case .unknown:
+                self.swapInMainFlow()
+            }
+
+            // startup just get first 50 books
+//            self.productService.fetchBooks(offset: 1, limit: 50).subscribe(onSuccess: { [unowned self] in
+//                if self.productService.userBooks.value.count > 0 {
+//                    print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
+//                    self.swapInMainFlow()
+//                } else {
+//                    self.swapInAccountSetupFlow()
+//                }
+//                }, onError: { [unowned self] error in
+//                    print("Check user products failed with error: \(error.localizedDescription)")
+//                    self.swapInMainFlow()
+//            }).disposed(by: self.bag)
 
         }, onError: { error in
             print("fetch user language failed with error: \(error.localizedDescription)")
@@ -165,5 +186,17 @@ extension AppCoordinator: NavigationCoordinating {
 //        }, completion: { [unowned self] _ in
 //            self.swapInMainFlow()
 //        }, context: .other)
+    }
+    
+    private func reactToReachability() {
+        reachability.startListening().asObservable()
+            .subscribe(onNext: { networkStatus in
+                self.networkStatus.value = networkStatus
+                if networkStatus == .notReachable {
+                    print("AppCoordinator reachability.notReachable")
+                } else if networkStatus == .reachable(.ethernetOrWiFi) {
+                    print("AppCoordinator reachability.reachable")
+                }
+            }).disposed(by: bag)
     }
 }

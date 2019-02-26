@@ -7,6 +7,7 @@ public enum DataServiceError: Error {
     case noSession
     case noAccessToken
     case decodeFailed
+    case offsetOutofRange
 }
 
 public protocol UserDataServicing {
@@ -21,71 +22,23 @@ public protocol AccountDataServicing {
     /// Permanent observable providing session objects.
     var session: Observable<String?> { get }
 
-    /// Permanent observable providing a list of MusicServiceAccounts.
-    //    var musicServiceAccounts: Observable<[MusicServiceAccount]> { get }
-
-    /// Downloads the user's session from Passport.
-    ///
-    /// - Parameters:
-    ///   - user: The Gigya user object for which the session is required.
-    ///   - idToken: The Gigya token obtained for the user.
-    /// - Returns: Single with the session object.
     func fetchSession() -> Single<String>
 
-    /// Delete's the user's session from disk.
-    ///
-    /// - Returns: Single indicating success or failure.
-    //    @discardableResult func deleteSession() -> Single<Void>
-
-    //    func fetchRemoteServiceMap(for user: GigyaUser) -> Single<RemoteServiceMap>
-
-    /// Fetch the account object for a given GosePerson from Passport.
-    ///
-    /// - Returns: Single with the account info object.
-    //    func fetchAccountInfo() -> Single<PassportAccountInfo>
-
-    /// Fetches MusicServiceAccounts from Passport.
-    ///
-    /// - Returns: Either a permanent observable of MusicServiceAccounts or an erroring observable based on the success of the routine. Waits until the fetch routing completes before emitting anything.
-    //    func fetchMusicServiceAccounts() -> Observable<[MusicServiceAccount]>
 }
 
 /// Provides product related data to the app
 public protocol ProductDataServicing {
-    /// Permanent observable emitting product arrays
     var books: Observable<[Book]> { get }
-    //    var persistedBooks: Observable<[Book]> { get }
 
-    /// Fetches the latest products from the cloud.arrays
-    ///
-    /// - Returns: Permanent observable emitting product arrays
-    func chapters(for bookUuid: String) -> Single<[Playable]>
-    func fetchAndObserveBooks() -> Observable<[Book]>
+    func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]>
+    func fetchAndObserveBooks(stride: Int) -> Single<[Book]>
     func deletePersistedBooks() -> Single<Void>
 
-    func mediaGospel(for categoryUuid: String) -> Single<[Playable]>
-    func mediaMusic(for categoryUuid: String) -> Single<[Playable]>
-    func bibleLanguages() -> Single<[LanguageIdentifier]>
+    func mediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]>
+    func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]>
+    func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]>
 
-    func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]>
-
-
-    /// Updates the settings of a user's product.
-    ///
-    /// - Parameters:
-    ///   - settings: The settings to change for the particular product.
-    ///   - productId: The ID of the product to update.
-    /// - Returns: Single which emits when the product was succesfully updated.
-    //    func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void>
-
-    /// Associates with a product with an account.
-    ///
-    /// - Parameters:
-    ///   - productName: Name of the product
-    ///   - productId: ID of the product
-    ///   - productType: Type of the product
-    /// - Returns: Success/Failure single
-    //    func addProduct(productName: String, productId: String, productType: String) -> Single<Void>
+    func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]>
 }
 
 public final class DataService {
@@ -98,44 +51,18 @@ public final class DataService {
 
     // MARK: Fields
 
-
     private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
     private let bag = DisposeBag()
 
-    // MARK: User
-
+    // MARK: UserDataServicing
     private var _languageIdentifier = Field<String>("test init identifier")
-
-    // MARK: Session
-
     private var _session = Field<String?>(nil)
-    //    private var assertingSession: Single<GoseSession> {
-    //        guard let value = _session.value else {
-    //            assertionFailure("No session. Must call this function after login so a session exists.")
-    //            return Single.error(DataServiceError.noSession)
-    //        }
-    //
-    //        return Single.just(value)
-    //    }
-    //    private var assertingSessionWithToken: Single<GoseSession> {
-    //        return assertingSession
-    //            .map { session -> GoseSession in
-    //                if session.accessToken == nil {
-    //                    assertionFailure("No user access token. Passport must have not provided one.")
-    //                    throw DataServiceError.noAccessToken
-    //                }
-    //
-    //                return session
-    //        }
-    //    }
-
-    // MARK: Account
-
-    //    private var _musicServiceAccounts = Field<[MusicServiceAccount]>([])
-
-    // MARK: Product
-
+    // MARK: ProductDataServicing
     private var _books = Field<[Book]>([])
+    private var _categories = Field<[String: [Categorizable]]>([:])
+    private var _media = Field<[String: [Playable]]>([:])
+
+    private var _responseMap: [String: Response] = [:]
     private var _persistedBooks = Field<[Book]>([])
 
     public init(
@@ -154,6 +81,28 @@ public final class DataService {
 
     private func loadInMemoryCache() {
         self.loadBooks()
+            .subscribeAndDispose(by: bag)
+
+        self.loadCategory(for: .music)
+            .do(onNext: { uuid in
+                self.dataStore.fetchMediaMusic(for: uuid)
+                    .subscribe(onSuccess: { playableArray in
+                        var mediaMap: [String: [Playable]] = self._media.value
+                        mediaMap[uuid] = playableArray
+                        self._media.value = mediaMap
+                })
+            })
+            .subscribeAndDispose(by: bag)
+
+        self.loadCategory(for: .gospel)
+            .do(onNext: { uuid in
+                self.dataStore.fetchMediaGospel(for: uuid)
+                    .subscribe(onSuccess: { playableArray in
+                        var mediaMap: [String: [Playable]] = self._media.value
+                        mediaMap[uuid] = playableArray
+                        self._media.value = mediaMap
+                    })
+            })
             .subscribeAndDispose(by: bag)
     }
 }
@@ -188,71 +137,18 @@ extension DataService: AccountDataServicing {
             })
     }
 
-    //    public func fetchRemoteServiceMap(for user: GigyaUser) -> Single<RemoteServiceMap> {
-    //        return galapagosNetworking.rx.request(.remoteServices(gigyaUserId: user.uid))
-    //            .parse(type: RemoteServiceMap.self)
-    //            .do(onNext: { map in
-    //                GoseLog.debug("RemoteServiceMap: \(map)")
-    //            })
-    //    }
-
     public var session: Observable<String?> { return _session.asObservable() }
-    //    public var musicServiceAccounts: Observable<[MusicServiceAccount]> { return _musicServiceAccounts.asObservable() }
-
-    //    public func fetchSession(for user: GigyaUser, idToken: String) -> Single<GoseSession> {
-    //        return passportNetworking.rx.request(.tokens(user: user, idToken: idToken))
-    //            .parse(type: PassportAccountSession.self)
-    //            .flatMap { [unowned self] in self.dataStore.addPerson(goseSession: $0) }
-    //            .do(onNext: { [unowned self] session in
-    //                self._session.value = session
-    //            })
-    //    }
-
-    //    public func deleteSession() -> Single<Void> {
-    //        self._session.value = nil
-    //        return dataStore.deletePersistedUser()
-    //    }
-
-    //    public func fetchAccountInfo() -> Single<PassportAccountInfo> {
-    //        return assertingSession
-    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accountInfo(gosePersonId: $0.gosePersonId)) }
-    //            .parse(type: PassportAccountInfo.self)
-    //    }
-    //
-    //    public func fetchMusicServiceAccounts() -> Observable<[MusicServiceAccount]> {
-    //        return assertingSession
-    //            .flatMap { [unowned self] in self.passportNetworking.rx.request(.accounts(gosePersonId: $0.gosePersonId)) }
-    //            .map([MusicServiceAccount].self)
-    //            .do(onNext: { [unowned self] accounts in
-    //                self._musicServiceAccounts.value = accounts
-    //            })
-    //            .asObservable()
-    //            .flatMap { [unowned self] _ in self.musicServiceAccounts }
-    //    }
 
     // MARK: Helpers
 
 }
 
-extension DataService: ProductDataServicing {
-    public func chapters(for bookUuid: String) -> Single<[Playable]> {
-        switch self.networkStatus.value {
-        case .notReachable:
-            return dataStore.fetchChapters(for: bookUuid)
-        case .reachable(_):
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language))
-            let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
-                try! response.map(MediaChapterResponse.self)
-            }
-            let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
-                self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
-            }
-            return storedChapters
-        case .unknown:
-            return dataStore.fetchChapters(for: bookUuid)
-        }
-    }
+enum FetchState {
+    case hasFetched
+    case hasNotFetched
+}
 
+extension DataService: ProductDataServicing {
     public var books: Observable<[Book]> {
         switch self.networkStatus.value {
         case .notReachable:
@@ -267,66 +163,363 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    //    public var persistedBooks: Observable<[Book]> {
-    //        return _persistedBooks.asObservable()
-    //    }
+    
+    
+    public func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]> {
+        
+        var mediaChapterResponse: MediaChapterResponse!
+        var previousOffset = 0
+        
+        if let cachedResponse: Response = self._responseMap[bookUuid] {
+            do {
+                mediaChapterResponse = try cachedResponse.map(MediaChapterResponse.self)
+                let totalEntries: Int = mediaChapterResponse.totalEntries
+                let cachedPageNumber: Int = mediaChapterResponse.pageNumber
+                let cachedPageSize: Int = mediaChapterResponse.pageSize
+                
+                let loadedSoFar: Int = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                // assume we've loaded at least once, so return the local db instead
+                if loadedSoFar == stride {
+                    return self.dataStore.fetchChapters(for: bookUuid)
+                }
+                else if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
+//        print("chapters offset \(offset) limit \(limit)")
+        switch self.networkStatus.value {
+        case .notReachable:
+            return dataStore.fetchChapters(for: bookUuid)
+        case .reachable(_):
+//            let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
+//            let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
+//            print("self._responseMap: \(self._responseMap)")
 
-    public func fetchAndObserveBooks() -> Observable<[Book]> {
-        return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language))
-            //            .catchError { _ in Single.just(product) }
-            .map { response -> BookResponse in try! response.map(BookResponse.self) }
-            .flatMap { bookResponse -> Single<[Book]> in Single.just(bookResponse.result) }
-            .flatMap { [unowned self] in self.replacePersistedBooks($0) }
-            .do(onSuccess: { [unowned self] products in
-                self._books.value = products
-                //            self._persistedBooks.value = products
-            })
-            .asObservable()
+            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
+            let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
+                do {
+                    self._responseMap[bookUuid] = response
+                    return try response.map(MediaChapterResponse.self)
+                } catch {
+                    throw DataServiceError.decodeFailed
+                }
+            }
+            let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
+                print("mediaChapterResponse.result: \(mediaChapterResponse.result)")
+                return self.appendPersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
+            }
+            return storedChapters
+        case .unknown:
+            return dataStore.fetchChapters(for: bookUuid)
+        }
     }
 
-    public func deletePersistedBooks() -> Single<Void> {
-        return self.dataStore.deleteAllBooks()
+    public func fetchAndObserveBooks(stride: Int) -> Single<[Book]> {
+        var bookResponse: BookResponse!
+        var previousOffset = 0
+        var totalEntries = -1
+        var loadedSoFar = -1
+        var fetchState: FetchState = .hasNotFetched
+        
+//        let books: [Book] = self._books.value
+//        print("books.count: \(books.count)")
+
+        if let cachedResponse: Response = self._responseMap["booksResponse"] {
+            do {
+                fetchState = .hasFetched
+                
+                bookResponse = try cachedResponse.map(BookResponse.self)
+                totalEntries = bookResponse.totalEntries
+                let cachedPageNumber: Int = bookResponse.pageNumber
+                let cachedPageSize: Int = bookResponse.pageSize
+                
+                loadedSoFar = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+//        else {
+//            // we are making the first call to fetch books
+//            request = .books(languageId: L10n.shared.language, offset: 1, limit: stride)
+//        }
+
+        /// if we got to this point we know there are more items to be fetched
+        switch self.networkStatus.value {
+        case .reachable(_):
+            
+            if loadedSoFar < totalEntries || fetchState == .hasNotFetched {
+                // bookResponse should not be nil because otherwise DataServiceError.decodeFailed would have happened
+                return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
+                    //            .catchError { _ in Single.just(product) }
+                    .map { [unowned self] response -> BookResponse in
+                        do {
+                            // cache response for the next call
+                            self._responseMap["booksResponse"] = response
+                            return try response.map(BookResponse.self)
+                        } catch {
+                            throw DataServiceError.decodeFailed
+                        }
+                    }
+                    .flatMap { bookResponse -> Single<[Book]> in
+                        return Single.just(bookResponse.result)
+                    }
+                    .flatMap { [unowned self] in
+                        self.appendPersistedBooks($0)
+                    }
+                    .do(onSuccess: { [unowned self] products in
+                        self._books.value = products
+                        //            self._persistedBooks.value = products
+                    })
+            } else {
+                return Single.just(self._books.value) //dataStore.fetchBooks()
+            }
+
+//                .asObservable()
+        case .notReachable:
+            return Single.just(self._books.value) //dataStore.fetchBooks()
+        case .unknown:
+            return Single.just(self._books.value) //dataStore.fetchBooks()
+        }
     }
 
-    public func mediaGospel(for categoryUuid: String) -> Single<[Playable]> {
+    public func mediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
+        var mediaGospelResponse: MediaGospelResponse!
+        var previousOffset = 0
+        var totalEntries = -1
+        var loadedSoFar = -1
+        var fetchState: FetchState = .hasNotFetched
+        
+        if let cachedResponse: Response = self._responseMap[categoryUuid] {
+            do {
+                fetchState = .hasFetched
+
+                mediaGospelResponse = try cachedResponse.map(MediaGospelResponse.self)
+                totalEntries = mediaGospelResponse.totalEntries
+                let cachedPageNumber: Int = mediaGospelResponse.pageNumber
+                let cachedPageSize: Int = mediaGospelResponse.pageSize
+                
+                loadedSoFar = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                // assume we've loaded at least once, so return the local db instead
+//                if loadedSoFar == stride {
+//                    return self.dataStore.fetchMediaGospel(for: categoryUuid)
+//                }
+                if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return dataStore.fetchMediaGospel(for: categoryUuid)
+//                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
         switch self.networkStatus.value {
         case .notReachable:
 
             return dataStore.fetchMediaGospel(for: categoryUuid)
         case .reachable(_):
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.gospelsMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
-            let mediaGospelResponse: Single<MediaGospelResponse> = moyaResponse.map { response -> MediaGospelResponse in
-                try! response.map(MediaGospelResponse.self)
+            var cachedMedia: [Playable]!
+            
+            // get cached gospel array
+            let mediaMap: [String: [Playable]] = self._media.value
+            if let result: [Playable] = mediaMap[String(describing: categoryUuid)] {
+                cachedMedia = result
+            } else {
+                cachedMedia = []
             }
-            let storedMediaGospel: Single<[Playable]> = mediaGospelResponse.flatMap { [unowned self] mediaGospelResponse -> Single<[Playable]> in
-                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+
+
+            // we should try to determine if we need to fetch more items
+            // AND if we should then determine the next page offset should be fetched
+            
+            // fetch more == false if
+            // - cacheedGospelItems.count < stride
+            
+            // fetch more == true if
+            // - cacheedGospelItems.count divides evenly into stride(no remainder)
+            
+            let modulo: Int = cachedMedia.count % stride
+            if modulo == 0 {
+                previousOffset = (cachedMedia.count / stride)
             }
-            return storedMediaGospel
+
+            if (loadedSoFar < totalEntries) || (fetchState == .hasNotFetched) && (cachedMedia.count == 0 || modulo == 0) {
+                let moyaResponse = self.kjvrvgNetworking.rx.request(.gospelsMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+                let mediaGospelResponse: Single<MediaGospelResponse> = moyaResponse.map { response -> MediaGospelResponse in
+                    do {
+                        self._responseMap[categoryUuid] = response
+                        return try response.map(MediaGospelResponse.self)
+                    } catch {
+                        throw DataServiceError.decodeFailed
+                    }
+                }
+                let storedMediaGospel: Single<[Playable]> = mediaGospelResponse.flatMap { [unowned self] mediaGospelResponse -> Single<[Playable]> in
+                    self.appendPersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
+                }
+                .do(onSuccess: { [unowned self] playble in
+                    var mediaMap: [String: [Playable]] = self._media.value
+                    mediaMap[categoryUuid] = playble
+                    self._media.value = mediaMap
+                })
+                return storedMediaGospel
+            } else {
+                // return back cached gospel array
+                let mediaMap: [String: [Playable]] = self._media.value
+                //                    let gospelResult: [Categorizable]
+                
+                if let result: [Playable] = mediaMap[categoryUuid] {
+                    return Single.just(result) // dataStore.fetchCategoryList(for: categoryType)
+                } else {
+                    return dataStore.fetchMediaGospel(for: categoryUuid)
+                }
+            }
         case .unknown:
             return dataStore.fetchMediaGospel(for: categoryUuid)
         }
     }
 
-    public func mediaMusic(for categoryUuid: String) -> Single<[Playable]> {
+    public func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
+        var mediaMusicResponse: MediaMusicResponse!
+        var previousOffset = 0
+        var totalEntries = -1
+        var loadedSoFar = -1
+        var fetchState: FetchState = .hasNotFetched
+        
+        if let cachedResponse: Response = self._responseMap[categoryUuid] {
+            do {
+                fetchState = .hasFetched
+                
+                mediaMusicResponse = try cachedResponse.map(MediaMusicResponse.self)
+                totalEntries = mediaMusicResponse.totalEntries
+                let cachedPageNumber: Int = mediaMusicResponse.pageNumber
+                let cachedPageSize: Int = mediaMusicResponse.pageSize
+                
+                loadedSoFar = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                // assume we've loaded at least once, so return the local db instead
+                //                if loadedSoFar == stride {
+                //                    return self.dataStore.fetchMediaMusic(for: categoryUuid)
+                //                }
+                if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return dataStore.fetchMediaMusic(for: categoryUuid)
+                    //                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
         switch self.networkStatus.value {
         case .notReachable:
+            
             return dataStore.fetchMediaMusic(for: categoryUuid)
         case .reachable(_):
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
-            let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
-                try! response.map(MediaMusicResponse.self)
+            var cachedMedia: [Playable]!
+            
+            // get cached music media array
+            let mediaMap: [String: [Playable]] = self._media.value
+            if let result: [Playable] = mediaMap[String(describing: categoryUuid)] {
+                cachedMedia = result
+            } else {
+                cachedMedia = []
             }
-            let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
-                //                self.replacePersistedMediaGospel(mediaGospel: mediaGospelResponse.result, for: categoryUuid)
-                self.replacePersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
+            
+            
+            // we should try to determine if we need to fetch more items
+            // AND if we should then determine the next page offset should be fetched
+            
+            // fetch more == false if
+            // - cacheedMusicItems.count < stride
+            
+            // fetch more == true if
+            // - cacheedMusicItems.count divides evenly into stride(no remainder)
+            
+            let modulo: Int = cachedMedia.count % stride
+            if modulo == 0 {
+                previousOffset = (cachedMedia.count / stride)
             }
-            return storedMediaMusic
+            
+            if (loadedSoFar < totalEntries) || (fetchState == .hasNotFetched) && (cachedMedia.count == 0 || modulo == 0) {
+                let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+                let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
+                    do {
+                        self._responseMap[categoryUuid] = response
+                        return try response.map(MediaMusicResponse.self)
+                    } catch {
+                        throw DataServiceError.decodeFailed
+                    }
+                }
+                let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
+                    self.appendPersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
+                    }
+                    .do(onSuccess: { [unowned self] playble in
+                        var mediaMap: [String: [Playable]] = self._media.value
+                        mediaMap[categoryUuid] = playble
+                        self._media.value = mediaMap
+                    })
+                return storedMediaMusic
+            } else {
+                // return back cached music media array
+                let mediaMap: [String: [Playable]] = self._media.value
+                //                    let gospelResult: [Categorizable]
+                
+                if let result: [Playable] = mediaMap[categoryUuid] {
+                    return Single.just(result) // dataStore.fetchCategoryList(for: categoryType)
+                } else {
+                    return dataStore.fetchMediaMusic(for: categoryUuid)
+                }
+            }
         case .unknown:
             return dataStore.fetchMediaMusic(for: categoryUuid)
         }
     }
 
-    public func bibleLanguages() -> Single<[LanguageIdentifier]> {
+    public func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]> {
+        var languageResponse: LanguagesSupportedResponse!
+        var previousOffset = 0
+        var totalEntries = -1
+        var loadedSoFar = -1
+        var fetchState: FetchState = .hasNotFetched
+        
+        if let cachedResponse: Response = self._responseMap["languagesResponse"] {
+            do {
+                fetchState = .hasFetched
+                
+                languageResponse = try cachedResponse.map(LanguagesSupportedResponse.self)
+                totalEntries = languageResponse.totalEntries
+                let cachedPageNumber: Int = languageResponse.pageNumber
+                let cachedPageSize: Int = languageResponse.pageSize
+                
+                loadedSoFar = cachedPageNumber * cachedPageSize
+                previousOffset = cachedPageNumber
+                
+                if loadedSoFar >= totalEntries {
+                    print(DataServiceError.offsetOutofRange)
+                    return Single.error(DataServiceError.offsetOutofRange)
+                }
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
+        
         switch self.networkStatus.value {
         case .unknown:
             return dataStore.fetchBibleLanguages()
@@ -334,9 +527,15 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchBibleLanguages()
         case .reachable(_):
             //        var categoryListing: Single<[LanguageIdentifier]> = Single.just([])
-            return self.kjvrvgNetworking.rx.request(.languagesSupported)
+            return self.kjvrvgNetworking.rx.request(.languagesSupported(offset: previousOffset + 1, limit: stride))
                 .map { response -> LanguagesSupportedResponse in
-                    try! response.map(LanguagesSupportedResponse.self)
+                    do {
+                        // cache response for the next call
+                        self._responseMap["languagesResponse"] = response
+                        return try response.map(LanguagesSupportedResponse.self)
+                    } catch {
+                        throw DataServiceError.decodeFailed
+                    }
                 }.flatMap { languagesSupportedResponse -> Single<[LanguageIdentifier]> in
                     print("languagesSupportedResponse.result: \(languagesSupportedResponse.result)")
                     return Single.just(languagesSupportedResponse.result)
@@ -345,9 +544,72 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    public func categoryListing(for categoryType: CategoryListingType) -> Single<[Categorizable]> {
+    public func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]> {
         var categoryListing: Single<[Categorizable]> = Single.just([])
+        var musicResponse: MusicResponse!
+        var gospelResponse: GospelResponse!
+        
+        var gospelPreviousOffset = 0
+        var gospelTotalEntries = -1
+        var gospelLoadedSoFar = -1
+        
+        var musicPreviousOffset = 0
+        var musicTotalEntries = -1
+        var musicLoadedSoFar = -1
+        
+        var gospelFetchState: FetchState = .hasNotFetched
+        var musicFetchState: FetchState = .hasNotFetched
+        
+        /// optimization where we cache responses to avoid unnecessary network fetches
+        if let cachedResponse: Response = self._responseMap[String(describing: categoryType)] {
+            do {
+                switch categoryType {
+                case .gospel:
+                    gospelFetchState = .hasFetched
 
+                    gospelResponse = try cachedResponse.map(GospelResponse.self)
+                    gospelTotalEntries = gospelResponse.totalEntries
+                    let cachedPageNumber: Int = gospelResponse.pageNumber
+                    let cachedPageSize: Int = gospelResponse.pageSize
+                    
+                    gospelLoadedSoFar = cachedPageNumber * cachedPageSize
+                    gospelPreviousOffset = cachedPageNumber
+                    
+                    // assume we've loaded at least once, so return the local db instead
+                    gospelLoadedSoFar = cachedPageNumber * cachedPageSize
+                    gospelPreviousOffset = cachedPageNumber
+                    
+                    if gospelLoadedSoFar >= gospelTotalEntries {
+                        print(DataServiceError.offsetOutofRange)
+//                        return Single.error(DataServiceError.offsetOutofRange)
+                        return dataStore.fetchCategoryList(for: categoryType)
+                    }
+                case .music:
+                    musicFetchState = .hasFetched
+
+                    musicResponse = try cachedResponse.map(MusicResponse.self)
+                    musicTotalEntries = musicResponse.totalEntries
+                    let cachedPageNumber: Int = musicResponse.pageNumber
+                    let cachedPageSize: Int = musicResponse.pageSize
+                    
+                    musicLoadedSoFar = cachedPageNumber * cachedPageSize
+                    musicPreviousOffset = cachedPageNumber
+                    
+                    // assume we've loaded at least once, so return the local db instead
+                    if musicLoadedSoFar >= musicTotalEntries {
+                        print(DataServiceError.offsetOutofRange)
+                        //                        return Single.error(DataServiceError.offsetOutofRange)
+                        return dataStore.fetchCategoryList(for: categoryType)
+                    }
+                case .mediaItems:
+                    print(".mediaItems")
+                }
+                //                categoryResponse = try cachedResponse.map(MediaGospelResponse.self)
+            } catch {
+                print(DataServiceError.decodeFailed)
+            }
+        }
+        
         switch categoryType {
         case .gospel:
             switch self.networkStatus.value {
@@ -356,15 +618,63 @@ extension DataService: ProductDataServicing {
             case .notReachable:
                 categoryListing = dataStore.fetchCategoryList(for: categoryType)
             case .reachable(_):
-                print("reachable")
-                categoryListing = self.kjvrvgNetworking.rx.request(.gospels(languageId: L10n.shared.language))
-                    .map { response -> GospelResponse in
-                        try! response.map(GospelResponse.self)
-                    }.flatMap { gospelResponse -> Single<[Categorizable]> in
-                        print("gospelResponse.result: \(gospelResponse.result)")
-                        return Single.just(gospelResponse.result)
+                var cachedGospelItems: [Categorizable]!
+                
+                // get cached gospel array
+                let categorizableMap: [String: [Categorizable]] = self._categories.value
+                if let gospelResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                    cachedGospelItems = gospelResult
+                } else {
+                    cachedGospelItems = []
+                }
+
+                // we should try to determine if we need to fetch more items
+                // AND if we should then determine the next page offset should be fetched
+                
+                // fetch more == false if
+                // - cacheedGospelItems.count < stride
+                
+                // fetch more == true if
+                // - cacheedGospelItems.count divides evenly into stride(no remainder)
+                
+                let modulo: Int = cachedGospelItems.count % stride
+                if modulo == 0 {
+                    gospelPreviousOffset = (cachedGospelItems.count / stride)
+                }
+
+                if (gospelLoadedSoFar < gospelTotalEntries || gospelFetchState == .hasNotFetched) && (cachedGospelItems.count == 0 || modulo == 0) {
+                    print("reachable")
+                    categoryListing = self.kjvrvgNetworking.rx.request(.gospels(languageId: L10n.shared.language, offset: gospelPreviousOffset + 1, limit: stride))
+                        .map { response -> GospelResponse in
+                            do {
+                                // cache response for the next call
+                                self._responseMap[String(describing: categoryType)] = response
+                                return try response.map(GospelResponse.self)
+                            } catch {
+                                throw DataServiceError.decodeFailed
+                            }
+                        }.flatMap { gospelResponse -> Single<[Categorizable]> in
+                            print("gospelResponse.result: \(gospelResponse.result)")
+                            return Single.just(gospelResponse.result)
+                        }
+                        .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
+                        .do(onSuccess: { [unowned self] categorizable in
+                            var categorizableMap: [String: [Categorizable]] = self._categories.value
+                            categorizableMap[String(describing: categoryType)] = categorizable
+                            self._categories.value = categorizableMap
+                            //            self._persistedBooks.value = products
+                        })
+                } else {
+                    // return back cached gospel array
+                    let categorizableMap: [String: [Categorizable]] = self._categories.value
+//                    let gospelResult: [Categorizable]
+                    
+                    if let gospelResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                        categoryListing = Single.just(gospelResult) // dataStore.fetchCategoryList(for: categoryType)
+                    } else {
+                        categoryListing = dataStore.fetchCategoryList(for: categoryType)
                     }
-                    .flatMap { [unowned self] in self.replacePersistedCategoryList(categoryList: $0, for: categoryType) }
+                }
             }
         case .music:
             print(".music")
@@ -374,30 +684,84 @@ extension DataService: ProductDataServicing {
             case .notReachable:
                 categoryListing = dataStore.fetchCategoryList(for: categoryType)
             case .reachable(_):
-                print("reachable")
-                categoryListing = self.kjvrvgNetworking.rx.request(.music(languageId: L10n.shared.language))
-                    .map { response -> MusicResponse in
-                        try! response.map(MusicResponse.self)
-                    }.flatMap { musicResponse -> Single<[Categorizable]> in
-                        print("musicResponse.result: \(musicResponse.result)")
-                        return Single.just(musicResponse.result)
+                var cachedMusicItems: [Categorizable]!
+
+                // get cached music array
+                let categorizableMap: [String: [Categorizable]] = self._categories.value
+                if let musicResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                    cachedMusicItems = musicResult
+                } else {
+                    cachedMusicItems = []
+                }
+                
+                // we should try to determine if we need to fetch more items
+                // AND if we should then determine the next page offset should be fetched
+                
+                // fetch more == false if
+                // - cacheedMusicItems.count < stride
+                
+                // fetch more == true if
+                // - cacheedMusicItems.count divides evenly into stride(no remainder)
+                
+                let modulo: Int = cachedMusicItems.count % stride
+                if modulo == 0 {
+                    musicPreviousOffset = (cachedMusicItems.count / stride)
+                }
+                if (musicLoadedSoFar < musicTotalEntries || musicFetchState == .hasNotFetched) && (cachedMusicItems.count == 0 || modulo == 0) {
+                    print("reachable")
+                    categoryListing = self.kjvrvgNetworking.rx.request(.music(languageId: L10n.shared.language, offset: musicPreviousOffset + 1, limit: stride))
+                        .map { response -> MusicResponse in
+                            do {
+                                // cache response for the next call
+                                self._responseMap[String(describing: categoryType)] = response
+                                return try response.map(MusicResponse.self)
+                            } catch {
+                                throw DataServiceError.decodeFailed
+                            }
+                        }.flatMap { musicResponse -> Single<[Categorizable]> in
+                            print("musicResponse.result: \(musicResponse.result)")
+                            return Single.just(musicResponse.result)
+                        }
+                        .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
+                        .do(onSuccess: { [unowned self] categorizable in
+                            var categorizableMap: [String: [Categorizable]] = self._categories.value
+                            categorizableMap[String(describing: categoryType)] = categorizable
+                            self._categories.value = categorizableMap
+                            //            self._persistedBooks.value = products
+                        })
+                } else {
+                    // return back cached music category array
+                    let categorizableMap: [String: [Categorizable]] = self._categories.value
+                    if let musicResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
+                        categoryListing = Single.just(musicResult) // dataStore.fetchCategoryList(for: categoryType)
+                    } else {
+                        categoryListing = dataStore.fetchCategoryList(for: categoryType)
                     }
-                    .flatMap { [unowned self] in self.replacePersistedCategoryList(categoryList: $0, for: categoryType) }
+                }
             }
-        case .churches:
-            print(".churches")
+        case .mediaItems:
+            print(".mediaItems")
         }
         return categoryListing
     }
 
     // MARK: Private helpers
-
     private func replacePersistedBooks(_ books: [Book]) -> Single<[Book]> {
-        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
         return dataStore.deleteAllBooks()
             .flatMap { [unowned self] in self.dataStore.addBooks(books: books) }
     }
-
+    
+    private func appendPersistedBooks(_ books: [Book]) -> Single<[Book]> {
+        return self.dataStore.addBooks(books: books)
+//            .do(onSuccess: { [unowned self] books in
+//                return self.dataStore.fetchBooks()
+//            })
+    }
+    
+    public func deletePersistedBooks() -> Single<Void> {
+        return self.dataStore.deleteAllBooks()
+    }
+    
     private func loadBooks() -> Observable<[Book]> {
         return dataStore.fetchBooks()
             //            .asObservable()
@@ -411,20 +775,53 @@ extension DataService: ProductDataServicing {
             })
             .asObservable()
     }
+    private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<String> {
+        return dataStore.fetchCategoryList(for: categoryListingType)
+            .do(onSuccess: { [unowned self] categorizable in
+                var categoryMap: [String: [Categorizable]] = self._categories.value
+                categoryMap[String(describing: categoryListingType)] = categorizable
+                self._categories.value = categoryMap
+            })
+            .map { categorizableArray in
+                return categorizableArray.map { categorizable -> String in
+                    print("categorizable: \((categorizable))")
+                    return categorizable.categoryUuid
+                }
+            }
+            .asObservable()
+            .flatMap { Observable.from($0) }
+    }
 
     private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addChapters(chapters: chapters, for: bookUuid) }
     }
 
+//    private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+//        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
+//    }
+    
+    private func appendPersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+//        let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
+        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
+    }
+
     private func replacePersistedMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteMediaGospel(for: categoryUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaGospel(mediaGospel: mediaGospel, for: categoryUuid) }
+    }
+    
+    private func appendPersistedMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
+        return self.dataStore.addMediaGospel(mediaGospel: mediaGospel, for: categoryUuid)
     }
 
     private func replacePersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteMediaMusic(for: categoryUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid) }
+    }
+
+    private func appendPersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
+        return self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid)
     }
 
     private func replacePersistedBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {
@@ -442,6 +839,11 @@ extension DataService: ProductDataServicing {
             for: categoryListType) }
     }
 
+    private func appendPersistedCategoryList(categoryList: [Categorizable],
+                                              for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
+        return self.dataStore.addCategory(categoryList: categoryList, for: categoryListType)
+    }
+
     private func reactToReachability() {
         reachability.startListening().asObservable()
             .subscribe(onNext: { networkStatus in
@@ -453,81 +855,4 @@ extension DataService: ProductDataServicing {
                 }
             }).disposed(by: bag)
     }
-
-    //    public func updateSettings(_ settings: ProductSettings, for productId: String) -> Single<Void> {
-    //        return passportNetworking.rx
-    //            .request(.updateProductSettings(productId: productId, settings: settings))
-    //            .checkStatusCode()
-    //            .toVoid()
-    //            .asObservable()
-    //            .flatMap { [unowned self] in self.fetchAndObserveProducts() }
-    //            .take(1).asSingle()
-    //            .toVoid()
-    //    }
-
-    //    public func addProduct(productName: String, productId: String, productType: String) -> Single<Void> {
-    //        return assertingSession
-    //            .flatMap { [unowned self] session in
-    //                self.passportNetworking.rx.request(.addProduct(
-    //                    gosePersonId: session.gosePersonId,
-    //                    productId: productId,
-    //                    productType: productType
-    //                    ))
-    //            }
-    //            .checkStatusCode()
-    //            .toVoid()
-    //            .asObservable()
-    //            .flatMap { [unowned self] in self.fetchAndObserveProducts() }
-    //            .take(1).asSingle()
-    //            .toVoid()
-    //    }
-
-
-    // MARK: Helpers
-
-    // TODO CASTLE-4433 SR/SG - Can delete once products endpoint response includes Settings object
-    //    private func productsWithSettings(products: [UserProduct]) -> Single<[UserProduct]> {
-    //        // When products is empty, the single would error due to no element
-    //        if products.isEmpty { return Single.just(products) }
-    //
-    //        let newProducts = products.map { [unowned self] product -> Observable<UserProduct> in
-    //            return self.fetchSettings(for: product.productId)
-    //                .map {
-    //                    UserProduct(
-    //                        productId: product.productId,
-    //                        productType: product.productType,
-    //                        persons: product.persons,
-    //                        settings: $0
-    //                    )
-    //                }
-    //                .catchError { _ in Single.just(product) }
-    //                .asObservable()
-    //        }
-    //
-    //        return Observable.combineLatest(newProducts).take(1).asSingle()
-    //    }
-    //
-    //    private func fetchSettings(for productId: String) -> Single<ProductSettings> {
-    //        return passportNetworking.rx.request(.getProductSettings(productId: productId))
-    //            .parse(type: ProductSettings.self)
-    //    }
-    //
-    //    private func replacePersistedProducts(_ products: [UserProduct]) -> Single<[UserProduct]> {
-    //        // Likely the source of existing bug: login/logout/login with different user seeing old user's products.
-    //        return dataStore.deleteGosePerson()
-    //            .flatMap { [unowned self] in self.assertingSession }
-    //            .flatMap { [unowned self] in self.dataStore.addProducts(goseSession: $0, products: products) }
-    //    }
-    //
-    //    private func loadProducts(with session: GoseSession) -> Single<[UserProduct]> {
-    //        return dataStore.fetchAccountDevices(gosePersonId: session.gosePersonId)
-    //            .do(
-    //                onNext: { [weak self] products in
-    //                    self?._products.value = products
-    //                },
-    //                onError: { [weak self] error in
-    //                    GoseLog.error(error.localizedDescription)
-    //                    self?._products.value = []
-    //            })
-    //    }
 }

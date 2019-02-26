@@ -45,6 +45,13 @@ internal final class MediaListingViewModel {
         }
     }
 
+    public func fetchMoreMedia() {
+        print("fetchMoreMedia")
+        fetchMedia(stride: 100)
+//        productService.fetchBooks(offset: self.sections.value[0].items.count, limit: 50).asObservable()
+//            .subscribeAndDispose(by: self.bag)
+    }
+
     // MARK: Dependencies
     private let playlistId: String!
     private let mediaType: MediaType!
@@ -95,34 +102,37 @@ internal final class MediaListingViewModel {
                     MediaListingSectionViewModel(type: .media, items: names)
                 ]
             }.disposed(by: bag)
-
+        
+        fetchMedia(stride: 100)
+    }
+    
+    func fetchMedia(stride: Int) {
         switch self.mediaType {
         case .audioChapter?:
-            self.productService.fetchChapters(for: self.playlistId).subscribe(onSuccess: { chapters in
+            self.productService.fetchChapters(for: self.playlistId, stride: 100).subscribe(onSuccess: { chapters in
                 self.media.value = chapters
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
-                print("fetchChapters failed with error: \(error.localizedDescription)")
+                print("audioChapter failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
-//        case .audioSermon?:
-//            print("fetch .audioSermon")
+            //        case .audioSermon?:
+        //            print("fetch .audioSermon")
         case .audioGospel?:
-            self.productService.fetchMediaGospel(for: playlistId).subscribe(onSuccess: { mediaGospel in
+            self.productService.fetchMediaGospel(for: playlistId, stride: 100).subscribe(onSuccess: { mediaGospel in
                 self.media.value = mediaGospel
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
-                print("fetchChapters failed with error: \(error.localizedDescription)")
+                print("audioGospel failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
         case .audioMusic?:
-            self.productService.fetchMediaMusic(for: playlistId).subscribe(onSuccess: { mediaMusic in
+            self.productService.fetchMediaMusic(for: playlistId, stride: 100).subscribe(onSuccess: { mediaMusic in
                 self.media.value = mediaMusic
                 self.assetPlaybackService.playables.value = self.media.value
             }, onError: { error in
-                print("fetchChapters failed with error: \(error.localizedDescription)")
+                print("audioMusic failed with error: \(error.localizedDescription)")
             }).disposed(by: self.bag)
         default:
             print("default")
         }
-
     }
 }

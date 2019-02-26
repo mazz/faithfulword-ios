@@ -9,4 +9,5 @@ public protocol RadioListViewModeling {
     
     func section(at index: Int) -> RadioListSectionViewModel
     func item(at indexPath: IndexPath) -> RadioListItemType
+    func fetchMoreItems()
 }

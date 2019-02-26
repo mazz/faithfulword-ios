@@ -1,6 +1,7 @@
 import UIKit
 import MBProgressHUD
 import Moya
+import L10n_swift
 
 class MediaGospelViewController: BaseClass {
     @IBOutlet weak var tableView: UITableView!
@@ -31,7 +32,7 @@ class MediaGospelViewController: BaseClass {
         loadingNotification.mode = MBProgressHUDMode.indeterminate
 
         if let gospelId = self.gospelId {
-            provider.request(.gospelsMedia(uuid: gospelId)) { result in
+            provider.request(.gospelsMedia(uuid: gospelId, offset: 1, limit: 50)) { result in
                 print("gospelMedia: \(result)")
                 switch result {
                 case let .success(moyaResponse):

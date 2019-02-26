@@ -49,7 +49,7 @@ class OtherLanguagesViewController: BaseClass {
         let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
-        provider.request(.languagesSupported) { result in
+        provider.request(.languagesSupported(offset: 1, limit: 100)) { result in
             print("languagesSupported: \(result)")
             switch result {
             case let .success(moyaResponse):
