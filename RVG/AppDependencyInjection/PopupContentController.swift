@@ -56,8 +56,9 @@ class PopupContentController: UIViewController {
     //    public var playlistAssets = [Asset]()
 
     // MARK: Fields
+    public var downloadState = Field<FileDownloadState>(.initial)
     // the state of the download button image name
-//    public let downloadImageNameEvent = Field<String>("download_icon_black")
+    public let downloadImageNameEvent = Field<String>("download_icon_black")
 
     var scrubbing: Bool = false
     var playingWhileScrubbing: Bool = false
@@ -208,21 +209,21 @@ class PopupContentController: UIViewController {
         //downloadingViewModel.downloadAsset should be set before observing download
         // this chunk is needed when the user opens the full screen UI while
         // the download has already started
-        downloadingViewModel.observableDownload
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { download in
-            self.downloadingViewModel.fileDownload.value = download
-            // fileDownload state
-            self.downloadingViewModel.downloadState.value = download.state
-
-            self.downloadingViewModel.updateDownloadState(filename: self.playbackAsset.uuid, downloadState: download.state)
-                DDLogDebug("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
-        })
-        .disposed(by: self.bag)
+//        downloadingViewModel.observableDownload
+//            .observeOn(MainScheduler.instance)
+//            .subscribe(onNext: { download in
+//            self.downloadingViewModel.fileDownload.value = download
+//            // fileDownload state
+//            self.downloadingViewModel.downloadState.value = download.state
+//
+//            self.downloadingViewModel.updateDownloadState(filename: self.playbackAsset.uuid, downloadState: download.state)
+//                DDLogDebug("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
+//        })
+//        .disposed(by: self.bag)
 
 
         // hide progress button on completion or initial
-        downloadingViewModel.downloadState.asObservable()
+        downloadState.asObservable()
             .observeOn(MainScheduler.instance)
             .map { fileDownloadState in
                 fileDownloadState != .inProgress }
@@ -230,7 +231,7 @@ class PopupContentController: UIViewController {
             .disposed(by: bag)
 
         // hide progress stop button on completion or initial
-        downloadingViewModel.downloadState.asObservable()
+        downloadState.asObservable()
             .observeOn(MainScheduler.instance)
             .map { fileDownloadState in
                 fileDownloadState != .inProgress }
@@ -238,14 +239,14 @@ class PopupContentController: UIViewController {
             .disposed(by: bag)
 
         // hide download button during download
-        downloadingViewModel.downloadState.asObservable()
+        downloadState.asObservable()
             .observeOn(MainScheduler.instance)
             .map { fileDownloadState in fileDownloadState == .inProgress }
             .bind(to: fullDownloadButton.rx.isHidden )
             .disposed(by: bag)
 
         // set image name based on state
-        downloadingViewModel.downloadImageNameEvent.asObservable()
+        downloadImageNameEvent.asObservable()
             .observeOn(MainScheduler.instance)
             .map { UIImage(named: $0) }
             .bind(to: fullDownloadButton.rx.image(for: .normal))
@@ -778,13 +779,26 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("initiateNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+                
+                self.downloadState.value = .initiating
+            }
+
         }
     }
 
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("progressNotification filedownload: \(fileDownload)")
+            DDLogDebug("lastPathComponent: \(fileDownload.url.lastPathComponent) uuid: \(self.playbackAsset.uuid)")
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+                self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
+                self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
+                
+                self.downloadState.value = .inProgress
+                
+                DDLogDebug("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+            }
         }
     }
 
@@ -792,6 +806,11 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("completeNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+                self.downloadImageNameEvent.value = "share-box"
+                
+                self.downloadState.value = .complete
+            }
         }
     }
 
@@ -799,6 +818,9 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("errorNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+                self.downloadState.value = .error
+            }
         }
     }
 
@@ -806,6 +828,9 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("cancelNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+                self.downloadState.value = .cancelled
+            }
         }
     }
 
