@@ -96,7 +96,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     func isValidEmail(testStr:String) -> Bool {
-        // //print("validate calendar: \(testStr)")
+        // //DDLogDebug("validate calendar: \(testStr)")
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -104,7 +104,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     func passwordValidationAlphaNumeric(testStr:String) -> Bool {
-        // //print("validate calendar: \(testStr)")
+        // //DDLogDebug("validate calendar: \(testStr)")
 //        let emailRegEx = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,15}$"
         let emailRegEx = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!#$%&'()*+,-./:;<=>?@^_`{|}~\"])[A-Za-z\\d!#$%&'()*+,-./:;<=>?@^_`{|}~\"]{6,15}$"
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -112,7 +112,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     func UK_postalCodeValidation(testStr:String) -> Bool {
-        // //print("validate calendar: \(testStr)")
+        // //DDLogDebug("validate calendar: \(testStr)")
         let emailRegEx = "(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX]][0-9][A-HJKPSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY])))) [0-9][A-Z-[CIKMOV]]{2})"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -120,7 +120,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     func phoneNumberOfUK(testStr:String) -> Bool {
-        // //print("validate calendar: \(testStr)")
+        // //DDLogDebug("validate calendar: \(testStr)")
         let emailRegEx = "^(?=.*[0-9])[0-9- ]{10,14}$"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -128,7 +128,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     func sortceCodeValidation(testStr:String) -> Bool {
-        // //print("validate calendar: \(testStr)")
+        // //DDLogDebug("validate calendar: \(testStr)")
         let emailRegEx = "^(\\d){2}-(\\d){2}-(\\d){2}$"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -136,7 +136,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     func accountNumberValidation(testStr:String) -> Bool {
-        // //print("validate calendar: \(testStr)")
+        // //DDLogDebug("validate calendar: \(testStr)")
         let emailRegEx = "^[0-9]+$"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
@@ -144,7 +144,7 @@ class BaseClass: UIViewController, UINavigationControllerDelegate {
     }
     
     func onlyDecimal(testStr:String) -> Bool {
-        // //print("validate calendar: \(testStr)")
+        // //DDLogDebug("validate calendar: \(testStr)")
         let emailRegEx = "^[0-9.]+$"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)

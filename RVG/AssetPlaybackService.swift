@@ -76,7 +76,7 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
             try AVAudioSession.sharedInstance().setActive(true, options: [])
         }
         catch {
-            print("An Error occured activating the audio session: \(error)")
+            DDLogDebug("An Error occured activating the audio session: \(error)")
         }
 
         do {
@@ -85,7 +85,7 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
                                                                                                  .defaultToSpeaker])
             //            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker])
         } catch {
-            print("AVAudioSession error: \(error)")
+            DDLogDebug("AVAudioSession error: \(error)")
         }
 
         UIApplication.shared.beginBackgroundTask {}

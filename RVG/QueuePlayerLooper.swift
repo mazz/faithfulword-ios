@@ -83,12 +83,12 @@ class QueuePlayerLooper : NSObject, Looper {
                 guard playableStatus == .loaded else { fatalError("Failed to read playable duration property with error: \(playableError)") }
 
                 guard videoAsset.isPlayable else {
-                    print("Can't loop since asset is not playable")
+                    DDLogDebug("Can't loop since asset is not playable")
                     return
                 }
 
                 guard CMTimeCompare(videoAsset.duration, CMTime(value:1, timescale:100)) >= 0 else {
-                    print("Can't loop since asset duration too short. Duration is(\(CMTimeGetSeconds(videoAsset.duration)) seconds")
+                    DDLogDebug("Can't loop since asset duration too short. Duration is(\(CMTimeGetSeconds(videoAsset.duration)) seconds")
                     return
                 }
 
@@ -150,7 +150,7 @@ class QueuePlayerLooper : NSObject, Looper {
             guard let newPlayerStatus = change?[.newKey] as? AVPlayer.Status else { return }
 
             if newPlayerStatus == AVPlayer.Status.failed {
-                print("End looping since player has failed with error: \(player?.error)")
+                DDLogDebug("End looping since player has failed with error: \(player?.error)")
                 stop()
             }
         }
@@ -158,7 +158,7 @@ class QueuePlayerLooper : NSObject, Looper {
             guard let player = player else { return }
 
             if player.items().isEmpty {
-                print("Play queue emptied out due to bad player item. End looping")
+                DDLogDebug("Play queue emptied out due to bad player item. End looping")
                 stop()
             }
             else {
@@ -167,7 +167,7 @@ class QueuePlayerLooper : NSObject, Looper {
                     numberOfTimesPlayed = numberOfTimesPlayed + 1
 
                     if numberOfTimesPlayed >= numberOfTimesToPlay {
-                        print("Looped \(numberOfTimesToPlay) times. Stopping.");
+                        DDLogDebug("Looped \(numberOfTimesToPlay) times. Stopping.");
                         stop()
                     }
                 }
@@ -191,7 +191,7 @@ class QueuePlayerLooper : NSObject, Looper {
             guard let newPlayerItemStatus = change?[.newKey] as? AVPlayerItem.Status else { return }
 
             if newPlayerItemStatus == .failed {
-                print("End looping since player item has failed with error: \(player?.currentItem?.error)")
+                DDLogDebug("End looping since player item has failed with error: \(player?.currentItem?.error)")
                 stop()
             }
         }

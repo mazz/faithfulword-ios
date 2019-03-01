@@ -34,7 +34,7 @@ extension CategoryListingCoordinator: NavigationCoordinating {
 
     func goToCategory(for categorizable: Categorizable) {
         DispatchQueue.main.async {
-            print("goToCategory categorizable: \(categorizable)")
+            DDLogDebug("goToCategory categorizable: \(categorizable)")
             self.resettableMediaListingCoordinator.value.playlistId = categorizable.categoryUuid
             self.resettableMediaListingCoordinator.value.mediaType = (categorizable is Gospel) ? .audioGospel : .audioMusic
 //                : (categorizable is Music)
@@ -59,12 +59,12 @@ extension CategoryListingCoordinator: NavigationCoordinating {
 // MARK: Event handling for medialisting screen
 extension CategoryListingCoordinator {
     private func handle(eventsFrom categoryListingViewModel: CategoryListingViewModel) {
-        print("handle(eventsFrom categoryListingViewModel")
+        DDLogDebug("handle(eventsFrom categoryListingViewModel")
         categoryListingViewModel.drillInEvent.next { [unowned self] type in
             switch type {
             case .categoryItemType(let item):
                 self.goToCategory(for: item)
-                print("categoryItem: \(item)")
+                DDLogDebug("categoryItem: \(item)")
             }
             }.disposed(by: bag)
     }

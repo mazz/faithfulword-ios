@@ -23,7 +23,7 @@ class ChapterViewController: BaseClass {
 //
 //        let errorClosure = { (error: Swift.Error) -> Void in
 //            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
-//            print("error: \(error)")
+//            DDLogDebug("error: \(error)")
 //            
 //            DispatchQueue.main.async {
 //                MBProgressHUD.hide(for: self.view, animated: true)
@@ -35,7 +35,7 @@ class ChapterViewController: BaseClass {
 //
 //        provider.request(.booksChapterMedia(bid: self.bookId!, languageId: Device.preferredLanguageIdentifier())) {
 //            result in
-//            print("booksChapterMedia: \(result)")
+//            DDLogDebug("booksChapterMedia: \(result)")
 //            switch result {
 //            case let .success(moyaResponse):
 //                do {
@@ -46,7 +46,7 @@ class ChapterViewController: BaseClass {
 //                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
 //                    if let jsonObject = json as? [String:Any] {
 //                        parsedObject = MediaChapterResponse(JSON: jsonObject)!
-//                        print(parsedObject)
+//                        DDLogDebug(parsedObject)
 //                        self.media = parsedObject.media!
 //                        DispatchQueue.main.async {
 //                            MBProgressHUD.hide(for: self.view, animated: true)
@@ -85,7 +85,7 @@ class ChapterViewController: BaseClass {
         
         let errorClosure = { (error: Swift.Error) -> Void in
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
-            print("error: \(error)")
+            DDLogDebug("error: \(error)")
             
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -97,13 +97,13 @@ class ChapterViewController: BaseClass {
         
         provider.request(.booksChapterMedia(uuid: self.bookId!, languageId: L10n.shared.language, offset: 1, limit: 50)) {
             result in
-            print("booksChapterMedia: \(result)")
+            DDLogDebug("booksChapterMedia: \(result)")
             switch result {
             case let .success(moyaResponse):
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                     let chapterResponse: MediaChapterResponse = try moyaResponse.map(MediaChapterResponse.self)
-                    print("mapped to moyaResponse: \(moyaResponse)")
+                    DDLogDebug("mapped to moyaResponse: \(moyaResponse)")
                     
                     self.media = chapterResponse.result
                     DispatchQueue.main.async {

@@ -67,7 +67,7 @@ public final class DataStore {
         migrator.registerMigration("v1.3") { db in
             do {
                 try db.create(table: "user") { userTable in
-                    print("created: \(userTable)")
+                    DDLogDebug("created: \(userTable)")
                     userTable.column("userId", .integer).primaryKey()
                     userTable.column("userUuid", .text)
                     userTable.column("name", .text)
@@ -77,12 +77,12 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making user table: \(error)")
+                DDLogDebug("error making user table: \(error)")
             }
 
             do {
                 try db.create(table: "book") { bookTable in
-                    print("created: \(bookTable)")
+                    DDLogDebug("created: \(bookTable)")
                     bookTable.column("categoryUuid", .text).primaryKey()
                     bookTable.column("title", .text)
                     bookTable.column("languageId", .text)
@@ -91,12 +91,12 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making book table: \(error)")
+                DDLogDebug("error making book table: \(error)")
             }
 
             do {
                 try db.create(table: "mediachapter") { chapterTable in
-                    print("created: \(chapterTable)")
+                    DDLogDebug("created: \(chapterTable)")
                     //                chapterTable.column("chapterId", .integer).primaryKey()
                     chapterTable.column("uuid", .text).primaryKey()
                     chapterTable.column("localizedName", .text)
@@ -112,12 +112,12 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making mediachapter table: \(error)")
+                DDLogDebug("error making mediachapter table: \(error)")
             }
 
             do {
                 try db.create(table: "gospel") { gospelTable in
-                    print("created: \(gospelTable)")
+                    DDLogDebug("created: \(gospelTable)")
                     gospelTable.column("categoryUuid", .text).primaryKey()
                     gospelTable.column("title", .text)
                     gospelTable.column("languageId", .text)
@@ -126,12 +126,12 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making gospel table: \(error)")
+                DDLogDebug("error making gospel table: \(error)")
             }
 
             do {
                 try db.create(table: "mediagospel") { gospelTable in
-                    print("created: \(gospelTable)")
+                    DDLogDebug("created: \(gospelTable)")
                     //                chapterTable.column("chapterId", .integer).primaryKey()
                     gospelTable.column("uuid", .text).primaryKey()
                     gospelTable.column("localizedName", .text)
@@ -147,12 +147,12 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making mediagospel table: \(error)")
+                DDLogDebug("error making mediagospel table: \(error)")
             }
 
             do {
                 try db.create(table: "music") { musicTable in
-                    print("created: \(musicTable)")
+                    DDLogDebug("created: \(musicTable)")
                     musicTable.column("categoryUuid", .text).primaryKey()
                     musicTable.column("title", .text)
                     musicTable.column("languageId", .text)
@@ -161,12 +161,12 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making gospel table: \(error)")
+                DDLogDebug("error making gospel table: \(error)")
             }
 
             do {
                 try db.create(table: "mediamusic") { musicTable in
-                    print("created: \(musicTable)")
+                    DDLogDebug("created: \(musicTable)")
                     //                chapterTable.column("chapterId", .integer).primaryKey()
                     musicTable.column("uuid", .text).primaryKey()
                     musicTable.column("localizedName", .text)
@@ -182,12 +182,12 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making mediagospel table: \(error)")
+                DDLogDebug("error making mediagospel table: \(error)")
             }
 
             do {
                 try db.create(table: "languageidentifier") { langTable in
-                    print("created: \(langTable)")
+                    DDLogDebug("created: \(langTable)")
                     langTable.column("uuid", .text).primaryKey()
                     langTable.column("sourceMaterial", .text)
                     langTable.column("languageIdentifier", .text)
@@ -195,7 +195,7 @@ public final class DataStore {
                 }
             }
             catch {
-                print("error making languageidentifier table: \(error)")
+                DDLogDebug("error making languageidentifier table: \(error)")
             }
         }
         return migrator
@@ -211,7 +211,7 @@ public final class DataStore {
             // Connect to the database
             // See https://github.com/groue/GRDB.swift/#database-connections
             _dbPool = try DatabasePool(path: path)
-            print("new _dbPool at databasePath: \(path)")
+            DDLogDebug("new _dbPool at databasePath: \(path)")
 
             if let databasePool = _dbPool {
                 // Use DatabaseMigrator to define the database schema
@@ -247,7 +247,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(resultSession))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -270,7 +270,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(identifier))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -288,7 +288,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(language))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -304,21 +304,21 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     if let user = try User.fetchOne(db) {
                         for category in categoryList {
-                            print("category: \(category)")
+                            DDLogDebug("category: \(category)")
                             switch categoryListType {
 
                             case .gospel:
-                                print("writing .gospel")
+                                DDLogDebug("writing .gospel")
                                 var storeGospel: Gospel = category as! Gospel
                                 storeGospel.userId = user.userId
                                 try storeGospel.insert(db)
                             case .music:
-                                print("writing .music")
+                                DDLogDebug("writing .music")
                                 var storeMusic: Music = category as! Music
                                 storeMusic.userId = user.userId
                                 try storeMusic.insert(db)
                             case .mediaItems:
-                                print("writing .mediaItems")
+                                DDLogDebug("writing .mediaItems")
                             }
                         }
                     }
@@ -328,18 +328,18 @@ extension DataStore: DataStoring {
                 try self.dbPool.read { db in
                     switch categoryListType {
                     case .gospel:
-                        print("fetch .gospel")
+                        DDLogDebug("fetch .gospel")
                         fetchCategoryList = try Gospel.fetchAll(db)
                     case .music:
-                        print("fetch .music")
+                        DDLogDebug("fetch .music")
                         fetchCategoryList = try Music.fetchAll(db)
                     case .mediaItems:
-                        print(".mediaItems")
+                        DDLogDebug(".mediaItems")
                     }
                 }
                 single(.success(fetchCategoryList))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -352,19 +352,19 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     switch categoryListingType {
                     case .gospel:
-                        print("delete .gospel")
+                        DDLogDebug("delete .gospel")
                         try Gospel.deleteAll(db)
                     case .music:
-                        print("delete .music")
+                        DDLogDebug("delete .music")
                         try Music.deleteAll(db)
                     case .mediaItems:
-                        print(".mediaItems")
+                        DDLogDebug(".mediaItems")
                     }
                     return .commit
                 }
                 single(.success(()))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create()
@@ -378,18 +378,18 @@ extension DataStore: DataStoring {
                 try self.dbPool.read { db in
                     switch categoryListingType {
                     case .gospel:
-                        print("fetch .gospel")
+                        DDLogDebug("fetch .gospel")
                         fetchCategoryList = try Gospel.fetchAll(db)
                     case .music:
-                        print("fetch .music")
+                        DDLogDebug("fetch .music")
                         fetchCategoryList = try Music.fetchAll(db)
                     case .mediaItems:
-                        print(".mediaItems")
+                        DDLogDebug(".mediaItems")
                     }
                 }
                 single(.success(fetchCategoryList))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -404,7 +404,7 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let book = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db){
-                        print("found chapter book: \(book)")
+                        DDLogDebug("found chapter book: \(book)")
                         for chapter in chapters {
                             var mediaChapter = MediaChapter(uuid: chapter.uuid,
                                                             localizedName: chapter.localizedName,
@@ -431,7 +431,7 @@ extension DataStore: DataStoring {
                 single(.success(fetchChapters))
 //                single(.success(chapters))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -450,7 +450,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchChapters))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -470,7 +470,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create()
@@ -486,7 +486,7 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let gospel = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db){
-                        print("found gospel: \(gospel)")
+                        DDLogDebug("found gospel: \(gospel)")
                         for media in mediaGospel {
                             var mediaGospel = MediaGospel(uuid: media.uuid,
                                                           localizedName: media.localizedName,
@@ -513,7 +513,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchMediaGospel))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -529,7 +529,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchMediaGospel))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -548,7 +548,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create()
@@ -565,7 +565,7 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let music = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db){
-                        print("found music: \(music)")
+                        DDLogDebug("found music: \(music)")
                         for media in mediaMusic {
                             var mediaMusic = MediaMusic(uuid: media.uuid,
                                                         localizedName: media.localizedName,
@@ -594,7 +594,7 @@ extension DataStore: DataStoring {
 //
 //                single(.success(mediaMusic))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -610,7 +610,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchMediaMusic))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -629,7 +629,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create()
@@ -645,7 +645,7 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
 //                    if let user = try User.fetchOne(db) {
                         for bibleLanguage in bibleLanguages {
-                            print("bibleLanguage: \(bibleLanguage)")
+                            DDLogDebug("bibleLanguage: \(bibleLanguage)")
                             //            try! self.dbQueue.inDatabase { db in
                             var storeLang: LanguageIdentifier = bibleLanguage
 //                            storeLang.userId = user.userId
@@ -656,7 +656,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(bibleLanguages))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -673,7 +673,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(languages))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -689,7 +689,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create()
@@ -705,7 +705,7 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     if let user = try User.fetchOne(db) {
                         for book in books {
-                            print("book: \(book)")
+                            DDLogDebug("book: \(book)")
                             //            try! self.dbQueue.inDatabase { db in
                             var storeBook: Book = book
                             storeBook.userId = user.userId
@@ -720,7 +720,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchBooks))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -736,7 +736,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchBooks))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
@@ -756,7 +756,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                print(error)
+                DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create()

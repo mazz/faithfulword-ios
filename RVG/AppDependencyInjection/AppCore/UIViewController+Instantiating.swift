@@ -30,7 +30,7 @@ public extension LoadableFromStoryboard where Self: UIViewController {
             as? Self
         guard viewController != nil else {
             let errorMessage = "Could not instantiate view controller from the Storyboard. Check your storyboard identifiers and Swinject hookups."
-            print(errorMessage)
+            DDLogDebug(errorMessage)
             fatalError(errorMessage)
         }
         return viewController!

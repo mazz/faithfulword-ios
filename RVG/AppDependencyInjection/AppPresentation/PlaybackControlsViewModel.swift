@@ -20,7 +20,7 @@ public final class PlaybackControlsViewModel {
     func setupBindings() {
         sliderScrubEvent.asObservable()
             .subscribe(onNext: { [unowned self] scrubValue in
-                print("scrubValue: \(scrubValue)")
+                DDLogDebug("scrubValue: \(scrubValue)")
                 if let assetPlaybackService = self.assetPlaybackService {
                     let assetPlaybackManager = assetPlaybackService.assetPlaybackManager
                     assetPlaybackManager.seekTo(Double(scrubValue))
@@ -30,7 +30,7 @@ public final class PlaybackControlsViewModel {
 
         repeatButtonTapEvent.asObservable()
             .subscribe({ currentSetting in
-                print("currentSetting: \(currentSetting)")
+                DDLogDebug("currentSetting: \(currentSetting)")
                 if let assetPlaybackService = self.assetPlaybackService,
                     let repeatSetting = currentSetting.element {
                     let assetPlaybackManager = assetPlaybackService.assetPlaybackManager

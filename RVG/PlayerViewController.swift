@@ -48,7 +48,7 @@ class PlayerViewController : BaseClass {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("PlayerViewController viewDidLoad")
+        DDLogDebug("PlayerViewController viewDidLoad")
 
         scrubberSlider.thumbTintColor = .black
         scrubberSlider.value = Float(0)
@@ -119,7 +119,7 @@ class PlayerViewController : BaseClass {
     }
     
     @objc func scrubberChanged() {
-        print("scrubberChanged")
+        DDLogDebug("scrubberChanged")
 //        currentTimeLabel.text = "--:--"
 //        remainingTimeLabel.text = "--:--"
         let time : Double = Double(scrubberSlider.value)
@@ -130,7 +130,7 @@ class PlayerViewController : BaseClass {
 
 
     @objc func scrubberTouchUpInside() {
-        print("scrubberTouchUpInside")
+        DDLogDebug("scrubberTouchUpInside")
         scrubbing = false;
         self.playbackTransportDelegate?.scrubbingDidEnd()
 
@@ -148,7 +148,7 @@ class PlayerViewController : BaseClass {
 
 
     @objc func scrubberTouchDown() {
-        print("scrubberTouchDown")
+        DDLogDebug("scrubberTouchDown")
         
         if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
             playingWhileScrubbing = true
@@ -163,7 +163,7 @@ class PlayerViewController : BaseClass {
 
 
     @IBAction func playPause(_ sender: Any) {
-        print("PlayerViewController playPause")
+        DDLogDebug("PlayerViewController playPause")
         
         if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
             playerIsPlaying = true
@@ -225,7 +225,7 @@ class PlayerViewController : BaseClass {
     func setCurrentTime(time : TimeInterval, duration : TimeInterval) {
         if !time.isNaN && !duration.isNaN {
 
-            print("setCurrentTime: \(time)")
+            DDLogDebug("setCurrentTime: \(time)")
             let currentSeconds = Int(ceil(time))
             let remainingTime = Int(duration - time)
             
@@ -235,7 +235,7 @@ class PlayerViewController : BaseClass {
             scrubberSlider.maximumValue = Float(duration)
             scrubberSlider.value = Float(time)
         }
-//            print("PlaybackDisplayDelegate setCurrentTime: \(String(time)) duration: \(String(duration))")
+//            DDLogDebug("PlaybackDisplayDelegate setCurrentTime: \(String(time)) duration: \(String(duration))")
     }
 
     func formatSeconds(value: Int) -> String {
@@ -253,7 +253,7 @@ class PlayerViewController : BaseClass {
     }
 
     @IBAction func previous(_ sender: Any) {
-        print("previous")
+        DDLogDebug("previous")
         
         if let currentIndex = PlaybackService.sharedInstance().mediaIndex {
             if currentIndex != 0 {
@@ -275,7 +275,7 @@ class PlayerViewController : BaseClass {
     }
 
     @IBAction func next(_ sender: Any) {
-        print("next")
+        DDLogDebug("next")
         
         if let currentIndex = PlaybackService.sharedInstance().mediaIndex {
             if currentIndex + 1 <= (PlaybackService.sharedInstance().media?.count)! - 1 {
@@ -306,7 +306,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     func playbackReady() {
         MBProgressHUD.hide(for: self.view, animated: true)
         playerIsPlaying = false
-        print("PlaybackDisplayDelegate playbackReady")
+        DDLogDebug("PlaybackDisplayDelegate playbackReady")
         
         // because remote events could initiate playback
         // if we are already playing, do not hit play
@@ -320,7 +320,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
         MBProgressHUD.hide(for: self.view, animated: true)
         self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem getting the media.", comment: "").l10n())
 
-        print("PlaybackDisplayDelegate playbackFailed")
+        DDLogDebug("PlaybackDisplayDelegate playbackFailed")
         emptyUIState()
 //        playPause(self.playPauseButton)
     }
@@ -329,7 +329,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
         scrubberSlider.value = Float(0)
         emptyUIState()
         playerIsPlaying = false
-        print("PlaybackDisplayDelegate playbackComplete")
+        DDLogDebug("PlaybackDisplayDelegate playbackComplete")
     }
     
     func playbackRepeat(shouldRepeat: Bool) {
@@ -351,13 +351,13 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     }
     
     func audioSessionInterrupted() {
-        print("audioSessionInterrupted")
+        DDLogDebug("audioSessionInterrupted")
 
         self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
     }
 
     func audioSessionResumed() {
-        print("audioSessionResumed")
+        DDLogDebug("audioSessionResumed")
         self.sessionIsResuming = true
         if self.playerIsPlaying {
             playPause(self.playPauseButton)
@@ -365,7 +365,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
     }
     
     func audioSessionRouteChange() {
-        print("audioSessionRouteChange")
+        DDLogDebug("audioSessionRouteChange")
     }
     
 }

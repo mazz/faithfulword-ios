@@ -39,7 +39,7 @@ class OtherLanguagesViewController: BaseClass {
         
         let errorClosure = { (error: Swift.Error) -> Void in
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the media.", comment: "").l10n())
-            print("error: \(error)")
+            DDLogDebug("error: \(error)")
             
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -50,13 +50,13 @@ class OtherLanguagesViewController: BaseClass {
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
         provider.request(.languagesSupported(offset: 1, limit: 100)) { result in
-            print("languagesSupported: \(result)")
+            DDLogDebug("languagesSupported: \(result)")
             switch result {
             case let .success(moyaResponse):
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                     let data = moyaResponse.data
-                    print(String(data: data, encoding: .utf8))
+                    DDLogDebug("\(String(describing: String(data: data, encoding: .utf8)))")
 //                    var parsedObject: LanguagesSupportedResponse
                     
                     let supportedLanguages: LanguagesSupportedResponse = try moyaResponse.map(LanguagesSupportedResponse.self)
@@ -68,7 +68,7 @@ class OtherLanguagesViewController: BaseClass {
 //                    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
 //                    if let jsonObject = json as? [String:Any] {
 //                        parsedObject = LanguagesSupportedResponse(JSON: jsonObject)!
-//                        print(parsedObject)
+//                        DDLogDebug(parsedObject)
 //
 //                        self.languages = parsedObject.languageIdentifiers!
 //                        }
@@ -128,16 +128,16 @@ extension OtherLanguagesViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let languageIdentifier = self.languages[indexPath.row].languageIdentifier
-        print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
-        print("L10n.supportedLanguages: \(L10n.supportedLanguages)")
-        print("Bundle.main.preferredLocalizations: \(Bundle.main.preferredLocalizations)")
+        DDLogDebug("L10n.preferredLanguage: \(L10n.preferredLanguage)")
+        DDLogDebug("L10n.supportedLanguages: \(L10n.supportedLanguages)")
+        DDLogDebug("Bundle.main.preferredLocalizations: \(Bundle.main.preferredLocalizations)")
         
         L10n.shared.language = languageIdentifier
         //            L10n.preferredLanguage = languageIdentifier
         
-        print("L10n.preferredLanguage: \(L10n.preferredLanguage)")
-        print("L10n.shared.language: \(L10n.shared.language)")
-        print("OtherLanguagesViewController languageIdentifier: \(languageIdentifier)")
+        DDLogDebug("L10n.preferredLanguage: \(L10n.preferredLanguage)")
+        DDLogDebug("L10n.shared.language: \(L10n.shared.language)")
+        DDLogDebug("OtherLanguagesViewController languageIdentifier: \(languageIdentifier)")
     }
     
     func localizedString(identifier: String) -> String {

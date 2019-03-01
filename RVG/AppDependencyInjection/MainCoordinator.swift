@@ -188,7 +188,7 @@ extension MainCoordinator: NavigationCoordinating {
     }
 
     private func goToHamburger() {
-        print("goToHamburger")
+        DDLogDebug("goToHamburger")
         self.swapInSideMenuFlow()
         //        tappedHamburger.onNext(mainViewRevealed)
 
@@ -243,7 +243,7 @@ extension MainCoordinator: NavigationCoordinating {
     }
 
     private func goToSettings() {
-        print("goToSettings")
+        DDLogDebug("goToSettings")
         //        resettableSettingsCoordinator.value.flow(with: { [unowned self] settingsFlowViewController in
         //            self.mainNavigationController.present(settingsFlowViewController, animated: true)
         //        }, completion: { [unowned self] _ in
@@ -260,7 +260,7 @@ extension MainCoordinator {
         mainViewModel.drillInEvent.next { [unowned self] type in
             switch type {
             case .bookType(let bookUuid):
-                print(".defaultType: \(bookUuid)")
+                DDLogDebug(".defaultType: \(bookUuid)")
                 self.goToBook(for: bookUuid)
             }
             }.disposed(by: bag)
@@ -314,40 +314,40 @@ extension MainCoordinator {
             DispatchQueue.main.async {
                 switch type {
                 case .bible:
-                    print(".bible")
+                    DDLogDebug(".bible")
                     self.dismiss()
                 case .gospel:
-                    print(".soulwinning")
+                    DDLogDebug(".soulwinning")
                     self.goToCategoryFlow(categoryType: .gospel)
                 case .preaching:
-                    print(".mediaItems")
+                    DDLogDebug(".mediaItems")
                     self.goToCategoryFlow(categoryType: .mediaItems)
                 case .music:
-                    print(".music")
+                    DDLogDebug(".music")
                     self.goToCategoryFlow(categoryType: .music)
                 case .aboutUs:
-                    print(".aboutUs")
+                    DDLogDebug(".aboutUs")
                     self.goToExternalWebBrowser(url: NSURL(
                         string: "https://www.faithfulwordapp.com/")!
                         as URL)
                 case .share:
-                    print(".share")
+                    DDLogDebug(".share")
                 case .setBibleLanguage:
-                    print(".setBibleLanguage")
+                    DDLogDebug(".setBibleLanguage")
                     self.goToBibleLanguageFlow()
 
                 case .donate:
-                    print(".donate")
+                    DDLogDebug(".donate")
                     self.goToExternalWebBrowser(url: NSURL(
                         string: "https://www.faithfulwordapp.com/donate/")!
                         as URL)
                 case .privacyPolicy:
-                    print(".privacyPolicy")
+                    DDLogDebug(".privacyPolicy")
                     self.goToExternalWebBrowser(url: NSURL(
                         string: "https://www.faithfulwordapp.com/privacy-policy/")!
                         as URL)
                 case .contactUs:
-                    print(".contactUs")
+                    DDLogDebug(".contactUs")
                     self.goToMailComposer()
                 }
             }

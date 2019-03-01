@@ -79,7 +79,7 @@ class PopupContentController: UIViewController {
 
 //    private var downloadMode: FileDownloadState = .initial {
 //        didSet {
-//            print("dowload mode set to: \(downloadMode)")
+//            DDLogDebug("dowload mode set to: \(downloadMode)")
 //
 ////            self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
 //        }
@@ -106,7 +106,6 @@ class PopupContentController: UIViewController {
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
-
         }
     }
 
@@ -160,51 +159,51 @@ class PopupContentController: UIViewController {
 
         // setup sharing button and UIActivityViewController
         // once the download finishes
-        downloadingViewModel.fileDownloadCompleteEvent.asObservable()
-            .observeOn(MainScheduler.instance)
-            .subscribe({ download in
-                self.fullDownloadButton.rx.tap
-                    .observeOn(MainScheduler.instance)
-                    .bind {
-                        // copy file to temp dir to rename it
-                        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
-                        // generate temp file url path
-                        if let lastPathComponent = self.downloadingViewModel.fileDownload.value?.url.lastPathComponent {
-                            let temporaryFileURL = temporaryDirectoryURL.appendingPathComponent(lastPathComponent)
-                            print("temporaryFileURL: \(temporaryFileURL)")
-
-                            // capture the audio file as a Data blob and then write it
-                            // to temp dir
-
-                            if let localDownload = self.downloadingViewModel.fileDownload.value {
-                                do {
-                                    let audioData: Data = try Data(contentsOf: localDownload.localUrl, options: .uncached)
-                                    try audioData.write(to: temporaryFileURL, options: .atomicWrite)
-                                } catch {
-                                    print("error writing temp audio file: \(error)")
-                                    return
-                                }
-
-                                let activityViewController = UIActivityViewController(activityItems: ["Shared via the Faithful Word App: https://faithfulwordapp.com/", temporaryFileURL], applicationActivities: nil)
-
-                                activityViewController.excludedActivityTypes = [
-                                    .addToReadingList,
-                                    .openInIBooks,
-                                    .print,
-                                    .saveToCameraRoll,
-                                    .postToWeibo,
-                                    .postToFlickr,
-                                    .postToVimeo,
-                                    .postToTencentWeibo]
-
-                                self.present(activityViewController, animated: true, completion: {})
-                            }
-
-                        }
-                }
-                .disposed(by: self.bag)
-            })
-            .disposed(by: bag)
+//        downloadingViewModel.fileDownloadCompleteEvent.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .subscribe({ download in
+//                self.fullDownloadButton.rx.tap
+//                    .observeOn(MainScheduler.instance)
+//                    .bind {
+//                        // copy file to temp dir to rename it
+//                        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+//                        // generate temp file url path
+//                        if let lastPathComponent = self.downloadingViewModel.fileDownload.value?.url.lastPathComponent {
+//                            let temporaryFileURL = temporaryDirectoryURL.appendingPathComponent(lastPathComponent)
+//                            DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
+//
+//                            // capture the audio file as a Data blob and then write it
+//                            // to temp dir
+//
+//                            if let localDownload = self.downloadingViewModel.fileDownload.value {
+//                                do {
+//                                    let audioData: Data = try Data(contentsOf: localDownload.localUrl, options: .uncached)
+//                                    try audioData.write(to: temporaryFileURL, options: .atomicWrite)
+//                                } catch {
+//                                    DDLogDebug("error writing temp audio file: \(error)")
+//                                    return
+//                                }
+//
+//                                let activityViewController = UIActivityViewController(activityItems: ["Shared via the Faithful Word App: https://faithfulwordapp.com/", temporaryFileURL], applicationActivities: nil)
+//
+//                                activityViewController.excludedActivityTypes = [
+//                                    .addToReadingList,
+//                                    .openInIBooks,
+//                                    .print,
+//                                    .saveToCameraRoll,
+//                                    .postToWeibo,
+//                                    .postToFlickr,
+//                                    .postToVimeo,
+//                                    .postToTencentWeibo]
+//
+//                                self.present(activityViewController, animated: true, completion: {})
+//                            }
+//
+//                        }
+//                }
+//                .disposed(by: self.bag)
+//            })
+//            .disposed(by: bag)
         
         //downloadingViewModel.downloadAsset should be set before observing download
         // this chunk is needed when the user opens the full screen UI while
@@ -217,7 +216,7 @@ class PopupContentController: UIViewController {
             self.downloadingViewModel.downloadState.value = download.state
 
             self.downloadingViewModel.updateDownloadState(filename: self.playbackAsset.uuid, downloadState: download.state)
-                print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
+                DDLogDebug("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
         })
         .disposed(by: self.bag)
 
@@ -253,16 +252,17 @@ class PopupContentController: UIViewController {
             .disposed(by: bag)
 
         // set progress UI during download
-        downloadingViewModel.fileDownload.asObservable()
-            .observeOn(MainScheduler.instance)
-            .filterNils()
-            .subscribe(onNext: { fileDownload in
-
-                self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
-                self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
-                print("downloadingViewModel.fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
-            })
-            .disposed(by: bag)
+        // FIXME: the old playback service will not deallocate because of this chunk
+//        downloadingViewModel.fileDownload.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .filterNils()
+//            .subscribe(onNext: { fileDownload in
+//
+//                self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
+//                self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
+//                DDLogDebug("downloadingViewModel.fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+//            })
+//            .disposed(by: bag)
 
         // initiate download
         fullDownloadButton.rx.tap
@@ -303,7 +303,7 @@ class PopupContentController: UIViewController {
             .observeOn(MainScheduler.instance)
             .map { Float($0) }
             .do(onNext: { time in
-                print("time: \(time)")
+                DDLogDebug("time: \(time)")
             })
             .distinctUntilChanged()
             .throttle(0.3, scheduler: MainScheduler.instance)
@@ -320,7 +320,7 @@ class PopupContentController: UIViewController {
             .debounce(0.2, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] progress in
                 self.fullPlaybackSlider.value = progress
-                print("field progress: \(progress)")
+                DDLogDebug("field progress: \(progress)")
             })
             .disposed(by: bag)
 
@@ -376,6 +376,18 @@ class PopupContentController: UIViewController {
 
 
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
+
+        let notificationCenter = NotificationCenter.default
+
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidInitiateNotification(notification:)), name: DownloadDataService.fileDownloadDidInitiateNotification, object: nil)
+
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidProgressNotification(notification:)), name: DownloadDataService.fileDownloadDidProgressNotification, object: nil)
+
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCompleteNotification(notification:)), name: DownloadDataService.fileDownloadDidCompleteNotification, object: nil)
+
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCancelNotification(notification:)), name: DownloadDataService.fileDownloadDidCancelNotification, object: nil)
+
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidErrorNotification(notification:)), name: DownloadDataService.fileDownloadDidErrorNotification, object: nil)
 
         resetUIDefaults()
         resetDownloadingViewModel()
@@ -441,7 +453,7 @@ class PopupContentController: UIViewController {
 
         if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
 
-            print("print rate: \(String(describing:playbackSpeed))")
+            DDLogDebug("print rate: \(String(describing:playbackSpeed))")
             switch playbackSpeed {
             case 1.0:
                 self.playbackSpeed = .oneX
@@ -527,7 +539,7 @@ class PopupContentController: UIViewController {
             let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
             let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause")
             else { return }
-        print("updateTransportUIState")
+        DDLogDebug("updateTransportUIState")
         if assetPlaybackManager.asset == nil {
             //            backwardButton.isEnabled = false
             playPauseButton.isEnabled = false
@@ -570,7 +582,7 @@ class PopupContentController: UIViewController {
     @objc func emptyUIState() {
         if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
 
-            print("print rate: \(String(describing:playbackSpeed))")
+            DDLogDebug("print rate: \(String(describing:playbackSpeed))")
             switch playbackSpeed {
             case 1.0:
                 self.playbackSpeed = .oneX
@@ -597,10 +609,10 @@ class PopupContentController: UIViewController {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(AssetPlaybackManager.duration) {
             let duration: Float = Float(assetPlaybackManager.duration)
-            //            print("duration: \(duration)")
+            //            DDLogDebug("duration: \(duration)")
             if !duration.isNaN {
                 estimatedDuration = duration
-                //                print("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
+                //                DDLogDebug("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
                 fullPlaybackSlider.minimumValue = Float(0)
                 fullPlaybackSlider.maximumValue = assetPlaybackManager.duration
                 //                guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.duration)) else { return }
@@ -612,7 +624,7 @@ class PopupContentController: UIViewController {
             let playbackPosition: Float = Float(assetPlaybackManager.playbackPosition)
             if !playbackPosition.isNaN {
                 estimatedPlaybackPosition = playbackPosition
-                //                print("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
+                //                DDLogDebug("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
                 guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.playbackPosition)) else { return }
                 fullCurrentPlaybackPositionLabel.text = stringValue
 
@@ -748,7 +760,7 @@ class PopupContentController: UIViewController {
     }
 
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
-        print("handlePlayerRateDidChangeNotification notification: \(notification)")
+        DDLogDebug("handlePlayerRateDidChangeNotification notification: \(notification)")
         updateTransportUIState()
     }
 
@@ -761,4 +773,40 @@ class PopupContentController: UIViewController {
             assetPlaybackManager.play()
         }
     }
+    
+    @objc func handleDownloadDidInitiateNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
+        }
+    }
+
+    @objc func handleDownloadDidProgressNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("progressNotification filedownload: \(fileDownload)")
+        }
+    }
+
+    @objc func handleDownloadDidCompleteNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("completeNotification filedownload: \(fileDownload)")
+        }
+    }
+
+    @objc func handleDownloadDidErrorNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("errorNotification filedownload: \(fileDownload)")
+        }
+    }
+
+    @objc func handleDownloadDidCancelNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("cancelNotification filedownload: \(fileDownload)")
+        }
+    }
+
 }

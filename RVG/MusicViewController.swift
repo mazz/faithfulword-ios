@@ -19,7 +19,7 @@ class MusicViewController: BaseClass {
         
         let errorClosure = { (error: Swift.Error) -> Void in
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
-            print("error: \(error)")
+            DDLogDebug("error: \(error)")
             
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -30,13 +30,13 @@ class MusicViewController: BaseClass {
         loadingNotification.mode = MBProgressHUDMode.indeterminate
         
         provider.request(.music(languageId: L10n.shared.language, offset: 1, limit: 50)) { result in
-            print("gospels: \(result)")
+            DDLogDebug("gospels: \(result)")
             switch result {
             case let .success(moyaResponse):
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                     let musicResponse: MusicResponse = try moyaResponse.map(MusicResponse.self)
-                    print("mapped to moyaResponse: \(moyaResponse)")
+                    DDLogDebug("mapped to moyaResponse: \(moyaResponse)")
 
                     self.musicIds = musicResponse.result
                     DispatchQueue.main.async {

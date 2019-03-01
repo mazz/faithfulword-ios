@@ -55,7 +55,7 @@ internal final class DownloadingViewModel {
     private func setupBindings() {
         cancelDownloadButtonTapEvent.asObservable()
             .subscribe({ currentSetting in
-                print("currentSetting: \(currentSetting)")
+                DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
                     downloadService.cancelDownload(filename: downloadAsset.uuid)
@@ -65,7 +65,7 @@ internal final class DownloadingViewModel {
 
         downloadButtonTapEvent.asObservable()
             .subscribe(onNext: { currentSetting in
-                print("currentSetting: \(currentSetting)")
+                DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
 
@@ -78,16 +78,16 @@ internal final class DownloadingViewModel {
 
                         self.updateDownloadState(filename: downloadAsset.uuid, downloadState: download.state)
 
-                        //                        print("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
-                        print("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
+                        //                        DDLogDebug("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
+                        DDLogDebug("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
                     }, onError: { error in
-                        print("observableDownload error: \(error)")
+                        DDLogDebug("observableDownload error: \(error)")
                         self.fileDownload.value = nil
                     })
                     .disposed(by: self.bag)
                 }
             }, onError: { error in
-                print("downloadButtonTapEvent error: \(error)")
+                DDLogDebug("downloadButtonTapEvent error: \(error)")
             })
             .disposed(by: bag)
     }

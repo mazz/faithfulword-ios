@@ -39,7 +39,7 @@ public final class LoginSequencer {
 extension LoginSequencer: LoginSequencing {
     public var session: Observable<String?> {
         return dataService.session.do(onNext: { session in // currently just a simple string
-            print("got session: \(String(describing: session))")
+            DDLogDebug("got session: \(String(describing: session))")
         })
     }
     

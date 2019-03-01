@@ -44,7 +44,7 @@ final class RootViewController: UIViewController {
     }
     
     private func showNoWifiAlert() {
-        print("Wifi connection lost")
+        DDLogDebug("Wifi connection lost")
 //        let alert = UIAlertController(title: "⚠️",
 //                                      message: "Wifi connection lost",
 //                                      preferredStyle: .alert)

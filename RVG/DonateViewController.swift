@@ -44,7 +44,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
         self.donateButton.setTitle(NSLocalizedString("Donate via PayPal", comment: ""), for: .normal)
 //        self.navigationController?.isNavigationBarHidden=false
         
-        print("PayPal iOS SDK Version: \(PayPalMobile.libraryVersion())")
+        DDLogDebug("PayPal iOS SDK Version: \(PayPalMobile.libraryVersion())")
         
         logoImageView.layer.cornerRadius = logoImageView.frame.size.height / 2
         logoImageView.layer.masksToBounds = true
@@ -88,11 +88,11 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     }
     
     @IBAction func donate(_ sender: AnyObject) {
-        print("donate!")
+        DDLogDebug("donate!")
         // Remove our last completed payment, just for demo purposes.
         resultText = ""
 
-        print("donationTextField.amount: \(donationTextField.amount)")
+        DDLogDebug("donationTextField.amount: \(donationTextField.amount)")
         
         if donationTextField.amount > 0.0 {
             let item1 = PayPalItem(name: "KJVRVG Donation", withQuantity: 1, withPrice: NSDecimalNumber(string: String(donationTextField.amount)), withCurrency: "USD", withSku: "KJVRVG-0001")
@@ -115,15 +115,15 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
                 // example, the amount was negative or the shortDescription was
                 // empty, this payment wouldn't be processable, and you'd want
                 // to handle that here.
-                print("Payment not processalbe: \(payment)")
+                DDLogDebug("Payment not processalbe: \(payment)")
             }
         }
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let currencyField = textField as? CurrencyField {
-            print("textFieldDidEndEditing: \(currencyField)")
-            print("currencyField.amount: \(currencyField.amount)")
+            DDLogDebug("textFieldDidEndEditing: \(currencyField)")
+            DDLogDebug("currencyField.amount: \(currencyField.amount)")
             if currencyField.amount > 0.0 {
                 donateButton.isEnabled = true
             } else {
@@ -135,17 +135,17 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     // PayPalPaymentDelegate
     
     func payPalPaymentDidCancel(_ paymentViewController: PayPalPaymentViewController) {
-        print("PayPal Payment Cancelled")
+        DDLogDebug("PayPal Payment Cancelled")
         resultText = ""
         successView.isHidden = true
         paymentViewController.dismiss(animated: true, completion: nil)
     }
     
     func payPalPaymentViewController(_ paymentViewController: PayPalPaymentViewController, didComplete completedPayment: PayPalPayment) {
-        print("PayPal Payment Success !")
+        DDLogDebug("PayPal Payment Success !")
         paymentViewController.dismiss(animated: true, completion: { () -> Void in
             // send completed confirmaion to your server
-            print("Here is your proof of payment:\n\n\(completedPayment.confirmation)\n\nSend this to your server for confirmation and fulfillment.")
+            DDLogDebug("Here is your proof of payment:\n\n\(completedPayment.confirmation)\n\nSend this to your server for confirmation and fulfillment.")
 
             self.resultText = completedPayment.description
             self.showSuccess()

@@ -8,6 +8,7 @@ import RxSwift
 import Fabric
 import Crashlytics
 import LNPopupController
+import CocoaLumberjack
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
@@ -20,7 +21,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
         }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+//        DDLog.add(DDOSLogger.sharedInstance)
+        DDLog.add(DDTTYLogger.sharedInstance)
+        DDTTYLogger.sharedInstance.colorsEnabled = true
 
+//        DDLogVerbose("Verbose")
+//        DDLogDebug("Debug")
+//        DDLogInfo("Info")
+//        DDLogWarn("Warn")
+//        DDLogError("Error")
+        
         LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).marqueeScrollEnabled = true
 
         UINavigationBar.appearance().tintColor = UIColor.black
@@ -57,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 
         }
         catch {
-            print("An error occured setting the audio session category: \(error)")
+            DDLogDebug("An error occured setting the audio session category: \(error)")
         }
     }
 
@@ -67,12 +77,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
         let str = deviceToken.map { String(format: "%02X", $0) }.joined()
 //        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
         // Print it to console
-        print("APNs device token: \(str)")
+        DDLogDebug("APNs device token: \(str)")
         
         Messaging.messaging().setAPNSToken(deviceToken, type: MessagingAPNSTokenType.unknown)
-        print("APNs device token: \(Messaging.messaging().apnsToken)")
+        DDLogDebug("APNs device token: \(Messaging.messaging().apnsToken)")
         if let firebaseToken = Messaging.messaging().fcmToken {
-            print("FCM token: \(firebaseToken)")
+            DDLogDebug("FCM token: \(firebaseToken)")
 
             if let apnsToken = Messaging.messaging().apnsToken {
                 let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
@@ -103,37 +113,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
                                                     //                    var parsedObject: BookResponse
 
                                                     let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                                                    print("json: \(json)")
+                                                    DDLogDebug("json: \(json)")
                                                     if let jsonObject = json as? [String:Any] {
-                                                        print("jsonObject: \(jsonObject)")
+                                                        DDLogDebug("jsonObject: \(jsonObject)")
                                                     }
                                                 }
                                                 catch {
-                                                    print("error: \(error)")
+                                                    DDLogDebug("error: \(error)")
                                                 }
 
                                             case let .failure(error):
-                                                print(".failure: \(error)")
+                                                DDLogDebug(".failure: \(error)")
                                                 // this means there was a network failure - either the request
                                                 // wasn't sent (connectivity), or no response was received (server
                                                 // timed out).  If the server responds with a 4xx or 5xx error, that
                                                 // will be sent as a ".success"-ful response.
                                                 //                errorClosure(error)
-                                                print(".failure")
+                                                DDLogDebug(".failure")
                                             }
         }
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Swift.Error) {
         // Print the error to console (you should alert the user that registration failed)
-        print("APNs registration failed: \(error)")
+        DDLogDebug("APNs registration failed: \(error)")
     }
     
     
     // Push notification received
     func application(_ application: UIApplication, didReceiveRemoteNotification data: [AnyHashable : Any]) {
         // Print notification payload data
-        print("Push notification received: \(data)")
+        DDLogDebug("Push notification received: \(data)")
         Messaging.messaging().appDidReceiveMessage(data)
         
     }
@@ -144,7 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         //        Messaging.messaging().shouldEstablishDirectChannel = false
-        //        print("Disconnected from FCM.")
+        //        DDLogDebug("Disconnected from FCM.")
         
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.

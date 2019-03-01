@@ -81,18 +81,18 @@ final class CategoryListingViewModel {
             self.productService.fetchCategoryListing(for: .gospel, stride: 50).subscribe(onSuccess: { listing in
                 self.categoryListing.value = listing
             }) { error in
-                print("fetchCategoryListing failed with error: \(error.localizedDescription)")
+                DDLogDebug("fetchCategoryListing failed with error: \(error.localizedDescription)")
                 }.disposed(by: self.bag)
         case .music?:
             self.productService.fetchCategoryListing(for: .music, stride: 50).subscribe(onSuccess: { listing in
                 self.categoryListing.value = listing
             }) { error in
-                print("fetchCategoryListing failed with error: \(error.localizedDescription)")
+                DDLogDebug("fetchCategoryListing failed with error: \(error.localizedDescription)")
                 }.disposed(by: self.bag)
         case .mediaItems?:
-            print("mediaItems")
+            DDLogDebug("mediaItems")
         default:
-            print("feetprint")
+            DDLogDebug("feetprint")
         }
     }
 }

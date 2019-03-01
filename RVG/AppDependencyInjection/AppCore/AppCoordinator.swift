@@ -91,11 +91,11 @@ extension AppCoordinator: NavigationCoordinating {
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] authState in
                 if authState == .authenticated {
-                    print("authenticated")
+                    DDLogDebug("authenticated")
                     self.checkUserBooks()
                 } else if authState == .unauthenticated {
                     self.swapInInitialFlow()
-                    print("unauthenticated")
+                    DDLogDebug("unauthenticated")
                 }
             })
             .disposed(by: bag)
@@ -105,7 +105,7 @@ extension AppCoordinator: NavigationCoordinating {
         // we must fetch and set the user language before we do
         // anything, really
         self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
-            print("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
+            DDLogDebug("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
             L10n.shared.language = userLanguage
 
 //            self.swapInMainFlow()
@@ -124,25 +124,25 @@ extension AppCoordinator: NavigationCoordinating {
             // startup just get first 50 books
 //            self.productService.fetchBooks(offset: 1, limit: 50).subscribe(onSuccess: { [unowned self] in
 //                if self.productService.userBooks.value.count > 0 {
-//                    print("self.productService.userProducts.value: \(self.productService.userBooks.value)")
+//                    DDLogDebug("self.productService.userProducts.value: \(self.productService.userBooks.value)")
 //                    self.swapInMainFlow()
 //                } else {
 //                    self.swapInAccountSetupFlow()
 //                }
 //                }, onError: { [unowned self] error in
-//                    print("Check user products failed with error: \(error.localizedDescription)")
+//                    DDLogDebug("Check user products failed with error: \(error.localizedDescription)")
 //                    self.swapInMainFlow()
 //            }).disposed(by: self.bag)
 
         }, onError: { error in
-            print("fetch user language failed with error: \(error.localizedDescription)")
+            DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
         }).disposed(by: bag)
     }
     
     /// Puts the initial flow (unauthenticated state) on top of the rootViewController,
     /// and sets up the initial flow to be replaced by the main flow when complete.
     private func swapInInitialFlow() {
-        print("swapInInitialFlow")
+        DDLogDebug("swapInInitialFlow")
 //        resettableInitialCoordinator.value.flow(with: { [unowned self] initialFlowViewController in
 //            self.rootViewController.plant(initialFlowViewController, withAnimation: GoseAnimations.fade)
 //        }, completion: { [unowned self] _ in
@@ -180,7 +180,7 @@ extension AppCoordinator: NavigationCoordinating {
     }
     
     private func swapInAccountSetupFlow() {
-        print("swapInAccountSetupFlow")
+        DDLogDebug("swapInAccountSetupFlow")
 //        resettableAccountSetupCoordinator.value.flow(with: { [unowned self] accountSetupNavigationController in
 //            self.rootViewController.plant(accountSetupNavigationController)
 //        }, completion: { [unowned self] _ in
@@ -193,9 +193,9 @@ extension AppCoordinator: NavigationCoordinating {
             .subscribe(onNext: { networkStatus in
                 self.networkStatus.value = networkStatus
                 if networkStatus == .notReachable {
-                    print("AppCoordinator reachability.notReachable")
+                    DDLogDebug("AppCoordinator reachability.notReachable")
                 } else if networkStatus == .reachable(.ethernetOrWiFi) {
-                    print("AppCoordinator reachability.reachable")
+                    DDLogDebug("AppCoordinator reachability.reachable")
                 }
             }).disposed(by: bag)
     }

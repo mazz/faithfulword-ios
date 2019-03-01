@@ -2,6 +2,9 @@ PODS:
   - Alamofire (4.8.1)
   - AlamofireImage (3.5.0):
     - Alamofire (~> 4.8)
+  - CocoaLumberjack/Core (3.5.1)
+  - CocoaLumberjack/Swift (3.5.1):
+    - CocoaLumberjack/Core
   - Crashlytics (3.12.0):
     - Fabric (~> 1.9.0)
   - Differentiator (3.1.0)
@@ -111,6 +114,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 4.7)
   - AlamofireImage (~> 3.3)
+  - CocoaLumberjack/Swift
   - Crashlytics
   - Fabric
   - Firebase/Core
@@ -133,6 +137,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - AlamofireImage
+    - CocoaLumberjack
     - Crashlytics
     - Differentiator
     - Fabric
@@ -165,6 +170,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   AlamofireImage: 1aea346f4dda2f6c67622fa5a89fcbb80d79cc16
+  CocoaLumberjack: 2101f8a5508197a305e737d16c5c2e9e2157628c
   Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
   Fabric: f988e33c97f08930a413e08123064d2e5f68d655
@@ -194,6 +200,6 @@ SPEC CHECKSUMS:
   Swinject: 82cdb851f63f91bba974e3eca1d69780f2f7677e
   UICircularProgressRing: 9d8d554f16b87df84bb350380bb26e31979b8773
 
-PODFILE CHECKSUM: faa4d1c862267fa39a6edf1ae123e8f7a8511300
+PODFILE CHECKSUM: b2531c18ff31c78c5de6c815a74eaf95452c7646
 
 COCOAPODS: 1.5.3

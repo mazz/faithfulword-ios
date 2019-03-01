@@ -21,7 +21,7 @@ class MediaGospelViewController: BaseClass {
         
         let errorClosure = { (error: Swift.Error) -> Void in
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
-            print("error: \(error)")
+            DDLogDebug("error: \(error)")
             
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -33,13 +33,13 @@ class MediaGospelViewController: BaseClass {
 
         if let gospelId = self.gospelId {
             provider.request(.gospelsMedia(uuid: gospelId, offset: 1, limit: 50)) { result in
-                print("gospelMedia: \(result)")
+                DDLogDebug("gospelMedia: \(result)")
                 switch result {
                 case let .success(moyaResponse):
                     do {
                         try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                         let mediaGospelResponse: MediaGospelResponse = try moyaResponse.map(MediaGospelResponse.self)
-                        print("mapped to moyaResponse: \(moyaResponse)")
+                        DDLogDebug("mapped to moyaResponse: \(moyaResponse)")
                         
                         self.media = mediaGospelResponse.result
                         DispatchQueue.main.async {

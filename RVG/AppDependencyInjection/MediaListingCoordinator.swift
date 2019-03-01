@@ -77,7 +77,7 @@ extension MediaListingCoordinator: NavigationCoordinating {
     }
 
     func goToPlayback(for playable: Playable) {
-        print("goToPlayback playable: \(playable)")
+        DDLogDebug("goToPlayback playable: \(playable)")
 
         guard let _ = playable.localizedName
 //            let _ = playable.presenterName
@@ -92,11 +92,11 @@ extension MediaListingCoordinator: NavigationCoordinating {
 // MARK: Event handling for medialisting screen
 extension MediaListingCoordinator {
     private func handle(eventsFrom mediaListingViewModel: MediaListingViewModel) {
-        print("handle(eventsFrom mediaListingViewModel")
+        DDLogDebug("handle(eventsFrom mediaListingViewModel")
         mediaListingViewModel.drillInEvent.next { [unowned self] type in
             switch type {
             case .playable(let item):
-                print(".defaultType: \(item)")
+                DDLogDebug(".defaultType: \(item)")
                 self.goToPlayback(for: item)
             default:
                 break

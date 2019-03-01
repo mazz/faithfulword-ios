@@ -51,7 +51,7 @@ public final class DownloadService {
 
 extension DownloadService: DownloadServicing {
     func fetchDownload(url: String, filename: String) -> Single<Void> {
-        print("fetchDownload")
+        DDLogDebug("fetchDownload")
 
 
         let downloadDataService: DownloadDataService = DownloadDataService(fileWebService: MoyaProvider<FileWebService>())

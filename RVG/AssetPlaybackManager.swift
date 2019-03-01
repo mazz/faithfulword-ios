@@ -87,18 +87,18 @@ public class AssetPlaybackManager: NSObject {
     var asset: Asset! {
         willSet {
             if asset != nil {
-                print("asset willSet: \(String(describing: asset))")
+                DDLogDebug("asset willSet: \(String(describing: asset))")
                 asset.urlAsset.removeObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), context: nil)
             }
         }
         didSet {
             if asset != nil {
-                print("asset didSet: \(String(describing: asset))")
+                DDLogDebug("asset didSet: \(String(describing: asset))")
                 asset.urlAsset.addObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), options: [.initial, .new], context: nil)
             }
             else {
                 // Unload currentItem so that the state is updated globally.
-                print("asset didSet nil: \(String(describing: asset))")
+                DDLogDebug("asset didSet nil: \(String(describing: asset))")
                 player.replaceCurrentItem(with: nil)
             }
 
@@ -351,7 +351,7 @@ public class AssetPlaybackManager: NSObject {
     #if os(iOS)
     
     @objc func handleAudioSessionInterruption(notification: Notification) {
-        print("handleAudioSessionInterruption notification.userInfo: \(notification.userInfo!)")
+        DDLogDebug("handleAudioSessionInterruption notification.userInfo: \(notification.userInfo!)")
         guard let userInfo = notification.userInfo, let typeInt = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
             let interruptionType = AVAudioSession.InterruptionType(rawValue: typeInt) else { return }
 
@@ -377,7 +377,7 @@ public class AssetPlaybackManager: NSObject {
                     }
                 }
                 catch {
-                    print("An Error occured activating the audio session while resuming from interruption: \(error)")
+                    DDLogDebug("An Error occured activating the audio session while resuming from interruption: \(error)")
                 }
         }
     }

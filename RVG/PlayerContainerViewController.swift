@@ -24,12 +24,12 @@ class PlayerContainerViewController: BaseClass {
     }
 
     @IBAction func back(_ sender: AnyObject) {
-        print("back")
+        DDLogDebug("back")
         self.dismiss(animated: true) {   }
     }
 
     @IBAction func close(_ sender: AnyObject) {
-        print("close")
+        DDLogDebug("close")
         
         self.showTwoButtonAlertWithLeftAction(title: NSLocalizedString("Do you want to close the player?", comment: "").l10n(),
                                               buttonTitleLeft: NSLocalizedString("Yes", comment: "").l10n(),

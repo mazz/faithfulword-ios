@@ -138,10 +138,10 @@ class PlaybackService : NSObject {
         self.playbackModeDelegate?.playbackDisposed()
         
         if self.timeObserverToken != nil {
-            print("enter")
+            DDLogDebug("enter")
             self.player?.removeTimeObserver(self.timeObserverToken)
             self.timeObserverToken = nil
-            print("exit")
+            DDLogDebug("exit")
         }
 
         if self.itemEndObserver != nil {
@@ -187,7 +187,7 @@ class PlaybackService : NSObject {
                 try AVAudioSession.sharedInstance().setActive(true)
             }
             catch let error as NSError {
-                print("setting (AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker]) failed: \(error)")
+                DDLogDebug("setting (AVAudioSessionCategoryPlayAndRecord, with: [.allowBluetooth, .mixWithOthers, .defaultToSpeaker]) failed: \(error)")
                 
             }
             
@@ -255,10 +255,10 @@ class PlaybackService : NSObject {
         
         if let timeObserverToken = self.timeObserverToken {
 //            if timeObserverToken != nil {
-            print("enter")
+            DDLogDebug("enter")
             self.player?.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
-            print("exit")
+            DDLogDebug("exit")
 //            }
         }
         
@@ -282,7 +282,7 @@ class PlaybackService : NSObject {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        print("observeValue")
+        DDLogDebug("observeValue")
 
         guard context == &playerItemStatusContext else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -293,7 +293,7 @@ class PlaybackService : NSObject {
             
             if let currentPlayerItem = self.currentPlayerItem {
                 if currentPlayerItem.status == .readyToPlay {
-                    print(".readyToPlay")
+                    DDLogDebug(".readyToPlay")
                     addPlayerItemTimeObserver()
                     addItemEndObserverForPlayerItem(item : self.currentPlayerItem!)
                     
@@ -323,7 +323,7 @@ class PlaybackService : NSObject {
                     
                 }
                 else if currentPlayerItem.status == .failed  {
-                    print("failed!")
+                    DDLogDebug("failed!")
                     self.playbackDisplayDelegate?.playbackFailed()
                     disposePlayback()
                 }
@@ -331,7 +331,7 @@ class PlaybackService : NSObject {
             
 
         } else {
-            print("failed to load audio!")
+            DDLogDebug("failed to load audio!")
         }
         
     }
@@ -363,7 +363,7 @@ class PlaybackService : NSObject {
     }
 
     @objc func playerItemDidReachEnd(note : NSNotification) {
-        print("playerItemDidReachEnd note: \(note)")
+        DDLogDebug("playerItemDidReachEnd note: \(note)")
         
         if let item: AVPlayerItem = note.object as? AVPlayerItem {
 //            playbackForward(itemEnded: item)
@@ -446,7 +446,7 @@ class PlaybackService : NSObject {
         
         stopObserving(playerItem: self.currentPlayerItem!)
         
-//        print("nextItem: \(nextItem) nextIndex: \(nextIndex)")
+//        DDLogDebug("nextItem: \(nextItem) nextIndex: \(nextIndex)")
         self.currentAsset = self.assets?[nextIndex]
         // TODO
         self.currentPlayerItem = AVPlayerItem(asset: self.currentAsset!, automaticallyLoadedAssetKeys: self.defaultAssetKeys)
@@ -462,7 +462,7 @@ class PlaybackService : NSObject {
         
         stopObserving(playerItem: self.currentPlayerItem!)
 
-//        print("previousItem: \(previousItem) previousIndex: \(previousIndex)")
+//        DDLogDebug("previousItem: \(previousItem) previousIndex: \(previousIndex)")
         self.currentAsset = self.assets?[previousIndex]
         
         self.currentPlayerItem = AVPlayerItem(asset: self.currentAsset!, automaticallyLoadedAssetKeys: self.defaultAssetKeys)
@@ -524,7 +524,7 @@ class PlaybackService : NSObject {
     }
 
     @objc func handleAudioSessionInterruption(note : NSNotification) {
-        print("handleAudioSessionInterruption note.userInfo: \(note.userInfo!)")
+        DDLogDebug("handleAudioSessionInterruption note.userInfo: \(note.userInfo!)")
 
         var gotInterrupted : Bool = false
         var didResume : Bool = false
@@ -546,7 +546,7 @@ class PlaybackService : NSObject {
             self.playbackDisplayDelegate?.audioSessionResumed()
         }
         
-        print("gotInterrupted: \(gotInterrupted) didResume: \(didResume)")
+        DDLogDebug("gotInterrupted: \(gotInterrupted) didResume: \(didResume)")
         
         // playing: false gotInterrupted: true didResume: false -- interrupting
         // playing: false gotInterrupted: false didResume: true -- resuming
@@ -554,21 +554,21 @@ class PlaybackService : NSObject {
     }
     
     @objc func handleAudioSessionRouteChange(note : NSNotification) {
-        print("handleAudioSessionRouteChange note.userInfo: \(note.userInfo!)")
+        DDLogDebug("handleAudioSessionRouteChange note.userInfo: \(note.userInfo!)")
         var playing : Bool?
         
         if let player = self.player {
             playing = Double(player.rate) > 0.0 ? true : false
         }
         
-        print("handleAudioSessionRouteChange playing: \(playing)")
+        DDLogDebug("handleAudioSessionRouteChange playing: \(playing)")
 
         self.playbackDisplayDelegate?.audioSessionRouteChange()
         
     }
     
     @objc func handleMediaServicesReset() {
-        print("handleMediaServicesReset")
+        DDLogDebug("handleMediaServicesReset")
     }
     
     
@@ -578,14 +578,14 @@ extension PlaybackService : PlaybackTransportDelegate {
 
     func stop() {
 //        isPlaying = Double((self.player?.rate)!) > 0.0 ? true : false
-        print("PlaybackTransportDelegate stop")
+        DDLogDebug("PlaybackTransportDelegate stop")
         self.player?.rate = 0.0
         self.playbackDisplayDelegate?.playbackComplete()
         isPlaying = false
     }
 
     func pause() {
-        print("PlaybackTransportDelegate pause")
+        DDLogDebug("PlaybackTransportDelegate pause")
         self.lastPlaybackRate = self.player?.rate;
         self.player?.pause()
         self.playbackModeDelegate?.playbackPaused()
@@ -594,7 +594,7 @@ extension PlaybackService : PlaybackTransportDelegate {
     }
 
     func play() {
-        print("PlaybackTransportDelegate play")
+        DDLogDebug("PlaybackTransportDelegate play")
         videoPlaybackEndDate = Date().timeIntervalSinceNow
 //        self.addPlayerItemTimeObserver()
         self.player?.play()
@@ -603,14 +603,14 @@ extension PlaybackService : PlaybackTransportDelegate {
     }
 
     func jumpedToTime(time: TimeInterval) {
-        print("PlaybackTransportDelegate jumpedToTime: \(String(time))")
+        DDLogDebug("PlaybackTransportDelegate jumpedToTime: \(String(time))")
         self.player?.seek(to: CMTimeMakeWithSeconds(time, preferredTimescale: Int32(NSEC_PER_SEC)))
         //        self.player?.seek(to: CMTimeMakeWithSeconds(time, Int32(NSEC_PER_SEC)), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero)
         isPlaying = false
     }
 
     func scrubbingDidStart() {
-        print("PlaybackTransportDelegate scrubbingDidStart")
+        DDLogDebug("PlaybackTransportDelegate scrubbingDidStart")
         self.lastPlaybackRate = self.player?.rate;
         self.player?.pause()
         if self.timeObserverToken != nil {
@@ -620,7 +620,7 @@ extension PlaybackService : PlaybackTransportDelegate {
     }
 
     func scrubbedToTime(time: TimeInterval) {
-        print("PlaybackTransportDelegate scrubbedToTime: \(String(time))")
+        DDLogDebug("PlaybackTransportDelegate scrubbedToTime: \(String(time))")
         self.currentPlayerItem?.cancelPendingSeeks()
         self.player?.seek(to: CMTimeMakeWithSeconds(time, preferredTimescale: Int32(NSEC_PER_SEC)), toleranceBefore: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)), toleranceAfter: CMTime.init(seconds: 0, preferredTimescale: Int32(NSEC_PER_SEC)))
         self.playbackDisplayDelegate?.setCurrentTime(time: time, duration: CMTimeGetSeconds((self.currentPlayerItem?.duration)!))
@@ -629,7 +629,7 @@ extension PlaybackService : PlaybackTransportDelegate {
     }
 
     func scrubbingDidEnd() {
-        print("PlaybackTransportDelegate scrubbingDidEnd")
+        DDLogDebug("PlaybackTransportDelegate scrubbingDidEnd")
         self.addPlayerItemTimeObserver()
         if Double(self.lastPlaybackRate!) > 0.0 {
             self.player?.play()
@@ -680,14 +680,14 @@ extension PlaybackService : PlaybackTransportDelegate {
     }
 
     func playerViewDidDisappear() {
-        print("playerViewDidDisappear")
+        DDLogDebug("playerViewDidDisappear")
         self.playerViewIsVisible = false
         // reset this flag for later
 //        self.sessionInterruptedWhilePlayerViewNotVisible = false
     }
 
     func playerViewDidAppear() {
-        print("playerViewDidAppear")
+        DDLogDebug("playerViewDidAppear")
         self.playerViewIsVisible = true
         // reset this flag for later
 //        self.sessionInterruptedWhilePlayerViewNotVisible = false

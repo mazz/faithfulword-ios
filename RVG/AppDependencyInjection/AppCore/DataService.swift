@@ -152,13 +152,13 @@ extension DataService: ProductDataServicing {
     public var books: Observable<[Book]> {
         switch self.networkStatus.value {
         case .notReachable:
-            print("DataService reachability.notReachable")
+            DDLogDebug("DataService reachability.notReachable")
             return _books.asObservable()
         case .reachable(_):
-            print("DataService reachability.reachable")
+            DDLogDebug("DataService reachability.reachable")
             return _books.asObservable()
         case .unknown:
-            print("DataService reachability.unknown")
+            DDLogDebug("DataService reachability.unknown")
             return _books.asObservable()
         }
     }
@@ -185,22 +185,22 @@ extension DataService: ProductDataServicing {
                     return self.dataStore.fetchChapters(for: bookUuid)
                 }
                 else if loadedSoFar >= totalEntries {
-                    print(DataServiceError.offsetOutofRange)
+                    DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
                     return Single.error(DataServiceError.offsetOutofRange)
                 }
             } catch {
-                print(DataServiceError.decodeFailed)
+                DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
             }
         }
         
-//        print("chapters offset \(offset) limit \(limit)")
+//        DDLogDebug("chapters offset \(offset) limit \(limit)")
         switch self.networkStatus.value {
         case .notReachable:
             return dataStore.fetchChapters(for: bookUuid)
         case .reachable(_):
 //            let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
 //            let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
-//            print("self._responseMap: \(self._responseMap)")
+//            DDLogDebug("self._responseMap: \(self._responseMap)")
 
             let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
             let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
@@ -212,7 +212,7 @@ extension DataService: ProductDataServicing {
                 }
             }
             let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
-                print("mediaChapterResponse.result: \(mediaChapterResponse.result)")
+                DDLogDebug("mediaChapterResponse.result: \(mediaChapterResponse.result)")
                 return self.appendPersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
             }
             return storedChapters
@@ -229,7 +229,7 @@ extension DataService: ProductDataServicing {
         var fetchState: FetchState = .hasNotFetched
         
 //        let books: [Book] = self._books.value
-//        print("books.count: \(books.count)")
+//        DDLogDebug("books.count: \(books.count)")
 
         if let cachedResponse: Response = self._responseMap["booksResponse"] {
             do {
@@ -244,11 +244,11 @@ extension DataService: ProductDataServicing {
                 previousOffset = cachedPageNumber
                 
                 if loadedSoFar >= totalEntries {
-                    print(DataServiceError.offsetOutofRange)
+                    DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
                     return Single.error(DataServiceError.offsetOutofRange)
                 }
             } catch {
-                print(DataServiceError.decodeFailed)
+                DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
             }
         }
 //        else {
@@ -319,12 +319,12 @@ extension DataService: ProductDataServicing {
 //                    return self.dataStore.fetchMediaGospel(for: categoryUuid)
 //                }
                 if loadedSoFar >= totalEntries {
-                    print(DataServiceError.offsetOutofRange)
+                    DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
                     return dataStore.fetchMediaGospel(for: categoryUuid)
 //                    return Single.error(DataServiceError.offsetOutofRange)
                 }
             } catch {
-                print(DataServiceError.decodeFailed)
+                DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
             }
         }
         
@@ -417,12 +417,12 @@ extension DataService: ProductDataServicing {
                 //                    return self.dataStore.fetchMediaMusic(for: categoryUuid)
                 //                }
                 if loadedSoFar >= totalEntries {
-                    print(DataServiceError.offsetOutofRange)
+                    DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
                     return dataStore.fetchMediaMusic(for: categoryUuid)
                     //                    return Single.error(DataServiceError.offsetOutofRange)
                 }
             } catch {
-                print(DataServiceError.decodeFailed)
+                DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
             }
         }
         
@@ -511,11 +511,11 @@ extension DataService: ProductDataServicing {
                 previousOffset = cachedPageNumber
                 
                 if loadedSoFar >= totalEntries {
-                    print(DataServiceError.offsetOutofRange)
+                    DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
                     return Single.error(DataServiceError.offsetOutofRange)
                 }
             } catch {
-                print(DataServiceError.decodeFailed)
+                DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
             }
         }
         
@@ -537,7 +537,7 @@ extension DataService: ProductDataServicing {
                         throw DataServiceError.decodeFailed
                     }
                 }.flatMap { languagesSupportedResponse -> Single<[LanguageIdentifier]> in
-                    print("languagesSupportedResponse.result: \(languagesSupportedResponse.result)")
+                    DDLogDebug("languagesSupportedResponse.result: \(languagesSupportedResponse.result)")
                     return Single.just(languagesSupportedResponse.result)
                 }
                 .flatMap { [unowned self] in self.replacePersistedBibleLanguages(bibleLanguages: $0) }
@@ -580,7 +580,7 @@ extension DataService: ProductDataServicing {
                     gospelPreviousOffset = cachedPageNumber
                     
                     if gospelLoadedSoFar >= gospelTotalEntries {
-                        print(DataServiceError.offsetOutofRange)
+                        DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
 //                        return Single.error(DataServiceError.offsetOutofRange)
                         return dataStore.fetchCategoryList(for: categoryType)
                     }
@@ -597,16 +597,16 @@ extension DataService: ProductDataServicing {
                     
                     // assume we've loaded at least once, so return the local db instead
                     if musicLoadedSoFar >= musicTotalEntries {
-                        print(DataServiceError.offsetOutofRange)
+                        DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
                         //                        return Single.error(DataServiceError.offsetOutofRange)
                         return dataStore.fetchCategoryList(for: categoryType)
                     }
                 case .mediaItems:
-                    print(".mediaItems")
+                    DDLogDebug(".mediaItems")
                 }
                 //                categoryResponse = try cachedResponse.map(MediaGospelResponse.self)
             } catch {
-                print(DataServiceError.decodeFailed)
+                DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
             }
         }
         
@@ -643,7 +643,7 @@ extension DataService: ProductDataServicing {
                 }
 
                 if (gospelLoadedSoFar < gospelTotalEntries || gospelFetchState == .hasNotFetched) && (cachedGospelItems.count == 0 || modulo == 0) {
-                    print("reachable")
+                    DDLogDebug("reachable")
                     categoryListing = self.kjvrvgNetworking.rx.request(.gospels(languageId: L10n.shared.language, offset: gospelPreviousOffset + 1, limit: stride))
                         .map { response -> GospelResponse in
                             do {
@@ -654,7 +654,7 @@ extension DataService: ProductDataServicing {
                                 throw DataServiceError.decodeFailed
                             }
                         }.flatMap { gospelResponse -> Single<[Categorizable]> in
-                            print("gospelResponse.result: \(gospelResponse.result)")
+                            DDLogDebug("gospelResponse.result: \(gospelResponse.result)")
                             return Single.just(gospelResponse.result)
                         }
                         .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
@@ -677,7 +677,7 @@ extension DataService: ProductDataServicing {
                 }
             }
         case .music:
-            print(".music")
+            DDLogDebug(".music")
             switch self.networkStatus.value {
             case .unknown:
                 categoryListing = dataStore.fetchCategoryList(for: categoryType)
@@ -708,7 +708,7 @@ extension DataService: ProductDataServicing {
                     musicPreviousOffset = (cachedMusicItems.count / stride)
                 }
                 if (musicLoadedSoFar < musicTotalEntries || musicFetchState == .hasNotFetched) && (cachedMusicItems.count == 0 || modulo == 0) {
-                    print("reachable")
+                    DDLogDebug("reachable")
                     categoryListing = self.kjvrvgNetworking.rx.request(.music(languageId: L10n.shared.language, offset: musicPreviousOffset + 1, limit: stride))
                         .map { response -> MusicResponse in
                             do {
@@ -719,7 +719,7 @@ extension DataService: ProductDataServicing {
                                 throw DataServiceError.decodeFailed
                             }
                         }.flatMap { musicResponse -> Single<[Categorizable]> in
-                            print("musicResponse.result: \(musicResponse.result)")
+                            DDLogDebug("musicResponse.result: \(musicResponse.result)")
                             return Single.just(musicResponse.result)
                         }
                         .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
@@ -740,7 +740,7 @@ extension DataService: ProductDataServicing {
                 }
             }
         case .mediaItems:
-            print(".mediaItems")
+            DDLogDebug(".mediaItems")
         }
         return categoryListing
     }
@@ -770,7 +770,7 @@ extension DataService: ProductDataServicing {
                     self?._books.value = books
                 },
                 onError: { [weak self] error in
-                    print("error: \(error.localizedDescription)")
+                    DDLogDebug("error: \(error.localizedDescription)")
                     self?._books.value = []
             })
             .asObservable()
@@ -784,7 +784,7 @@ extension DataService: ProductDataServicing {
             })
             .map { categorizableArray in
                 return categorizableArray.map { categorizable -> String in
-                    print("categorizable: \((categorizable))")
+                    DDLogDebug("categorizable: \((categorizable))")
                     return categorizable.categoryUuid
                 }
             }
@@ -849,9 +849,9 @@ extension DataService: ProductDataServicing {
             .subscribe(onNext: { networkStatus in
                 self.networkStatus.value = networkStatus
                 if networkStatus == .notReachable {
-                    print("DataService reachability.notReachable")
+                    DDLogDebug("DataService reachability.notReachable")
                 } else if networkStatus == .reachable(.ethernetOrWiFi) {
-                    print("DataService reachability.reachable")
+                    DDLogDebug("DataService reachability.reachable")
                 }
             }).disposed(by: bag)
     }

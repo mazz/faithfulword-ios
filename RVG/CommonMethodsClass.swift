@@ -24,7 +24,7 @@ class CommonMethodsClass {
 //    class func isSessionExpire(data:NSDictionary){
 //        if(data.isKeyAvailable(key: "statusCode")){
 //            if  let statusCode = data.value(forKey: "statusCode") as? NSNumber{
-//                //print(statusCode)
+//                //DDLogDebug(statusCode)
 //                if("\(statusCode)" == "1000"){
 //                    DispatchQueue.main.async {
 //                        AppDelegate.shareInstance().makeLoginToRootVc()

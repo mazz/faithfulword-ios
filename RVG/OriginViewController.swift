@@ -66,8 +66,8 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
             let dayNumberOfWeek = Calendar.current.component(.weekday, from: Date())
             
             let lastPushNotificationCheck: Date? = UserDefaults.standard.object(forKey: OriginViewController.lastPushNotificationCheck) as? Date
-            print("lastPushNotificationCheck: \(lastPushNotificationCheck)")
-            print("isRegisteredForRemoteNotifications: \(isRegisteredForRemoteNotifications)")
+            DDLogDebug("lastPushNotificationCheck: \(lastPushNotificationCheck)")
+            DDLogDebug("isRegisteredForRemoteNotifications: \(isRegisteredForRemoteNotifications)")
             // if we never checked for push notifications opt-in yet, OR it's been at least a week since we last checked AND today is Saturday
             if lastPushNotificationCheck == nil || ((Date().timeIntervalSince1970 - (lastPushNotificationCheck?.timeIntervalSince1970)!) >  OriginViewController.secondsInAWeek && dayNumberOfWeek == OriginViewController.saturday) {
                 if !isRegisteredForRemoteNotifications {
@@ -146,7 +146,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         
         let errorClosure = { (error: Swift.Error) -> Void in
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
-            print("error: \(error)")
+            DDLogDebug("error: \(error)")
             
             DispatchQueue.main.async {
                 MBProgressHUD.hide(for: self.view, animated: true)
@@ -154,7 +154,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         }
         
         provider.request(.books(languageId: L10n.shared.language, offset: 1, limit: 50)) { result in
-            print("moya books: \(result)")
+            DDLogDebug("moya books: \(result)")
 
 //            let resultString: String = String(data: result encoding: .utf8)
 
@@ -164,7 +164,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                 do {
                     try moyaResponse.filterSuccessfulStatusAndRedirectCodes()
                     let bookResponse: BookResponse = try moyaResponse.map(BookResponse.self)
-                    print("mapped to bookResponse: \(bookResponse)")
+                    DDLogDebug("mapped to bookResponse: \(bookResponse)")
 
                     self.books = bookResponse.result
                     DispatchQueue.main.async {
@@ -267,8 +267,8 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
 
         let lastVersionCheck: Date? = UserDefaults.standard.object(forKey: OriginViewController.lastVersionCheck) as? Date
         
-        print("Date().timeIntervalSince1970: \(Date().timeIntervalSince1970)")
-        print("lastVersionCheck: \(lastVersionCheck)")
+        DDLogDebug("Date().timeIntervalSince1970: \(Date().timeIntervalSince1970)")
+        DDLogDebug("lastVersionCheck: \(lastVersionCheck)")
 
         if lastVersionCheck == nil || ((Date().timeIntervalSince1970 - (lastVersionCheck?.timeIntervalSince1970)!) >  OriginViewController.secondsInAWeek && dayNumberOfWeek == OriginViewController.monday) {
             let provider = MoyaProvider<KJVRVGService>()
@@ -283,7 +283,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                         let data = moyaResponse.data
                         
                         let appVersionsResponse: AppVersionResponse = try moyaResponse.map(AppVersionResponse.self)
-                        print("mapped to appVersionsResponse: \(appVersionsResponse)")
+                        DDLogDebug("mapped to appVersionsResponse: \(appVersionsResponse)")
                         
                         var amISupported = false
                         var amICurrent = false
@@ -302,7 +302,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                                 break
                             }
                         }
-                        print("amISupported: \(amISupported)")
+                        DDLogDebug("amISupported: \(amISupported)")
                         
                         if let latestAppVersion = appVersions.last?.versionNumber {
                             // "1.2.1" beginswith "1.2" and is still considered `current`
@@ -310,7 +310,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                                 amICurrent = true
                             }
                         }
-                        print("amICurrent: \(amICurrent)")
+                        DDLogDebug("amICurrent: \(amICurrent)")
                         
                         if amICurrent == false {
                             let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: ""),
@@ -329,13 +329,13 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                             alert.addAction(appStore)
                             self.present(alert, animated: false, completion: nil)
                         } else {
-                            print("amICurrent true, didVersionCheck.onNext(true)")
+                            DDLogDebug("amICurrent true, didVersionCheck.onNext(true)")
                             self.didVersionCheck.onNext(true)
                         }
                     }
                     catch {
                         self.didVersionCheck.onNext(false)
-                        print("error: \(error)")
+                        DDLogDebug("error: \(error)")
                     }
                     
                 case let .failure(error):
@@ -343,12 +343,12 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                     // wasn't sent (connectivity), or no response was received (server
                     // timed out).  If the server responds with a 4xx or 5xx error, that
                     // will be sent as a ".success"-ful response.
-                    print("error: \(error)")
+                    DDLogDebug("error: \(error)")
                     self.didVersionCheck.onNext(false)
                 }
             }
         } else {
-            print("didVersionCheck.onNext(false)")
+            DDLogDebug("didVersionCheck.onNext(false)")
             self.didVersionCheck.onNext(false)
         }
     }
@@ -372,29 +372,29 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                                                     //                    var parsedObject: BookResponse
                                                     
                                                     let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-                                                    print("json: \(json)")
+                                                    DDLogDebug("json: \(json)")
                                                     if let jsonObject = json as? [String:Any] {
-                                                        print("jsonObject: \(jsonObject)")
+                                                        DDLogDebug("jsonObject: \(jsonObject)")
                                                     }
                                                 }
                                                 catch {
-                                                    print("error: \(error)")
+                                                    DDLogDebug("error: \(error)")
                                                 }
                                                 
                                             case let .failure(error):
-                                                print(".failure: \(error)")
+                                                DDLogDebug(".failure: \(error)")
                                                 // this means there was a network failure - either the request
                                                 // wasn't sent (connectivity), or no response was received (server
                                                 // timed out).  If the server responds with a 4xx or 5xx error, that
                                                 // will be sent as a ".success"-ful response.
                                                 //                errorClosure(error)
-                                                print(".failure")
+                                                DDLogDebug(".failure")
                                             }
         }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
-        print("response.actionIdentifier: \(response.actionIdentifier)")
+        DDLogDebug("response.actionIdentifier: \(response.actionIdentifier)")
         //        Messaging.messaging().appDidReceiveMessage()
     }
     
@@ -405,7 +405,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
 
 extension OriginViewController {
     func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        print("Firebase didRefreshRegistrationToken token: \(fcmToken)")
+        DDLogDebug("Firebase didRefreshRegistrationToken token: \(fcmToken)")
         if let apnsToken = Messaging.messaging().apnsToken {
             let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
             self.updatePushToken(fcmToken: fcmToken,
@@ -416,7 +416,7 @@ extension OriginViewController {
     }
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-        print("messaging remoteMessage.appData: \(remoteMessage.appData)")
+        DDLogDebug("messaging remoteMessage.appData: \(remoteMessage.appData)")
     }
 }
 
@@ -516,7 +516,7 @@ extension OriginViewController: UICollectionViewDelegate,UICollectionViewDataSou
         
         let localizedTitle = books[indexPath.row].localizedTitle
         cell?.label.text = localizedTitle
-        print("book at index: \(indexPath.row) \(localizedTitle)")
+        DDLogDebug("book at index: \(indexPath.row) \(localizedTitle)")
 
         return cell!
     }

@@ -59,7 +59,7 @@ public final class RxReachability {
         
         self.reachabilityManager = reachabilityManager
         self.reachabilityManager?.listener = { [unowned self] status in
-            print("reachability status changed: \(status)")
+            DDLogDebug("reachability status changed: \(status)")
             self.status.value = status
         }
     }
@@ -73,18 +73,18 @@ public final class RxReachability {
 extension RxReachability: RxReachable {
     
     public func startListening() -> Observable<ReachabilityStatus> {
-        print("started reachability listener")
+        DDLogDebug("started reachability listener")
         self.reachabilityManager?.startListening()
         return status.asObservable()
     }
     
     public func pauseListening() {
-        print("pausing reachability listener")
+        DDLogDebug("pausing reachability listener")
         self.reachabilityManager?.stopListening()
     }
     
     public func stopListening() {
-        print("stopping reachability listener")
+        DDLogDebug("stopping reachability listener")
         self.reachabilityManager?.stopListening()
         let currentStatus = reachabilityManager?.networkReachabilityStatus ?? .unknown
         status = Field<ReachabilityStatus>(currentStatus)

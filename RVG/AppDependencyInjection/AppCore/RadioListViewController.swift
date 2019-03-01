@@ -88,28 +88,28 @@ extension RadioListViewController: UICollectionViewDelegateFlowLayout {
 
 extension RadioListViewController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        //        print("scrollViewDidEndDecelerating scrollView: \(scrollView)")
+        //        DDLogDebug("scrollViewDidEndDecelerating scrollView: \(scrollView)")
         
         let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-        //        print("offset diff: \(offsetDiff)")
-        print("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+        //        DDLogDebug("offset diff: \(offsetDiff)")
+        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
         //        if scrollView.contentSize.height - scrollView.contentOffset.y <
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
-            print("fetch!")
+            DDLogDebug("fetch!")
             viewModel.fetchMoreItems()
         }
     }
     
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        //        print("scrollViewDidEndDragging scrollView: \(scrollView)")
+        //        DDLogDebug("scrollViewDidEndDragging scrollView: \(scrollView)")
         
         let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-        //        print("offset diff: \(offsetDiff)")
-        print("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+        //        DDLogDebug("offset diff: \(offsetDiff)")
+        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
-            print("fetch!")
+            DDLogDebug("fetch!")
             viewModel.fetchMoreItems()
         }
     }

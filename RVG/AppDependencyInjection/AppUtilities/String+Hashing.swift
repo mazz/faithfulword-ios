@@ -48,14 +48,14 @@ public extension String {
     }
     /*
      let vad = sha512Hex(string: "8yOrBmkd")
-     print(vad)
+     DDLogDebug(vad)
 
      let digestRaw = sha512(string:"8yOrBmkd")
-     print("decimal array:\n\(digestRaw)")
-     print("hexadecimal:\n\(NSData(bytes:digestRaw, length:digestRaw.count).description)")
+     DDLogDebug("decimal array:\n\(digestRaw)")
+     DDLogDebug("hexadecimal:\n\(NSData(bytes:digestRaw, length:digestRaw.count).description)")
 
      let digestBase64 = sha512Base64(string:"8yOrBmkd")
-     print("Base64:\n\(digestBase64)")
+     DDLogDebug("Base64:\n\(digestBase64)")
      */
 
     var MD5: Data {
@@ -81,10 +81,10 @@ public extension String {
      let md5Data = MD5(string:"Hello")
 
      let md5Hex =  md5Data.map { String(format: "%02hhx", $0) }.joined()
-     print("md5Hex: \(md5Hex)")
+     DDLogDebug("md5Hex: \(md5Hex)")
 
      let md5Base64 = md5Data.base64EncodedString()
-     print("md5Base64: \(md5Base64)")
+     DDLogDebug("md5Base64: \(md5Base64)")
 
      */
 }

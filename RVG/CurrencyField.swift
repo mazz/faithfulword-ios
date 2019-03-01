@@ -25,7 +25,7 @@ class CurrencyField: UITextField {
         }
         text = Formatter.currency.string(for: amount)
         lastValue = text!
-        print(amount)
+        DDLogDebug("amount: \(amount)")
     }
     
     func currencyFormatter() -> NumberFormatter {

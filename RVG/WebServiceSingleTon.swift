@@ -98,13 +98,13 @@ class WebServiceSingleTon {
                 {
                     do {
                         if let jsonResult = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary {
-                            //print(jsonResult)
+                            //DDLogDebug(jsonResult)
                             DispatchQueue.main.async {
                                 success(jsonResult)}
                         }
                     } catch let error1 as NSError {
                         DispatchQueue.main.async {
-                            //print(error1.localizedDescription)
+                            //DDLogDebug(error1.localizedDescription)
                             errors(error1.localizedDescription)
                             self.HideIndicator()
                         }
@@ -112,7 +112,7 @@ class WebServiceSingleTon {
                 }
                 else
                 {
-                    //print(error)
+                    //DDLogDebug(error)
                     DispatchQueue.main.async {
                         self.HideIndicator()
                         errors((error?.localizedDescription)!)
@@ -163,13 +163,13 @@ class WebServiceSingleTon {
                 {
                     do {
                         if let jsonResult = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary {
-                            //print(jsonResult)
+                            //DDLogDebug(jsonResult)
                             DispatchQueue.main.async {
                                 success(jsonResult)}
                         }
                     } catch let error1 as NSError {
                         DispatchQueue.main.async {
-                            //print(error1.localizedDescription)
+                            //DDLogDebug(error1.localizedDescription)
                             errors(error1.localizedDescription)
                             self.HideIndicator()
                         }
@@ -177,7 +177,7 @@ class WebServiceSingleTon {
                 }
                 else
                 {
-                    //print(error)
+                    //DDLogDebug(error)
                     DispatchQueue.main.async {
                         self.HideIndicator()
                         errors((error?.localizedDescription)!)
@@ -229,13 +229,13 @@ class WebServiceSingleTon {
                 {
                     do {
                         if let jsonResult = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary {
-                            //print(jsonResult)
+                            //DDLogDebug(jsonResult)
                             DispatchQueue.main.async {
                                 success(jsonResult)}
                         }
                     } catch let error1 as NSError {
                         DispatchQueue.main.async {
-                            //print(error1.localizedDescription)
+                            //DDLogDebug(error1.localizedDescription)
                             errors(error1.localizedDescription)
                             self.HideIndicator()
                         }
@@ -243,7 +243,7 @@ class WebServiceSingleTon {
                 }
                 else
                 {
-                    //print(error)
+                    //DDLogDebug(error)
                     DispatchQueue.main.async {
                         self.HideIndicator()
                         errors((error?.localizedDescription)!)
@@ -290,13 +290,13 @@ class WebServiceSingleTon {
                 
                 
 //                let responseString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-//                print(responseString)
+//                DDLogDebug(responseString)
                 
                 if(error==nil)
                 {
                     do {
                         if let jsonResult = try JSONSerialization.jsonObject(with: data!, options: []) as? [AnyObject] {
-                        //    print(jsonResult)
+                        //    DDLogDebug(jsonResult)
                             DispatchQueue.main.async {
                             success(jsonResult)
                             }
@@ -304,7 +304,7 @@ class WebServiceSingleTon {
                             
                         }
                     } catch let error1 as NSError {
-                        print(error1.localizedDescription)
+                        DDLogDebug(error1.localizedDescription)
                         DispatchQueue.main.async {
                             errors(error1.localizedDescription)
                         }
@@ -316,7 +316,7 @@ class WebServiceSingleTon {
                         self.HideIndicator()
                         errors((error?.localizedDescription)!)
                     }
-                    //print(error)
+                    //DDLogDebug(error)
                 }
                 
             });
@@ -330,7 +330,7 @@ class WebServiceSingleTon {
     {
         let reachability = Reachability()!
         if(reachability.currentReachabilityStatus != .notReachable){
-            //print("Internet connection OK")
+            //DDLogDebug("Internet connection OK")
             if(indicator == true)
             {
                 showIndicator()
@@ -342,7 +342,7 @@ class WebServiceSingleTon {
             request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
             request.setValue("multipart/form-data; boundary="+boundary, forHTTPHeaderField: "Content-Type")
             let data = createBodyWithParameters(parameters: input, filePathKey:nil, imageDataKey: picData, boundary: boundary)
-            //print(data)
+            //DDLogDebug(data)
             request.httpBody = data
             let task = URLSession.shared.dataTask(with: request as URLRequest)
             {
@@ -362,12 +362,12 @@ class WebServiceSingleTon {
                 }
                 // Print out reponse body
         //        let responseString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                //print("****** response data = \(responseString!)")
+                //DDLogDebug("****** response data = \(responseString!)")
                 do
                 {
                     let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
                     
-                    //print(json)
+                    //DDLogDebug(json)
                     DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
                         
                         DispatchQueue.main.async {
@@ -388,7 +388,7 @@ class WebServiceSingleTon {
             task.resume()
         }
         else {
-            //print("Internet connection FAILED")
+            //DDLogDebug("Internet connection FAILED")
             Unreachable("Internet not available")
         }
     }
@@ -400,7 +400,7 @@ class WebServiceSingleTon {
     {
         let reachability = Reachability()!
         if(reachability.currentReachabilityStatus != .notReachable){
-            //print("Internet connection OK")
+            //DDLogDebug("Internet connection OK")
             if(indicator == true)
             {
                 showIndicator()
@@ -412,7 +412,7 @@ class WebServiceSingleTon {
             request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
             request.setValue("multipart/form-data; boundary="+boundary, forHTTPHeaderField: "Content-Type")
             let data = createBodyWithParameters(parameters: input, filePathKey:nil, imageDataKey: picData, boundary: boundary)
-            //print(data)
+            //DDLogDebug(data)
             request.httpBody = data
             let task = URLSession.shared.dataTask(with: request as URLRequest)
             {
@@ -432,12 +432,12 @@ class WebServiceSingleTon {
                 }
                 // Print out reponse body
  //               let responseString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                //print("****** response data = \(responseString!)")
+                //DDLogDebug("****** response data = \(responseString!)")
                 do
                 {
                     let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
                     
-                    //print(json)
+                    //DDLogDebug(json)
                     DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
                         
                         DispatchQueue.main.async {
@@ -458,7 +458,7 @@ class WebServiceSingleTon {
             task.resume()
         }
         else {
-            //print("Internet connection FAILED")
+            //DDLogDebug("Internet connection FAILED")
             Unreachable("Internet not available")
         }
     }
@@ -492,7 +492,7 @@ class WebServiceSingleTon {
     {
         let reachability = Reachability()!
         if(reachability.currentReachabilityStatus != .notReachable){
-            //print("Internet connection OK")
+            //DDLogDebug("Internet connection OK")
             if(indicator == true)
             {
                 showIndicator()
@@ -504,7 +504,7 @@ class WebServiceSingleTon {
             request.setValue("Keep-Alive", forHTTPHeaderField: "Connection")
             request.setValue("multipart/form-data; boundary="+boundary, forHTTPHeaderField: "Content-Type")
             let data = createBodyWithParametersForSingleImage(parameters: input, filePathKey:nil, imageDataKey: picData, boundary: boundary)
-            //print(data)
+            //DDLogDebug(data)
             request.httpBody = data
             let task = URLSession.shared.dataTask(with: request as URLRequest)
             {
@@ -524,12 +524,12 @@ class WebServiceSingleTon {
                 }
                 // Print out reponse body
  //               let responseString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
-                //print("****** response data = \(responseString!)")
+                //DDLogDebug("****** response data = \(responseString!)")
                 do
                 {
                     let json = try JSONSerialization.jsonObject(with: data!, options: .mutableContainers) as? NSDictionary
                     
-                    //print(json)
+                    //DDLogDebug(json)
                     DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
                         
                         DispatchQueue.main.async {
@@ -550,7 +550,7 @@ class WebServiceSingleTon {
             task.resume()
         }
         else {
-            //print("Internet connection FAILED")
+            //DDLogDebug("Internet connection FAILED")
             Unreachable("Internet not available")
         }
     }
@@ -595,15 +595,15 @@ class WebServiceSingleTon {
  {
  do {
  if let jsonResult = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary {
- //print(jsonResult)
+ //DDLogDebug(jsonResult)
  }
  } catch let error as NSError {
- //print(error.localizedDescription)
+ //DDLogDebug(error.localizedDescription)
  }
  }
  else
  {
- //print(error)
+ //DDLogDebug(error)
  }
  
  });

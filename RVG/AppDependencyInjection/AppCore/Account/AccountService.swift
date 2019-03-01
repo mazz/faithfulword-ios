@@ -59,7 +59,7 @@ public final class AccountService {
     
 //    private func fetchAccountInfo() {
 //        dataService.fetchAccountInfo().subscribe(onSuccess: { [unowned self] accountInfo in
-//            print("Cached Login Flow - Retrieved Passport Account Info: \(accountInfo)")
+//            DDLogDebug("Cached Login Flow - Retrieved Passport Account Info: \(accountInfo)")
 //            self.currentUser?.accountInfo = accountInfo
 //            self.authStateBehaviorSubject.onNext(.accountInfoRetrieved)
 //        }).disposed(by: bag)

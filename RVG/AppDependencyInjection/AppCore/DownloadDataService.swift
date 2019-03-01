@@ -124,6 +124,12 @@ public protocol FileDownloadDataServicing {
 
 public final class DownloadDataService {
 
+    static let fileDownloadDidInitiateNotification = Notification.Name("fileDownloadDidInitiateNotification")
+    static let fileDownloadDidProgressNotification = Notification.Name("fileDownloadDidProgressNotification")
+    static let fileDownloadDidCompleteNotification = Notification.Name("fileDownloadDidCompleteNotification")
+    static let fileDownloadDidErrorNotification = Notification.Name("fileDownloadDidErrorNotification")
+    static let fileDownloadDidCancelNotification = Notification.Name("fileDownloadDidCancelNotification")
+    
     // MARK: Fields
 //    private var stateSubject = BehaviorSubject<FileDownloadState>(value: .initial)
 //    private var progressSubject: PublishSubject = PublishSubject<Float>()
@@ -144,28 +150,28 @@ public final class DownloadDataService {
      let urlString: String = "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0001-Psalms-en.mp3"
 
      provider.request(FileWebService.download(url: urlString, fileName: nil), callbackQueue: nil, progress: { progressResponse in
-     print("progressResponse: \(progressResponse)")
+     DDLogDebug("progressResponse: \(progressResponse)")
      }) { result in
-     print("result: \(result)")
+     DDLogDebug("result: \(result)")
      switch result {
      case let .success(response):
      let statusCode = response.statusCode
      if let dataString: String = String(data: response.data, encoding: .utf8) {
-     print(".success: \(dataString)")
-     print(".success statusCode: \(statusCode)")
+     DDLogDebug(".success: \(dataString)")
+     DDLogDebug(".success statusCode: \(statusCode)")
      }
 
      case .failure(_):
      if let error = result.error {
-     print(".failure: \(String(describing: error.errorDescription)))")
+     DDLogDebug(".failure: \(String(describing: error.errorDescription)))")
      }
      }
      }
 
      //        FileProvider.request(target: FileWebService.download(url: urlString, fileName: nil), progress: { progressResult in
-     //            print("progressResult: \(progressResult)")
+     //            DDLogDebug("progressResult: \(progressResult)")
      //        }) { webserviceResult in
-     //            print("webserviceResult: \(webserviceResult)")
+     //            DDLogDebug("webserviceResult: \(webserviceResult)")
      //        }
      */
 
@@ -205,13 +211,14 @@ extension DownloadDataService: FileDownloadDataServicing {
                     internalRequest.cancel()
                     internalFileDownload.state = .cancelled
                     self.fileDownloadSubject.onNext(internalFileDownload)
+                    NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCancelNotification, object: internalFileDownload)
                 }
             }
         } else { return }
     }
 
     public func downloadFile(url: String, filename: String) -> Single<Void> {
-        print("downloadFile url: \(url)")
+        DDLogDebug("downloadFile url: \(url)")
 
 //        self.stateSubject.onNext(.initiating)
 
@@ -229,6 +236,7 @@ extension DownloadDataService: FileDownloadDataServicing {
         if let internalFileDownload = self.internalFileDownload {
             // .initiating
             self.fileDownloadSubject.onNext(internalFileDownload)
+            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidInitiateNotification, object: internalFileDownload)
         }
 
         self.internalRequest = fileWebService.request(fileService, callbackQueue: nil, progress: { progressResponse in
@@ -245,31 +253,35 @@ extension DownloadDataService: FileDownloadDataServicing {
                             if let internalFileDownload = self.internalFileDownload {
                                 internalFileDownload.state = .inProgress
                                 self.fileDownloadSubject.onNext(internalFileDownload)
+                                NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: internalFileDownload)
                             }
                         }
                     }
 //                }
 
             }
-            print("progressResponse response statusCode: \(progressResponse.response?.statusCode)")
-            print("progressResponse: \(progressResponse.progress)")
+            DDLogDebug("progressResponse response statusCode: \(progressResponse.response?.statusCode)")
+            DDLogDebug("progressResponse: \(progressResponse.progress)")
         }) { result in
-            print("result: \(result)")
+            DDLogDebug("result: \(result)")
             switch result {
             case let .success(response):
                 let statusCode = response.statusCode
                 if let dataString: String = String(data: response.data, encoding: .utf8) {
-                    print(".success: \(dataString)")
-                    print(".success statusCode: \(statusCode)")
+                    DDLogDebug(".success: \(dataString)")
+                    DDLogDebug(".success statusCode: \(statusCode)")
                     if let internalFileDownload = self.internalFileDownload {
                         if statusCode >= Int(200) && statusCode < 400 {
                             internalFileDownload.state = .complete
                             self.fileDownloadSubject.onNext(internalFileDownload)
+                            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCompleteNotification, object: internalFileDownload)
+
                             //                        self.stateSubject.onNext(.complete)
                         }
                         else if statusCode >= Int(400) {
                             internalFileDownload.state = .error
                             self.fileDownloadSubject.onNext(internalFileDownload)
+                            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidErrorNotification, object: internalFileDownload)
                         }
                     }
                 }
@@ -279,8 +291,9 @@ extension DownloadDataService: FileDownloadDataServicing {
                         internalFileDownload.state = .error
 
                         self.fileDownloadSubject.onNext(internalFileDownload)
+                        NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidErrorNotification, object: internalFileDownload)
                     }
-                    print(".failure: \(String(describing: error.errorDescription)))")
+                    DDLogDebug(".failure: \(String(describing: error.errorDescription)))")
 //                    self.stateSubject.onError(FileDownloadError.internalFailure(error))
                 }
             }
@@ -311,7 +324,7 @@ public enum FileWebService {
                 let pathExtension: String = (ext as NSString).pathExtension.lowercased()
                 filePath = filePath.appendingPathExtension(pathExtension)
             }
-            print("filePath: \(filePath)")
+            DDLogDebug("filePath: \(filePath)")
             return filePath
         }
     }
