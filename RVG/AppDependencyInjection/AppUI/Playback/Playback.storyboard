@@ -59,7 +59,7 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg-rectangle" translatesAutoresizingMaskIntoConstraints="NO" id="ECD-E1-4Dt">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="MVJ-yU-XRs">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="creation" translatesAutoresizingMaskIntoConstraints="NO" id="MVJ-yU-XRs">
                                         <rect key="frame" x="32" y="55" width="256" height="256"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -309,7 +309,7 @@
     <resources>
         <image name="bg-rectangle" width="375" height="667"/>
         <image name="cloud-down" width="50" height="38"/>
-        <image name="demoAlbum" width="614.4000244140625" height="614.4000244140625"/>
+        <image name="creation" width="880" height="869"/>
         <image name="loop" width="55" height="42"/>
         <image name="nowPlaying_next" width="44" height="44"/>
         <image name="nowPlaying_pause" width="44" height="44"/>

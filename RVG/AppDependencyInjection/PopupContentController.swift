@@ -169,14 +169,16 @@ class PopupContentController: UIViewController {
         // hide progress button on completion or initial
         downloadState.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
+//            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
+            .map { fileDownloadState in fileDownloadState != .inProgress }
             .bind(to: fullDownloadProgress.rx.isHidden)
             .disposed(by: bag)
         
         // hide progress stop button on completion or initial
         downloadState.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
+//            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
+            .map { fileDownloadState in fileDownloadState != .inProgress }
             .bind(to: fullProgressDownloadButton.rx.isHidden)
             .disposed(by: bag)
         
@@ -442,8 +444,8 @@ class PopupContentController: UIViewController {
         fullAlbumArtImageView.layer.shadowOffset = CGSize(width: 2, height: 4)
         fullAlbumArtImageView.layer.shadowOpacity = 0.8
         fullAlbumArtImageView.layer.shadowRadius = 4.0
-        fullAlbumArtImageView.clipsToBounds = false
-        //        fullAlbumArtImageView.image = albumArt
+//        fullAlbumArtImageView.clipsToBounds = false
+        fullAlbumArtImageView.image = albumArt
         
         popupItem.title = songTitle
         popupItem.subtitle = albumTitle
@@ -712,10 +714,18 @@ class PopupContentController: UIViewController {
             
             let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
             
-            let image = UIImage(data: artworkData) ?? UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
+            if let image = UIImage(data: artworkData) {
+                albumArt = image
+            } else {
+                if let image = UIImage(named: "creation") {
+                    albumArt = image
+                } else {
+                    albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
+                }
+            }
+            
             
             //            fullAlbumArtImageView.image = image
-            albumArt = image
         }
         else {
             
