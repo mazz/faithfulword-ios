@@ -114,7 +114,10 @@ class PopupContentController: UIViewController {
     var songTitle: String = "" {
         didSet {
             if isViewLoaded {
-                fullSongNameLabel.text = songTitle
+                if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                    fullSongNameLabel.attributedText = NSAttributedString(string: songTitle, attributes: songAttribs)
+                }
+//                fullSongNameLabel.text = songTitle
             }
             
             popupItem.title = songTitle
@@ -123,7 +126,11 @@ class PopupContentController: UIViewController {
     var albumTitle: String = "" {
         didSet {
             if isViewLoaded {
-                fullAlbumNameLabel.text = albumTitle
+                if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                    fullAlbumNameLabel.attributedText = NSAttributedString(string: albumTitle, attributes: albumAttribs)
+                }
+
+//                fullAlbumNameLabel.text = albumTitle
             }
             //            if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
             popupItem.subtitle = albumTitle
@@ -414,13 +421,20 @@ class PopupContentController: UIViewController {
         dateComponentFormatter.allowedUnits = [.minute, .second]
         dateComponentFormatter.zeroFormattingBehavior = [.pad]
         
-        fullPlaybackSlider.thumbTintColor = UIColor.darkGray
+        fullPlaybackSlider.thumbTintColor = UIColor.lightGray //UIColor(red: CGFloat(238/255), green: CGFloat(238/255), blue: CGFloat(238/255), alpha: CGFloat(1))
         
-        fullSongNameLabel.text = songTitle
+        if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+            fullSongNameLabel.attributedText = NSAttributedString(string: songTitle, attributes: songAttribs)
+        }
+
+//        fullSongNameLabel.text = songTitle
         fullSongNameLabel.fadeLength = 10.0
         fullSongNameLabel.speed = .duration(8.0)
         
-        fullAlbumNameLabel.text = albumTitle
+//        fullAlbumNameLabel.text = albumTitle
+        if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+            fullAlbumNameLabel.attributedText = NSAttributedString(string: albumTitle, attributes: albumAttribs)
+        }
         fullAlbumNameLabel.fadeLength = 10.0
         fullAlbumNameLabel.speed = .duration(8.0)
         
@@ -456,11 +470,18 @@ class PopupContentController: UIViewController {
             default:
                 self.playbackSpeed = .oneX
             }
-            
-            fullToggleSpeedButton.setTitle(String(describing:playbackSpeed).appending("x"), for: .normal)
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: String(describing:playbackSpeed).appending("x"), attributes: attribs), for: .normal)
+            }
         }
-        fullCurrentPlaybackPositionLabel.text = "-:--"
-        fullTotalPlaybackDurationLabel.text = "-:--"
+        
+        if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+            fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+            fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+        }
+
+//        fullCurrentPlaybackPositionLabel.text = "-:--"
+//        fullTotalPlaybackDurationLabel.text = "-:--"
         fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
         
         updateTransportUIState()
@@ -493,17 +514,24 @@ class PopupContentController: UIViewController {
         if playbackSpeed == .oneX {
             playbackSpeed = .onePointTwoFiveX
             speedTitle = "1.25"
-            fullToggleSpeedButton.setTitle(speedTitle.appending("x"), for: .normal)
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+            }
+
         }
         else if playbackSpeed == .onePointTwoFiveX {
             playbackSpeed = .onePointFiveX
             speedTitle = "1.5"
-            fullToggleSpeedButton.setTitle(speedTitle.appending("x"), for: .normal)
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+            }
         }
         else if playbackSpeed == .onePointFiveX {
             playbackSpeed = .oneX
             speedTitle = "1.0"
-            fullToggleSpeedButton.setTitle(speedTitle.appending("x"), for: .normal)
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+            }
         }
         if let rate = Float(speedTitle) {
             assetPlaybackManager.playbackRate(rate)
@@ -586,10 +614,18 @@ class PopupContentController: UIViewController {
                 self.playbackSpeed = .oneX
             }
             
-            fullToggleSpeedButton.setTitle(String(describing:playbackSpeed).appending("x"), for: .normal)
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: String(describing:playbackSpeed).appending("x"), attributes: attribs), for: .normal)
+            }
         }
-        fullCurrentPlaybackPositionLabel.text = "-:--"
-        fullTotalPlaybackDurationLabel.text = "-:--"
+        
+        if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+            fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+            fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+        }
+
+//        fullCurrentPlaybackPositionLabel.text = "-:--"
+//        fullTotalPlaybackDurationLabel.text = "-:--"
         fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
         
         updateTransportUIState()
@@ -618,18 +654,31 @@ class PopupContentController: UIViewController {
                 estimatedPlaybackPosition = playbackPosition
                 //                DDLogDebug("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
                 guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.playbackPosition)) else { return }
-                fullCurrentPlaybackPositionLabel.text = stringValue
+                if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                    fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: stringValue, attributes: timeAttribs)
+                }
+
+//                fullCurrentPlaybackPositionLabel.text = stringValue
                 
                 actualPlaybackProgress.value = assetPlaybackManager.playbackPosition
                 
                 if estimatedDuration != 0 {
                     let remainingTime: Float = Float(estimatedDuration - assetPlaybackManager.playbackPosition)
                     guard let stringValue = dateComponentFormatter.string(from: TimeInterval(remainingTime)) else { return }
-                    fullTotalPlaybackDurationLabel.text = String("-").appending(stringValue)
+                    
+                    if let timeAttribs: [NSAttributedString.Key : Any] = fullTotalPlaybackDurationLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                        fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: String("-").appending(stringValue), attributes: timeAttribs)
+                    }
+
+//                    fullTotalPlaybackDurationLabel.text = String("-").appending(stringValue)
                     
                 } else {
-                    fullCurrentPlaybackPositionLabel.text = "-:--"
-                    fullTotalPlaybackDurationLabel.text = "-:--"
+                    if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                        fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+                        fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+                    }
+//                    fullCurrentPlaybackPositionLabel.text = "-:--"
+//                    fullTotalPlaybackDurationLabel.text = "-:--"
                 }
             }
         }
@@ -642,8 +691,15 @@ class PopupContentController: UIViewController {
     
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         if assetPlaybackManager.asset != nil {
-            fullSongNameLabel.text = assetPlaybackManager.asset.name
-            fullAlbumNameLabel.text = assetPlaybackManager.asset.artist
+            if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                fullSongNameLabel.attributedText = NSAttributedString(string: assetPlaybackManager.asset.name, attributes: songAttribs)
+            }
+            if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                fullAlbumNameLabel.attributedText = NSAttributedString(string: assetPlaybackManager.asset.artist, attributes: albumAttribs)
+            }
+
+//            fullSongNameLabel.text = assetPlaybackManager.asset.name
+//            fullAlbumNameLabel.text = assetPlaybackManager.asset.artist
             
             songTitle = assetPlaybackManager.asset.name
             albumTitle = assetPlaybackManager.asset.artist
@@ -664,10 +720,23 @@ class PopupContentController: UIViewController {
         else {
             
             albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
-            fullSongNameLabel.text = "--"
-            fullAlbumNameLabel.text = "--"
-            fullTotalPlaybackDurationLabel.text = "-:--"
-            fullCurrentPlaybackPositionLabel.text = "-:--"
+            
+            if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                fullSongNameLabel.attributedText = NSAttributedString(string: "--", attributes: songAttribs)
+            }
+            if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                fullAlbumNameLabel.attributedText = NSAttributedString(string: "--", attributes: albumAttribs)
+            }
+
+//            fullSongNameLabel.text = "--"
+//            fullAlbumNameLabel.text = "--"
+
+            if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
+                fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+                fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
+            }
+//            fullTotalPlaybackDurationLabel.text = "-:--"
+//            fullCurrentPlaybackPositionLabel.text = "-:--"
             fullPlaybackSlider.value = Float(0)
             
             estimatedPlaybackPosition = Float(0)
