@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -155,6 +155,14 @@
                                                 </constraints>
                                                 <state key="normal" title="Button" image="download_icon_black"/>
                                             </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dtE-n8-xom">
+                                                <rect key="frame" x="141.5" y="171" width="37.5" height="37.5"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="37.5" id="C6p-DL-ECR"/>
+                                                    <constraint firstAttribute="width" constant="37.5" id="NqX-zN-vj3"/>
+                                                </constraints>
+                                                <state key="normal" title="Button" image="share-box"/>
+                                            </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BHb-do-Bad" customClass="UICircularProgressRing" customModule="UICircularProgressRing">
                                                 <rect key="frame" x="141.5" y="171" width="37.5" height="37.5"/>
                                                 <constraints>
@@ -188,7 +196,9 @@
                                             <constraint firstItem="1dQ-qe-0Qs" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1.7:1" id="Gw8-l8-v9C"/>
                                             <constraint firstItem="BHb-do-Bad" firstAttribute="centerY" secondItem="Z64-eW-1OQ" secondAttribute="centerY" id="K6z-LW-nJQ"/>
                                             <constraint firstItem="BHb-do-Bad" firstAttribute="centerX" secondItem="Z64-eW-1OQ" secondAttribute="centerX" id="Kwr-K0-jQu"/>
+                                            <constraint firstItem="dtE-n8-xom" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1.7:1" id="N3i-4i-6ee"/>
                                             <constraint firstItem="24I-zf-ayu" firstAttribute="centerY" secondItem="Kjz-e8-KVw" secondAttribute="centerY" multiplier="1:1.15" id="Rj9-va-B5U"/>
+                                            <constraint firstItem="dtE-n8-xom" firstAttribute="centerX" secondItem="Kjz-e8-KVw" secondAttribute="centerX" id="VhW-4t-fiC"/>
                                             <constraint firstItem="bJH-Gc-pC2" firstAttribute="leading" secondItem="Kjz-e8-KVw" secondAttribute="leading" constant="8" id="WWi-4d-wiz"/>
                                             <constraint firstAttribute="trailing" secondItem="kKF-Ep-3T1" secondAttribute="trailing" constant="8" id="YRT-BR-ntM"/>
                                             <constraint firstItem="egg-tI-Yhc" firstAttribute="centerX" secondItem="Kjz-e8-KVw" secondAttribute="centerX" multiplier="1.5:1" id="YeO-8v-283"/>
@@ -241,6 +251,7 @@
                         <outlet property="fullPlayPauseButton" destination="24I-zf-ayu" id="0vk-Tu-wSy"/>
                         <outlet property="fullPlaybackSlider" destination="CDy-IF-KmA" id="5ou-3n-wcv"/>
                         <outlet property="fullProgressDownloadButton" destination="Z64-eW-1OQ" id="tDP-QP-fg3"/>
+                        <outlet property="fullProgressShareButton" destination="dtE-n8-xom" id="F6a-Sg-KWG"/>
                         <outlet property="fullRepeatButton" destination="Rp0-OT-67e" id="szt-uu-qIg"/>
                         <outlet property="fullSongNameLabel" destination="B6t-4N-FaC" id="AGQ-AT-fTi"/>
                         <outlet property="fullToggleSpeedButton" destination="rIc-v1-SES" id="tdB-2R-wOb"/>
@@ -253,11 +264,12 @@
         </scene>
     </scenes>
     <resources>
-        <image name="demoAlbum" width="2048" height="2048"/>
-        <image name="download_icon_black" width="128" height="128"/>
+        <image name="demoAlbum" width="614.4000244140625" height="614.4000244140625"/>
+        <image name="download_icon_black" width="61.439998626708984" height="61.439998626708984"/>
         <image name="nowPlaying_next" width="44" height="44"/>
         <image name="nowPlaying_pause" width="44" height="44"/>
         <image name="nowPlaying_prev" width="44" height="44"/>
-        <image name="repeat" width="256" height="256"/>
+        <image name="repeat" width="204.80000305175781" height="204.80000305175781"/>
+        <image name="share-box" width="204.80000305175781" height="204.80000305175781"/>
     </resources>
 </document>

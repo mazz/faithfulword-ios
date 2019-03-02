@@ -39,6 +39,7 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var fullToggleSpeedButton: UIButton!
     @IBOutlet weak var fullDownloadProgress: UICircularProgressRing!
     @IBOutlet weak var fullProgressDownloadButton: UIButton!
+    @IBOutlet weak var fullProgressShareButton: UIButton!
 
     var estimatedPlaybackPosition: Float = Float(0)
     var estimatedDuration: Float = Float(0)
@@ -58,7 +59,7 @@ class PopupContentController: UIViewController {
     // MARK: Fields
     public var downloadState = Field<FileDownloadState>(.initial)
     // the state of the download button image name
-    public let downloadImageNameEvent = Field<String>("download_icon_black")
+//    public let downloadImageNameEvent = Field<String>("download_icon_black")
 
     var scrubbing: Bool = false
     var playingWhileScrubbing: Bool = false
@@ -225,32 +226,45 @@ class PopupContentController: UIViewController {
         // hide progress button on completion or initial
         downloadState.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { fileDownloadState in
-                fileDownloadState != .inProgress }
-            .bind(to: fullDownloadProgress.rx.isHidden )
+            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
+            .bind(to: fullDownloadProgress.rx.isHidden)
             .disposed(by: bag)
 
         // hide progress stop button on completion or initial
         downloadState.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { fileDownloadState in
-                fileDownloadState != .inProgress }
-            .bind(to: fullProgressDownloadButton.rx.isHidden )
+            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
+            .bind(to: fullProgressDownloadButton.rx.isHidden)
             .disposed(by: bag)
 
         // hide download button during download
+//        downloadState.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { fileDownloadState in fileDownloadState == .inProgress }
+//            .bind(to: fullDownloadButton.rx.isHidden)
+//            .disposed(by: bag)
+        
+        // hide download button if download complete
         downloadState.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { fileDownloadState in fileDownloadState == .inProgress }
-            .bind(to: fullDownloadButton.rx.isHidden )
+            .map { fileDownloadState in fileDownloadState != .initial }
+            .bind(to: fullDownloadButton.rx.isHidden)
             .disposed(by: bag)
 
-        // set image name based on state
-        downloadImageNameEvent.asObservable()
+        // hide share button if not downloaded yet
+        downloadState.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { UIImage(named: $0) }
-            .bind(to: fullDownloadButton.rx.image(for: .normal))
+            .map { fileDownloadState in fileDownloadState != .complete }
+            .bind(to: fullProgressShareButton.rx.isHidden)
             .disposed(by: bag)
+
+
+        // set image name based on state
+//        downloadImageNameEvent.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { UIImage(named: $0) }
+//            .bind(to: fullDownloadButton.rx.image(for: .normal))
+//            .disposed(by: bag)
 
         // set progress UI during download
         // FIXME: the old playback service will not deallocate because of this chunk
@@ -476,8 +490,15 @@ class PopupContentController: UIViewController {
     }
 
     func resetDownloadingViewModel() {
-        downloadingViewModel.downloadState.value = .initial
-        downloadingViewModel.downloadImageNameEvent.value = "download_icon_black"
+//        let filePath: URL = FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid)
+        
+        if FileManager.default.fileExists(atPath: FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid).path) {
+            downloadState.value = .complete
+//            downloadImageNameEvent.value = "share-box"
+        } else {
+            downloadState.value = .initial
+//            downloadImageNameEvent.value = "download_icon_black"
+        }
     }
 
     @objc func doPlayPause() {
@@ -691,7 +712,7 @@ class PopupContentController: UIViewController {
 
 //            emptyUIState()
             resetUIDefaults()
-            resetDownloadingViewModel()
+//            resetDownloadingViewModel()
 
             //            assetListTableView.deselectAll(nil)
         }
@@ -723,7 +744,7 @@ class PopupContentController: UIViewController {
 
             //reset UI
             resetUIDefaults()
-            resetDownloadingViewModel()
+//            resetDownloadingViewModel()
 //            bindUI()
             assetPlaybackManager.seekTo(0)
 //            assetPlaybackManager.play()
@@ -753,7 +774,7 @@ class PopupContentController: UIViewController {
 
             //reset UI
             resetUIDefaults()
-            resetDownloadingViewModel()
+//            resetDownloadingViewModel()
 //            bindUI()
             assetPlaybackManager.seekTo(0)
 //            assetPlaybackManager.play()
@@ -807,7 +828,7 @@ class PopupContentController: UIViewController {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("completeNotification filedownload: \(fileDownload)")
             if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
-                self.downloadImageNameEvent.value = "share-box"
+//                self.downloadImageNameEvent.value = "share-box"
                 
                 self.downloadState.value = .complete
             }

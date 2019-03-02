@@ -986,7 +986,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
@@ -1035,7 +1035,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */ = {

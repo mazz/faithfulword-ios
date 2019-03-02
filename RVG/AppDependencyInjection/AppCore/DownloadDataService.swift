@@ -275,6 +275,12 @@ extension DownloadDataService: FileDownloadDataServicing {
                             internalFileDownload.state = .complete
                             self.fileDownloadSubject.onNext(internalFileDownload)
                             NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCompleteNotification, object: internalFileDownload)
+                            do {
+                                // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
+                                try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: internalFileDownload.localUrl.path)
+                            } catch {
+                                DDLogDebug("error while setting file permissions")
+                            }
 
                             //                        self.stateSubject.onNext(.complete)
                         }

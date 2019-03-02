@@ -5,6 +5,7 @@ target 'FaithfulWord' do
     # Comment this line if you're not using Swift and don't want to use dynamic frameworks
     use_frameworks!
     pod 'CocoaLumberjack/Swift'
+#    pod "SkeletonView"
     pod 'RxCocoa'
     pod 'MBProgressHUD', '~> 1.0.0'
     pod 'FirebaseInstanceID'
