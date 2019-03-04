@@ -58,7 +58,10 @@ internal final class DownloadingViewModel {
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
-                    downloadService.cancelDownload(filename: downloadAsset.uuid)
+//                    downloadService.removeDownload(filename: downloadAsset.uuid)
+                    downloadService.removeDownload(filename: downloadAsset.uuid)
+                        .asObservable()
+                        .subscribeAndDispose(by: self.bag)
                 }
             })
             .disposed(by: bag)
@@ -92,6 +95,10 @@ internal final class DownloadingViewModel {
             .disposed(by: bag)
     }
 
+    func removeDownload(for uuid: String) {
+        downloadService.removeDownload(filename: uuid)
+    }
+    
     public func updateDownloadState(filename: String, downloadState: FileDownloadState) {
         if let downloadAsset = self.downloadAsset {
             switch downloadState {
@@ -104,17 +111,17 @@ internal final class DownloadingViewModel {
             case .cancelling:
                 break
             case .cancelled:
-                downloadService.removeDownload(filename: downloadAsset.uuid)
+//                downloadService.removeDownload(filename: downloadAsset.uuid)
                 self.downloadState.value = .initial
             case .complete:
                 self.downloadImageNameEvent.value = "share-box"
-                downloadService.removeDownload(filename: downloadAsset.uuid)
+//                downloadService.removeDownload(filename: downloadAsset.uuid)
                 self.downloadButtonTapEvent.dispose()
                 if let download = self.fileDownload.value {
                     self.fileDownloadCompleteEvent.onNext(download)
                 }
             case .error:
-                downloadService.removeDownload(filename: downloadAsset.uuid)
+//                downloadService.removeDownload(filename: downloadAsset.uuid)
                 self.downloadState.value = .initial
             case .unknown:
                 break

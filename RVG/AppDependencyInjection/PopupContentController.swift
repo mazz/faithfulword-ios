@@ -875,7 +875,9 @@ class PopupContentController: UIViewController {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("errorNotification filedownload: \(fileDownload)")
             if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
-                self.downloadState.value = .error
+                // even though it's an error, just set it back to .initial
+                // because we have no use case for an errored download at the moment
+                self.downloadState.value = .initial
             }
         }
     }
@@ -885,7 +887,7 @@ class PopupContentController: UIViewController {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("cancelNotification filedownload: \(fileDownload)")
             if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
-                self.downloadState.value = .cancelled
+                self.downloadState.value = .initial
             }
         }
     }

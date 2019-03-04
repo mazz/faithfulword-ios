@@ -10,15 +10,6 @@ import Foundation
 import Moya
 import RxSwift
 
-public protocol FileDownloading {
-    var url: URL { get }
-    var localUrl: URL { get }
-    var progress: Float { get }
-    var totalCount: Int64 { get }
-    var completedCount: Int64 { get }
-    var state: FileDownloadState { get }
-}
-
 public final class FileDownload {
     // MARK: Fields
     public let url: URL
@@ -41,41 +32,7 @@ public final class FileDownload {
         self.completedCount = completedCount
         self.state = state
     }
-
-//    public var url: URL {
-//        return url
-//    }
-//
-//    public var progress: Float {
-//        return progress
-//    }
-//
-//    public var totalCount: UInt64 {
-//        return totalCount
-//    }
-//
-//    public var completedCount: UInt64 {
-//        return completedCount
-//    }
 }
-
-//extension FileDownload: FileDownloading {
-//    public var url: URL {
-//        return url
-//    }
-//
-//    public var progress: Float {
-//        return progress
-//    }
-//
-//    public var totalCount: UInt64 {
-//        return totalCount
-//    }
-//
-//    public var completedCount: UInt64 {
-//        return completedCount
-//    }
-//}
 
 public enum FileDownloadState {
     case initial
@@ -108,18 +65,40 @@ public enum FileDownloadError: Error {
     }
 }
 
+enum CancelDownloadError: Error {
+    case cancelFailed(String)
+    case unknown(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .cancelFailed(let reason):
+            return "cancel failed due to \(reason)"
+        case .unknown:
+            return "Download cancel failed, reason unknown"
+        }
+    }
+}
 
-//import SwiftyJSON
-
-//protocol DownloadDataServicing {
-//
-//}
+enum DeleteFileError: Error {
+    case deleteFileFailed(String)
+    case unknown(String)
+    
+    var errorDescription: String? {
+        switch self {
+        case .deleteFileFailed(let reason):
+            return "file deletion failed due to \(reason)"
+        case .unknown:
+            return "file deletion failed, reason unknown"
+        }
+    }
+}
 
 public protocol FileDownloadDataServicing {
     var state: Observable<FileDownloadState> { get }
 //    var progress: Observable<Float> { get }
     var fileDownload: Observable<FileDownload> { get }
     func downloadFile(url: String, filename: String) -> Single<Void>
+    func deleteDownload() -> Single<Void>
 }
 
 public final class DownloadDataService {
@@ -144,37 +123,6 @@ public final class DownloadDataService {
     public init(fileWebService: MoyaProvider<FileWebService>) {
         self.fileWebService = fileWebService
     }
-
-    /*
-     let provider = MoyaProvider<FileWebService>(plugins: [NetworkLoggerPlugin(verbose: WebService.verbose)])
-     let urlString: String = "https://d2v5mbm9qwqitj.cloudfront.net/bible/en/0019-0001-Psalms-en.mp3"
-
-     provider.request(FileWebService.download(url: urlString, fileName: nil), callbackQueue: nil, progress: { progressResponse in
-     DDLogDebug("progressResponse: \(progressResponse)")
-     }) { result in
-     DDLogDebug("result: \(result)")
-     switch result {
-     case let .success(response):
-     let statusCode = response.statusCode
-     if let dataString: String = String(data: response.data, encoding: .utf8) {
-     DDLogDebug(".success: \(dataString)")
-     DDLogDebug(".success statusCode: \(statusCode)")
-     }
-
-     case .failure(_):
-     if let error = result.error {
-     DDLogDebug(".failure: \(String(describing: error.errorDescription)))")
-     }
-     }
-     }
-
-     //        FileProvider.request(target: FileWebService.download(url: urlString, fileName: nil), progress: { progressResult in
-     //            DDLogDebug("progressResult: \(progressResult)")
-     //        }) { webserviceResult in
-     //            DDLogDebug("webserviceResult: \(webserviceResult)")
-     //        }
-     */
-
 }
 
 
@@ -191,30 +139,32 @@ extension DownloadDataService: FileDownloadDataServicing {
         }
     }
 
-//    public var progress: Observable<Float> {
-//        return progressSubject.asObservable()
-//    }
-
     public var fileDownload: Observable<FileDownload> {
         return fileDownloadSubject.asObservable()
     }
 
 
-    public func cancel() {
-        if let internalFileDownload = self.internalFileDownload {
-            switch internalFileDownload.state {
-            case .initial, .cancelling, .cancelled, .complete: return
-            case .initiating, .inProgress, .error, .unknown:
-                //            stateSubject.onNext(.cancelling)
-                if let internalRequest = internalRequest,
-                    let internalFileDownload = self.internalFileDownload {
-                    internalRequest.cancel()
-                    internalFileDownload.state = .cancelled
-                    self.fileDownloadSubject.onNext(internalFileDownload)
-                    NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCancelNotification, object: internalFileDownload)
+    public func cancel() -> Single<Void> {
+        return Single.create { [unowned self] single -> Disposable in
+            if let internalFileDownload = self.internalFileDownload {
+                switch internalFileDownload.state {
+                case .initial, .cancelling, .cancelled, .complete:
+                    single(.error(CancelDownloadError.cancelFailed("not in a cancellable state")))
+                case .initiating, .inProgress, .error, .unknown:
+                    if let internalRequest = self.internalRequest,
+                        let internalFileDownload = self.internalFileDownload {
+                        internalRequest.cancel()
+                        internalFileDownload.state = .cancelled
+                        self.fileDownloadSubject.onNext(internalFileDownload)
+                        NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCancelNotification, object: internalFileDownload)
+                        single(.success(()))
+                    }
                 }
+            } else {
+                single(.error(CancelDownloadError.cancelFailed("not in a cancellable state")))
             }
-        } else { return }
+            return Disposables.create { }
+        }
     }
 
     public func downloadFile(url: String, filename: String) -> Single<Void> {
@@ -253,6 +203,9 @@ extension DownloadDataService: FileDownloadDataServicing {
                             if let internalFileDownload = self.internalFileDownload {
                                 internalFileDownload.state = .inProgress
                                 self.fileDownloadSubject.onNext(internalFileDownload)
+                                
+                                // FIXME: it is possible to send at least one .inProgress
+                                // notification even after the file download has been cancelled
                                 NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: internalFileDownload)
                             }
                         }
@@ -305,6 +258,22 @@ extension DownloadDataService: FileDownloadDataServicing {
             }
         }
         return Single.just(())
+    }
+    
+    public func deleteDownload() -> Single<Void> {
+        return Single.create { [unowned self] single -> Disposable in
+            if let internalFile: URL = self.internalFileDownload?.localUrl {
+                do {
+                    try FileManager.default.removeItem(atPath: internalFile.path)
+                } catch {
+                    single(.error(error))
+                }
+                single(.success(()))
+            } else {
+                single(.error(DeleteFileError.deleteFileFailed("file not found")))
+            }
+            return Disposables.create {}
+        }
     }
 }
 
