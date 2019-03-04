@@ -1,7 +1,3 @@
-//
-//  PopupContentController.swift
-//
-
 import UIKit
 import LNPopupController
 import AVFoundation
@@ -52,10 +48,6 @@ class PopupContentController: UIViewController {
     var nextButton: UIBarButtonItem!
     
     internal var playbackAsset: Asset!
-    //    internal var playables: [Playable]!
-    
-    //    public var playlistAssets = [Asset]()
-    
     // MARK: Fields
     public var downloadState = Field<FileDownloadState>(.initial)
     // the state of the download button image name
@@ -78,14 +70,6 @@ class PopupContentController: UIViewController {
             self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
         }
     }
-    
-    //    private var downloadMode: FileDownloadState = .initial {
-    //        didSet {
-    //            DDLogDebug("dowload mode set to: \(downloadMode)")
-    //
-    ////            self.fullRepeatButton.setImage((repeatMode == .repeatOne) ? #imageLiteral(resourceName: "repeat-2") : #imageLiteral(resourceName: "repeat"), for: .normal)
-    //        }
-    //    }
     
     private var bag = DisposeBag()
     
@@ -224,49 +208,6 @@ class PopupContentController: UIViewController {
         //            })
         //            .disposed(by: bag)
         
-        
-        self.fullProgressShareButton.rx.tap
-            .observeOn(MainScheduler.instance)
-            .bind {
-                // copy file to temp dir to rename it
-                let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
-                // generate temp file url path
-                
-                let firstPart: String = "\(self.playbackAsset.artist.replacingOccurrences(of: " ", with: ""))"
-                let secondPart: String = "\(self.playbackAsset.name.replacingOccurrences(of: " ", with: "")).mp3"
-                let destinationLastPathComponent: String = String(describing: "\(firstPart)-\(secondPart)")
-                
-                let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid)
-                let temporaryFileURL: URL = temporaryDirectoryURL.appendingPathComponent(destinationLastPathComponent)
-                DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
-                
-                // capture the audio file as a Data blob and then write it
-                // to temp dir
-                
-                //                if let localDownload = self.downloadingViewModel.fileDownload.value {
-                do {
-                    let audioData: Data = try Data(contentsOf: sourceFileUrl, options: .uncached)
-                    try audioData.write(to: temporaryFileURL, options: .atomicWrite)
-                } catch {
-                    DDLogDebug("error writing temp audio file: \(error)")
-                    return
-                }
-                
-                let activityViewController = UIActivityViewController(activityItems: ["Shared via the Faithful Word App: https://faithfulwordapp.com/", temporaryFileURL], applicationActivities: nil)
-                
-                activityViewController.excludedActivityTypes = [
-                    .addToReadingList,
-                    .openInIBooks,
-                    .print,
-                    .saveToCameraRoll,
-                    .postToWeibo,
-                    .postToFlickr,
-                    .postToVimeo,
-                    .postToTencentWeibo]
-                
-                self.present(activityViewController, animated: true, completion: {})
-            }
-            .disposed(by: self.bag)
 
         // initiate download
         fullDownloadButton.rx.tap
@@ -555,6 +496,46 @@ class PopupContentController: UIViewController {
         assetPlaybackManager.nextTrack()
     }
     
+    @IBAction func share(sender: AnyObject) {
+        // copy file to temp dir to rename it
+        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+        // generate temp file url path
+        
+        let firstPart: String = "\(self.playbackAsset.artist.replacingOccurrences(of: " ", with: ""))"
+        let secondPart: String = "\(self.playbackAsset.name.replacingOccurrences(of: " ", with: "")).mp3"
+        let destinationLastPathComponent: String = String(describing: "\(firstPart)-\(secondPart)")
+        
+        let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid)
+        let temporaryFileURL: URL = temporaryDirectoryURL.appendingPathComponent(destinationLastPathComponent)
+        DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
+        
+        // capture the audio file as a Data blob and then write it
+        // to temp dir
+        
+        //                if let localDownload = self.downloadingViewModel.fileDownload.value {
+        do {
+            let audioData: Data = try Data(contentsOf: sourceFileUrl, options: .uncached)
+            try audioData.write(to: temporaryFileURL, options: .atomicWrite)
+        } catch {
+            DDLogDebug("error writing temp audio file: \(error)")
+            return
+        }
+        
+        let activityViewController = UIActivityViewController(activityItems: ["Shared via the Faithful Word App: https://faithfulwordapp.com/", temporaryFileURL], applicationActivities: nil)
+        
+        activityViewController.excludedActivityTypes = [
+            .addToReadingList,
+            .openInIBooks,
+            .print,
+            .saveToCameraRoll,
+            .postToWeibo,
+            .postToFlickr,
+            .postToVimeo,
+            .postToTencentWeibo]
+        
+        self.present(activityViewController, animated: true, completion: {})
+    }
+    
     @objc func updateTransportUIState() {
         guard let pauseImage: UIImage = UIImage(named: "pause"),
             let playImage: UIImage = UIImage(named: "play"),
@@ -645,8 +626,6 @@ class PopupContentController: UIViewController {
                 //                DDLogDebug("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
                 fullPlaybackSlider.minimumValue = Float(0)
                 fullPlaybackSlider.maximumValue = assetPlaybackManager.duration
-                //                guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.duration)) else { return }
-                //                totalPlaybackDurationLabel.text = stringValue
             }
             
         }
@@ -659,9 +638,6 @@ class PopupContentController: UIViewController {
                 if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                     fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: stringValue, attributes: timeAttribs)
                 }
-
-//                fullCurrentPlaybackPositionLabel.text = stringValue
-                
                 actualPlaybackProgress.value = assetPlaybackManager.playbackPosition
                 
                 if estimatedDuration != 0 {
@@ -671,16 +647,11 @@ class PopupContentController: UIViewController {
                     if let timeAttribs: [NSAttributedString.Key : Any] = fullTotalPlaybackDurationLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                         fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: String("-").appending(stringValue), attributes: timeAttribs)
                     }
-
-//                    fullTotalPlaybackDurationLabel.text = String("-").appending(stringValue)
-                    
                 } else {
                     if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                         fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
                         fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
                     }
-//                    fullCurrentPlaybackPositionLabel.text = "-:--"
-//                    fullTotalPlaybackDurationLabel.text = "-:--"
                 }
             }
         }
@@ -863,8 +834,6 @@ class PopupContentController: UIViewController {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("completeNotification filedownload: \(fileDownload)")
             if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
-                //                self.downloadImageNameEvent.value = "share-box"
-                
                 self.downloadState.value = .complete
             }
         }
