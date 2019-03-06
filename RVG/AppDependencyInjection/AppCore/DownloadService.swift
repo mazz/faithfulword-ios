@@ -13,7 +13,7 @@ import Moya
 protocol DownloadServicing {
     //    var progress: Observable<Float> { get }
     //    var state: Observable<FileDownloadState> { get }
-    var fileDownload: Observable<FileDownload> { get }
+//    var fileDownload: Observable<FileDownload> { get }
     var downloadMap: [String: DownloadDataService] { get }
     func fetchDownload(url: String, filename: String) -> Single<Void>
     func activeDownload(filename: String) -> Observable<FileDownload>
@@ -34,20 +34,20 @@ public final class DownloadService {
     //        return downloadDataService.progress
     //    }
     
-    public var fileDownload: Observable<FileDownload> {
-        return downloadDataService.fileDownload
-    }
+//    public var fileDownload: Observable<FileDownload> {
+//        return downloadDataService.fileDownload
+//    }
     
     //    public var state: Observable<FileDownloadState> {
     //        return downloadDataService.state
     //    }
     
     // MARK: Dependencies
-    private let downloadDataService: FileDownloadDataServicing
-    
-    public init(downloadDataService: FileDownloadDataServicing) {
-        self.downloadDataService = downloadDataService
-    }
+//    private let downloadDataService: FileDownloadDataServicing
+//    
+//    public init(downloadDataService: FileDownloadDataServicing) {
+//        self.downloadDataService = downloadDataService
+//    }
 }
 
 extension DownloadService: DownloadServicing {

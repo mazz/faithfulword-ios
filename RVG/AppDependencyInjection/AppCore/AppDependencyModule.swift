@@ -176,7 +176,7 @@ internal final class AppDependencyModule {
             }.inObjectScope(.container)
 
         container.register(DownloadServicing.self) { resolver in
-            return DownloadService(downloadDataService: resolver.resolve(FileDownloadDataServicing.self)!)
+            return DownloadService()
             }.inObjectScope(.container)
     }
 

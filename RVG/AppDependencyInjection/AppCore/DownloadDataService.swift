@@ -203,7 +203,7 @@ extension DownloadDataService: FileDownloadDataServicing {
                             if let internalFileDownload = self.internalFileDownload {
                                 internalFileDownload.state = .inProgress
                                 self.fileDownloadSubject.onNext(internalFileDownload)
-                                
+                                DDLogDebug("internalFileDownload.localUrl: \(internalFileDownload.localUrl)")
                                 // FIXME: it is possible to send at least one .inProgress
                                 // notification even after the file download has been cancelled
                                 NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: internalFileDownload)

@@ -71,7 +71,7 @@ internal final class DownloadingViewModel {
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
-
+                    DDLogDebug("downloadAsset.uuid: \(downloadAsset.uuid)")
                     downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid)
 
                     self.observableDownload.subscribe(onNext: { download in

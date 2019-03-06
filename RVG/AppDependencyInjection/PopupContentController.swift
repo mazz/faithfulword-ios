@@ -212,6 +212,7 @@ class PopupContentController: UIViewController {
         // initiate download
         fullDownloadButton.rx.tap
             .map { //[unowned self] _ in
+                DDLogDebug("fullDownloadButton.rx.tap")
                 // FIXME: HACK: probably a better way to sync the download view model
                 //                self.downloadingViewModel.downloadAsset = self.playbackAsset
                 return .initial
@@ -485,6 +486,7 @@ class PopupContentController: UIViewController {
         if assetPlaybackManager.playbackPosition < 5.0 {
             // If the currently playing asset is less than 5 seconds into playback then skip to the previous `Asset`.
             assetPlaybackManager.previousTrack()
+            resetDownloadingViewModel()
         }
         else {
             // Otherwise seek back to the beginning of the currently playing `Asset`.
@@ -750,7 +752,7 @@ class PopupContentController: UIViewController {
             
             //reset UI
             resetUIDefaults()
-            //            resetDownloadingViewModel()
+            resetDownloadingViewModel()
             //            bindUI()
             assetPlaybackManager.seekTo(0)
             //            assetPlaybackManager.play()
@@ -780,7 +782,7 @@ class PopupContentController: UIViewController {
             
             //reset UI
             resetUIDefaults()
-            //            resetDownloadingViewModel()
+            resetDownloadingViewModel()
             //            bindUI()
             assetPlaybackManager.seekTo(0)
             //            assetPlaybackManager.play()
