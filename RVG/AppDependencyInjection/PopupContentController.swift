@@ -315,8 +315,7 @@ class PopupContentController: UIViewController {
                               uuid: item.uuid,
                               urlAsset: AVURLAsset(url: url))
         assetPlaybackManager.asset = playbackAsset
-        
-        downloadingViewModel.downloadAsset = self.playbackAsset
+        downloadingViewModel.downloadAsset = playbackAsset
         
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
         
@@ -486,7 +485,7 @@ class PopupContentController: UIViewController {
         if assetPlaybackManager.playbackPosition < 5.0 {
             // If the currently playing asset is less than 5 seconds into playback then skip to the previous `Asset`.
             assetPlaybackManager.previousTrack()
-            resetDownloadingViewModel()
+//            resetDownloadingViewModel()
         }
         else {
             // Otherwise seek back to the beginning of the currently playing `Asset`.
@@ -749,6 +748,8 @@ class PopupContentController: UIViewController {
                                   uuid: playable.uuid,
                                   urlAsset: AVURLAsset(url: url))
             assetPlaybackManager.asset = playbackAsset
+            downloadingViewModel.downloadAsset = playbackAsset
+
             
             //reset UI
             resetUIDefaults()
@@ -779,6 +780,7 @@ class PopupContentController: UIViewController {
                                   uuid: playable.uuid,
                                   urlAsset: AVURLAsset(url: url))
             assetPlaybackManager.asset = playbackAsset
+            downloadingViewModel.downloadAsset = playbackAsset
             
             //reset UI
             resetUIDefaults()
