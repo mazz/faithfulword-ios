@@ -522,7 +522,10 @@ class PopupContentController: UIViewController {
             return
         }
         
-        let activityViewController = UIActivityViewController(activityItems: ["Shared via the Faithful Word App: https://faithfulwordapp.com/", temporaryFileURL], applicationActivities: nil)
+        let message = MessageWithSubject(subject: String(describing: "\(self.playbackAsset.name) by \(self.playbackAsset.artist)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
+        let itemsToShare: [Any] = [message, temporaryFileURL]
+        
+        let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
         
         activityViewController.excludedActivityTypes = [
             .addToReadingList,
