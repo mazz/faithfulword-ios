@@ -249,7 +249,7 @@ class PopupContentController: UIViewController {
             .observeOn(MainScheduler.instance)
             .map { Float($0) }
             .do(onNext: { time in
-                DDLogDebug("time: \(time)")
+//                DDLogDebug("time: \(time)")
             })
             .distinctUntilChanged()
             .throttle(0.3, scheduler: MainScheduler.instance)
@@ -266,7 +266,7 @@ class PopupContentController: UIViewController {
             .debounce(0.2, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] progress in
                 self.fullPlaybackSlider.value = progress
-                DDLogDebug("field progress: \(progress)")
+//                DDLogDebug("field progress: \(progress)")
             })
             .disposed(by: bag)
         
@@ -303,17 +303,20 @@ class PopupContentController: UIViewController {
             let path: String = item.path,
             let localizedName: String = item.localizedName,
             let presenterName: String = item.presenterName ?? self.albumTitle,
-            let url: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
+            let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
             else { return }
         self.assetPlaybackManager = assetPlaybackService.assetPlaybackManager
         
         // stop because there could an asset currently playing
         assetPlaybackManager.stop()
         
+        // play local file if available
+        let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(item.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
         playbackAsset = Asset(name: localizedName,
                               artist: presenterName,
                               uuid: item.uuid,
-                              urlAsset: AVURLAsset(url: url))
+                              fileExtension: prodUrl.pathExtension,
+                              urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
         assetPlaybackManager.asset = playbackAsset
         downloadingViewModel.downloadAsset = playbackAsset
         
@@ -433,7 +436,7 @@ class PopupContentController: UIViewController {
     func resetDownloadingViewModel() {
         //        let filePath: URL = FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid)
         
-        if FileManager.default.fileExists(atPath: FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid).path) {
+        if FileManager.default.fileExists(atPath: FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))).path) {
             downloadState.value = .complete
             //            downloadImageNameEvent.value = "share-box"
         } else {
@@ -506,7 +509,7 @@ class PopupContentController: UIViewController {
         let secondPart: String = "\(self.playbackAsset.name.replacingOccurrences(of: " ", with: "")).mp3"
         let destinationLastPathComponent: String = String(describing: "\(firstPart)-\(secondPart)")
         
-        let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid)
+        let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")))
         let temporaryFileURL: URL = temporaryDirectoryURL.appendingPathComponent(destinationLastPathComponent)
         DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
         
@@ -522,7 +525,7 @@ class PopupContentController: UIViewController {
             return
         }
         
-        let message = MessageWithSubject(subject: String(describing: "\(self.playbackAsset.name) by \(self.playbackAsset.artist)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
+        let message = MessageWithSubjectActivityItem(subject: String(describing: "\(self.playbackAsset.name) by \(self.playbackAsset.artist)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
         let itemsToShare: [Any] = [message, temporaryFileURL]
         
         let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
@@ -546,7 +549,7 @@ class PopupContentController: UIViewController {
             let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
             let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause")
             else { return }
-        DDLogDebug("updateTransportUIState")
+//        DDLogDebug("updateTransportUIState")
         if assetPlaybackManager.asset == nil {
             //            backwardButton.isEnabled = false
             playPauseButton.isEnabled = false
@@ -674,9 +677,6 @@ class PopupContentController: UIViewController {
             if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                 fullAlbumNameLabel.attributedText = NSAttributedString(string: assetPlaybackManager.asset.artist, attributes: albumAttribs)
             }
-
-//            fullSongNameLabel.text = assetPlaybackManager.asset.name
-//            fullAlbumNameLabel.text = assetPlaybackManager.asset.artist
             
             songTitle = assetPlaybackManager.asset.name
             albumTitle = assetPlaybackManager.asset.artist
@@ -686,7 +686,7 @@ class PopupContentController: UIViewController {
             }
             
             let urlAsset = asset.urlAsset
-            
+            DDLogDebug("urlAsset: \(urlAsset)")
             let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
             
             if let image = UIImage(data: artworkData) {
@@ -743,13 +743,17 @@ class PopupContentController: UIViewController {
             guard let path: String = playable.path,
                 let localizedName: String = playable.localizedName,
                 let presenterName: String = playable.presenterName,
-                let url: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
+                let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
             
-            
+            // play local file if available
+//            (self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")))
+            let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
             playbackAsset = Asset(name: localizedName,
                                   artist: presenterName,
                                   uuid: playable.uuid,
-                                  urlAsset: AVURLAsset(url: url))
+                                  fileExtension: prodUrl.pathExtension,
+                                  urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
+            
             assetPlaybackManager.asset = playbackAsset
             downloadingViewModel.downloadAsset = playbackAsset
 
@@ -776,12 +780,16 @@ class PopupContentController: UIViewController {
             guard let path: String = playable.path,
                 let localizedName: String = playable.localizedName,
                 let presenterName: String = playable.presenterName,
-                let url: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
+                let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
             
+            // play local file if available
+            let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
             playbackAsset = Asset(name: localizedName,
                                   artist: presenterName,
                                   uuid: playable.uuid,
-                                  urlAsset: AVURLAsset(url: url))
+                                  fileExtension: prodUrl.pathExtension,
+                                  urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
+
             assetPlaybackManager.asset = playbackAsset
             downloadingViewModel.downloadAsset = playbackAsset
             
@@ -813,7 +821,7 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("initiateNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
                 
                 self.downloadState.value = .initiating
             }
@@ -824,8 +832,8 @@ class PopupContentController: UIViewController {
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("lastPathComponent: \(fileDownload.url.lastPathComponent) uuid: \(self.playbackAsset.uuid)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+            DDLogDebug("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(self.playbackAsset.uuid)")
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
                 self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
                 self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
                 
@@ -840,7 +848,7 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("completeNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
                 self.downloadState.value = .complete
             }
         }
@@ -850,7 +858,7 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("errorNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
                 // even though it's an error, just set it back to .initial
                 // because we have no use case for an errored download at the moment
                 self.downloadState.value = .initial
@@ -862,7 +870,7 @@ class PopupContentController: UIViewController {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
             DDLogDebug("cancelNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid {
+            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
                 self.downloadState.value = .initial
             }
         }

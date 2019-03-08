@@ -59,7 +59,7 @@ internal final class DownloadingViewModel {
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
 //                    downloadService.removeDownload(filename: downloadAsset.uuid)
-                    downloadService.removeDownload(filename: downloadAsset.uuid)
+                    downloadService.removeDownload(filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")))
                         .asObservable()
                         .subscribeAndDispose(by: self.bag)
                 }
@@ -72,7 +72,7 @@ internal final class DownloadingViewModel {
                 if let downloadService = self.downloadService,
                     let downloadAsset = self.downloadAsset {
                     DDLogDebug("downloadAsset.uuid: \(downloadAsset.uuid)")
-                    downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid)
+                    downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")))
 
 //                    self.observableDownload.subscribe(onNext: { download in
 //                        self.fileDownload.value = download

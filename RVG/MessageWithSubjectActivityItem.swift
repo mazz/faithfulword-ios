@@ -8,10 +8,10 @@
 
 import Foundation
 
-class MessageWithSubject: NSObject, UIActivityItemSource {
+class MessageWithSubjectActivityItem: NSObject, UIActivityItemSource {
     
-    let subject:String
-    let message:String
+    let subject: String
+    let message: String
     
     init(subject: String, message: String) {
         self.subject = subject
@@ -25,11 +25,17 @@ class MessageWithSubject: NSObject, UIActivityItemSource {
     }
     
     func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-        return message
+        if activityType?.rawValue == "net.whatsapp.WhatsApp.ShareExtension" {
+            return subject
+        } else if activityType == UIActivity.ActivityType.postToFacebook {
+            return subject
+        }
+        else { // email etc
+            return message
+        }
     }
     
-    func activityViewController(_ activityViewController: UIActivityViewController,
-                                subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
+    func activityViewController(_ activityViewController: UIActivityViewController, subjectForActivityType activityType: UIActivity.ActivityType?) -> String {
         return subject
     }
 }

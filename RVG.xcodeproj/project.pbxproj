@@ -73,7 +73,7 @@
 		4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */; };
 		4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */; };
 		4CA31FAC200E3C0900A94101 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FAB200E3C0900A94101 /* User.swift */; };
-		4CB27EEE2230B6D60082931D /* MessageWithSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB27EED2230B6D60082931D /* MessageWithSubject.swift */; };
+		4CB27EEE2230B6D60082931D /* MessageWithSubjectActivityItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB27EED2230B6D60082931D /* MessageWithSubjectActivityItem.swift */; };
 		4CBE0F5221605CA500646F76 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBE0F5121605CA400646F76 /* QuartzCore.framework */; };
 		4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F732160932400646F76 /* SlimSlider.swift */; };
 		4CBE0F762161747200646F76 /* Color+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F752161747100646F76 /* Color+Image.swift */; };
@@ -259,7 +259,7 @@
 		4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestedNameCell.xib; sourceTree = "<group>"; };
 		4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedNameCell.swift; sourceTree = "<group>"; };
 		4CA31FAB200E3C0900A94101 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		4CB27EED2230B6D60082931D /* MessageWithSubject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWithSubject.swift; sourceTree = "<group>"; };
+		4CB27EED2230B6D60082931D /* MessageWithSubjectActivityItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWithSubjectActivityItem.swift; sourceTree = "<group>"; };
 		4CBE0F5121605CA400646F76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4CBE0F732160932400646F76 /* SlimSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlimSlider.swift; sourceTree = "<group>"; };
 		4CBE0F752161747100646F76 /* Color+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Image.swift"; sourceTree = "<group>"; };
@@ -804,7 +804,7 @@
 				4CD63DFA1ED4CBAD00C4E2EC /* SessionError.swift */,
 				6833CBC61FC9F9DA001FEFD5 /* AppVersion.swift */,
 				68BBC8821FCCFD290008962B /* AppVersionResponse.swift */,
-				4CB27EED2230B6D60082931D /* MessageWithSubject.swift */,
+				4CB27EED2230B6D60082931D /* MessageWithSubjectActivityItem.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1216,7 +1216,7 @@
 				4C1F0006209D6F3800938C30 /* Asset.swift in Sources */,
 				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,
 				4C5FAD7020369A5600397BFF /* RadioListSectionViewModel.swift in Sources */,
-				4CB27EEE2230B6D60082931D /* MessageWithSubject.swift in Sources */,
+				4CB27EEE2230B6D60082931D /* MessageWithSubjectActivityItem.swift in Sources */,
 				4C5FAD7120369A5600397BFF /* RadioListViewModeling.swift in Sources */,
 				4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */,
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
