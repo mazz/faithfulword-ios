@@ -740,7 +740,7 @@ class PopupContentController: UIViewController {
             
             guard let path: String = playable.path,
                 let localizedName: String = playable.localizedName,
-                let presenterName: String = playable.presenterName,
+                let presenterName: String = playable.presenterName ?? self.albumTitle,
                 let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
             
             // play local file if available
@@ -778,7 +778,7 @@ class PopupContentController: UIViewController {
             
             guard let path: String = playable.path,
                 let localizedName: String = playable.localizedName,
-                let presenterName: String = playable.presenterName,
+                let presenterName: String = playable.presenterName ?? self.albumTitle,
                 let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
             
             // play local file if available
