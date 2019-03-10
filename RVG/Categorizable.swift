@@ -10,6 +10,6 @@ public protocol Categorizable {
 public enum CategoryListingType {
     case gospel
     case music
-    case mediaItems
+    case preaching
 }
 

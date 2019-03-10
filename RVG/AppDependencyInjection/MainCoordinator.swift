@@ -320,8 +320,8 @@ extension MainCoordinator {
                     DDLogDebug(".soulwinning")
                     self.goToCategoryFlow(categoryType: .gospel)
                 case .preaching:
-                    DDLogDebug(".mediaItems")
-                    self.goToCategoryFlow(categoryType: .mediaItems)
+                    DDLogDebug(".preaching")
+                    self.goToCategoryFlow(categoryType: .preaching)
                 case .music:
                     DDLogDebug(".music")
                     self.goToCategoryFlow(categoryType: .music)

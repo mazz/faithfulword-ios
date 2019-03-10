@@ -16,6 +16,10 @@ public protocol UserDataServicing {
     func fetchUserLanguage() -> Single<String>
 }
 
+public protocol UserActionsDataServicing {
+    func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void>
+    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
+}
 // Provides account related data to the app
 public protocol AccountDataServicing {
 
@@ -126,6 +130,18 @@ extension DataService: UserDataServicing {
     }
 }
 
+extension DataService: UserActionsDataServicing {
+    public func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void> {
+        DDLogDebug("updatePlaybackPosition(playable: \(playable) position: \(position)")
+        return dataStore.updatePlaybackHistory(playable: playable, position: position)
+//        return Single.just(())
+    }
+    
+    public func fetchPlaybackPosition(playable: Playable) -> Single<Double> {
+        DDLogDebug("fetchPlaybackPosition(playable: \(playable)")
+        return Single.just(5.0)
+    }
+}
 
 extension DataService: AccountDataServicing {
     public func fetchSession() -> Single<String> {
@@ -601,8 +617,8 @@ extension DataService: ProductDataServicing {
                         //                        return Single.error(DataServiceError.offsetOutofRange)
                         return dataStore.fetchCategoryList(for: categoryType)
                     }
-                case .mediaItems:
-                    DDLogDebug(".mediaItems")
+                case .preaching:
+                    DDLogDebug(".preaching")
                 }
                 //                categoryResponse = try cachedResponse.map(MediaGospelResponse.self)
             } catch {
@@ -739,8 +755,8 @@ extension DataService: ProductDataServicing {
                     }
                 }
             }
-        case .mediaItems:
-            DDLogDebug(".mediaItems")
+        case .preaching:
+            DDLogDebug(".preaching")
         }
         return categoryListing
     }

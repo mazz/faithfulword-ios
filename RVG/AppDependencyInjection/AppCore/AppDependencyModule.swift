@@ -27,12 +27,6 @@ internal final class AppDependencyModule {
     private static func applicationContainer() -> Container {
         // create a new container
         let container = Container()
-
-        //        container.register(DataStoring.self) { resolver in
-        //            return DataStore()
-        //        }
-        //
-
         container.register(LoginSequencer.self) { resolver in
 
             container.register(DataService.self) { resolver in
@@ -43,11 +37,6 @@ internal final class AppDependencyModule {
 
 
             return LoginSequencer(dataService: resolver.resolve(DataService.self)!)
-
-
-            //            return DataService(dataStore: DataStore(),
-            //                               kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
-            //                               reachability: resolver.resolve(RxReachable.self)!)
             }.inObjectScope(.container)
 
         container.register(ProductServicing.self) { resolver in
@@ -134,18 +123,6 @@ internal final class AppDependencyModule {
         }
     }
 
-
-    //    private static func attachInitialFlowDependencies(to container: Container) {
-    //        container.register(InitialCoordinator.self) { resolver in
-    //            InitialCoordinator(
-    //                uiFactory: resolver.resolve(AppUIMaking.self)!,
-    //                resettableAuthCoordinator: Resettable {
-    //                    resolver.resolve(AuthCoordinator.self)!
-    //                }
-    //            )
-    //        }
-    //    }
-
     private static func attachSideMenuFlowDependencies(to container: Container) {
         container.register(SideMenuCoordinator.self) { resolver in
             SideMenuCoordinator(
@@ -158,6 +135,20 @@ internal final class AppDependencyModule {
     }
 
     private static func attachAssetPlaybackDependencies(to container: Container) {
+        
+        //        UserActionsServicing
+        container.register(UserActionsServicing.self) { resolver in
+            return UserActionsService(dataService: resolver.resolve(DataService.self)!)
+            }.inObjectScope(.container)
+        
+        container.register(UserActionsViewModel.self) { resolver in
+            UserActionsViewModel(userActionsService: resolver.resolve(UserActionsServicing.self)!
+                //                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
+            )
+            }.inObjectScope(.container)
+
+        
+
         container.register(PlaybackControlsViewModel.self) { resolver in
             PlaybackControlsViewModel(assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
 //                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
@@ -218,20 +209,6 @@ internal final class AppDependencyModule {
                 resettableBibleLanguageCoordinator: Resettable {
                     resolver.resolve(BibleLanguageCoordinator.self)!
                 }
-
-                //                resettableSettingsCoordinator: Resettable {
-                //                    resolver.resolve(SettingsCoordinator.self)!
-                //                },
-                //                resettableDeviceSelectionCoordinator: Resettable {
-                //                    resolver.resolve(DeviceSelectionCoordinator.self)!
-                //                },
-                //                resettableSectionalNavigatorCoordinator: Resettable {
-                //                    resolver.resolve(SectionalNavigatorCoordinator.self)!
-                //                },
-                //                resettableControlCentreCoordinator: Resettable {
-                //                    resolver.resolve(ControlCentreCoordinator.self)!
-                //                },
-                //                deviceManager: resolver.resolve(DeviceManaging.self)!
             )
         }
         container.register(BooksViewModel.self) { resolver in

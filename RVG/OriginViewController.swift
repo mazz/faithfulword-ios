@@ -113,7 +113,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
-        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        PlaybackService_depr.sharedInstance().avoidRestartOnLoad = true
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve
@@ -131,7 +131,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         
         refreshTitles()
         
-        if (PlaybackService.sharedInstance().player != nil) {
+        if (PlaybackService_depr.sharedInstance().player != nil) {
             self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
         } else {
             self.navigationItem.rightBarButtonItem = nil

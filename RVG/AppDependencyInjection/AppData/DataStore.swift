@@ -7,7 +7,7 @@ public protocol DataStoring {
     //    func latestCachedUser() -> Single<String?>
     
     func addUser(session: String) -> Single<String>
-//    func updateUserLanguage(identifier: String) -> Single<String>
+    //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
     func fetchUserLanguage() -> Single<String>
     
@@ -18,23 +18,26 @@ public protocol DataStoring {
     func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]>
     func fetchChapters(for bookUuid: String) -> Single<[Playable]>
     func deleteChapters(for bookUuid: String) -> Single<Void>
-
+    
     func addMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]>
     func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]>
     func deleteMediaGospel(for categoryUuid: String) -> Single<Void>
-
+    
     func addMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]>
     func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]>
     func deleteMediaMusic(for categoryUuid: String) -> Single<Void>
-
+    
     func addBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]>
     func fetchBibleLanguages() -> Single<[LanguageIdentifier]>
     func deleteBibleLanguages() -> Single<Void>
-
+    
     func addCategory(categoryList: [Categorizable],
                      for categoryListType: CategoryListingType) -> Single<[Categorizable]>
     func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void>
     func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]>
+    
+    func updatePlaybackHistory(playable: Playable, position: Float) -> Single<Void>
+    //    func fetchPlaybackHistory(playable: Playable, position: Float) -> Single<Float>
 }
 
 public enum DataStoreError: Error {
@@ -43,14 +46,14 @@ public enum DataStoreError: Error {
 
 /// Storage class holding reference to realm object
 public final class DataStore {
-
+    
     internal var _dbPool: DatabasePool?
     
     // MARK: Dependencies
     public var dbPool: DatabasePool {
         let documentsURL: URL = getDocumentsDirectory()
-            let databasePath = documentsURL.appendingPathComponent("db.sqlite")
-            return try! openDatabase(atPath: databasePath.absoluteString)
+        let databasePath = documentsURL.appendingPathComponent("db.sqlite")
+        return try! openDatabase(atPath: databasePath.absoluteString)
     }
     
     func getDocumentsDirectory() -> URL {
@@ -79,7 +82,7 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making user table: \(error)")
             }
-
+            
             do {
                 try db.create(table: "book") { bookTable in
                     DDLogDebug("created: \(bookTable)")
@@ -93,7 +96,7 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making book table: \(error)")
             }
-
+            
             do {
                 try db.create(table: "mediachapter") { chapterTable in
                     DDLogDebug("created: \(chapterTable)")
@@ -114,7 +117,7 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making mediachapter table: \(error)")
             }
-
+            
             do {
                 try db.create(table: "gospel") { gospelTable in
                     DDLogDebug("created: \(gospelTable)")
@@ -128,7 +131,7 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making gospel table: \(error)")
             }
-
+            
             do {
                 try db.create(table: "mediagospel") { gospelTable in
                     DDLogDebug("created: \(gospelTable)")
@@ -149,7 +152,7 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making mediagospel table: \(error)")
             }
-
+            
             do {
                 try db.create(table: "music") { musicTable in
                     DDLogDebug("created: \(musicTable)")
@@ -163,7 +166,7 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making gospel table: \(error)")
             }
-
+            
             do {
                 try db.create(table: "mediamusic") { musicTable in
                     DDLogDebug("created: \(musicTable)")
@@ -184,7 +187,7 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making mediagospel table: \(error)")
             }
-
+            
             do {
                 try db.create(table: "languageidentifier") { langTable in
                     DDLogDebug("created: \(langTable)")
@@ -196,6 +199,22 @@ public final class DataStore {
             }
             catch {
                 DDLogDebug("error making languageidentifier table: \(error)")
+            }
+            do {
+                try db.create(table: "useractionplayback") { userActionPlaybackTable in
+                    DDLogDebug("created: \(userActionPlaybackTable)")
+                    userActionPlaybackTable.column("userActionPlaybackId", .integer).primaryKey()
+                    userActionPlaybackTable.column("uuid", .text)
+                    userActionPlaybackTable.column("playableUuid", .text)
+                    userActionPlaybackTable.column("playablePath", .text)
+                    userActionPlaybackTable.column("createdAt", .double)
+                    userActionPlaybackTable.column("updatedAt", .double)
+                    userActionPlaybackTable.column("playbackPosition", .double)
+                    userActionPlaybackTable.column("downloaded", .boolean)
+                }
+            }
+            catch {
+                DDLogDebug("error making useractionplayback table: \(error)")
             }
         }
         return migrator
@@ -212,7 +231,7 @@ public final class DataStore {
             // See https://github.com/groue/GRDB.swift/#database-connections
             _dbPool = try DatabasePool(path: path)
             DDLogDebug("new _dbPool at databasePath: \(path)")
-
+            
             if let databasePool = _dbPool {
                 // Use DatabaseMigrator to define the database schema
                 // See https://github.com/groue/GRDB.swift/#migrations
@@ -229,16 +248,16 @@ public final class DataStore {
 
 // MARK: <DataStoring>
 extension DataStore: DataStoring {
-
+    
     //MARK: User
-
+    
     public func addUser(session: String) -> Single<String> {
         return Single.create { [unowned self] single in
             var resultSession: String = session
             do {
                 try self.dbPool.writeInTransaction { db in
                     if try User.fetchCount(db) == 0 {
-
+                        
                         var user = User(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
                         try user.insert(db)
                         resultSession = user.session
@@ -254,9 +273,9 @@ extension DataStore: DataStoring {
         }
         //        return Single.just("")
     }
-
+    
     // MARK: -- User Language
-
+    
     public func updateUserLanguage(identifier: String) -> Single<String> {
         return Single.create { [unowned self] single in
             do {
@@ -276,7 +295,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func fetchUserLanguage() -> Single<String> {
         return Single.create { [unowned self] single in
             do {
@@ -294,9 +313,9 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     // MARK: Categories
-
+    
     public func addCategory(categoryList: [Categorizable],
                             for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
         return Single.create { [unowned self] single in
@@ -306,7 +325,7 @@ extension DataStore: DataStoring {
                         for category in categoryList {
                             DDLogDebug("category: \(category)")
                             switch categoryListType {
-
+                                
                             case .gospel:
                                 DDLogDebug("writing .gospel")
                                 var storeGospel: Gospel = category as! Gospel
@@ -317,8 +336,8 @@ extension DataStore: DataStoring {
                                 var storeMusic: Music = category as! Music
                                 storeMusic.userId = user.userId
                                 try storeMusic.insert(db)
-                            case .mediaItems:
-                                DDLogDebug("writing .mediaItems")
+                            case .preaching:
+                                DDLogDebug("writing .preaching")
                             }
                         }
                     }
@@ -333,8 +352,8 @@ extension DataStore: DataStoring {
                     case .music:
                         DDLogDebug("fetch .music")
                         fetchCategoryList = try Music.fetchAll(db)
-                    case .mediaItems:
-                        DDLogDebug(".mediaItems")
+                    case .preaching:
+                        DDLogDebug(".preaching")
                     }
                 }
                 single(.success(fetchCategoryList))
@@ -345,7 +364,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
@@ -357,8 +376,8 @@ extension DataStore: DataStoring {
                     case .music:
                         DDLogDebug("delete .music")
                         try Music.deleteAll(db)
-                    case .mediaItems:
-                        DDLogDebug(".mediaItems")
+                    case .preaching:
+                        DDLogDebug(".preaching")
                     }
                     return .commit
                 }
@@ -370,7 +389,7 @@ extension DataStore: DataStoring {
             return Disposables.create()
         }
     }
-
+    
     public func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]> {
         return Single.create { [unowned self] single in
             do {
@@ -383,8 +402,8 @@ extension DataStore: DataStoring {
                     case .music:
                         DDLogDebug("fetch .music")
                         fetchCategoryList = try Music.fetchAll(db)
-                    case .mediaItems:
-                        DDLogDebug(".mediaItems")
+                    case .preaching:
+                        DDLogDebug(".preaching")
                     }
                 }
                 single(.success(fetchCategoryList))
@@ -395,9 +414,9 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     // MARK: Chapters
-
+    
     public func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
@@ -429,17 +448,17 @@ extension DataStore: DataStoring {
                     fetchChapters = try MediaChapter.filter(Column("categoryUuid") == bookUuid).fetchAll(db)
                 }
                 single(.success(fetchChapters))
-//                single(.success(chapters))
+                //                single(.success(chapters))
             } catch {
                 DDLogDebug("error: \(error)")
                 single(.error(error))
             }
             return Disposables.create {}
         }
-
+        
         //        return Single.just([])
     }
-
+    
     public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
@@ -456,12 +475,12 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func deleteChapters(for bookUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-
+                    
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let _ = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
                         try MediaChapter.filter(Column("categoryUuid") == bookUuid).deleteAll(db)
@@ -477,15 +496,15 @@ extension DataStore: DataStoring {
         }
         //        return Single.just(())
     }
-
+    
     // MARK: MediaGospel
-
+    
     public func addMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
-                    if let gospel = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db){
+                    if let gospel = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         DDLogDebug("found gospel: \(gospel)")
                         for media in mediaGospel {
                             var mediaGospel = MediaGospel(uuid: media.uuid,
@@ -519,7 +538,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
@@ -535,7 +554,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func deleteMediaGospel(for categoryUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
@@ -555,16 +574,16 @@ extension DataStore: DataStoring {
         }
         //        return Single.just(())
     }
-
-
+    
+    
     // MARK: MediaMusic
-
+    
     public func addMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
-                    if let music = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db){
+                    if let music = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         DDLogDebug("found music: \(music)")
                         for media in mediaMusic {
                             var mediaMusic = MediaMusic(uuid: media.uuid,
@@ -591,8 +610,8 @@ extension DataStore: DataStoring {
                     fetchMediaMusic = try MediaMusic.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
                 }
                 single(.success(fetchMediaMusic))
-//
-//                single(.success(mediaMusic))
+                //
+                //                single(.success(mediaMusic))
             } catch {
                 DDLogDebug("error: \(error)")
                 single(.error(error))
@@ -600,7 +619,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
@@ -616,7 +635,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func deleteMediaMusic(for categoryUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
@@ -636,22 +655,22 @@ extension DataStore: DataStoring {
         }
         //        return Single.just(())
     }
-
+    
     // MARK: Bible Languages
-
+    
     public func addBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-//                    if let user = try User.fetchOne(db) {
-                        for bibleLanguage in bibleLanguages {
-                            DDLogDebug("bibleLanguage: \(bibleLanguage)")
-                            //            try! self.dbQueue.inDatabase { db in
-                            var storeLang: LanguageIdentifier = bibleLanguage
-//                            storeLang.userId = user.userId
-                            try storeLang.insert(db)
-                        }
-//                    }
+                    //                    if let user = try User.fetchOne(db) {
+                    for bibleLanguage in bibleLanguages {
+                        DDLogDebug("bibleLanguage: \(bibleLanguage)")
+                        //            try! self.dbQueue.inDatabase { db in
+                        var storeLang: LanguageIdentifier = bibleLanguage
+                        //                            storeLang.userId = user.userId
+                        try storeLang.insert(db)
+                    }
+                    //                    }
                     return .commit
                 }
                 single(.success(bibleLanguages))
@@ -662,11 +681,11 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func fetchBibleLanguages() -> Single<[LanguageIdentifier]> {
         return Single.create { [unowned self] single in
             do {
-
+                
                 var languages: [LanguageIdentifier] = []
                 try self.dbPool.read { db in
                     languages = try LanguageIdentifier.fetchAll(db)
@@ -679,7 +698,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func deleteBibleLanguages() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
@@ -695,9 +714,9 @@ extension DataStore: DataStoring {
             return Disposables.create()
         }
     }
-
+    
     // MARK: Books
-
+    
     // always return ALL books, even when appending
     public func addBooks(books: [Book]) -> Single<[Book]> {
         return Single.create { [unowned self] single in
@@ -726,7 +745,7 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
+    
     public func fetchBooks() -> Single<[Book]> {
         return Single.create { [unowned self] single in
             do {
@@ -761,5 +780,63 @@ extension DataStore: DataStoring {
             }
             return Disposables.create()
         }
+    }
+    
+    // MARK: User Actions
+    
+    public func updatePlaybackHistory(playable: Playable, position: Float) -> Single<Void> {
+        // let update: Single<Void> =
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    // update
+                    if let action = try UserActionPlayback.filter(Column("playableUuid") == playable.uuid).fetchOne(db) {
+                        DDLogDebug("found action: \(action)")
+                        
+                        if let playablePath = playable.path,
+                            let prodUrl: URL = URL(string: playablePath) {
+                            let pathExtension: String = prodUrl.pathExtension
+                            let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(pathExtension)"))).path)
+                            let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
+                            DDLogDebug("file there update? \(downloaded)")
+                            
+                            // db update
+                            var storeAction: UserActionPlayback = action
+                            storeAction.playbackPosition = Double(position)
+                            storeAction.updatedAt = Date().timeIntervalSince1970
+                            storeAction.downloaded = downloaded
+                            try storeAction.update(db)
+                        }
+                        
+                    } else {
+                        // insert
+                        if let playablePath = playable.path,
+                            let prodUrl: URL = URL(string: playablePath) {
+                            let pathExtension: String = prodUrl.pathExtension
+                            let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(pathExtension)"))).path)
+                            let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
+                            DDLogDebug("file there insert? \(downloaded)")
+                            var newAction: UserActionPlayback = UserActionPlayback(userActionPlaybackId: nil,
+                                                                                   uuid: UUID().uuidString,
+                                                                                   playableUuid: playable.uuid,
+                                                                                   playablePath: playable.path ?? nil,
+                                                                                   createdAt: Date().timeIntervalSince1970,
+                                                                                   updatedAt: Date().timeIntervalSince1970,
+                                                                                   playbackPosition: Double(position),
+                                                                                   downloaded: downloaded)
+                            try newAction.insert(db)
+                        }
+                        
+                    }
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create { }
+        }
+        //        return Single.just(())
     }
 }

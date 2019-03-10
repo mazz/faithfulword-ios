@@ -47,8 +47,8 @@ class PopupContentController: UIViewController {
     var playPauseButton: UIBarButtonItem!
     var nextButton: UIBarButtonItem!
     
-    internal var playbackAsset: Asset!
     // MARK: Fields
+    internal var playbackAsset: Asset!
     public var downloadState = Field<FileDownloadState>(.initial)
     // the state of the download button image name
     //    public let downloadImageNameEvent = Field<String>("download_icon_black")
@@ -58,6 +58,7 @@ class PopupContentController: UIViewController {
     
     public var playbackViewModel: PlaybackControlsViewModel!
     public var downloadingViewModel: DownloadingViewModel!
+    public var userActionsViewModel: UserActionsViewModel!
     
     private let sliderInUse = Variable<Bool>(false)
     
@@ -266,11 +267,16 @@ class PopupContentController: UIViewController {
             .debounce(0.2, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] progress in
                 self.fullPlaybackSlider.value = progress
-//                DDLogDebug("field progress: \(progress)")
+                DDLogDebug("field progress: \(progress)")
             })
             .disposed(by: bag)
         
         listenForSliderUserEvents()
+        
+        actualPlaybackProgress.asObservable()
+            .observeOn(MainScheduler.instance)
+            .bind(to: userActionsViewModel.progressEvent)
+            .disposed(by: bag)
     }
     
     func listenForSliderUserEvents() {
@@ -319,6 +325,7 @@ class PopupContentController: UIViewController {
                               urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
         assetPlaybackManager.asset = playbackAsset
         downloadingViewModel.downloadAsset = playbackAsset
+        userActionsViewModel.playable = item
         
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
         
@@ -516,7 +523,6 @@ class PopupContentController: UIViewController {
         // capture the audio file as a Data blob and then write it
         // to temp dir
         
-        //                if let localDownload = self.downloadingViewModel.fileDownload.value {
         do {
             let audioData: Data = try Data(contentsOf: sourceFileUrl, options: .uncached)
             try audioData.write(to: temporaryFileURL, options: .atomicWrite)
@@ -614,13 +620,10 @@ class PopupContentController: UIViewController {
             fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
         }
 
-//        fullCurrentPlaybackPositionLabel.text = "-:--"
-//        fullTotalPlaybackDurationLabel.text = "-:--"
         fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
         
         updateTransportUIState()
         
-        //        self.repeatButton.setImage(#imageLiteral(resourceName: "repeat"), for: .normal)
     }
     // MARK: Key-Value Observing Method
     
@@ -713,15 +716,10 @@ class PopupContentController: UIViewController {
                 fullAlbumNameLabel.attributedText = NSAttributedString(string: "--", attributes: albumAttribs)
             }
 
-//            fullSongNameLabel.text = "--"
-//            fullAlbumNameLabel.text = "--"
-
             if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                 fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
                 fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
             }
-//            fullTotalPlaybackDurationLabel.text = "-:--"
-//            fullCurrentPlaybackPositionLabel.text = "-:--"
             fullPlaybackSlider.value = Float(0)
             
             estimatedPlaybackPosition = Float(0)
@@ -756,6 +754,7 @@ class PopupContentController: UIViewController {
             
             assetPlaybackManager.asset = playbackAsset
             downloadingViewModel.downloadAsset = playbackAsset
+            userActionsViewModel.playable = playable
 
             
             //reset UI
@@ -792,6 +791,7 @@ class PopupContentController: UIViewController {
 
             assetPlaybackManager.asset = playbackAsset
             downloadingViewModel.downloadAsset = playbackAsset
+            userActionsViewModel.playable = playable
             
             //reset UI
             resetUIDefaults()

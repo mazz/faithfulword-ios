@@ -58,7 +58,7 @@ final class CategoryListingViewModel {
                     icon = "feetprint"
                 case .music?:
                     icon = "disc_icon_white"
-                case .mediaItems?:
+                case .preaching?:
                     icon = "preaching"
                 default:
                     icon = "feetprint"
@@ -89,8 +89,8 @@ final class CategoryListingViewModel {
             }) { error in
                 DDLogDebug("fetchCategoryListing failed with error: \(error.localizedDescription)")
                 }.disposed(by: self.bag)
-        case .mediaItems?:
-            DDLogDebug("mediaItems")
+        case .preaching?:
+            DDLogDebug("preaching")
         default:
             DDLogDebug("feetprint")
         }

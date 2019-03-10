@@ -36,7 +36,7 @@ class PlayerContainerViewController: BaseClass {
                                               buttonTitleRight: NSLocalizedString("No", comment: "").l10n()) {
                                                 
                                                 self.dismiss(animated: true) { }
-                                                PlaybackService.sharedInstance().disposePlayback()
+                                                PlaybackService_depr.sharedInstance().disposePlayback()
         }
         
     }

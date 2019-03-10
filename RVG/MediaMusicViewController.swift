@@ -64,7 +64,7 @@ class MediaMusicViewController: BaseClass {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        if (PlaybackService.sharedInstance().player != nil) {
+        if (PlaybackService_depr.sharedInstance().player != nil) {
             self.navigationItem.rightBarButtonItem = self.musicBarRightButton
         } else {
             self.navigationItem.rightBarButtonItem = nil
@@ -72,7 +72,7 @@ class MediaMusicViewController: BaseClass {
     }
 
     @IBAction func showPlayer(_ sender: AnyObject) {
-        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        PlaybackService_depr.sharedInstance().avoidRestartOnLoad = true
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve
@@ -101,9 +101,9 @@ extension MediaMusicViewController: UITableViewDelegate, UITableViewDataSource {
             
             //            let media = tableRows.map({$0.url})
             
-            PlaybackService.sharedInstance().disposePlayback()
-            PlaybackService.sharedInstance().media = music
-            PlaybackService.sharedInstance().mediaIndex = indexPath.row
+            PlaybackService_depr.sharedInstance().disposePlayback()
+            PlaybackService_depr.sharedInstance().media = music
+            PlaybackService_depr.sharedInstance().mediaIndex = indexPath.row
             //            PlaybackService.sharedInstance().playbackModeDelegate = self
             
             viewController.modalTransitionStyle = .crossDissolve

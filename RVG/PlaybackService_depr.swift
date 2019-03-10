@@ -41,8 +41,8 @@ protocol PlaybackModeDelegate : class {
 
 private var playerItemStatusContext = 0
 
-class PlaybackService : NSObject {
-    static var playbackService :  PlaybackService?
+class PlaybackService_depr : NSObject {
+    static var playbackService :  PlaybackService_depr?
 
     var media : [Playable]?
     var mediaIndex : Int?
@@ -92,15 +92,15 @@ class PlaybackService : NSObject {
     override init() {
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionInterruption(note:)), name:AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
-        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleAudioSessionRouteChange(note:)), name:AVAudioSession.routeChangeNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService.handleMediaServicesReset), name:AVAudioSession.mediaServicesWereResetNotification, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService_depr.handleAudioSessionInterruption(note:)), name:AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService_depr.handleAudioSessionRouteChange(note:)), name:AVAudioSession.routeChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(PlaybackService_depr.handleMediaServicesReset), name:AVAudioSession.mediaServicesWereResetNotification, object: AVAudioSession.sharedInstance())
     }
 
-    class func sharedInstance() -> PlaybackService {
+    class func sharedInstance() -> PlaybackService_depr {
 
         DispatchQueue.once(token: "com.kjvrvg.dispatch.playback") {
-            playbackService = PlaybackService()
+            playbackService = PlaybackService_depr()
             playbackService?.isPlaying = false
             
             // avoidRestartOnLoad always false on first playback
@@ -358,7 +358,7 @@ class PlaybackService : NSObject {
         let center = NotificationCenter.default
         let mainQueue = OperationQueue.main
         
-        self.itemEndObserver = center.addObserver(self, selector: #selector(PlaybackService.playerItemDidReachEnd(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
+        self.itemEndObserver = center.addObserver(self, selector: #selector(PlaybackService_depr.playerItemDidReachEnd(note:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: item)
         
     }
 
@@ -574,7 +574,7 @@ class PlaybackService : NSObject {
     
 }
 
-extension PlaybackService : PlaybackTransportDelegate {
+extension PlaybackService_depr : PlaybackTransportDelegate {
 
     func stop() {
 //        isPlaying = Double((self.player?.rate)!) > 0.0 ? true : false

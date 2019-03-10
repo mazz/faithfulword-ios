@@ -191,6 +191,7 @@ extension AppCoordinator: NavigationCoordinating {
     private func reactToReachability() {
         reachability.startListening().asObservable()
             .subscribe(onNext: { networkStatus in
+                DDLogDebug("networkStatus: \(networkStatus)")
                 self.networkStatus.value = networkStatus
                 if networkStatus == .notReachable {
                     DDLogDebug("AppCoordinator reachability.notReachable")

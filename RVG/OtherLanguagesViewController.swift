@@ -26,7 +26,7 @@ class OtherLanguagesViewController: BaseClass {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        if (PlaybackService.sharedInstance().player != nil) {
+        if (PlaybackService_depr.sharedInstance().player != nil) {
             self.navigationItem.rightBarButtonItem = self.songsBarRightButton
         } else {
             self.navigationItem.rightBarButtonItem = nil
@@ -92,7 +92,7 @@ class OtherLanguagesViewController: BaseClass {
     }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
-        PlaybackService.sharedInstance().avoidRestartOnLoad = true
+        PlaybackService_depr.sharedInstance().avoidRestartOnLoad = true
         if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
             
             viewController.modalTransitionStyle = .crossDissolve

@@ -61,37 +61,37 @@ class PlayerViewController : BaseClass {
 
         emptyUIState()
         
-        let mediaIndex = PlaybackService.sharedInstance().mediaIndex!
+        let mediaIndex = PlaybackService_depr.sharedInstance().mediaIndex!
         
         let baseUrlString: String = EnvironmentUrlItemKey.DevelopmentFileStorageRootUrl.rawValue.appending("/")
-        if let media : [Playable] = PlaybackService.sharedInstance().media {
+        if let media : [Playable] = PlaybackService_depr.sharedInstance().media {
             if let urls : [URL] = media.map({ URL(string: baseUrlString.appending($0.path!))! }) {
                 
                 // only show spinner if playback service is not currently playing
-                if (PlaybackService.sharedInstance().player == nil) {
+                if (PlaybackService_depr.sharedInstance().player == nil) {
                     let loadingNotification = MBProgressHUD.showAdded(to: self.view, animated: true)
                     loadingNotification.mode = MBProgressHUDMode.indeterminate
                 }
 
-                PlaybackService.sharedInstance().prepareToPlayUrls(urls: urls, playIndex: mediaIndex)
+                PlaybackService_depr.sharedInstance().prepareToPlayUrls(urls: urls, playIndex: mediaIndex)
                 //            self.playerController?.playbackDisplayDelegate = self
             }
         }
 
         // if we were paused and returned via music icon, restore UI
-        if let pausedState = PlaybackService.sharedInstance().pausedState {
+        if let pausedState = PlaybackService_depr.sharedInstance().pausedState {
             self.contentTitleLabel.text = pausedState.displayedTitle
             setCurrentTime(time:pausedState.pausedTime, duration: pausedState.duration)
         }
         
-        if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
+        if Double((PlaybackService_depr.sharedInstance().player?.rate)!) > 0.0 {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
         } else {
             self.playPauseButton.setImage(#imageLiteral(resourceName: "player_ic180"), for: .normal)
         }
 
-        self.playbackTransportDelegate = PlaybackService.sharedInstance()
-        PlaybackService.sharedInstance().playbackDisplayDelegate = self
+        self.playbackTransportDelegate = PlaybackService_depr.sharedInstance()
+        PlaybackService_depr.sharedInstance().playbackDisplayDelegate = self
 
     }
     
@@ -150,7 +150,7 @@ class PlayerViewController : BaseClass {
     @objc func scrubberTouchDown() {
         DDLogDebug("scrubberTouchDown")
         
-        if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
+        if Double((PlaybackService_depr.sharedInstance().player?.rate)!) > 0.0 {
             playingWhileScrubbing = true
         } else {
             playingWhileScrubbing = false
@@ -165,7 +165,7 @@ class PlayerViewController : BaseClass {
     @IBAction func playPause(_ sender: Any) {
         DDLogDebug("PlayerViewController playPause")
         
-        if Double((PlaybackService.sharedInstance().player?.rate)!) > 0.0 {
+        if Double((PlaybackService_depr.sharedInstance().player?.rate)!) > 0.0 {
             playerIsPlaying = true
         }
 
@@ -177,7 +177,7 @@ class PlayerViewController : BaseClass {
                 sessionIsResuming = false
 
                 if let titleText = self.contentTitleLabel.text {
-                    PlaybackService.sharedInstance().pausedState = PausedState(pausedTime: TimeInterval(scrubberSlider.value), duration: TimeInterval(scrubberSlider.maximumValue), displayedTitle: titleText)
+                    PlaybackService_depr.sharedInstance().pausedState = PausedState(pausedTime: TimeInterval(scrubberSlider.value), duration: TimeInterval(scrubberSlider.maximumValue), displayedTitle: titleText)
                 }
             } else {
                 self.playPauseButton.setImage(#imageLiteral(resourceName: "player_play_180"), for: .normal)
@@ -185,7 +185,7 @@ class PlayerViewController : BaseClass {
                 playerIsPlaying = true
                 sessionIsResuming = false
                 
-                PlaybackService.sharedInstance().pausedState = nil
+                PlaybackService_depr.sharedInstance().pausedState = nil
             }
         }
         
@@ -255,7 +255,7 @@ class PlayerViewController : BaseClass {
     @IBAction func previous(_ sender: Any) {
         DDLogDebug("previous")
         
-        if let currentIndex = PlaybackService.sharedInstance().mediaIndex {
+        if let currentIndex = PlaybackService_depr.sharedInstance().mediaIndex {
             if currentIndex != 0 {
                 // we pause here because calling
                 // previousTrack() alone will eventually
@@ -277,8 +277,8 @@ class PlayerViewController : BaseClass {
     @IBAction func next(_ sender: Any) {
         DDLogDebug("next")
         
-        if let currentIndex = PlaybackService.sharedInstance().mediaIndex {
-            if currentIndex + 1 <= (PlaybackService.sharedInstance().media?.count)! - 1 {
+        if let currentIndex = PlaybackService_depr.sharedInstance().mediaIndex {
+            if currentIndex + 1 <= (PlaybackService_depr.sharedInstance().media?.count)! - 1 {
                 // we pause here because calling
                 // nextTrack() alone will eventually
                 // call playPause() and toggle play -> pause
@@ -311,7 +311,7 @@ extension PlayerViewController : PlaybackDisplayDelegate {
         // because remote events could initiate playback
         // if we are already playing, do not hit play
         // again because that would pause
-        if Double((PlaybackService.sharedInstance().player?.rate)!) == 0.0 {
+        if Double((PlaybackService_depr.sharedInstance().player?.rate)!) == 0.0 {
             playPause(self.playPauseButton)
         }
     }
