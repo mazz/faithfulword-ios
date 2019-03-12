@@ -96,9 +96,12 @@ extension MusicViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let reachability = Reachability()!
+        let reachability = ClassicReachability()!
 
-        if reachability.currentReachabilityStatus != .notReachable {
+        switch reachability.currentReachabilityStatus {
+        case .notReachable, .unknown:
+            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
+        case .reachable(_):
             let musicId = musicIds[indexPath.row].categoryUuid
             //            {
             let vc = self.pushVc(strBdName: "Main", vcName: "MediaMusicViewController") as? MediaMusicViewController
@@ -106,9 +109,6 @@ extension MusicViewController: UITableViewDelegate, UITableViewDataSource {
             vc?.musicId = musicId
             vc?.musicTitle = musicIds[indexPath.row].title
             self.navigationController?.pushViewController(vc!, animated: true)
-            //            }
-        } else {
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: ""))
         }
     }
 }

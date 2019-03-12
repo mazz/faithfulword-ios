@@ -110,28 +110,29 @@ extension GospelViewController_depr: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let reachability = Reachability()!
+        let reachability = ClassicReachability()!
         
-        if reachability.currentReachabilityStatus != .notReachable {
-            let gospelId = gospels[indexPath.row].categoryUuid //{
-                let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
-                vc?.gospelId = gospelId
-                
-                switch indexPath.row {
-                case 0:
-                    vc?.gospelType = .planOfSalvation
-                case 1:
-                    vc?.gospelType = .soulwinningMotivation
-                case 2:
-                    vc?.gospelType = .soulwinningTutorial
-                default:
-                    vc?.gospelType = .gospelDefault
-                }
-                self.navigationController?.pushViewController(vc!, animated: true)
-//            }
-        } else {
+        switch reachability.currentReachabilityStatus {
+        case .notReachable, .unknown:
             self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: "").l10n())
+        case .reachable(_):
+            let gospelId = gospels[indexPath.row].categoryUuid //{
+            let vc = self.pushVc(strBdName: "Main", vcName: "MediaGospelViewController") as? MediaGospelViewController
+            vc?.gospelId = gospelId
+            
+            switch indexPath.row {
+            case 0:
+                vc?.gospelType = .planOfSalvation
+            case 1:
+                vc?.gospelType = .soulwinningMotivation
+            case 2:
+                vc?.gospelType = .soulwinningTutorial
+            default:
+                vc?.gospelType = .gospelDefault
+            }
+            self.navigationController?.pushViewController(vc!, animated: true)
         }
+        
     }
 }
 

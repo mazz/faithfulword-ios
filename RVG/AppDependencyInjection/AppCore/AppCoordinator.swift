@@ -16,7 +16,7 @@ internal class AppCoordinator {
     
     private var rootViewController: RootViewController!
     private var sideMenuViewController: SideMenuViewController!
-    private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
+    private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     private let bag = DisposeBag()
     
     
@@ -31,8 +31,8 @@ internal class AppCoordinator {
     private let productService: ProductServicing
     private let languageService: LanguageServicing
     private let assetPlaybackService: AssetPlaybackServicing
-    private let reachability: RxReachable
-
+    private let reachability: RxClassicReachable
+    
     internal init(uiFactory: AppUIMaking,
                   //                  resettableInitialCoordinator: Resettable<InitialCoordinator>
         resettableMainCoordinator: Resettable<MainCoordinator>,
@@ -42,7 +42,7 @@ internal class AppCoordinator {
         productService: ProductServicing,
         languageService: LanguageServicing,
         assetPlaybackService: AssetPlaybackServicing,
-        reachability: RxReachable
+        reachability: RxClassicReachable
         ) {
         self.uiFactory = uiFactory
         //        self.resettableInitialCoordinator = resettableInitialCoordinator
@@ -62,23 +62,23 @@ internal class AppCoordinator {
 // MARK: <NavigationCoordinating>
 extension AppCoordinator: NavigationCoordinating {
     public func flow(with setup: FlowSetup, completion: @escaping FlowCompletion, context: FlowContext) {
-//        rootViewController = uiFactory.makeRoot()
-//        setup(rootViewController)
-
+        //        rootViewController = uiFactory.makeRoot()
+        //        setup(rootViewController)
+        
         rootViewController = uiFactory.makeRoot()
         setup(rootViewController)
-
-//        sideMenuViewController = uiFactory.makeSideMenu()
-//        self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)
-
+        
+        //        sideMenuViewController = uiFactory.makeSideMenu()
+        //        self.rootViewController.embed(sideMenuViewController, in: self.rootViewController.view)
+        
         // Load splash screen animations, proceed to other flows when completed
         swapInSplashScreenFlow()
     }
-
+    
     private func startHandlingAssetPlaybackEvents() {
-//        assetPlaybackService.start()
+        //        assetPlaybackService.start()
     }
-
+    
     private func startHandlingAuthEvents() {
         
         // while we do not require auth,
@@ -107,9 +107,9 @@ extension AppCoordinator: NavigationCoordinating {
         self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
             DDLogDebug("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
             L10n.shared.language = userLanguage
-
-//            self.swapInMainFlow()
-
+            
+            //            self.swapInMainFlow()
+            
             switch self.networkStatus.value {
             case .notReachable:
                 self.swapInMainFlow()
@@ -120,20 +120,20 @@ extension AppCoordinator: NavigationCoordinating {
             case .unknown:
                 self.swapInMainFlow()
             }
-
+            
             // startup just get first 50 books
-//            self.productService.fetchBooks(offset: 1, limit: 50).subscribe(onSuccess: { [unowned self] in
-//                if self.productService.userBooks.value.count > 0 {
-//                    DDLogDebug("self.productService.userProducts.value: \(self.productService.userBooks.value)")
-//                    self.swapInMainFlow()
-//                } else {
-//                    self.swapInAccountSetupFlow()
-//                }
-//                }, onError: { [unowned self] error in
-//                    DDLogDebug("Check user products failed with error: \(error.localizedDescription)")
-//                    self.swapInMainFlow()
-//            }).disposed(by: self.bag)
-
+            //            self.productService.fetchBooks(offset: 1, limit: 50).subscribe(onSuccess: { [unowned self] in
+            //                if self.productService.userBooks.value.count > 0 {
+            //                    DDLogDebug("self.productService.userProducts.value: \(self.productService.userBooks.value)")
+            //                    self.swapInMainFlow()
+            //                } else {
+            //                    self.swapInAccountSetupFlow()
+            //                }
+            //                }, onError: { [unowned self] error in
+            //                    DDLogDebug("Check user products failed with error: \(error.localizedDescription)")
+            //                    self.swapInMainFlow()
+            //            }).disposed(by: self.bag)
+            
         }, onError: { error in
             DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
         }).disposed(by: bag)
@@ -143,22 +143,22 @@ extension AppCoordinator: NavigationCoordinating {
     /// and sets up the initial flow to be replaced by the main flow when complete.
     private func swapInInitialFlow() {
         DDLogDebug("swapInInitialFlow")
-//        resettableInitialCoordinator.value.flow(with: { [unowned self] initialFlowViewController in
-//            self.rootViewController.plant(initialFlowViewController, withAnimation: GoseAnimations.fade)
-//        }, completion: { [unowned self] _ in
-//            self.swapInMainFlow()
-//            self.resettableInitialCoordinator.reset()
-//        }, context: .other)
+        //        resettableInitialCoordinator.value.flow(with: { [unowned self] initialFlowViewController in
+        //            self.rootViewController.plant(initialFlowViewController, withAnimation: GoseAnimations.fade)
+        //        }, completion: { [unowned self] _ in
+        //            self.swapInMainFlow()
+        //            self.resettableInitialCoordinator.reset()
+        //        }, context: .other)
     }
     
     /// Puts the main flow (logged in state) on top of the rootViewController.
     private func swapInMainFlow() {
         resettableMainCoordinator.value.flow(with: { [unowned self] mainFlowViewController in
             self.rootViewController.plant(mainFlowViewController, withAnimation: AppAnimations.fade)
-        }, completion: { [unowned self] _ in
-            self.swapInInitialFlow()
-            self.resettableMainCoordinator.reset()
-        }, context: .other)
+            }, completion: { [unowned self] _ in
+                self.swapInInitialFlow()
+                self.resettableMainCoordinator.reset()
+            }, context: .other)
     }
     
     /// Puts the splash screen flow on top of the rootViewController, and animates the
@@ -166,37 +166,40 @@ extension AppCoordinator: NavigationCoordinating {
     private func swapInSplashScreenFlow() {
         resettableSplashScreenCoordinator.value.flow(with: { [unowned self] splashScreenFlowViewController in
             self.rootViewController.plant(splashScreenFlowViewController)
-        }, completion: { [unowned self] _ in
-            self.startHandlingAssetPlaybackEvents()
-            self.startHandlingAuthEvents()
-            self.accountService.start()
-            
-            // bootstrap login/fetching of session HERE because we have no login UI
-            self.accountService.startLoginFlow()
-                .asObservable()
-                .subscribeAndDispose(by: self.bag)
-            
-        }, context: .other)
+            }, completion: { [unowned self] _ in
+                self.startHandlingAssetPlaybackEvents()
+                self.startHandlingAuthEvents()
+                self.accountService.start()
+                
+                // bootstrap login/fetching of session HERE because we have no login UI
+                self.accountService.startLoginFlow()
+                    .asObservable()
+                    .subscribeAndDispose(by: self.bag)
+                
+            }, context: .other)
     }
     
     private func swapInAccountSetupFlow() {
         DDLogDebug("swapInAccountSetupFlow")
-//        resettableAccountSetupCoordinator.value.flow(with: { [unowned self] accountSetupNavigationController in
-//            self.rootViewController.plant(accountSetupNavigationController)
-//        }, completion: { [unowned self] _ in
-//            self.swapInMainFlow()
-//        }, context: .other)
+        //        resettableAccountSetupCoordinator.value.flow(with: { [unowned self] accountSetupNavigationController in
+        //            self.rootViewController.plant(accountSetupNavigationController)
+        //        }, completion: { [unowned self] _ in
+        //            self.swapInMainFlow()
+        //        }, context: .other)
     }
     
     private func reactToReachability() {
-        reachability.startListening().asObservable()
+        reachability.startNotifier().asObservable()
             .subscribe(onNext: { networkStatus in
-                DDLogDebug("networkStatus: \(networkStatus)")
                 self.networkStatus.value = networkStatus
-                if networkStatus == .notReachable {
-                    DDLogDebug("AppCoordinator reachability.notReachable")
-                } else if networkStatus == .reachable(.ethernetOrWiFi) {
-                    DDLogDebug("AppCoordinator reachability.reachable")
+                
+                switch networkStatus {
+                case .unknown:
+                    DDLogDebug("AppCoordinator \(self.reachability.status.value)")
+                case .notReachable:
+                    DDLogDebug("AppCoordinator \(self.reachability.status.value)")
+                case .reachable(_):
+                    DDLogDebug("AppCoordinator \(self.reachability.status.value)")
                 }
             }).disposed(by: bag)
     }

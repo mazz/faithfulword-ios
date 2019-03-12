@@ -51,11 +51,11 @@ public final class DataService {
 
     private let dataStore: DataStoring
     private let kjvrvgNetworking: MoyaProvider<KJVRVGService>!
-    private let reachability: RxReachable!
+    private let reachability: RxClassicReachable!
 
     // MARK: Fields
 
-    private var networkStatus = Field<Alamofire.NetworkReachabilityManager.NetworkReachabilityStatus>(.unknown)
+    private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     private let bag = DisposeBag()
 
     // MARK: UserDataServicing
@@ -69,10 +69,10 @@ public final class DataService {
     private var _responseMap: [String: Response] = [:]
     private var _persistedBooks = Field<[Book]>([])
 
-    public init(
+    internal init(
         dataStore: DataStoring,
         kjvrvgNetworking: MoyaProvider<KJVRVGService>,
-        reachability: RxReachable) {
+        reachability: RxClassicReachable) {
         self.dataStore = dataStore
         self.kjvrvgNetworking = kjvrvgNetworking
         self.reachability = reachability
@@ -861,13 +861,17 @@ extension DataService: ProductDataServicing {
     }
 
     private func reactToReachability() {
-        reachability.startListening().asObservable()
+        reachability.startNotifier().asObservable()
             .subscribe(onNext: { networkStatus in
                 self.networkStatus.value = networkStatus
-                if networkStatus == .notReachable {
-                    DDLogDebug("DataService reachability.notReachable")
-                } else if networkStatus == .reachable(.ethernetOrWiFi) {
-                    DDLogDebug("DataService reachability.reachable")
+                
+                switch networkStatus {
+                case .unknown:
+                    DDLogDebug("DataService \(self.reachability.status.value)")
+                case .notReachable:
+                    DDLogDebug("DataService \(self.reachability.status.value)")
+                case .reachable(_):
+                    DDLogDebug("DataService \(self.reachability.status.value)")
                 }
             }).disposed(by: bag)
     }

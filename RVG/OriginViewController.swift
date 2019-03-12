@@ -522,17 +522,17 @@ extension OriginViewController: UICollectionViewDelegate,UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let reachability = Reachability()!
+        let reachability = ClassicReachability()!
         
-        if reachability.currentReachabilityStatus != .notReachable {
-            let bookId = books[indexPath.row].categoryUuid
-            let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
-            //            vc?.folderId = id
-            vc?.bookId = bookId
-            self.navigationController?.pushViewController(vc!, animated: true)
-        } else {
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: "").l10n())
-        }
+//        if reachability.currentReachabilityStatus != .notReachable {
+//            let bookId = books[indexPath.row].categoryUuid
+//            let vc = self.pushVc(strBdName: "Main", vcName: "ChapterViewController") as? ChapterViewController
+//            //            vc?.folderId = id
+//            vc?.bookId = bookId
+//            self.navigationController?.pushViewController(vc!, animated: true)
+//        } else {
+//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Your device is not connected to the Internet.", comment: "").l10n())
+//        }
         
     }
 }

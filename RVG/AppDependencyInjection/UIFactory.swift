@@ -82,7 +82,7 @@ extension UIFactory: AppUIMaking {
         let controller = RootViewController
             .make(storyboardName: StoryboardName.main)
         controller.reachability = resolver
-            .resolve(RxReachable.self)
+            .resolve(RxClassicReachable.self)
         return controller
     }
 

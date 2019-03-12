@@ -10,7 +10,7 @@ final class RootViewController: UIViewController {
     
     // MARK: Dependencies
     
-    public var reachability: RxReachable!
+    public var reachability: RxClassicReachable!
     
     // MARK: Lifecycle
     
@@ -35,12 +35,18 @@ final class RootViewController: UIViewController {
     // MARK: Private helpers
     
     private func subscribeAndHandleReachabilityEvents() {
-        reachability.startListening().asObservable()
+        reachability.startNotifier().asObservable()
             .subscribe(onNext: { [unowned self] networkStatus in
-                if networkStatus == .notReachable {
+                switch networkStatus {
+                case .unknown, .notReachable:
+                    DDLogDebug("RootViewController \(self.reachability.status.value)")
                     self.showNoWifiAlert()
+                case .reachable(_):
+                    DDLogDebug("RootViewController \(self.reachability.status.value)")
                 }
             }).disposed(by: bag)
+        
+
     }
     
     private func showNoWifiAlert() {

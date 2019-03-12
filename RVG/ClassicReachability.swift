@@ -27,6 +27,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 import SystemConfiguration
 import Foundation
+import RxSwift
 
 public enum ReachabilityError: Error {
     case FailedToCreateWithAddress(sockaddr_in)
@@ -41,30 +42,91 @@ func callback(reachability:SCNetworkReachability, flags: SCNetworkReachabilityFl
 
     guard let info = info else { return }
     
-    let reachability = Unmanaged<Reachability>.fromOpaque(info).takeUnretainedValue()
+    let reachability = Unmanaged<ClassicReachability>.fromOpaque(info).takeUnretainedValue()
 
     DispatchQueue.main.async { 
         reachability.reachabilityChanged()
     }
 }
 
-public class Reachability {
+public typealias ClassicNetworkStatus = ClassicReachability.NetworkStatus
 
-    public typealias NetworkReachable = (Reachability) -> ()
-    public typealias NetworkUnreachable = (Reachability) -> ()
+protocol RxClassicReachable {
+    var status: Field<ClassicNetworkStatus> { get }
+    func startNotifier() -> Observable<ClassicNetworkStatus>
+    func stopNotifier()
+}
 
-    public enum NetworkStatus: CustomStringConvertible {
+public final class RxClassicReachability {
 
-        case notReachable, reachableViaWiFi, reachableViaWWAN
+    // MARK: Fields
+    public private(set) var status: Field<ClassicNetworkStatus>
+    
+    // MARK: Dependencies
+    private let reachabilityManager: ClassicReachability?
 
-        public var description: String {
-            switch self {
-            case .reachableViaWWAN: return "Cellular"
-            case .reachableViaWiFi: return "WiFi"
-            case .notReachable: return "No Connection"
+    init(reachability: ClassicReachability?) {
+        let startingStatus = ClassicNetworkStatus.unknown
+        status = Field<ClassicNetworkStatus>(startingStatus)
+        
+        self.reachabilityManager = reachability
+        do {
+            try self.reachabilityManager?.startNotifier()
+        } catch {
+            DDLogError("failed to start reachability: \(error)")
+        }
+
+//        self.reachabilityManager?.startNotifier()
+        
+        let notificationCenter: NotificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(forName: ReachabilityChangedNotification, object: nil, queue: nil) { notification in
+            if let reachability: ClassicReachability = notification.object as? ClassicReachability {
+                self.status.value = reachability.currentReachabilityStatus
+                DDLogDebug("got network status change: \(self.status.value)")
             }
         }
     }
+
+    deinit {
+        self.reachabilityManager?.stopNotifier()
+    }
+}
+
+extension RxClassicReachability: RxClassicReachable {
+    func startNotifier() -> Observable<ClassicNetworkStatus> {
+        do {
+            try self.reachabilityManager?.startNotifier()
+        } catch {
+            DDLogError("failed to start reachability: \(error)")
+        }
+        return status.asObservable()
+    }
+    
+    func stopNotifier() {
+        self.reachabilityManager?.stopNotifier()
+    }
+}
+
+public class ClassicReachability {
+
+    public typealias NetworkReachable = (ClassicReachability) -> ()
+    public typealias NetworkUnreachable = (ClassicReachability) -> ()
+
+    public enum NetworkStatus {
+        case unknown
+        case notReachable
+        case reachable(ConnectionType)
+    }
+    
+    public enum ConnectionType {
+        case ethernetOrWifi
+        case wwan
+    }
+
+//    public enum NetworkStatus {
+//
+//        case notReachable, reachableViaWiFi, reachableViaWWAN, unknown
+//    }
 
     public var whenReachable: NetworkReachable?
     public var whenUnreachable: NetworkUnreachable?
@@ -81,13 +143,14 @@ public class Reachability {
         guard isReachable else { return .notReachable }
         
         if isReachableViaWiFi {
-            return .reachableViaWiFi
-        }
-        if isRunningOnDevice {
-            return .reachableViaWWAN
+            return .reachable(.ethernetOrWifi)
         }
         
-        return .notReachable
+        if isRunningOnDevice {
+            return .reachable(.wwan)
+        }
+        
+        return .unknown
     }
     
     fileprivate var previousFlags: SCNetworkReachabilityFlags?
@@ -139,7 +202,7 @@ public class Reachability {
     }
 }
 
-public extension Reachability {
+public extension ClassicReachability {
     
     // MARK: - *** Notifier methods ***
     func startNotifier() throws {
@@ -147,7 +210,7 @@ public extension Reachability {
         guard let reachabilityRef = reachabilityRef, !notifierRunning else { return }
         
         var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
-        context.info = UnsafeMutableRawPointer(Unmanaged<Reachability>.passUnretained(self).toOpaque())        
+        context.info = UnsafeMutableRawPointer(Unmanaged<ClassicReachability>.passUnretained(self).toOpaque())        
         if !SCNetworkReachabilitySetCallback(reachabilityRef, callback, &context) {
             stopNotifier()
             throw ReachabilityError.UnableToSetCallback
@@ -226,7 +289,7 @@ public extension Reachability {
     }
 }
 
-fileprivate extension Reachability {
+fileprivate extension ClassicReachability {
     
     func reachabilityChanged() {
         

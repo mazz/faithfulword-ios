@@ -32,7 +32,7 @@ internal final class AppDependencyModule {
             container.register(DataService.self) { resolver in
                 return DataService(dataStore: DataStore(),
                                    kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
-                                   reachability: resolver.resolve(RxReachable.self)!)
+                                   reachability: resolver.resolve(RxClassicReachable.self)!)
                 }.inObjectScope(.container)
 
 
@@ -68,14 +68,15 @@ internal final class AppDependencyModule {
     }
 
     private static func attachUtilityDependencies(to container: Container) {
-        container.register(RxReachable.self) { _ in
-            RxReachability(
-                reachabilityManager: Alamofire.NetworkReachabilityManager(host: "www.apple.com")
-            )
+//        container.register(RxReachable.self) { _ in
+//            RxReachability(
+//                reachabilityManager: Alamofire.NetworkReachabilityManager(host: "www.apple.com")
+//            )
+//        }
+        
+        container.register(RxClassicReachable.self) { _ in
+            RxClassicReachability(reachability: ClassicReachability(hostname: "www.apple.com"))
         }
-        //        container.register(Analytics.self) { _ in
-        //            Analytics()
-        //        }
     }
 
     private static func attachAppLevelDependencies(to container: Container) {
@@ -114,7 +115,7 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService: resolver.resolve(LanguageServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
-                reachability: resolver.resolve(RxReachable.self)!
+                reachability: resolver.resolve(RxClassicReachable.self)!
             )
         }
 

@@ -174,7 +174,7 @@
 		68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */; };
 		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
 		701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */; };
-		701F01551E65DA2E0010B320 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* Reachability.swift */; };
+		701F01551E65DA2E0010B320 /* ClassicReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* ClassicReachability.swift */; };
 		701F01571E65DA440010B320 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01561E65DA440010B320 /* BaseClass.swift */; };
 		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
 		703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* ChapterViewController.swift */; };
@@ -390,7 +390,7 @@
 		68F2EA722038A0CB00566484 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		701F014F1E65DA000010B320 /* LoadingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
 		701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceSingleTon.swift; sourceTree = "<group>"; };
-		701F01541E65DA2E0010B320 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		701F01541E65DA2E0010B320 /* ClassicReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassicReachability.swift; sourceTree = "<group>"; };
 		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BaseClass.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
 		703D12B81E67156D0093E1AA /* ChapterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ChapterViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -664,7 +664,7 @@
 		701F01531E65DA1F0010B320 /* Rechability */ = {
 			isa = PBXGroup;
 			children = (
-				701F01541E65DA2E0010B320 /* Reachability.swift */,
+				701F01541E65DA2E0010B320 /* ClassicReachability.swift */,
 			);
 			name = Rechability;
 			sourceTree = "<group>";
@@ -1262,7 +1262,7 @@
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
 				4C3EA131206A6EB600310024 /* UIView+Constraining.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
-				701F01551E65DA2E0010B320 /* Reachability.swift in Sources */,
+				701F01551E65DA2E0010B320 /* ClassicReachability.swift in Sources */,
 				4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */,
 				68BBC8851FCD12400008962B /* AppVersioning.swift in Sources */,
 				68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */,
