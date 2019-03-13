@@ -41,7 +41,7 @@
 		4C3EA13E206B265100310024 /* PlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3EA13D206B265100310024 /* PlaybackViewController.swift */; };
 		4C437AB92232334200083197 /* UserActionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437AB82232334200083197 /* UserActionsService.swift */; };
 		4C437ABB223356C600083197 /* UserActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437ABA223356C600083197 /* UserActionsViewModel.swift */; };
-		4C437AD022346BB600083197 /* UserActionPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437ACF22346BB600083197 /* UserActionPlayback.swift */; };
+		4C437AD022346BB600083197 /* UserActionPlayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437ACF22346BB600083197 /* UserActionPlayable.swift */; };
 		4C5D60F720A51A5E00ED9958 /* 1sec.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4C5D60F620A51A5D00ED9958 /* 1sec.m4a */; };
 		4C5FAD5F2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */; };
 		4C5FAD612031D5B400397BFF /* BibleLanguageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */; };
@@ -232,7 +232,7 @@
 		4C3EA13D206B265100310024 /* PlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackViewController.swift; sourceTree = "<group>"; };
 		4C437AB82232334200083197 /* UserActionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionsService.swift; sourceTree = "<group>"; };
 		4C437ABA223356C600083197 /* UserActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionsViewModel.swift; sourceTree = "<group>"; };
-		4C437ACF22346BB600083197 /* UserActionPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionPlayback.swift; sourceTree = "<group>"; };
+		4C437ACF22346BB600083197 /* UserActionPlayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionPlayable.swift; sourceTree = "<group>"; };
 		4C5D60F620A51A5D00ED9958 /* 1sec.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1sec.m4a; sourceTree = "<group>"; };
 		4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MainCoordinator+SideMenuHandling.swift"; path = "AppPresentation/MainCoordinator+SideMenuHandling.swift"; sourceTree = "<group>"; };
 		4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageCoordinator.swift; sourceTree = "<group>"; };
@@ -789,7 +789,7 @@
 				689A05441ED27A9E00D3232D /* Bible.swift */,
 				681E117E1ED138DA00B028DD /* Book.swift */,
 				4CA31FAB200E3C0900A94101 /* User.swift */,
-				4C437ACF22346BB600083197 /* UserActionPlayback.swift */,
+				4C437ACF22346BB600083197 /* UserActionPlayable.swift */,
 				681E11801ED13B1400B028DD /* BookResponse.swift */,
 				4C9E06C71EDBBF6800282247 /* ContactUsModel.swift */,
 				4CF401EA1ED391F400632272 /* Device.swift */,
@@ -1275,7 +1275,7 @@
 				4C3EA137206A71D200310024 /* DeviceNowPlayingBarView.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
-				4C437AD022346BB600083197 /* UserActionPlayback.swift in Sources */,
+				4C437AD022346BB600083197 /* UserActionPlayable.swift in Sources */,
 				4C2503982168691A0069AB49 /* DownloadService.swift in Sources */,
 				4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */,
 				4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */,

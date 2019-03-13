@@ -201,20 +201,29 @@ public final class DataStore {
                 DDLogDebug("error making languageidentifier table: \(error)")
             }
             do {
-                try db.create(table: "useractionplayback") { userActionPlaybackTable in
-                    DDLogDebug("created: \(userActionPlaybackTable)")
-                    userActionPlaybackTable.column("userActionPlaybackId", .integer).primaryKey()
-                    userActionPlaybackTable.column("uuid", .text)
-                    userActionPlaybackTable.column("playableUuid", .text)
-                    userActionPlaybackTable.column("playablePath", .text)
-                    userActionPlaybackTable.column("createdAt", .double)
-                    userActionPlaybackTable.column("updatedAt", .double)
-                    userActionPlaybackTable.column("playbackPosition", .double)
-                    userActionPlaybackTable.column("downloaded", .boolean)
+                try db.create(table: "useractionplayable") { userActionPlayableTable in
+                    DDLogDebug("created: \(userActionPlayableTable)")
+                    userActionPlayableTable.column("userActionPlayableId", .integer).primaryKey()
+                    userActionPlayableTable.column("uuid", .text)
+                    userActionPlayableTable.column("playableUuid", .text)
+                    userActionPlayableTable.column("playablePath", .text)
+                    userActionPlayableTable.column("createdAt", .double)
+                    userActionPlayableTable.column("updatedAt", .double)
+                    userActionPlayableTable.column("playbackPosition", .double)
+                    userActionPlayableTable.column("downloaded", .boolean)
+
+                    // Playable
+                    userActionPlayableTable.column("localizedName", .text)
+                    userActionPlayableTable.column("path", .text)
+                    userActionPlayableTable.column("presenterName", .text)
+                    userActionPlayableTable.column("sourceMaterial", .text)
+                    userActionPlayableTable.column("trackNumber", .integer)
+                    userActionPlayableTable.column("largeThumbnailPath", .text)
+                    userActionPlayableTable.column("smallThumbnailPath", .text)
                 }
             }
             catch {
-                DDLogDebug("error making useractionplayback table: \(error)")
+                DDLogDebug("error making useractionplayable table: \(error)")
             }
         }
         return migrator
@@ -790,7 +799,7 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     // update
-                    if let action = try UserActionPlayback.filter(Column("playableUuid") == playable.uuid).fetchOne(db) {
+                    if let action = try UserActionPlayable.filter(Column("playableUuid") == playable.uuid).fetchOne(db) {
                         DDLogDebug("found action: \(action)")
                         
                         if let playablePath = playable.path,
@@ -801,7 +810,7 @@ extension DataStore: DataStoring {
                             DDLogDebug("file there update? \(downloaded)")
                             
                             // db update
-                            var storeAction: UserActionPlayback = action
+                            var storeAction: UserActionPlayable = action
                             storeAction.playbackPosition = Double(position)
                             storeAction.updatedAt = Date().timeIntervalSince1970
                             storeAction.downloaded = downloaded
@@ -811,19 +820,29 @@ extension DataStore: DataStoring {
                     } else {
                         // insert
                         if let playablePath = playable.path,
-                            let prodUrl: URL = URL(string: playablePath) {
+                            let prodUrl: URL = URL(string: playablePath)
+                        {
                             let pathExtension: String = prodUrl.pathExtension
                             let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(pathExtension)"))).path)
                             let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
                             DDLogDebug("file there insert? \(downloaded)")
-                            var newAction: UserActionPlayback = UserActionPlayback(userActionPlaybackId: nil,
+                            
+                            var newAction: UserActionPlayable = UserActionPlayable(userActionPlayableId: nil,
                                                                                    uuid: UUID().uuidString,
                                                                                    playableUuid: playable.uuid,
                                                                                    playablePath: playable.path ?? nil,
                                                                                    createdAt: Date().timeIntervalSince1970,
                                                                                    updatedAt: Date().timeIntervalSince1970,
                                                                                    playbackPosition: Double(position),
-                                                                                   downloaded: downloaded)
+                                                                                   downloaded: downloaded,
+                                                                                   localizedName: playable.localizedName ?? nil,
+                                                                                   path: playablePath,
+                                                                                   presenterName: playable.presenterName ?? nil,
+                                                                                   sourceMaterial: playable.sourceMaterial ?? nil,
+                                                                                   trackNumber: playable.trackNumber ?? nil,
+                                                                                   largeThumbnailPath: playable.largeThumbnailPath ?? nil,
+                                                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil
+                            )
                             try newAction.insert(db)
                         }
                         

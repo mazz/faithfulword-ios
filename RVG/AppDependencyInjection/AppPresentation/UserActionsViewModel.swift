@@ -17,6 +17,15 @@ internal final class UserActionsViewModel {
 
     // MARK: Playback action handling
     public var progressEvent = PublishSubject<Float>()
+//
+//    public var latestPlaybackPosition: Observable<Double> {
+//        if let playable = self.playable {
+//            return self.userActionsService.fetchPlaybackPosition(playable: playable)
+//                .asObservable()
+//        } else {
+//            return Observable.just(-1)
+//        }
+//    }
 
     // MARK: Dependencies
     private let userActionsService: UserActionsServicing!
