@@ -277,6 +277,18 @@ class PopupContentController: UIViewController {
             .observeOn(MainScheduler.instance)
             .bind(to: userActionsViewModel.progressEvent)
             .disposed(by: bag)
+        
+        userActionsViewModel.playbackHistory
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { playable in
+                DDLogDebug("top playable: \(playable.first)")
+            })
+            .disposed(by: bag)
+//            .map { $0 }
+//            .do(onNext: { playables in
+//                DDLogDebug("top playable: \(playables.first)")
+//            })
+//            .disposed(by: bag)
     }
     
     func listenForSliderUserEvents() {

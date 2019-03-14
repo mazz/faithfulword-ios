@@ -3,7 +3,7 @@ import RxSwift
 
 protocol UserActionsServicing {
     func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void>
-    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
+//    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
 }
 
 public final class UserActionsService: UserActionsServicing {
@@ -22,11 +22,11 @@ public final class UserActionsService: UserActionsServicing {
             })
     }
     
-    public func fetchPlaybackPosition(playable: Playable) -> Single<Double> {
-        return dataService.fetchPlaybackPosition(playable: playable)
-            .do(onSuccess: { position in
-                DDLogDebug("position: \(position)")
-                //                self.userLanguage.value = identifier
-            })
-    }
+//    public func fetchPlaybackPosition(playable: Playable) -> Single<Double> {
+//        return dataService.fetchPlaybackPosition(playable: playable)
+//            .do(onSuccess: { position in
+//                DDLogDebug("position: \(position)")
+//                //                self.userLanguage.value = identifier
+//            })
+//    }
 }

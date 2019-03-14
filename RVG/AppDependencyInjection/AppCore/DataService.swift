@@ -18,8 +18,14 @@ public protocol UserDataServicing {
 
 public protocol UserActionsDataServicing {
     func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void>
-    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
+//    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
 }
+
+public protocol HistoryDataServicing {
+    func fetchPlayableHistory() -> Single<[Playable]>
+    //    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
+}
+
 // Provides account related data to the app
 public protocol AccountDataServicing {
 
@@ -133,13 +139,19 @@ extension DataService: UserDataServicing {
 extension DataService: UserActionsDataServicing {
     public func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void> {
         DDLogDebug("updatePlaybackPosition(playable: \(playable) position: \(position)")
-        return dataStore.updatePlaybackHistory(playable: playable, position: position)
+        return dataStore.updatePlayableHistory(playable: playable, position: position)
 //        return Single.just(())
     }
     
-    public func fetchPlaybackPosition(playable: Playable) -> Single<Double> {
-        DDLogDebug("fetchPlaybackPosition(playable: \(playable)")
-        return Single.just(5.0)
+//    public func fetchPlaybackPosition(playable: Playable) -> Single<Double> {
+//        DDLogDebug("fetchPlaybackPosition(playable: \(playable)")
+//        return Single.just(5.0)
+//    }
+}
+
+extension DataService: HistoryDataServicing {
+    public func fetchPlayableHistory() -> Single<[Playable]> {
+        return dataStore.fetchPlayableHistory()
     }
 }
 

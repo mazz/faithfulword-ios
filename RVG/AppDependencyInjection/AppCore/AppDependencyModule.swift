@@ -136,14 +136,19 @@ internal final class AppDependencyModule {
     }
 
     private static func attachAssetPlaybackDependencies(to container: Container) {
-        
-        //        UserActionsServicing
+
+        container.register(HistoryServicing.self) { resolver in
+            return HistoryService(dataService: resolver.resolve(DataService.self)!)
+            }.inObjectScope(.container)
+
         container.register(UserActionsServicing.self) { resolver in
             return UserActionsService(dataService: resolver.resolve(DataService.self)!)
             }.inObjectScope(.container)
         
         container.register(UserActionsViewModel.self) { resolver in
-            UserActionsViewModel(userActionsService: resolver.resolve(UserActionsServicing.self)!
+            UserActionsViewModel(userActionsService: resolver.resolve(UserActionsServicing.self)!,
+                                 historyService:
+                resolver.resolve(HistoryServicing.self)!
                 //                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
             )
             }.inObjectScope(.container)

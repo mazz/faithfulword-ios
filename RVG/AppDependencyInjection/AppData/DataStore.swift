@@ -36,7 +36,11 @@ public protocol DataStoring {
     func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void>
     func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]>
     
-    func updatePlaybackHistory(playable: Playable, position: Float) -> Single<Void>
+    // MARK: history
+    
+    func updatePlayableHistory(playable: Playable, position: Float) -> Single<Void>
+    func fetchPlayableHistory() -> Single<[Playable]>
+
     //    func fetchPlaybackHistory(playable: Playable, position: Float) -> Single<Float>
 }
 
@@ -793,7 +797,7 @@ extension DataStore: DataStoring {
     
     // MARK: User Actions
     
-    public func updatePlaybackHistory(playable: Playable, position: Float) -> Single<Void> {
+    public func updatePlayableHistory(playable: Playable, position: Float) -> Single<Void> {
         // let update: Single<Void> =
         return Single.create { [unowned self] single in
             do {
@@ -809,9 +813,14 @@ extension DataStore: DataStoring {
                             let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
                             DDLogDebug("file there update? \(downloaded)")
                             
+                            // back up 5 seconds to help the user remember the context, unless < 0
+                            var newPosition: Double = Double(position)
+                            newPosition = newPosition - 5
+                            if newPosition < Double(0) { newPosition = Double(0) }
+                            
                             // db update
                             var storeAction: UserActionPlayable = action
-                            storeAction.playbackPosition = Double(position)
+                            storeAction.playbackPosition = Double(newPosition)
                             storeAction.updatedAt = Date().timeIntervalSince1970
                             storeAction.downloaded = downloaded
                             try storeAction.update(db)
@@ -827,13 +836,18 @@ extension DataStore: DataStoring {
                             let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
                             DDLogDebug("file there insert? \(downloaded)")
                             
+                            // back up 5 seconds to help the user remember the context, unless < 0
+                            var newPosition: Double = Double(position)
+                            newPosition = newPosition - 5
+                            if newPosition < Double(0) { newPosition = Double(0) }
+
                             var newAction: UserActionPlayable = UserActionPlayable(userActionPlayableId: nil,
                                                                                    uuid: UUID().uuidString,
                                                                                    playableUuid: playable.uuid,
                                                                                    playablePath: playable.path ?? nil,
                                                                                    createdAt: Date().timeIntervalSince1970,
                                                                                    updatedAt: Date().timeIntervalSince1970,
-                                                                                   playbackPosition: Double(position),
+                                                                                   playbackPosition: Double(newPosition),
                                                                                    downloaded: downloaded,
                                                                                    localizedName: playable.localizedName ?? nil,
                                                                                    path: playablePath,
@@ -858,4 +872,22 @@ extension DataStore: DataStoring {
         }
         //        return Single.just(())
     }
+
+    public func fetchPlayableHistory() -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchPlayableHistory: [Playable] = []
+                try self.dbPool.read { db in
+                    let updatedAt = Column("updatedAt")
+                    fetchPlayableHistory = try UserActionPlayable.order(updatedAt.desc).fetchAll(db)
+                }
+                single(.success(fetchPlayableHistory))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
 }

@@ -15,8 +15,11 @@ internal final class UserActionsViewModel {
     // the asset that the user intends to download
     public var playable: Playable? = nil
 
-    // MARK: Playback action handling
+    // MARK: from client
     public var progressEvent = PublishSubject<Float>()
+    
+    // MARK: to client
+    public var playbackHistory = PublishSubject<[Playable]>()
 //
 //    public var latestPlaybackPosition: Observable<Double> {
 //        if let playable = self.playable {
@@ -29,10 +32,14 @@ internal final class UserActionsViewModel {
 
     // MARK: Dependencies
     private let userActionsService: UserActionsServicing!
+    private let historyService: HistoryServicing!
+    
     private let bag = DisposeBag()
 
-    init(userActionsService: UserActionsServicing) {
+    init(userActionsService: UserActionsServicing,
+         historyService: HistoryServicing) {
         self.userActionsService = userActionsService
+        self.historyService = historyService
         setupBindings()
     }
     
@@ -44,6 +51,29 @@ internal final class UserActionsViewModel {
                     self.userActionsService.updatePlaybackPosition(playable: playable, position: progressValue)
                         .asObservable()
                         .subscribeAndDispose(by: self.bag)
+                    
+                    self.historyService.fetchPlaybackHistory()
+                        .asObservable()
+                        .next({ playables in
+                            self.playbackHistory.onNext(playables)
+
+                        })
+//                        .map({ playables in
+//                            self.playbackHistory.onNext(playables)
+//                        })
+
+                        
+//                        .subscribe(onSuccess: { playables in
+//
+//                        })
+//                        .subscribe(onNext: { playables in
+//                            return playables
+//                        })
+//                        .map { playables in
+//                            self.playbackHistory.next(playables)
+//                        }
+
+//                        .subscribeAndDispose(by: self.bag)
                 }
             })
             .disposed(by: bag)
