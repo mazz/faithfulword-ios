@@ -21,6 +21,10 @@ internal final class DownloadingViewModel {
     
     // MARK: to client
     public var downloadState = PublishSubject<FileDownloadState>()
+    
+    public var downloadNotStarted = Field<Bool>(false)
+    public var downloadInProgress = Field<Bool>(false)
+    public var completedDownload = Field<Bool>(false)
     // the tap event for the download share button
 //    public var fileDownloadCompleteEvent = PublishSubject<FileDownload>()
     // the progress of the current download
@@ -104,6 +108,23 @@ internal final class DownloadingViewModel {
                 }
             })
             .disposed(by: bag)
+        
+        downloadState.asObservable()
+            .next { fileDownloadState in
+                if fileDownloadState == .initial {
+                    self.downloadNotStarted.value = true
+                    self.downloadInProgress.value = false
+                    self.completedDownload.value = false
+                } else if fileDownloadState == .inProgress {
+                    self.downloadNotStarted.value = false
+                    self.downloadInProgress.value = true
+                    self.completedDownload.value = false
+                } else if fileDownloadState == .complete {
+                    self.downloadNotStarted.value = false
+                    self.downloadInProgress.value = false
+                    self.completedDownload.value = true
+                }
+        }
     }
 
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {

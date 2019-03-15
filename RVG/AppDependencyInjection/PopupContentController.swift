@@ -152,20 +152,30 @@ class PopupContentController: UIViewController {
         resetUIBindings()
         
         // hide progress button on completion or initial
-        downloadState.asObservable()
+//        downloadingViewModel.downloadState.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { fileDownloadState in fileDownloadState != .inProgress }
+//            .bind(to: fullDownloadProgress.rx.isHidden)
+//            .disposed(by: bag)
+        downloadingViewModel.downloadInProgress.asObservable()
             .observeOn(MainScheduler.instance)
-//            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
-            .map { fileDownloadState in fileDownloadState != .inProgress }
+            .map { !$0 }
             .bind(to: fullDownloadProgress.rx.isHidden)
             .disposed(by: bag)
-        
+
         // hide progress stop button on completion or initial
-        downloadState.asObservable()
+//        downloadingViewModel.downloadState.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { fileDownloadState in fileDownloadState != .inProgress }
+//            .bind(to: fullProgressDownloadButton.rx.isHidden)
+//            .disposed(by: bag)
+        downloadingViewModel.downloadInProgress.asObservable()
             .observeOn(MainScheduler.instance)
-//            .map { fileDownloadState in fileDownloadState == .initial || fileDownloadState == .complete }
-            .map { fileDownloadState in fileDownloadState != .inProgress }
+            .map { !$0 }
             .bind(to: fullProgressDownloadButton.rx.isHidden)
             .disposed(by: bag)
+
+        
         
         // hide download button during download
         //        downloadState.asObservable()
@@ -175,19 +185,29 @@ class PopupContentController: UIViewController {
         //            .disposed(by: bag)
         
         // hide download button if download complete
-        downloadState.asObservable()
+//        downloadingViewModel.downloadState.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { fileDownloadState in fileDownloadState != .initial }
+//            .bind(to: fullDownloadButton.rx.isHidden)
+//            .disposed(by: bag)
+        downloadingViewModel.downloadNotStarted.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { fileDownloadState in fileDownloadState != .initial }
+            .map { !$0 }
             .bind(to: fullDownloadButton.rx.isHidden)
             .disposed(by: bag)
-        
+
         // hide share button if not downloaded yet
-        downloadState.asObservable()
+//        downloadingViewModel.downloadState.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { fileDownloadState in fileDownloadState != .complete }
+//            .bind(to: fullProgressShareButton.rx.isHidden)
+//            .disposed(by: bag)
+        downloadingViewModel.completedDownload.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { fileDownloadState in fileDownloadState != .complete }
+            .map { !$0 }
             .bind(to: fullProgressShareButton.rx.isHidden)
             .disposed(by: bag)
-        
+
         
         // set image name based on state
         //        downloadImageNameEvent.asObservable()
@@ -337,6 +357,7 @@ class PopupContentController: UIViewController {
                               urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
         assetPlaybackManager.asset = playbackAsset
         downloadingViewModel.downloadAsset.value = playbackAsset
+        downloadingViewModel.downloadState.onNext(.initial)
         userActionsViewModel.playable = item
         
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
@@ -354,7 +375,7 @@ class PopupContentController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidErrorNotification(notification:)), name: DownloadDataService.fileDownloadDidErrorNotification, object: nil)
         
         resetUIDefaults()
-        resetDownloadingViewModel()
+//        resetDownloadingViewModel()
         bindUI()
         
     }
@@ -771,7 +792,7 @@ class PopupContentController: UIViewController {
             
             //reset UI
             resetUIDefaults()
-            resetDownloadingViewModel()
+//            resetDownloadingViewModel()
             //            bindUI()
             assetPlaybackManager.seekTo(0)
             //            assetPlaybackManager.play()
@@ -807,7 +828,7 @@ class PopupContentController: UIViewController {
             
             //reset UI
             resetUIDefaults()
-            resetDownloadingViewModel()
+//            resetDownloadingViewModel()
             //            bindUI()
             assetPlaybackManager.seekTo(0)
             //            assetPlaybackManager.play()
