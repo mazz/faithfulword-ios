@@ -49,7 +49,6 @@ class PopupContentController: UIViewController {
     
     // MARK: Fields
     internal var playbackAsset: Asset!
-    public var downloadState = Field<FileDownloadState>(.initial)
     // the state of the download button image name
     //    public let downloadImageNameEvent = Field<String>("download_icon_black")
     
@@ -148,7 +147,68 @@ class PopupContentController: UIViewController {
         
     }
     
-    func bindUI() {
+    func bindPlaybackViewModel() {
+        // bind repeat track state
+        fullRepeatButton.rx.tap
+            .map { [unowned self] _ in
+                var repeatSetting: RepeatSetting!
+                if self.repeatMode == .repeatOff {
+                    repeatSetting = .repeatOne
+                } else if self.repeatMode == .repeatOne {
+                    repeatSetting = .repeatOff
+                }
+                self.repeatMode = repeatSetting
+                return self.repeatMode
+            }
+            .bind(to: playbackViewModel.repeatButtonTapEvent)
+            .disposed(by: bag)
+        
+        // when the user scrubs, limit the frequency of the
+        // sending of the scrub event to every 0.3 seconds
+        // in order to send a little more frequently than
+        // how frequently the slider playback position is updated
+        fullPlaybackSlider.rx.value.asObservable()
+            .observeOn(MainScheduler.instance)
+            .map { Float($0) }
+            .do(onNext: { time in
+                //                DDLogDebug("time: \(time)")
+            })
+            .distinctUntilChanged()
+            .throttle(0.3, scheduler: MainScheduler.instance)
+            .bind(to: playbackViewModel.sliderScrubEvent)
+            .disposed(by: bag)
+        fullPlaybackSlider.isContinuous = true
+        fullPlaybackSlider.isMultipleTouchEnabled = false
+        
+        // check to update the slider position around every 0.4 seconds
+        // as long as the user is not scrubbing
+        actualPlaybackProgress.asObservable()
+            .observeOn(MainScheduler.instance)
+            .filter { [unowned self] _ in !self.sliderInUse.value }
+            .debounce(0.2, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] progress in
+                self.fullPlaybackSlider.value = progress
+                DDLogDebug("field progress: \(progress)")
+            })
+            .disposed(by: bag)
+        
+        listenForSliderUserEvents()
+        
+        actualPlaybackProgress.asObservable()
+            .observeOn(MainScheduler.instance)
+            .bind(to: userActionsViewModel.progressEvent)
+            .disposed(by: bag)
+        
+        userActionsViewModel.playbackHistory
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { playable in
+                DDLogDebug("top playable: \(playable.first)")
+            })
+            .disposed(by: bag)
+
+    }
+    
+    func bindDownloadingViewModel() {
         resetUIBindings()
         
         // hide progress button on completion or initial
@@ -247,63 +307,6 @@ class PopupContentController: UIViewController {
             .bind(to: downloadingViewModel.cancelDownloadButtonTapEvent)
             .disposed(by: bag)
         
-        // bind repeat track state
-        fullRepeatButton.rx.tap
-            .map { [unowned self] _ in
-                var repeatSetting: RepeatSetting!
-                if self.repeatMode == .repeatOff {
-                    repeatSetting = .repeatOne
-                } else if self.repeatMode == .repeatOne {
-                    repeatSetting = .repeatOff
-                }
-                self.repeatMode = repeatSetting
-                return self.repeatMode
-            }
-            .bind(to: playbackViewModel.repeatButtonTapEvent)
-            .disposed(by: bag)
-        
-        // when the user scrubs, limit the frequency of the
-        // sending of the scrub event to every 0.3 seconds
-        // in order to send a little more frequently than
-        // how frequently the slider playback position is updated
-        fullPlaybackSlider.rx.value.asObservable()
-            .observeOn(MainScheduler.instance)
-            .map { Float($0) }
-            .do(onNext: { time in
-//                DDLogDebug("time: \(time)")
-            })
-            .distinctUntilChanged()
-            .throttle(0.3, scheduler: MainScheduler.instance)
-            .bind(to: playbackViewModel.sliderScrubEvent)
-            .disposed(by: bag)
-        fullPlaybackSlider.isContinuous = true
-        fullPlaybackSlider.isMultipleTouchEnabled = false
-        
-        // check to update the slider position around every 0.4 seconds
-        // as long as the user is not scrubbing
-        actualPlaybackProgress.asObservable()
-            .observeOn(MainScheduler.instance)
-            .filter { [unowned self] _ in !self.sliderInUse.value }
-            .debounce(0.2, scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [unowned self] progress in
-                self.fullPlaybackSlider.value = progress
-                DDLogDebug("field progress: \(progress)")
-            })
-            .disposed(by: bag)
-        
-        listenForSliderUserEvents()
-        
-        actualPlaybackProgress.asObservable()
-            .observeOn(MainScheduler.instance)
-            .bind(to: userActionsViewModel.progressEvent)
-            .disposed(by: bag)
-        
-        userActionsViewModel.playbackHistory
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { playable in
-                DDLogDebug("top playable: \(playable.first)")
-            })
-            .disposed(by: bag)
 //            .map { $0 }
 //            .do(onNext: { playables in
 //                DDLogDebug("top playable: \(playables.first)")
@@ -333,19 +336,20 @@ class PopupContentController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bindUI()
+        bindPlaybackViewModel()
+        bindDownloadingViewModel()
 
         // assetPlaybackService.playableItem should be valid pointer
         // because it should be set when the user taps a row in MediaListingViewModel
         
-        guard let assetPlaybackService = playbackViewModel.assetPlaybackService,
-            let item: Playable = assetPlaybackService.playableItem.value,
+//        guard let assetPlaybackService = playbackViewModel.assetPlaybackService,
+        guard let item: Playable = playbackViewModel.assetPlaybackService.playableItem.value,
             let path: String = item.path,
             let localizedName: String = item.localizedName,
             let presenterName: String = item.presenterName ?? self.albumTitle,
             let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
             else { return }
-        self.assetPlaybackManager = assetPlaybackService.assetPlaybackManager
+        self.assetPlaybackManager = playbackViewModel.assetPlaybackService.assetPlaybackManager
         
         // stop because there could an asset currently playing
         assetPlaybackManager.stop()
@@ -472,19 +476,7 @@ class PopupContentController: UIViewController {
         
         updateTransportUIState()
     }
-    
-    func resetDownloadingViewModel() {
-        //        let filePath: URL = FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid)
-        
-        if FileManager.default.fileExists(atPath: FileSystem.savedDirectory.appendingPathComponent(self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))).path) {
-            downloadState.value = .complete
-            //            downloadImageNameEvent.value = "share-box"
-        } else {
-            downloadState.value = .initial
-            //            downloadImageNameEvent.value = "download_icon_black"
-        }
-    }
-    
+
     @objc func doPlayPause() {
         assetPlaybackManager.togglePlayPause()
         
@@ -762,8 +754,8 @@ class PopupContentController: UIViewController {
     }
     
     @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
-        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
-        let playables: [Playable] = assetPlaybackService.playables.value
+//        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
+        let playables: [Playable] = playbackViewModel.assetPlaybackService.playables.value
         
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
@@ -800,8 +792,8 @@ class PopupContentController: UIViewController {
     }
     
     @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
-        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
-        let playables: [Playable] = assetPlaybackService.playables.value
+//        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
+        let playables: [Playable] = playbackViewModel.assetPlaybackService.playables.value
         
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }

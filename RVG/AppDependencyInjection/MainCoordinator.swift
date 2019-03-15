@@ -93,8 +93,6 @@ extension MainCoordinator: NavigationCoordinating {
         handle(eventsFrom: mainViewController.viewModel)
         setup(mainNavigationController)
 
-        let playbackViewController = appUIMaking.makePlayer()
-
 //        let nowPlayingBar = DeviceNowPlayingBarView.fromUiNib()
 
 //        nowPlayingBar.translatesAutoresizingMaskIntoConstraints = false
