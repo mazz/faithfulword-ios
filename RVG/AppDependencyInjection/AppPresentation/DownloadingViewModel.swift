@@ -25,6 +25,7 @@ internal final class DownloadingViewModel {
     public var downloadNotStarted = Field<Bool>(false)
     public var downloadInProgress = Field<Bool>(false)
     public var completedDownload = Field<Bool>(false)
+
     // the tap event for the download share button
 //    public var fileDownloadCompleteEvent = PublishSubject<FileDownload>()
     // the progress of the current download
@@ -146,9 +147,12 @@ internal final class DownloadingViewModel {
             let downloadAsset: Asset = self.downloadAsset.value {
             DDLogDebug("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(downloadAsset.uuid)")
             if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
-//                self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
-//                self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
+                
+//                self.downloadMaxValue.value = CGFloat(fileDownload.totalCount)
+//                self.downloadValue.value = CGFloat(fileDownload.completedCount)
+                
                 self.downloadState.onNext(.inProgress)
+                
                 DDLogDebug("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
             }
         }

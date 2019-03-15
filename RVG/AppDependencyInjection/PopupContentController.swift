@@ -207,7 +207,7 @@ class PopupContentController: UIViewController {
             .map { !$0 }
             .bind(to: fullProgressShareButton.rx.isHidden)
             .disposed(by: bag)
-
+        
         
         // set image name based on state
         //        downloadImageNameEvent.asObservable()
@@ -333,6 +333,8 @@ class PopupContentController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bindUI()
+
         // assetPlaybackService.playableItem should be valid pointer
         // because it should be set when the user taps a row in MediaListingViewModel
         
@@ -357,26 +359,24 @@ class PopupContentController: UIViewController {
                               urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
         assetPlaybackManager.asset = playbackAsset
         downloadingViewModel.downloadAsset.value = playbackAsset
-        downloadingViewModel.downloadState.onNext(.initial)
         userActionsViewModel.playable = item
         
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
         
         let notificationCenter = NotificationCenter.default
         
-        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidInitiateNotification(notification:)), name: DownloadDataService.fileDownloadDidInitiateNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidInitiateNotification(notification:)), name: DownloadDataService.fileDownloadDidInitiateNotification, object: nil)
         
         notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidProgressNotification(notification:)), name: DownloadDataService.fileDownloadDidProgressNotification, object: nil)
         
-        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCompleteNotification(notification:)), name: DownloadDataService.fileDownloadDidCompleteNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCompleteNotification(notification:)), name: DownloadDataService.fileDownloadDidCompleteNotification, object: nil)
         
-        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCancelNotification(notification:)), name: DownloadDataService.fileDownloadDidCancelNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCancelNotification(notification:)), name: DownloadDataService.fileDownloadDidCancelNotification, object: nil)
         
-        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidErrorNotification(notification:)), name: DownloadDataService.fileDownloadDidErrorNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidErrorNotification(notification:)), name: DownloadDataService.fileDownloadDidErrorNotification, object: nil)
         
         resetUIDefaults()
 //        resetDownloadingViewModel()
-        bindUI()
         
     }
     
@@ -850,18 +850,6 @@ class PopupContentController: UIViewController {
         }
     }
     
-    @objc func handleDownloadDidInitiateNotification(notification: Notification) {
-        DDLogDebug("notification: \(notification)")
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
-                
-                self.downloadState.value = .initiating
-            }
-            
-        }
-    }
-    
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
@@ -870,43 +858,8 @@ class PopupContentController: UIViewController {
                 self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
                 self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
                 
-                self.downloadState.value = .inProgress
-                
                 DDLogDebug("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
             }
         }
     }
-    
-    @objc func handleDownloadDidCompleteNotification(notification: Notification) {
-        DDLogDebug("notification: \(notification)")
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("completeNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
-                self.downloadState.value = .complete
-            }
-        }
-    }
-    
-    @objc func handleDownloadDidErrorNotification(notification: Notification) {
-        DDLogDebug("notification: \(notification)")
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("errorNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
-                // even though it's an error, just set it back to .initial
-                // because we have no use case for an errored download at the moment
-                self.downloadState.value = .initial
-            }
-        }
-    }
-    
-    @objc func handleDownloadDidCancelNotification(notification: Notification) {
-        DDLogDebug("notification: \(notification)")
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("cancelNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
-                self.downloadState.value = .initial
-            }
-        }
-    }
-    
 }
