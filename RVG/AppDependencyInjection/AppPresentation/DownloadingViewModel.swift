@@ -26,26 +26,6 @@ internal final class DownloadingViewModel {
     public var downloadInProgress = Field<Bool>(false)
     public var completedDownload = Field<Bool>(false)
 
-    // the tap event for the download share button
-//    public var fileDownloadCompleteEvent = PublishSubject<FileDownload>()
-    // the progress of the current download
-//    public var fileDownload = Field<FileDownload?>(nil)
-
-//    public var observableDownload: Observable<FileDownload> {
-////        return downloadService.activeDownload(filename: downloadAsset?.uuid)
-//        var download: Observable<FileDownload>!
-////
-//        if let downloadAsset = self.downloadAsset {
-//            download = downloadService.activeDownload(filename: downloadAsset.uuid)
-//                .catchError({ error in
-//                    throw error
-//                })
-//        }
-//        return download
-//    }
-
-    // the state of the current download
-//    public var downloadState = Field<FileDownloadState>(.initial)
     // the state of the download button image name
     public let downloadImageNameEvent = Field<String>("download_icon_black")
     // MARK: Dependencies

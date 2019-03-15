@@ -20,15 +20,6 @@ internal final class UserActionsViewModel {
     
     // MARK: to client
     public var playbackHistory = PublishSubject<[Playable]>()
-//
-//    public var latestPlaybackPosition: Observable<Double> {
-//        if let playable = self.playable {
-//            return self.userActionsService.fetchPlaybackPosition(playable: playable)
-//                .asObservable()
-//        } else {
-//            return Observable.just(-1)
-//        }
-//    }
 
     // MARK: Dependencies
     private let userActionsService: UserActionsServicing!
@@ -45,6 +36,7 @@ internal final class UserActionsViewModel {
     
     func setupBindings() {
         progressEvent.asObservable()
+            .throttle(1.5, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
             .subscribe(onNext: { [unowned self] progressValue in
                 DDLogDebug("progressValue: \(progressValue)")
                 if let playable: Playable = self.playable {
