@@ -58,22 +58,6 @@ internal final class UserActionsViewModel {
                             self.playbackHistory.onNext(playables)
 
                         })
-//                        .map({ playables in
-//                            self.playbackHistory.onNext(playables)
-//                        })
-
-                        
-//                        .subscribe(onSuccess: { playables in
-//
-//                        })
-//                        .subscribe(onNext: { playables in
-//                            return playables
-//                        })
-//                        .map { playables in
-//                            self.playbackHistory.next(playables)
-//                        }
-
-//                        .subscribeAndDispose(by: self.bag)
                 }
             })
             .disposed(by: bag)

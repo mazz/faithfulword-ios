@@ -336,7 +336,7 @@ class PopupContentController: UIViewController {
                               fileExtension: prodUrl.pathExtension,
                               urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
         assetPlaybackManager.asset = playbackAsset
-        downloadingViewModel.downloadAsset = playbackAsset
+        downloadingViewModel.downloadAsset.value = playbackAsset
         userActionsViewModel.playable = item
         
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
@@ -765,7 +765,7 @@ class PopupContentController: UIViewController {
                                   urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
             
             assetPlaybackManager.asset = playbackAsset
-            downloadingViewModel.downloadAsset = playbackAsset
+            downloadingViewModel.downloadAsset.value = playbackAsset
             userActionsViewModel.playable = playable
 
             
@@ -802,7 +802,7 @@ class PopupContentController: UIViewController {
                                   urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
 
             assetPlaybackManager.asset = playbackAsset
-            downloadingViewModel.downloadAsset = playbackAsset
+            downloadingViewModel.downloadAsset.value = playbackAsset
             userActionsViewModel.playable = playable
             
             //reset UI

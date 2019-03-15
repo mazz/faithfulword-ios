@@ -11,12 +11,16 @@ import RxSwift
 internal final class DownloadingViewModel {
     // MARK: Fields
 
+    // MARK: from client
     // the asset that the user intends to download
-    public var downloadAsset: Asset? = nil
+    public var downloadAsset = Field<Asset?>(nil)
     // the tap event initiated by the user
     public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
     // the tap event initiated by the user
     public var cancelDownloadButtonTapEvent = PublishSubject<FileDownloadState>()
+    
+    // MARK: to client
+    public var downloadState = PublishSubject<FileDownloadState>()
     // the tap event for the download share button
 //    public var fileDownloadCompleteEvent = PublishSubject<FileDownload>()
     // the progress of the current download
@@ -47,6 +51,17 @@ internal final class DownloadingViewModel {
     {
         self.downloadService = downloadService
         setupBindings()
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidInitiateNotification(notification:)), name: DownloadDataService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidProgressNotification(notification:)), name: DownloadDataService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidCompleteNotification(notification:)), name: DownloadDataService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidCancelNotification(notification:)), name: DownloadDataService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidErrorNotification(notification:)), name: DownloadDataService.fileDownloadDidErrorNotification, object: nil)
+    }
+    
+    deinit {
+        
     }
 
     private func setupBindings() {
@@ -54,7 +69,7 @@ internal final class DownloadingViewModel {
             .subscribe({ currentSetting in
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
-                    let downloadAsset = self.downloadAsset {
+                    let downloadAsset: Asset = self.downloadAsset.value {
 //                    downloadService.removeDownload(filename: downloadAsset.uuid)
                     downloadService.removeDownload(filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")))
                         .asObservable()
@@ -67,63 +82,89 @@ internal final class DownloadingViewModel {
             .subscribe(onNext: { currentSetting in
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
-                    let downloadAsset = self.downloadAsset {
+                    let downloadAsset: Asset = self.downloadAsset.value {
                     DDLogDebug("downloadAsset.uuid: \(downloadAsset.uuid)")
                     downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")))
 
-//                    self.observableDownload.subscribe(onNext: { download in
-//                        self.fileDownload.value = download
-//                        // fileDownload state
-//                        self.downloadState.value = download.state
-//
-//                        self.updateDownloadState(filename: downloadAsset.uuid, downloadState: download.state)
-//
-//                        //                        DDLogDebug("download: \(download.localUrl) | \(download.completedCount) / \(download.totalCount)(\(download.progress) | \(download.state) )")
-//                        DDLogDebug("self.downloadService.downloadMap: \(self.downloadService.downloadMap)")
-//                    }, onError: { error in
-//                        DDLogDebug("observableDownload error: \(error)")
-//                        self.fileDownload.value = nil
-//                    })
-//                    .disposed(by: self.bag)
                 }
             }, onError: { error in
                 DDLogDebug("downloadButtonTapEvent error: \(error)")
             })
             .disposed(by: bag)
+        
+        downloadAsset.asObservable()
+            .filterNils()
+            .subscribe(onNext: { asset in
+                if FileManager.default.fileExists(atPath: FileSystem.savedDirectory.appendingPathComponent(asset.uuid.appending(String(describing: ".\(asset.fileExtension)"))).path) {
+                    self.downloadState.onNext(.complete)
+                    //            downloadImageNameEvent.value = "share-box"
+                } else {
+                    self.downloadState.onNext(.initial)
+                    //            downloadImageNameEvent.value = "download_icon_black"
+                }
+            })
+            .disposed(by: bag)
     }
 
-//    func removeDownload(for uuid: String) {
-//        downloadService.removeDownload(filename: uuid)
-//    }
+    @objc func handleDownloadDidInitiateNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload,
+            let downloadAsset: Asset = self.downloadAsset.value {
+            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+                
+                self.downloadState.onNext(.initiating)
+            }
+            
+        }
+    }
     
-//    public func updateDownloadState(filename: String, downloadState: FileDownloadState) {
-//        if let downloadAsset = self.downloadAsset {
-//            switch downloadState {
-//            case .initial:
-//                self.downloadImageNameEvent.value = "download_icon_black"
-//            case .initiating:
-//                break
-//            case .inProgress:
-//                break
-//            case .cancelling:
-//                break
-//            case .cancelled:
-////                downloadService.removeDownload(filename: downloadAsset.uuid)
-//                self.downloadState.value = .initial
-//            case .complete:
-//                self.downloadImageNameEvent.value = "share-box"
-////                downloadService.removeDownload(filename: downloadAsset.uuid)
-//                self.downloadButtonTapEvent.dispose()
-//                if let download = self.fileDownload.value {
-//                    self.fileDownloadCompleteEvent.onNext(download)
-//                }
-//            case .error:
-////                downloadService.removeDownload(filename: downloadAsset.uuid)
-//                self.downloadState.value = .initial
-//            case .unknown:
-//                break
-//            }
-//        }
-//    }
-}
+    @objc func handleDownloadDidProgressNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload,
+            let downloadAsset: Asset = self.downloadAsset.value {
+            DDLogDebug("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(downloadAsset.uuid)")
+            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+//                self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
+//                self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
+                self.downloadState.onNext(.inProgress)
+                DDLogDebug("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+            }
+        }
+    }
+    
+    @objc func handleDownloadDidCompleteNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload,
+            let downloadAsset: Asset = self.downloadAsset.value {
+            DDLogDebug("completeNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+                self.downloadState.onNext(.complete)
+            }
+        }
+    }
+    
+    @objc func handleDownloadDidErrorNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload,
+            let downloadAsset: Asset = self.downloadAsset.value {
+            DDLogDebug("errorNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+                // even though it's an error, just set it back to .initial
+                // because we have no use case for an errored download at the moment
+                self.downloadState.onNext(.initial)
+            }
+        }
+    }
+    
+    @objc func handleDownloadDidCancelNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload,
+            let downloadAsset: Asset = self.downloadAsset.value {
+            DDLogDebug("cancelNotification filedownload: \(fileDownload)")
+            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+                self.downloadState.onNext(.initial)
+            }
+        }
+    }}
 
