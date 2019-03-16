@@ -13,13 +13,13 @@ public final class PlaybackControlsViewModel {
     public private(set) var songTitle = Field<NSAttributedString>(NSAttributedString(string: "--", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.songTitleFont()]))
     public private(set) var artistName = Field<NSAttributedString>(NSAttributedString(string: "--", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0), NSAttributedString.Key.font: UIFont.artistNameFont()]))
     public private(set) var albumArt = Field<UIImage?>(nil)
-    public private(set) var estimatedPlaybackPosition = Field<Float>(Float(0))
-    public private(set) var estimatedDuration = Field<Float>(Float(0))
     
-    // MARK: Constants
-    //    var songTitleAttributes: [NSAttributedString.Key: Any] =
-    //        [NSAttributedString.Key.foregroundColor: UIColor.black,
-    //         NSAttributedString.Key.font: UIFont.songTitleFont()]
+    public private(set) var playbackPlayable = Field<Playable?>(nil)
+
+    
+//    public private(set) var estimatedPlaybackPosition = Field<Float>(Float(0))
+//    public private(set) var estimatedDuration = Field<Float>(Float(0))
+    
     // MARK: --
     
     init(assetPlaybackService: AssetPlaybackServicing) {
@@ -87,9 +87,6 @@ public final class PlaybackControlsViewModel {
                     albumArt.value = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
                 }
             }
-            
-            
-            //            fullAlbumArtImageView.image = image
         }
         else {
             
@@ -97,95 +94,28 @@ public final class PlaybackControlsViewModel {
             songTitle.value = NSAttributedString(string: "--", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black,NSAttributedString.Key.font: UIFont.songTitleFont()])
             
             artistName.value = NSAttributedString(string: "--", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0), NSAttributedString.Key.font: UIFont.artistNameFont()])
-
-//            albumTitle.value = "--"
-            
-            
-            //            if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            //                fullSongNameLabel.attributedText = NSAttributedString(string: "--", attributes: songAttribs)
-            //            }
-            //            if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            //                fullAlbumNameLabel.attributedText = NSAttributedString(string: "--", attributes: albumAttribs)
-            //            }
-            
-            //            if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            //                fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
-            //                fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
-            //            }
-            //            fullPlaybackSlider.value = Float(0)
-            //
-            //            estimatedPlaybackPosition = Float(0)
-            //            estimatedDuration = Float(0)
-            //            resetUIDefaults()
         }
     }
     
     @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
         DDLogDebug("handleRemoteCommandNextTrackNotification notification: \(notification)")
         
-        //        let playables: [Playable] = playbackViewModel.assetPlaybackService.playables.value
-        //
-        //        guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
-        //        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
-        //
-        //        if assetIndex < playables.count - 1 {
-        //            let playable: Playable = playables[assetIndex + 1]
-        //
-        //            guard let path: String = playable.path,
-        //                let localizedName: String = playable.localizedName,
-        //                let presenterName: String = playable.presenterName ?? self.albumTitle,
-        //                let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
-        //
-        //            let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
-        //            playbackAsset = Asset(name: localizedName,
-        //                                  artist: presenterName,
-        //                                  uuid: playable.uuid,
-        //                                  fileExtension: prodUrl.pathExtension,
-        //                                  urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
-        //
-        //            assetPlaybackManager.asset = playbackAsset
-        //            downloadingViewModel.downloadAsset.value = playbackAsset
-        //            userActionsViewModel.playable = playable
-        //
-        //
-        //            //reset UI
-        //            resetUIDefaults()
-        //            assetPlaybackManager.seekTo(0)
-        //        }
+        let playables: [Playable] = assetPlaybackService.playables.value
+        
+        guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
+        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
+        
+        if assetIndex < playables.count - 1 { self.playbackPlayable.value = playables[assetIndex + 1] }
     }
     
     @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
         DDLogDebug("handleRemoteCommandPreviousTrackNotification notification: \(notification)")
+        let playables: [Playable] = assetPlaybackService.playables.value
         
-        //        let playables: [Playable] = playbackViewModel.assetPlaybackService.playables.value
-        //
-        //        guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
-        //        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
-        //
-        //        if assetIndex > 0 {
-        //            let playable: Playable = playables[assetIndex - 1]
-        //
-        //            guard let path: String = playable.path,
-        //                let localizedName: String = playable.localizedName,
-        //                let presenterName: String = playable.presenterName ?? self.albumTitle,
-        //                let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
-        //
-        //            // play local file if available
-        //            let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
-        //            playbackAsset = Asset(name: localizedName,
-        //                                  artist: presenterName,
-        //                                  uuid: playable.uuid,
-        //                                  fileExtension: prodUrl.pathExtension,
-        //                                  urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
-        //
-        //            assetPlaybackManager.asset = playbackAsset
-        //            downloadingViewModel.downloadAsset.value = playbackAsset
-        //            userActionsViewModel.playable = playable
-        //
-        //            //reset UI
-        //            resetUIDefaults()
-        //            assetPlaybackManager.seekTo(0)
-        //        }
+        guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
+        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
+        
+        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }            
     }
     
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {

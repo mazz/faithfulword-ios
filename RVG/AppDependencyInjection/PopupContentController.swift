@@ -77,23 +77,23 @@ class PopupContentController: UIViewController {
     //    var muteVolume : Bool?
     var playbackSpeed: PlaybackSpeed = .oneX
     
-    var assetPlaybackManager: AssetPlaybackManager! {
-        didSet {
-            // Add the Key-Value Observers needed to keep the UI up to date.
-            //            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
-            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration), options: NSKeyValueObservingOptions.new, context: nil)
-            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition), options: NSKeyValueObservingOptions.new, context: nil)
-            
-            // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
-            let notificationCenter = NotificationCenter.default
-            
-            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
-        }
-    }
+//    var assetPlaybackManager: AssetPlaybackManager! {
+//        didSet {
+//            // Add the Key-Value Observers needed to keep the UI up to date.
+//            //            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
+//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration), options: NSKeyValueObservingOptions.new, context: nil)
+//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition), options: NSKeyValueObservingOptions.new, context: nil)
+//
+//            // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
+//            let notificationCenter = NotificationCenter.default
+//
+//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
+//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
+//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
+//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
+//        }
+//    }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -108,9 +108,35 @@ class PopupContentController: UIViewController {
     
     func bindPlaybackViewModel() {
         
+        playbackViewModel.playbackPlayable
+            .asObservable()
+            .filterNils()
+            .next { [unowned self] playable in
+                guard let path: String = playable.path,
+                    let localizedName: String = playable.localizedName,
+                    let presenterName: String = playable.presenterName ?? "Unknown",
+                    let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
+
+                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
+                self.playbackAsset = Asset(name: localizedName,
+                                      artist: presenterName,
+                                      uuid: playable.uuid,
+                                      fileExtension: prodUrl.pathExtension,
+                                      urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
+
+                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
+                self.downloadingViewModel.downloadAsset.value = self.playbackAsset
+                self.userActionsViewModel.playable = playable
+
+                //reset UI
+                self.resetUIDefaults()
+                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.seekTo(0)
+            }
+            .disposed(by: bag)
+        
         playbackViewModel.songTitle
             .asObservable()
-            .do(onNext: { songNameAttr in
+            .do(onNext: { [unowned self] songNameAttr in
                 self.popupItem.title = songNameAttr.string
             })
             .bind(to: fullSongNameLabel.rx.attributedText)
@@ -118,7 +144,7 @@ class PopupContentController: UIViewController {
 
         playbackViewModel.artistName
             .asObservable()
-            .do(onNext: { artistNameAttr in
+            .do(onNext: { [unowned self] artistNameAttr in
                 self.popupItem.subtitle = artistNameAttr.string
             })
             .bind(to: fullAlbumNameLabel.rx.attributedText)
@@ -126,7 +152,7 @@ class PopupContentController: UIViewController {
         
         playbackViewModel.albumArt
             .asObservable()
-            .do(onNext: { albumArtImage in
+            .do(onNext: { [unowned self] albumArtImage in
                 self.popupItem.image = albumArtImage
                 self.popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "")
             })
@@ -336,10 +362,29 @@ class PopupContentController: UIViewController {
             let presenterName: String = item.presenterName ?? "Unknown",
             let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
             else { return }
-        self.assetPlaybackManager = playbackViewModel.assetPlaybackService.assetPlaybackManager
+        
+        
+        // Add the Key-Value Observers needed to keep the UI up to date.
+        //            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration), options: NSKeyValueObservingOptions.new, context: nil)
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition), options: NSKeyValueObservingOptions.new, context: nil)
+        
+        // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
+
+        
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidProgressNotification(notification:)), name: DownloadDataService.fileDownloadDidProgressNotification, object: nil)
+
+//        self.assetPlaybackManager = playbackViewModel.assetPlaybackService.assetPlaybackManager
         
         // stop because there could an asset currently playing
-        assetPlaybackManager.stop()
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.stop()
         
         // play local file if available
         let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(item.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
@@ -348,15 +393,13 @@ class PopupContentController: UIViewController {
                               uuid: item.uuid,
                               fileExtension: prodUrl.pathExtension,
                               urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
-        assetPlaybackManager.asset = playbackAsset
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = playbackAsset
         downloadingViewModel.downloadAsset.value = playbackAsset
         userActionsViewModel.playable = item
         
         fullPlayPauseButton.addTarget(self, action: #selector(PopupContentController.doPlayPause), for: .touchUpInside)
         
-        let notificationCenter = NotificationCenter.default
-        
-        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidProgressNotification(notification:)), name: DownloadDataService.fileDownloadDidProgressNotification, object: nil)
+//        let notificationCenter = NotificationCenter.default
         
         resetUIDefaults()
 //        resetDownloadingViewModel()
@@ -396,8 +439,8 @@ class PopupContentController: UIViewController {
         notificationCenter.removeObserver(self, name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
         
         //        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress))
-        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration))
-        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration))
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
         
         resetViewModelsBag()
     }
@@ -444,7 +487,7 @@ class PopupContentController: UIViewController {
     }
 
     @objc func doPlayPause() {
-        assetPlaybackManager.togglePlayPause()
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.togglePlayPause()
         
         //        updateToolbarItemState()
     }
@@ -478,24 +521,24 @@ class PopupContentController: UIViewController {
             }
         }
         if let rate = Float(speedTitle) {
-            assetPlaybackManager.playbackRate(rate)
+            playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackRate(rate)
         }
     }
     
     @IBAction func handleUserDidPressBackwardButton(_ sender: Any) {
-        if assetPlaybackManager.playbackPosition < 5.0 {
+        if playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition < 5.0 {
             // If the currently playing asset is less than 5 seconds into playback then skip to the previous `Asset`.
-            assetPlaybackManager.previousTrack()
+            playbackViewModel.assetPlaybackService.assetPlaybackManager.previousTrack()
 //            resetDownloadingViewModel()
         }
         else {
             // Otherwise seek back to the beginning of the currently playing `Asset`.
-            assetPlaybackManager.seekTo(0)
+            playbackViewModel.assetPlaybackService.assetPlaybackManager.seekTo(0)
         }
     }
     
     @IBAction func handleUserDidPressForwardButton(_ sender: Any) {
-        assetPlaybackManager.nextTrack()
+        playbackViewModel.assetPlaybackService.assetPlaybackManager.nextTrack()
     }
     
     @IBAction func share(sender: AnyObject) {
@@ -547,7 +590,7 @@ class PopupContentController: UIViewController {
             let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause")
             else { return }
 //        DDLogDebug("updateTransportUIState")
-        if assetPlaybackManager.asset == nil {
+        if playbackViewModel.assetPlaybackService.assetPlaybackManager.asset == nil {
             //            backwardButton.isEnabled = false
             playPauseButton.isEnabled = false
             nextButton.isEnabled = false
@@ -559,7 +602,7 @@ class PopupContentController: UIViewController {
             playPauseButton.isEnabled = true
             nextButton.isEnabled = true
             
-            if assetPlaybackManager.state != .playing {
+            if playbackViewModel.assetPlaybackService.assetPlaybackManager.state != .playing {
                 playPauseButton.image = UIImage(named: "play")
             }
             else {
@@ -570,13 +613,13 @@ class PopupContentController: UIViewController {
         let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
         let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
         
-        if assetPlaybackManager.state == .playing {
+        if playbackViewModel.assetPlaybackService.assetPlaybackManager.state == .playing {
             playPauseButton.image = pauseImage
             playPauseButton.accessibilityLabel = accessibilityPause
             
             fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
             fullPlayPauseButton.accessibilityLabel = accessibilityPause
-        } else if assetPlaybackManager.state == .paused {
+        } else if playbackViewModel.assetPlaybackService.assetPlaybackManager.state == .paused {
             playPauseButton.image = playImage
             playPauseButton.accessibilityLabel = accessibilityPlay
             
@@ -620,29 +663,29 @@ class PopupContentController: UIViewController {
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(AssetPlaybackManager.duration) {
-            let duration: Float = Float(assetPlaybackManager.duration)
+            let duration: Float = Float(playbackViewModel.assetPlaybackService.assetPlaybackManager.duration)
             //            DDLogDebug("duration: \(duration)")
             if !duration.isNaN {
                 estimatedDuration = duration
                 //                DDLogDebug("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
                 fullPlaybackSlider.minimumValue = Float(0)
-                fullPlaybackSlider.maximumValue = assetPlaybackManager.duration
+                fullPlaybackSlider.maximumValue = playbackViewModel.assetPlaybackService.assetPlaybackManager.duration
             }
             
         }
         else if keyPath == #keyPath(AssetPlaybackManager.playbackPosition) {
-            let playbackPosition: Float = Float(assetPlaybackManager.playbackPosition)
+            let playbackPosition: Float = Float(playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition)
             if !playbackPosition.isNaN {
                 estimatedPlaybackPosition = playbackPosition
                 //                DDLogDebug("assetPlaybackManager.playbackPosition: \(assetPlaybackManager.playbackPosition)")
-                guard let stringValue = dateComponentFormatter.string(from: TimeInterval(assetPlaybackManager.playbackPosition)) else { return }
+                guard let stringValue = dateComponentFormatter.string(from: TimeInterval(playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition)) else { return }
                 if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                     fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: stringValue, attributes: timeAttribs)
                 }
-                actualPlaybackProgress.value = assetPlaybackManager.playbackPosition
+                actualPlaybackProgress.value = playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition
                 
                 if estimatedDuration != 0 {
-                    let remainingTime: Float = Float(estimatedDuration - assetPlaybackManager.playbackPosition)
+                    let remainingTime: Float = Float(estimatedDuration - playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition)
                     guard let stringValue = dateComponentFormatter.string(from: TimeInterval(remainingTime)) else { return }
                     
                     if let timeAttribs: [NSAttributedString.Key : Any] = fullTotalPlaybackDurationLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
@@ -664,7 +707,7 @@ class PopupContentController: UIViewController {
     // MARK: Notification Observer Methods
     
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
-        if assetPlaybackManager.asset == nil {            
+        if playbackViewModel.assetPlaybackService.assetPlaybackManager.asset == nil {
 //            albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
             
             if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
@@ -679,79 +722,6 @@ class PopupContentController: UIViewController {
         }
     }
     
-    @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
-//        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
-        let playables: [Playable] = playbackViewModel.assetPlaybackService.playables.value
-        
-        guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
-        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
-        
-        if assetIndex < playables.count - 1 {
-            let playable: Playable = playables[assetIndex + 1]
-            
-            guard let path: String = playable.path,
-                let localizedName: String = playable.localizedName,
-                let presenterName: String = playable.presenterName ?? "Unknown",
-                let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
-            
-            // play local file if available
-//            (self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")))
-            let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
-            playbackAsset = Asset(name: localizedName,
-                                  artist: presenterName,
-                                  uuid: playable.uuid,
-                                  fileExtension: prodUrl.pathExtension,
-                                  urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
-            
-            assetPlaybackManager.asset = playbackAsset
-            downloadingViewModel.downloadAsset.value = playbackAsset
-            userActionsViewModel.playable = playable
-
-            
-            //reset UI
-            resetUIDefaults()
-//            resetDownloadingViewModel()
-            //            bindUI()
-            assetPlaybackManager.seekTo(0)
-            //            assetPlaybackManager.play()
-        }
-    }
-    
-    @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
-//        guard let assetPlaybackService = playbackViewModel.assetPlaybackService else { return }
-        let playables: [Playable] = playbackViewModel.assetPlaybackService.playables.value
-        
-        guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
-        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
-        
-        if assetIndex > 0 {
-            let playable: Playable = playables[assetIndex - 1]
-            
-            guard let path: String = playable.path,
-                let localizedName: String = playable.localizedName,
-                let presenterName: String = playable.presenterName ?? "Unknown",
-                let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
-            
-            // play local file if available
-            let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
-            playbackAsset = Asset(name: localizedName,
-                                  artist: presenterName,
-                                  uuid: playable.uuid,
-                                  fileExtension: prodUrl.pathExtension,
-                                  urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
-
-            assetPlaybackManager.asset = playbackAsset
-            downloadingViewModel.downloadAsset.value = playbackAsset
-            userActionsViewModel.playable = playable
-            
-            //reset UI
-            resetUIDefaults()
-//            resetDownloadingViewModel()
-            //            bindUI()
-            assetPlaybackManager.seekTo(0)
-            //            assetPlaybackManager.play()
-        }
-    }
     
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
         DDLogDebug("handlePlayerRateDidChangeNotification notification: \(notification)")
@@ -763,8 +733,8 @@ class PopupContentController: UIViewController {
             //            self.handleRemoteCommandNextTrackNotification(notification: notification)
             NotificationCenter.default.post(name: AssetPlaybackManager.nextTrackNotification, object: nil, userInfo: [Asset.uuidKey: playbackAsset.uuid])
         } else if self.repeatMode == .repeatOne {
-            assetPlaybackManager.seekTo(0)
-            assetPlaybackManager.play()
+            playbackViewModel.assetPlaybackService.assetPlaybackManager.seekTo(0)
+            playbackViewModel.assetPlaybackService.assetPlaybackManager.play()
         }
     }
     
