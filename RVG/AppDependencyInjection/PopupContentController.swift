@@ -94,7 +94,7 @@ class PopupContentController: UIViewController {
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
         }
     }
-        
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         playPauseButton = UIBarButtonItem(image: UIImage(named: "play"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
@@ -664,35 +664,7 @@ class PopupContentController: UIViewController {
     // MARK: Notification Observer Methods
     
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
-        if assetPlaybackManager.asset != nil {
-//            songTitle = assetPlaybackManager.asset.name
-//            albumTitle = assetPlaybackManager.asset.artist
-//            popupItem.title = assetPlaybackManager.asset.name
-//            popupItem.subtitle = assetPlaybackManager.asset.artist
-
-            guard let asset = assetPlaybackManager.asset else {
-                return
-            }
-            
-//            let urlAsset = asset.urlAsset
-//            DDLogDebug("urlAsset: \(urlAsset)")
-//            let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
-//
-//            if let image = UIImage(data: artworkData) {
-//                albumArt = image
-//            } else {
-//                if let image = UIImage(named: "creation") {
-//                    albumArt = image
-//                } else {
-//                    albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
-//                }
-//            }
-            
-            
-            //            fullAlbumArtImageView.image = image
-        }
-        else {
-            
+        if assetPlaybackManager.asset == nil {            
 //            albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
             
             if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
