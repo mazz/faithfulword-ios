@@ -54,11 +54,12 @@ extension MediaListingCoordinator: NavigationCoordinating {
 
             if let localizedName = playable.localizedName,
 //                let presenterName = playable.presenterName,
-                let thumbImage = UIImage(named: "Titus1-9") {
-                popupController.songTitle = localizedName
-                popupController.albumTitle = playable.presenterName ?? "Unknown"
+                let thumbImage = UIImage(named: "creation") {
+                popupController.popupItem.title = localizedName
+                popupController.popupItem.subtitle = playable.presenterName ?? "Unknown"
+                popupController.popupItem.image = thumbImage
                 //                popupController.albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
-                popupController.albumArt = thumbImage
+//                popupController.fullAlbumArtImageView.image = thumbImage
                 popupController.popupItem.accessibilityHint = NSLocalizedString("Tap to Expand the Mini Player", comment: "")
 
                 if let navigationController = self.navigationController {

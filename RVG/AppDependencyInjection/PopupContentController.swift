@@ -94,27 +94,7 @@ class PopupContentController: UIViewController {
             notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
         }
     }
-    
-    var songTitle: String = "" {
-        didSet {
-            popupItem.title = songTitle
-        }
-    }
-    var albumTitle: String = "" {
-        didSet {
-            popupItem.subtitle = albumTitle
-        }
-    }
-    var albumArt: UIImage = UIColor.red.image(size: CGSize(width: 128, height: 128)) {
-        didSet {
-            if isViewLoaded {
-                fullAlbumArtImageView.image = albumArt
-            }
-            popupItem.image = albumArt
-            popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "")
-        }
-    }
-    
+        
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         playPauseButton = UIBarButtonItem(image: UIImage(named: "play"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
@@ -130,12 +110,28 @@ class PopupContentController: UIViewController {
         
         playbackViewModel.songTitle
             .asObservable()
+            .do(onNext: { songNameAttr in
+                self.popupItem.title = songNameAttr.string
+            })
             .bind(to: fullSongNameLabel.rx.attributedText)
             .disposed(by: bag)
 
         playbackViewModel.artistName
             .asObservable()
+            .do(onNext: { artistNameAttr in
+                self.popupItem.subtitle = artistNameAttr.string
+            })
             .bind(to: fullAlbumNameLabel.rx.attributedText)
+            .disposed(by: bag)
+        
+        playbackViewModel.albumArt
+            .asObservable()
+            .do(onNext: { albumArtImage in
+                self.popupItem.image = albumArtImage
+                self.popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "")
+            })
+            .filterNils()
+            .bind(to: fullAlbumArtImageView.rx.image)
             .disposed(by: bag)
         
         // bind repeat track state
@@ -337,7 +333,7 @@ class PopupContentController: UIViewController {
         guard let item: Playable = playbackViewModel.assetPlaybackService.playableItem.value,
             let path: String = item.path,
             let localizedName: String = item.localizedName,
-            let presenterName: String = item.presenterName ?? self.albumTitle,
+            let presenterName: String = item.presenterName ?? "Unknown",
             let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
             else { return }
         self.assetPlaybackManager = playbackViewModel.assetPlaybackService.assetPlaybackManager
@@ -379,7 +375,7 @@ class PopupContentController: UIViewController {
         fullAlbumArtImageView.layer.shadowOffset = CGSize(width: 2, height: 4)
         fullAlbumArtImageView.layer.shadowOpacity = 0.8
         fullAlbumArtImageView.layer.shadowRadius = 4.0
-        fullAlbumArtImageView.image = albumArt
+        fullAlbumArtImageView.image = popupItem.image
         
         fullDownloadProgress.value = CGFloat(0)
         fullDownloadProgress.style = .ontop
@@ -414,8 +410,8 @@ class PopupContentController: UIViewController {
     
     private func resetUIDefaults() {
         
-        popupItem.title = songTitle
-        popupItem.subtitle = albumTitle
+//        popupItem.title = songTitle
+//        popupItem.subtitle = albumTitle
         
         // emptyUIState
         
@@ -669,35 +665,35 @@ class PopupContentController: UIViewController {
     
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         if assetPlaybackManager.asset != nil {
-            songTitle = assetPlaybackManager.asset.name
-            albumTitle = assetPlaybackManager.asset.artist
-            popupItem.title = assetPlaybackManager.asset.name
-            popupItem.subtitle = assetPlaybackManager.asset.artist
+//            songTitle = assetPlaybackManager.asset.name
+//            albumTitle = assetPlaybackManager.asset.artist
+//            popupItem.title = assetPlaybackManager.asset.name
+//            popupItem.subtitle = assetPlaybackManager.asset.artist
 
             guard let asset = assetPlaybackManager.asset else {
                 return
             }
             
-            let urlAsset = asset.urlAsset
-            DDLogDebug("urlAsset: \(urlAsset)")
-            let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
-            
-            if let image = UIImage(data: artworkData) {
-                albumArt = image
-            } else {
-                if let image = UIImage(named: "creation") {
-                    albumArt = image
-                } else {
-                    albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
-                }
-            }
+//            let urlAsset = asset.urlAsset
+//            DDLogDebug("urlAsset: \(urlAsset)")
+//            let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
+//
+//            if let image = UIImage(data: artworkData) {
+//                albumArt = image
+//            } else {
+//                if let image = UIImage(named: "creation") {
+//                    albumArt = image
+//                } else {
+//                    albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
+//                }
+//            }
             
             
             //            fullAlbumArtImageView.image = image
         }
         else {
             
-            albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
+//            albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
             
             if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                 fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
@@ -723,7 +719,7 @@ class PopupContentController: UIViewController {
             
             guard let path: String = playable.path,
                 let localizedName: String = playable.localizedName,
-                let presenterName: String = playable.presenterName ?? self.albumTitle,
+                let presenterName: String = playable.presenterName ?? "Unknown",
                 let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
             
             // play local file if available
@@ -761,7 +757,7 @@ class PopupContentController: UIViewController {
             
             guard let path: String = playable.path,
                 let localizedName: String = playable.localizedName,
-                let presenterName: String = playable.presenterName ?? self.albumTitle,
+                let presenterName: String = playable.presenterName ?? "Unknown",
                 let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
             
             // play local file if available

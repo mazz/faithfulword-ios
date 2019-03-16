@@ -66,20 +66,9 @@ public final class PlaybackControlsViewModel {
         DDLogDebug("PlaybackControlsViewModel handleCurrentAssetDidChangeNotification notification: \(notification)")
         
         if self.assetPlaybackService.assetPlaybackManager.asset != nil {
-//                        if let songAttribs: [NSAttributedString.Key : Any] = songTitle.value.attributes(at: 0, effectiveRange: nil) {
-            
-//            DispatchQueue.main.async {
-//            }
             songTitle.value = NSAttributedString(string: self.assetPlaybackService.assetPlaybackManager.asset.name, attributes: [NSAttributedString.Key.foregroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.songTitleFont()])
             
             artistName.value = NSAttributedString(string: self.assetPlaybackService.assetPlaybackManager.asset.artist, attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0), NSAttributedString.Key.font: UIFont.artistNameFont()])
-//                        }
-            //            if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            //                fullAlbumNameLabel.attributedText = NSAttributedString(string: self.assetPlaybackService.assetPlaybackManager.asset.artist, attributes: albumAttribs)
-            //            }
-            
-            
-//            albumTitle.value = self.assetPlaybackService.assetPlaybackManager.asset.artist
             
             guard let asset = self.assetPlaybackService.assetPlaybackManager.asset else {
                 return
