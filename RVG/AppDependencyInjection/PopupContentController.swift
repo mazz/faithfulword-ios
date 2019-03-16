@@ -97,28 +97,12 @@ class PopupContentController: UIViewController {
     
     var songTitle: String = "" {
         didSet {
-            if isViewLoaded {
-                if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-                    fullSongNameLabel.attributedText = NSAttributedString(string: songTitle, attributes: songAttribs)
-                }
-//                fullSongNameLabel.text = songTitle
-            }
-            
             popupItem.title = songTitle
         }
     }
     var albumTitle: String = "" {
         didSet {
-            if isViewLoaded {
-                if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-                    fullAlbumNameLabel.attributedText = NSAttributedString(string: albumTitle, attributes: albumAttribs)
-                }
-
-//                fullAlbumNameLabel.text = albumTitle
-            }
-            //            if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
             popupItem.subtitle = albumTitle
-            //            }
         }
     }
     var albumArt: UIImage = UIColor.red.image(size: CGSize(width: 128, height: 128)) {
@@ -134,11 +118,6 @@ class PopupContentController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         playPauseButton = UIBarButtonItem(image: UIImage(named: "play"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
-        //        playPauseButton.action = #selector(PopupContentController.doPlayPause)
-        
-        //for: .normal, style: .plain, barMetrics: .compact)
-        
-        //        playPauseButton = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
         playPauseButton.accessibilityLabel = NSLocalizedString("Play", comment: "")
         nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(PopupContentController.handleUserDidPressForwardButton))
         nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
@@ -148,6 +127,17 @@ class PopupContentController: UIViewController {
     }
     
     func bindPlaybackViewModel() {
+        
+        playbackViewModel.songTitle
+            .asObservable()
+            .bind(to: fullSongNameLabel.rx.attributedText)
+            .disposed(by: bag)
+
+        playbackViewModel.artistName
+            .asObservable()
+            .bind(to: fullAlbumNameLabel.rx.attributedText)
+            .disposed(by: bag)
+        
         // bind repeat track state
         fullRepeatButton.rx.tap
             .map { [unowned self] _ in
@@ -209,7 +199,6 @@ class PopupContentController: UIViewController {
     }
     
     func bindDownloadingViewModel() {
-        resetUIBindings()
         
         // hide progress button on completion or initial
 //        downloadingViewModel.downloadState.asObservable()
@@ -336,6 +325,8 @@ class PopupContentController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        resetViewModelsBag()
+
         bindPlaybackViewModel()
         bindDownloadingViewModel()
 
@@ -369,19 +360,34 @@ class PopupContentController: UIViewController {
         
         let notificationCenter = NotificationCenter.default
         
-//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidInitiateNotification(notification:)), name: DownloadDataService.fileDownloadDidInitiateNotification, object: nil)
-        
         notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidProgressNotification(notification:)), name: DownloadDataService.fileDownloadDidProgressNotification, object: nil)
-        
-//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCompleteNotification(notification:)), name: DownloadDataService.fileDownloadDidCompleteNotification, object: nil)
-        
-//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidCancelNotification(notification:)), name: DownloadDataService.fileDownloadDidCancelNotification, object: nil)
-        
-//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidErrorNotification(notification:)), name: DownloadDataService.fileDownloadDidErrorNotification, object: nil)
         
         resetUIDefaults()
 //        resetDownloadingViewModel()
+        dateComponentFormatter.unitsStyle = .positional
+        dateComponentFormatter.allowedUnits = [.minute, .second]
+        dateComponentFormatter.zeroFormattingBehavior = [.pad]
         
+        fullPlaybackSlider.thumbTintColor = UIColor.lightGray //UIColor(red: CGFloat(238/255), green: CGFloat(238/255), blue: CGFloat(238/255), alpha: CGFloat(1))
+        fullSongNameLabel.fadeLength = 10.0
+        fullSongNameLabel.speed = .duration(8.0)
+        
+        fullAlbumNameLabel.fadeLength = 10.0
+        fullAlbumNameLabel.speed = .duration(8.0)
+        
+        fullAlbumArtImageView.layer.shadowColor = UIColor.darkGray.cgColor
+        fullAlbumArtImageView.layer.shadowOffset = CGSize(width: 2, height: 4)
+        fullAlbumArtImageView.layer.shadowOpacity = 0.8
+        fullAlbumArtImageView.layer.shadowRadius = 4.0
+        fullAlbumArtImageView.image = albumArt
+        
+        fullDownloadProgress.value = CGFloat(0)
+        fullDownloadProgress.style = .ontop
+        fullDownloadProgress.innerRingColor = UIColor(red: 21.0/255.0, green: 126.0/255.0, blue: 251.0/255.0, alpha: 1.0)
+        fullDownloadProgress.outerRingColor = UIColor(white: 0.8, alpha: 1.0)
+        fullDownloadProgress.outerRingWidth = 3.0
+        fullDownloadProgress.innerRingWidth = 3.0
+
     }
     
     deinit {
@@ -397,53 +403,19 @@ class PopupContentController: UIViewController {
         assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration))
         assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition))
         
-        resetUIBindings()
+        resetViewModelsBag()
     }
     
     // MARK: Private
     
-    private func resetUIBindings() {
+    private func resetViewModelsBag() {
         bag = DisposeBag()
     }
     
     private func resetUIDefaults() {
-        dateComponentFormatter.unitsStyle = .positional
-        dateComponentFormatter.allowedUnits = [.minute, .second]
-        dateComponentFormatter.zeroFormattingBehavior = [.pad]
-        
-        fullPlaybackSlider.thumbTintColor = UIColor.lightGray //UIColor(red: CGFloat(238/255), green: CGFloat(238/255), blue: CGFloat(238/255), alpha: CGFloat(1))
-        
-        if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            fullSongNameLabel.attributedText = NSAttributedString(string: songTitle, attributes: songAttribs)
-        }
-
-//        fullSongNameLabel.text = songTitle
-        fullSongNameLabel.fadeLength = 10.0
-        fullSongNameLabel.speed = .duration(8.0)
-        
-//        fullAlbumNameLabel.text = albumTitle
-        if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            fullAlbumNameLabel.attributedText = NSAttributedString(string: albumTitle, attributes: albumAttribs)
-        }
-        fullAlbumNameLabel.fadeLength = 10.0
-        fullAlbumNameLabel.speed = .duration(8.0)
-        
-        fullAlbumArtImageView.layer.shadowColor = UIColor.darkGray.cgColor
-        fullAlbumArtImageView.layer.shadowOffset = CGSize(width: 2, height: 4)
-        fullAlbumArtImageView.layer.shadowOpacity = 0.8
-        fullAlbumArtImageView.layer.shadowRadius = 4.0
-//        fullAlbumArtImageView.clipsToBounds = false
-        fullAlbumArtImageView.image = albumArt
         
         popupItem.title = songTitle
         popupItem.subtitle = albumTitle
-        
-        fullDownloadProgress.value = CGFloat(0)
-        fullDownloadProgress.style = .ontop
-        fullDownloadProgress.innerRingColor = UIColor(red: 21.0/255.0, green: 126.0/255.0, blue: 251.0/255.0, alpha: 1.0)
-        fullDownloadProgress.outerRingColor = UIColor(white: 0.8, alpha: 1.0)
-        fullDownloadProgress.outerRingWidth = 3.0
-        fullDownloadProgress.innerRingWidth = 3.0
         
         // emptyUIState
         
@@ -470,8 +442,6 @@ class PopupContentController: UIViewController {
             fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
         }
 
-//        fullCurrentPlaybackPositionLabel.text = "-:--"
-//        fullTotalPlaybackDurationLabel.text = "-:--"
         fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
         
         updateTransportUIState()
@@ -699,16 +669,11 @@ class PopupContentController: UIViewController {
     
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         if assetPlaybackManager.asset != nil {
-            if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-                fullSongNameLabel.attributedText = NSAttributedString(string: assetPlaybackManager.asset.name, attributes: songAttribs)
-            }
-            if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-                fullAlbumNameLabel.attributedText = NSAttributedString(string: assetPlaybackManager.asset.artist, attributes: albumAttribs)
-            }
-            
             songTitle = assetPlaybackManager.asset.name
             albumTitle = assetPlaybackManager.asset.artist
-            
+            popupItem.title = assetPlaybackManager.asset.name
+            popupItem.subtitle = assetPlaybackManager.asset.artist
+
             guard let asset = assetPlaybackManager.asset else {
                 return
             }
@@ -734,13 +699,6 @@ class PopupContentController: UIViewController {
             
             albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
             
-            if let songAttribs: [NSAttributedString.Key : Any] = fullSongNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-                fullSongNameLabel.attributedText = NSAttributedString(string: "--", attributes: songAttribs)
-            }
-            if let albumAttribs: [NSAttributedString.Key : Any] = fullAlbumNameLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-                fullAlbumNameLabel.attributedText = NSAttributedString(string: "--", attributes: albumAttribs)
-            }
-
             if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
                 fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
                 fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
