@@ -156,7 +156,8 @@ internal final class AppDependencyModule {
         
 
         container.register(PlaybackControlsViewModel.self) { resolver in
-            PlaybackControlsViewModel(assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
+            PlaybackControlsViewModel(assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                                      reachability: resolver.resolve(RxClassicReachable.self)!
 //                assetPlaybackService: resolver.resolve(AssetPlaybackService.self)!
             )
         }.inObjectScope(.container)

@@ -76,7 +76,7 @@ class PopupContentController: UIViewController {
     var playbackRepeat : Bool?
     //    var muteVolume : Bool?
     var playbackSpeed: PlaybackSpeed = .oneX
-        
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         playPauseButton = UIBarButtonItem(image: UIImage(named: "play"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
@@ -89,6 +89,14 @@ class PopupContentController: UIViewController {
     }
     
     func bindPlaybackViewModel() {
+        
+        playbackViewModel.playDisabled
+            .asObservable()
+            .next { [unowned self] playDisabled in
+                self.playPauseButton.isEnabled = !playDisabled
+                self.fullPlayPauseButton.isEnabled = !playDisabled
+        }
+        .disposed(by: bag)
         
         playbackViewModel.playbackState
             .asObservable()
@@ -105,35 +113,27 @@ class PopupContentController: UIViewController {
                 case .initial:
                     self.playPauseButton.image = playImage
                     self.playPauseButton.accessibilityLabel = accessibilityPlay
-                    self.playPauseButton.isEnabled = false
                     
                     self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
                     self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-                    self.fullPlayPauseButton.isEnabled = false
                 case .playing:
                     self.playPauseButton.image = pauseImage
                     self.playPauseButton.accessibilityLabel = accessibilityPause
-                    self.playPauseButton.isEnabled = true
 
                     self.fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
                     self.fullPlayPauseButton.accessibilityLabel = accessibilityPause
-                    self.fullPlayPauseButton.isEnabled = true
                 case .paused:
                     self.playPauseButton.image = playImage
                     self.playPauseButton.accessibilityLabel = accessibilityPlay
-                    self.playPauseButton.isEnabled = true
 
                     self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
                     self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-                    self.fullPlayPauseButton.isEnabled = true
                 case .interrupted:
                     self.playPauseButton.image = playImage
                     self.playPauseButton.accessibilityLabel = accessibilityPlay
-                    self.playPauseButton.isEnabled = false
 
                     self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
                     self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-                    self.fullPlayPauseButton.isEnabled = false
                 }
             }
             .disposed(by: bag)
