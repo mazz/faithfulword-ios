@@ -19,7 +19,7 @@ internal class AppCoordinator {
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     private let bag = DisposeBag()
     
-    
+    private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
     // MARK: Dependencies
     
     private let uiFactory: AppUIMaking
@@ -55,6 +55,17 @@ internal class AppCoordinator {
         self.assetPlaybackService = assetPlaybackService
         self.reachability = reachability
         
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { notification in            
+            if let taskId: UIBackgroundTaskIdentifier = self.backgroundTaskIdentifier {
+                UIApplication.shared.endBackgroundTask(taskId)
+            }
+        }
+
+        NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { notification in
+            self.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(withName: "main", expirationHandler: nil)
+        }
+
         reactToReachability()
     }
 }

@@ -87,7 +87,5 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
         } catch {
             DDLogDebug("AVAudioSession error: \(error)")
         }
-
-        UIApplication.shared.beginBackgroundTask {}
     }
 }
