@@ -76,25 +76,7 @@ class PopupContentController: UIViewController {
     var playbackRepeat : Bool?
     //    var muteVolume : Bool?
     var playbackSpeed: PlaybackSpeed = .oneX
-    
-//    var assetPlaybackManager: AssetPlaybackManager! {
-//        didSet {
-//            // Add the Key-Value Observers needed to keep the UI up to date.
-//            //            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress), options: NSKeyValueObservingOptions.new, context: nil)
-//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.duration), options: NSKeyValueObservingOptions.new, context: nil)
-//            assetPlaybackManager.addObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.playbackPosition), options: NSKeyValueObservingOptions.new, context: nil)
-//
-//            // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
-//            let notificationCenter = NotificationCenter.default
-//
-//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
-//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
-//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
-//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
-//            notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: playbackAsset)
-//        }
-//    }
-    
+        
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         playPauseButton = UIBarButtonItem(image: UIImage(named: "play"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
@@ -107,6 +89,54 @@ class PopupContentController: UIViewController {
     }
     
     func bindPlaybackViewModel() {
+        
+        playbackViewModel.playbackState
+            .asObservable()
+            .next { [unowned self] playbackState in
+                guard let pauseImage: UIImage = UIImage(named: "pause"),
+                    let playImage: UIImage = UIImage(named: "play"),
+                    let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
+                    let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause") else { return }
+
+                let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
+                let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
+                switch playbackState {
+                    
+                case .initial:
+                    self.playPauseButton.image = playImage
+                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+                    self.playPauseButton.isEnabled = false
+                    
+                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+                    self.fullPlayPauseButton.isEnabled = false
+                case .playing:
+                    self.playPauseButton.image = pauseImage
+                    self.playPauseButton.accessibilityLabel = accessibilityPause
+                    self.playPauseButton.isEnabled = true
+
+                    self.fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
+                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPause
+                    self.fullPlayPauseButton.isEnabled = true
+                case .paused:
+                    self.playPauseButton.image = playImage
+                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+                    self.playPauseButton.isEnabled = true
+
+                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+                    self.fullPlayPauseButton.isEnabled = true
+                case .interrupted:
+                    self.playPauseButton.image = playImage
+                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+                    self.playPauseButton.isEnabled = false
+
+                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+                    self.fullPlayPauseButton.isEnabled = false
+                }
+            }
+            .disposed(by: bag)
         
         playbackViewModel.playbackPlayable
             .asObservable()
@@ -129,7 +159,7 @@ class PopupContentController: UIViewController {
                 self.userActionsViewModel.playable = playable
 
                 //reset UI
-                self.resetUIDefaults()
+//                self.resetUIDefaults()
                 self.playbackViewModel.assetPlaybackService.assetPlaybackManager.seekTo(0)
             }
             .disposed(by: bag)
@@ -401,7 +431,7 @@ class PopupContentController: UIViewController {
         
 //        let notificationCenter = NotificationCenter.default
         
-        resetUIDefaults()
+//        resetUIDefaults()
 //        resetDownloadingViewModel()
         dateComponentFormatter.unitsStyle = .positional
         dateComponentFormatter.allowedUnits = [.minute, .second]
@@ -426,6 +456,25 @@ class PopupContentController: UIViewController {
         fullDownloadProgress.outerRingColor = UIColor(white: 0.8, alpha: 1.0)
         fullDownloadProgress.outerRingWidth = 3.0
         fullDownloadProgress.innerRingWidth = 3.0
+        
+        if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
+            
+            DDLogDebug("print rate: \(String(describing:playbackSpeed))")
+            switch playbackSpeed {
+            case 1.0:
+                self.playbackSpeed = .oneX
+            case 1.25:
+                self.playbackSpeed = .onePointTwoFiveX
+            case 1.5:
+                self.playbackSpeed = .onePointFiveX
+            default:
+                self.playbackSpeed = .oneX
+            }
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: String(describing:playbackSpeed).appending("x"), attributes: attribs), for: .normal)
+            }
+        }
+
 
     }
     
@@ -451,41 +500,6 @@ class PopupContentController: UIViewController {
         bag = DisposeBag()
     }
     
-    private func resetUIDefaults() {
-        
-//        popupItem.title = songTitle
-//        popupItem.subtitle = albumTitle
-        
-        // emptyUIState
-        
-        if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
-            
-            DDLogDebug("print rate: \(String(describing:playbackSpeed))")
-            switch playbackSpeed {
-            case 1.0:
-                self.playbackSpeed = .oneX
-            case 1.25:
-                self.playbackSpeed = .onePointTwoFiveX
-            case 1.5:
-                self.playbackSpeed = .onePointFiveX
-            default:
-                self.playbackSpeed = .oneX
-            }
-            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
-                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: String(describing:playbackSpeed).appending("x"), attributes: attribs), for: .normal)
-            }
-        }
-        
-        if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
-            fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
-        }
-
-        fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
-        
-        updateTransportUIState()
-    }
-
     @objc func doPlayPause() {
         playbackViewModel.assetPlaybackService.assetPlaybackManager.togglePlayPause()
         
@@ -503,6 +517,7 @@ class PopupContentController: UIViewController {
             speedTitle = "1.25"
             if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
                 fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+                UserDefaults.standard.set(1.25, forKey: UserPrefs.playbackSpeed.rawValue)
             }
 
         }
@@ -511,6 +526,7 @@ class PopupContentController: UIViewController {
             speedTitle = "1.5"
             if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
                 fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+                UserDefaults.standard.set(1.5, forKey: UserPrefs.playbackSpeed.rawValue)
             }
         }
         else if playbackSpeed == .onePointFiveX {
@@ -518,6 +534,7 @@ class PopupContentController: UIViewController {
             speedTitle = "1.0"
             if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
                 fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+                UserDefaults.standard.set(1.0, forKey: UserPrefs.playbackSpeed.rawValue)
             }
         }
         if let rate = Float(speedTitle) {
@@ -583,82 +600,6 @@ class PopupContentController: UIViewController {
         self.present(activityViewController, animated: true, completion: {})
     }
     
-    @objc func updateTransportUIState() {
-        guard let pauseImage: UIImage = UIImage(named: "pause"),
-            let playImage: UIImage = UIImage(named: "play"),
-            let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
-            let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause")
-            else { return }
-//        DDLogDebug("updateTransportUIState")
-        if playbackViewModel.assetPlaybackService.assetPlaybackManager.asset == nil {
-            //            backwardButton.isEnabled = false
-            playPauseButton.isEnabled = false
-            nextButton.isEnabled = false
-            
-            playPauseButton.image = UIImage(named: "play")
-        }
-        else {
-            //            backwardButton.isEnabled = true
-            playPauseButton.isEnabled = true
-            nextButton.isEnabled = true
-            
-            if playbackViewModel.assetPlaybackService.assetPlaybackManager.state != .playing {
-                playPauseButton.image = UIImage(named: "play")
-            }
-            else {
-                playPauseButton.image = UIImage(named: "pause")
-            }
-        }
-        
-        let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
-        let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
-        
-        if playbackViewModel.assetPlaybackService.assetPlaybackManager.state == .playing {
-            playPauseButton.image = pauseImage
-            playPauseButton.accessibilityLabel = accessibilityPause
-            
-            fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
-            fullPlayPauseButton.accessibilityLabel = accessibilityPause
-        } else if playbackViewModel.assetPlaybackService.assetPlaybackManager.state == .paused {
-            playPauseButton.image = playImage
-            playPauseButton.accessibilityLabel = accessibilityPlay
-            
-            fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-            fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-        }
-        
-    }
-    
-    @objc func emptyUIState() {
-        if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
-            
-            DDLogDebug("print rate: \(String(describing:playbackSpeed))")
-            switch playbackSpeed {
-            case 1.0:
-                self.playbackSpeed = .oneX
-            case 1.25:
-                self.playbackSpeed = .onePointTwoFiveX
-            case 1.5:
-                self.playbackSpeed = .onePointFiveX
-            default:
-                self.playbackSpeed = .oneX
-            }
-            
-            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
-                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: String(describing:playbackSpeed).appending("x"), attributes: attribs), for: .normal)
-            }
-        }
-        
-        if let timeAttribs: [NSAttributedString.Key : Any] = fullCurrentPlaybackPositionLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
-            fullCurrentPlaybackPositionLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
-            fullTotalPlaybackDurationLabel.attributedText = NSAttributedString(string: "-:--", attributes: timeAttribs)
-        }
-
-        fullPlayPauseButton.setImage(UIImage(named: "nowPlaying_play"), for: .normal)
-        
-        updateTransportUIState()
-        
-    }
     // MARK: Key-Value Observing Method
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -718,14 +659,14 @@ class PopupContentController: UIViewController {
             
             estimatedPlaybackPosition = Float(0)
             estimatedDuration = Float(0)
-            resetUIDefaults()
+//            resetUIDefaults()
         }
     }
     
     
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
         DDLogDebug("handlePlayerRateDidChangeNotification notification: \(notification)")
-        updateTransportUIState()
+//        updateTransportUIState()
     }
     
     @objc func handleAVPlayerItemDidPlayToEndTimeNotification(notification: Notification) {

@@ -31,7 +31,7 @@ public class AssetPlaybackManager: NSObject {
     /// - playing: The playback state that `AssetPlaybackManager` is in when its `AVPlayer` has a `rate` != 0.
     /// - paused: The playback state that `AssetPlaybackManager` is in when its `AVPlayer` has a `rate` == 0.
     /// - interrupted: The playback state that `AssetPlaybackManager` is in when audio is interrupted.
-    enum playbackState {
+    public enum playbackState {
         case initial, playing, paused, interrupted
     }
     

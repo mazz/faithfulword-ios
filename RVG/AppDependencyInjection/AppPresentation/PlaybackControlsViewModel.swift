@@ -15,6 +15,7 @@ public final class PlaybackControlsViewModel {
     public private(set) var albumArt = Field<UIImage?>(nil)
     
     public private(set) var playbackPlayable = Field<Playable?>(nil)
+    public private(set) var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
 
     
 //    public private(set) var estimatedPlaybackPosition = Field<Float>(Float(0))
@@ -95,6 +96,8 @@ public final class PlaybackControlsViewModel {
             
             artistName.value = NSAttributedString(string: "--", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0.0/255.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0), NSAttributedString.Key.font: UIFont.artistNameFont()])
         }
+        
+        playbackState.value = assetPlaybackService.assetPlaybackManager.state
     }
     
     @objc func handleRemoteCommandNextTrackNotification(notification: Notification) {
@@ -106,6 +109,7 @@ public final class PlaybackControlsViewModel {
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
         
         if assetIndex < playables.count - 1 { self.playbackPlayable.value = playables[assetIndex + 1] }
+        playbackState.value = assetPlaybackService.assetPlaybackManager.state
     }
     
     @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
@@ -115,16 +119,19 @@ public final class PlaybackControlsViewModel {
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
         
-        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }            
+        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }
+        playbackState.value = assetPlaybackService.assetPlaybackManager.state
     }
     
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
         DDLogDebug("handlePlayerRateDidChangeNotification notification: \(notification)")
+        playbackState.value = assetPlaybackService.assetPlaybackManager.state
         //        updateTransportUIState()
     }
     
     @objc func handleAVPlayerItemDidPlayToEndTimeNotification(notification: Notification) {
         DDLogDebug("handleAVPlayerItemDidPlayToEndTimeNotification notification: \(notification)")
+        playbackState.value = assetPlaybackService.assetPlaybackManager.state
         
         //        if self.repeatMode == .repeatOff {
         //            NotificationCenter.default.post(name: AssetPlaybackManager.nextTrackNotification, object: nil, userInfo: [Asset.uuidKey: playbackAsset.uuid])
