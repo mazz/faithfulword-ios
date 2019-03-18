@@ -32,7 +32,7 @@ internal final class BooksViewModel {
     }
     
     public func fetchMoreBooks() {
-        productService.fetchBooks(stride: 50).asObservable()
+        productService.fetchBooks(stride: 100).asObservable()
             .subscribeAndDispose(by: self.bag)
     }
     
@@ -52,7 +52,7 @@ internal final class BooksViewModel {
         self.languageService.userLanguage.asObservable()
             .next { [unowned self] identifier in
                 self.title.value = NSLocalizedString("Bible", comment: "").l10n()
-                productService.fetchBooks(stride: 50).asObservable()
+                productService.fetchBooks(stride: 100).asObservable()
                     .subscribeAndDispose(by: self.bag)
         }.disposed(by: bag)
 

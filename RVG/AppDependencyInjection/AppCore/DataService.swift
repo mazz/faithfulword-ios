@@ -23,6 +23,7 @@ public protocol UserActionsDataServicing {
 
 public protocol HistoryDataServicing {
     func fetchPlayableHistory() -> Single<[Playable]>
+    func fetchLastState(for playableUuid: String) -> Single<Playable>
     //    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
 }
 
@@ -49,6 +50,12 @@ public protocol ProductDataServicing {
     func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]>
 
     func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]>
+    
+    // new-ish API for forthcoming org-channel-playlist changes
+    // TODO: once the schema from the server contains mediaType, there
+    // will be no need to LEFT JOIN in DataStore because we know which table
+    // among book, gospel and music to find the playables
+    func playables(for categoryUuid: String) -> Single<[Playable]>
 }
 
 public final class DataService {
@@ -152,6 +159,10 @@ extension DataService: UserActionsDataServicing {
 extension DataService: HistoryDataServicing {
     public func fetchPlayableHistory() -> Single<[Playable]> {
         return dataStore.fetchPlayableHistory()
+    }
+    
+    public func fetchLastState(for playableUuid: String) -> Single<Playable> {
+        return dataStore.fetchLastState(playableUuid: playableUuid)
     }
 }
 
@@ -887,4 +898,10 @@ extension DataService: ProductDataServicing {
                 }
             }).disposed(by: bag)
     }
+    
+    public func playables(for categoryUuid: String) -> Single<[Playable]> {
+        return dataStore.fetchPlayables(for: categoryUuid)
+    }
 }
+
+

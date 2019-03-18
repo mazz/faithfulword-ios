@@ -4,6 +4,7 @@ import GRDB
 public struct UserActionPlayable: Codable, Playable {
     public var userActionPlayableId: Int64?
     public var uuid: String
+    public var categoryUuid: String?
     public var playableUuid: String
     public var playablePath: String?
     public var createdAt: Double?
@@ -33,6 +34,7 @@ extension UserActionPlayable {
         static let downloaded = Column("downloaded")
 
         // Playable
+        static let categoryUuid = Column("categoryUuid")
         static let localizedName = Column("localizedName")
         static let path = Column("path")
         static let presenterName = Column("presenterName")

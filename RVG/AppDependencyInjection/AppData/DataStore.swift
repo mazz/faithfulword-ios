@@ -40,6 +40,10 @@ public protocol DataStoring {
     
     func updatePlayableHistory(playable: Playable, position: Float) -> Single<Void>
     func fetchPlayableHistory() -> Single<[Playable]>
+    func fetchLastState(playableUuid: String) -> Single<Playable>
+    
+    // MARK: Playlist
+    func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
 
     //    func fetchPlaybackHistory(playable: Playable, position: Float) -> Single<Float>
 }
@@ -217,6 +221,7 @@ public final class DataStore {
                     userActionPlayableTable.column("downloaded", .boolean)
 
                     // Playable
+                    userActionPlayableTable.column("categoryUuid", .text)
                     userActionPlayableTable.column("localizedName", .text)
                     userActionPlayableTable.column("path", .text)
                     userActionPlayableTable.column("presenterName", .text)
@@ -843,6 +848,7 @@ extension DataStore: DataStoring {
 
                             var newAction: UserActionPlayable = UserActionPlayable(userActionPlayableId: nil,
                                                                                    uuid: UUID().uuidString,
+                                                                                   categoryUuid: playable.categoryUuid,
                                                                                    playableUuid: playable.uuid,
                                                                                    playablePath: playable.path ?? nil,
                                                                                    createdAt: Date().timeIntervalSince1970,
@@ -890,4 +896,64 @@ extension DataStore: DataStoring {
         }
     }
 
+    public func fetchLastState(playableUuid: String) -> Single<Playable> {
+        return Single.create { [unowned self] single in
+            do {
+                var playable: UserActionPlayable!
+                
+                try self.dbPool.read { db in
+                    playable = try UserActionPlayable.filter(Column("playableUuid") == playableUuid).fetchOne(db)
+                }
+                single(.success(playable))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func fetchPlayables(for categoryUuid: String) -> Single<[Playable]> {
+        return Single.create { [unowned self] single in
+            do {
+                var playables: [UserActionPlayable]!
+                
+                try self.dbPool.read { db in
+                    let sql = """
+                        SELECT
+                            userActionPlayableId,
+                            uuid,
+                            playableUuid,
+                            playablePath,
+                            createdAt,
+                            updatedAt,
+                            playbackPosition,
+                            downloaded,
+                            categoryUuid,
+                            localizedName,
+                            path,
+                            presenterName,
+                            sourceMaterial,
+                            trackNumber,
+                            largeThumbnailPath,
+                            smallThumbnailPath,
+                        FROM
+                            useractionplayable
+                        LEFT JOIN book ON book.categoryUuid = userActionPlayableId.categoryUuid
+                        LEFT JOIN gospel ON gospel.categoryUuid = userActionPlayableId.categoryUuid
+                        LEFT JOIN music ON music.categoryUuid = userActionPlayableId.categoryUuid
+                        """
+                    playables = try UserActionPlayable.fetchAll(db, sql)
+                    DDLogDebug("playables: \(String(describing: playables))")
+                }
+                single(.success(playables))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
 }
+
+

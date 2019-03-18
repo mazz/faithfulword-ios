@@ -2,6 +2,7 @@ import Foundation
 
 public protocol Playable {
     var uuid: String { get set }
+    var categoryUuid: String? { get set }
     var localizedName : String? { get set }
     var path : String? { get set }
     var presenterName : String? { get set }
@@ -13,9 +14,9 @@ public protocol Playable {
     var smallThumbnailPath : String? { get set }
 }
 
-enum MediaType {
+enum MediaType: Int {
     case audioChapter
-//    case audioSermon
     case audioGospel
     case audioMusic
+    //    case audioSermon
 }
