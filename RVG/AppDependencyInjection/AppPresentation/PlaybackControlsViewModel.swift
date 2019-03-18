@@ -133,7 +133,7 @@ public final class PlaybackControlsViewModel {
         }
         
         // set playback state to update play button etc
-        playbackState.value = assetPlaybackService.assetPlaybackManager.state
+//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
         
         // might disable play button if we are offline and there is no local file
         let fileExists: Bool = playableHasLocalFile()
@@ -163,7 +163,7 @@ public final class PlaybackControlsViewModel {
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
         
         if assetIndex < playables.count - 1 { self.playbackPlayable.value = playables[assetIndex + 1] }
-        playbackState.value = assetPlaybackService.assetPlaybackManager.state
+//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
     }
     
     @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
@@ -174,7 +174,7 @@ public final class PlaybackControlsViewModel {
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
         
         if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }
-        playbackState.value = assetPlaybackService.assetPlaybackManager.state
+//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
     }
     
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
@@ -185,7 +185,7 @@ public final class PlaybackControlsViewModel {
     
     @objc func handleAVPlayerItemDidPlayToEndTimeNotification(notification: Notification) {
         DDLogDebug("handleAVPlayerItemDidPlayToEndTimeNotification notification: \(notification)")
-        playbackState.value = assetPlaybackService.assetPlaybackManager.state
+//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
         
         //        if self.repeatMode == .repeatOff {
         //            NotificationCenter.default.post(name: AssetPlaybackManager.nextTrackNotification, object: nil, userInfo: [Asset.uuidKey: playbackAsset.uuid])
