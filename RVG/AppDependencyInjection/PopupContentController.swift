@@ -136,16 +136,20 @@ class PopupContentController: UIViewController {
             }
             .disposed(by: bag)
         
+        // playbackViewModel.playbackPlayable could either be a Playable or
+        // a UserActionPlayable depending upon whether it was found in the
+        // useractionplayable db table
         playbackViewModel.playbackPlayable
             .asObservable()
             .filterNils()
             .next { [unowned self] playable in
                 guard let path: String = playable.path,
+                    let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value,
                     let localizedName: String = playable.localizedName,
                     let presenterName: String = playable.presenterName ?? "Unknown",
                     let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
 
-                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
+                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(selectedPlayable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
                 
                 var playbackPosition: Double = 0
                 var playableUuid: String = playable.uuid
@@ -171,7 +175,7 @@ class PopupContentController: UIViewController {
                 self.downloadingViewModel.downloadAsset.value = self.playbackAsset
                 // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
                 // get mixed-up
-                self.userActionsViewModel.playable = self.playbackViewModel.selectedPlayable.value
+                self.userActionsViewModel.playable = selectedPlayable
             }
             .disposed(by: bag)
         

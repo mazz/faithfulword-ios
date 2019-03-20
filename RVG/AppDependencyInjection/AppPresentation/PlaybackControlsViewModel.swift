@@ -272,7 +272,7 @@ public final class PlaybackControlsViewModel {
 
 extension PlaybackControlsViewModel {
     func playableHasLocalFile() -> Bool {
-        guard let playable: Playable = self.playbackPlayable.value,
+        guard let playable: Playable = self.selectedPlayable.value,
             let path: String = playable.path,
             let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
             else { return false }
