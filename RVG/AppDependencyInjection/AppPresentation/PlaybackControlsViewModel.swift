@@ -5,6 +5,7 @@ import RxSwift
 public final class PlaybackControlsViewModel {
     // MARK: Fields
     public let assetPlaybackService: AssetPlaybackServicing
+    private let historyService: HistoryServicing
     private let reachability: RxClassicReachable
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
 
@@ -21,15 +22,19 @@ public final class PlaybackControlsViewModel {
     public private(set) var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
     public private(set) var playDisabled = Field<Bool>(false)
 
-    
+    // MARK: internal use for synchronization
+    public var selectedPlayable = Field<Playable?>(nil)
+
 //    public private(set) var estimatedPlaybackPosition = Field<Float>(Float(0))
 //    public private(set) var estimatedDuration = Field<Float>(Float(0))
     
     // MARK: --
     
     init(assetPlaybackService: AssetPlaybackServicing,
+         historyService: HistoryServicing,
          reachability: RxClassicReachable) {
         self.assetPlaybackService = assetPlaybackService
+        self.historyService = historyService
         self.reachability = reachability
         
         // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
@@ -39,7 +44,7 @@ public final class PlaybackControlsViewModel {
         notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         
         reactToReachability()
         setupBindings()
@@ -88,16 +93,54 @@ public final class PlaybackControlsViewModel {
                     }
                     self.playDisabled.value = !fileExists
                 case .reachable(_):
-                    self.assetPlaybackService.assetPlaybackManager.play()
+//                    self.assetPlaybackService.assetPlaybackManager.play()
                     self.playDisabled.value = false
                 }
                 
+            }
+            .disposed(by: bag)
+        
+        selectedPlayable.asObservable()
+            .filterNils()
+            .next { [unowned self] selectedPlayable in
+                DDLogDebug("playbackPlayable.asObservable: \(selectedPlayable)")
+                self.historyService.fetchLastState(for: selectedPlayable.uuid)
+                    .asObservable()
+                    .next({ [unowned self] historyPlayable in
+                        // if the history item is not nil, assign it to playbackPlayable
+                        // which will be observed by the view controller
+                        // if the history item IS nil, assign selectedPlayable to playbackPlayable
+                        if let _ = historyPlayable {
+                            DDLogDebug("historyPlayable: \(String(describing: historyPlayable))")
+                            self.playbackPlayable.value = historyPlayable
+//                            self.assetPlaybackService.assetPlaybackManager.seekTo(Double(historyPlayable.playbackPosition))
+                        } else {
+                            self.playbackPlayable.value = self.selectedPlayable.value
+                        }
+                    })
+                    .disposed(by: self.bag)
             }
             .disposed(by: bag)
     }
     
     // MARK: Notification Observer Methods
     
+    /// events should happen in this sequence:
+    /// - user taps |< or >| and handleRemoteCommandNextTrackNotification or handleRemoteCommandPreviousTrackNotification fires
+    /// - PlaybackControlsViewModel.selectedPlayable changes
+    /// - database is queried to determine if the user played selectedPlayable before
+    ///     - true, the historyPlayable is assigned to playbackPlayable
+    ///     - false, then selectedPlayable is assigned to playbackPlayable
+    /// - PlaybackControlsViewModel.playbackPlayable changes
+    /// - PopupContentController observable playbackViewModel.playbackPlayable subscriber fires
+    /// - PopupContentController.playbackAsset is created and set on assetPlaybackManager
+    /// - AssetPlaybackManager calls .play() on internal playerItem
+    /// - handleCurrentAssetDidChangeNotification gets fired
+    /// - UserActionsViewModel will store playback position every 1.5 seconds. NOTE: MUST use the selectedPlayable
+    ///   - or, Playable, as the state to track. IF we use a UserActionPlayable to track, the Playable.uuid and
+    ///   - the UserActionPlayable.playableUuid get all mixed-together and duplicate db entries occur, resulting
+    ///   - in a bug where playbackPosition is stored as the correct value in one entry and 0.0 in a `fake` entry
+
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         DDLogDebug("PlaybackControlsViewModel handleCurrentAssetDidChangeNotification notification: \(notification)")
         
@@ -125,7 +168,6 @@ public final class PlaybackControlsViewModel {
             }
         }
         else {
-            
             albumArt.value = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
             songTitle.value = NSAttributedString(string: "--", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black,NSAttributedString.Key.font: UIFont.songTitleFont()])
             
@@ -149,7 +191,7 @@ public final class PlaybackControlsViewModel {
             }
             self.playDisabled.value = !fileExists
         case .reachable(_):
-            self.assetPlaybackService.assetPlaybackManager.play()
+//            self.assetPlaybackService.assetPlaybackManager.play()
             self.playDisabled.value = false
         }
     }
@@ -161,9 +203,20 @@ public final class PlaybackControlsViewModel {
         
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
+
         
-        if assetIndex < playables.count - 1 { self.playbackPlayable.value = playables[assetIndex + 1] }
-//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
+//        if let assetIndex = playables.index(where: { $0.uuid == assetUuid }) {
+        DDLogDebug("assetIndex: \(assetIndex)")
+            
+            //        let playableUuidIndex = playables.index(where: { $0.playableUuid == assetUuid })
+            
+            //        if assetIndex < playables.count - 1 { self.playbackPlayable.value = playables[assetIndex + 1] }
+        if assetIndex < playables.count - 1 {
+            self.assetPlaybackService.assetPlaybackManager.pause()
+            self.assetPlaybackService.playableItem.value = playables[assetIndex + 1]
+            self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
+        }
+//        }
     }
     
     @objc func handleRemoteCommandPreviousTrackNotification(notification: Notification) {
@@ -173,7 +226,12 @@ public final class PlaybackControlsViewModel {
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
         guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
         
-        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }
+//        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }
+        if assetIndex > 0 {
+            self.assetPlaybackService.assetPlaybackManager.pause()
+            self.assetPlaybackService.playableItem.value = playables[assetIndex - 1]
+            self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
+        }
 //        playbackState.value = assetPlaybackService.assetPlaybackManager.state
     }
     

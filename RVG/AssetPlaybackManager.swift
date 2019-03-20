@@ -395,10 +395,12 @@ public class AssetPlaybackManager: NSObject {
         }
         else if keyPath == #keyPath(AVPlayerItem.status) {
             if playerItem.status == .readyToPlay {
+                self.seekTo(asset.playbackPosition)
                 player.play()
+                self.playbackRate(asset.playbackRate)
             }
         }
-        else if keyPath == #keyPath(AVPlayer.currentItem){
+        else if keyPath == #keyPath(AVPlayer.currentItem) {
             
             // Cleanup if needed.
             if player.currentItem == nil {

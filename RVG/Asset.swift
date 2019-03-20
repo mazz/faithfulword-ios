@@ -22,6 +22,9 @@ public struct Asset {
     let artist: String
     let uuid: String
     let fileExtension: String
+    // the initial location to seek to when playing
+    let playbackPosition: Double
+    let playbackRate: Float
 
     /// The `AVURLAsset` corresponding to an asset in either the application bundle or on the Internet.
     let urlAsset: AVURLAsset

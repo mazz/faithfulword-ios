@@ -40,7 +40,7 @@ public protocol DataStoring {
     
     func updatePlayableHistory(playable: Playable, position: Float) -> Single<Void>
     func fetchPlayableHistory() -> Single<[Playable]>
-    func fetchLastState(playableUuid: String) -> Single<Playable>
+    func fetchLastState(playableUuid: String) -> Single<UserActionPlayable?>
     
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
@@ -896,7 +896,7 @@ extension DataStore: DataStoring {
         }
     }
 
-    public func fetchLastState(playableUuid: String) -> Single<Playable> {
+    public func fetchLastState(playableUuid: String) -> Single<UserActionPlayable?> {
         return Single.create { [unowned self] single in
             do {
                 var playable: UserActionPlayable!

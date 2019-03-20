@@ -51,6 +51,10 @@ extension MediaListingCoordinator: NavigationCoordinating {
             // when the playbackViewController loads
 
             let popupController = playbackViewController as! PopupContentController
+            
+            // this assignment is meant to initiate the entire playbackAsset to assetPlaybackManager
+            // assignment and loading of the historyPlayable
+            popupController.playbackViewModel.selectedPlayable.value = playable
 
             if let localizedName = playable.localizedName,
 //                let presenterName = playable.presenterName,
