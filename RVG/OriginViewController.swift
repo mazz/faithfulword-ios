@@ -78,7 +78,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
                         UserDefaults.standard.set(Date(), forKey: OriginViewController.lastPushNotificationCheck)
                     })
                     let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: ""), style: .default, handler: { (action) -> Void in
-                        self.optInForPushNotifications(application: UIApplication.shared)
+//                        self.optInForPushNotifications(application: UIApplication.shared)
                     })
                     
                     alert.addAction(laterAction)
@@ -94,23 +94,23 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         appVersionCheck()
     }
     
-    func optInForPushNotifications(application: UIApplication) {
-        UserDefaults.standard.set(Date(), forKey: OriginViewController.lastPushNotificationCheck)
-
-        application.registerForRemoteNotifications()
-        
-        UNUserNotificationCenter.current().delegate = self
-        
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
-        
-        FirebaseApp.configure()
-        Messaging.messaging().delegate = self as! MessagingDelegate
-//        FIRMessaging.messaging().delegate = self
-        Messaging.messaging().shouldEstablishDirectChannel = true
-    }
+//    func optInForPushNotifications(application: UIApplication) {
+//        UserDefaults.standard.set(Date(), forKey: OriginViewController.lastPushNotificationCheck)
+//
+//        application.registerForRemoteNotifications()
+//
+//        UNUserNotificationCenter.current().delegate = self
+//
+//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+//        UNUserNotificationCenter.current().requestAuthorization(
+//            options: authOptions,
+//            completionHandler: {_, _ in })
+//
+//        FirebaseApp.configure()
+//        Messaging.messaging().delegate = self as! MessagingDelegate
+////        FIRMessaging.messaging().delegate = self
+//        Messaging.messaging().shouldEstablishDirectChannel = true
+//    }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
         PlaybackService_depr.sharedInstance().avoidRestartOnLoad = true
@@ -403,22 +403,22 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
     }
 }
 
-extension OriginViewController {
-    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        DDLogDebug("Firebase didRefreshRegistrationToken token: \(fcmToken)")
-        if let apnsToken = Messaging.messaging().apnsToken {
-            let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
-            self.updatePushToken(fcmToken: fcmToken,
-                                 apnsToken: apnsTokenString,
-                                 preferredLanguage: L10n.shared.preferredLanguage,
-                                 userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
-        }
-    }
-    
-    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-        DDLogDebug("messaging remoteMessage.appData: \(remoteMessage.appData)")
-    }
-}
+//extension OriginViewController {
+//    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+//        DDLogDebug("Firebase didRefreshRegistrationToken token: \(fcmToken)")
+//        if let apnsToken = Messaging.messaging().apnsToken {
+//            let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
+//            self.updatePushToken(fcmToken: fcmToken,
+//                                 apnsToken: apnsTokenString,
+//                                 preferredLanguage: L10n.shared.preferredLanguage,
+//                                 userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
+//        }
+//    }
+//    
+//    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+//        DDLogDebug("messaging remoteMessage.appData: \(remoteMessage.appData)")
+//    }
+//}
 
 
 extension OriginViewController: UITableViewDelegate, UITableViewDataSource {

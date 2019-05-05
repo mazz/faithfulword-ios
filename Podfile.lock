@@ -66,7 +66,9 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (5.7.0):
     - GoogleUtilities/Logger
-  - GRDB.swift (3.7.0)
+  - GRDB.swift (3.7.0):
+    - GRDB.swift/standard (= 3.7.0)
+  - GRDB.swift/standard (3.7.0)
   - L10n-swift (5.4.1):
     - L10n-swift/Core (= 5.4.1)
     - L10n-swift/Extension (= 5.4.1)
@@ -100,12 +102,6 @@ PODS:
     - Differentiator (~> 3.0)
     - RxCocoa (~> 4.0)
     - RxSwift (~> 4.0)
-  - RxGRDB (0.13.0):
-    - RxGRDB/default (= 0.13.0)
-    - RxSwift (~> 4.0)
-  - RxGRDB/default (0.13.0):
-    - GRDB.swift (~> 3.5)
-    - RxSwift (~> 4.0)
   - RxSwift (4.5.0)
   - SwiftLint (0.31.0)
   - Swinject (2.6.0)
@@ -120,6 +116,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Messaging
   - FirebaseInstanceID
+  - GRDB.swift (from `https://github.com/groue/GRDB.swift.git`, branch `GRDB-4.0`)
   - L10n-swift
   - MarqueeLabel/Swift
   - MBProgressHUD (~> 1.0.0)
@@ -127,7 +124,6 @@ DEPENDENCIES:
   - RxAVFoundation
   - RxCocoa
   - RxDataSources
-  - RxGRDB
   - RxSwift
   - SwiftLint
   - Swinject
@@ -149,7 +145,6 @@ SPEC REPOS:
     - FirebaseMessaging
     - GoogleAppMeasurement
     - GoogleUtilities
-    - GRDB.swift
     - L10n-swift
     - MarqueeLabel
     - MBProgressHUD
@@ -160,11 +155,20 @@ SPEC REPOS:
     - RxAVFoundation
     - RxCocoa
     - RxDataSources
-    - RxGRDB
     - RxSwift
     - SwiftLint
     - Swinject
     - UICircularProgressRing
+
+EXTERNAL SOURCES:
+  GRDB.swift:
+    :branch: GRDB-4.0
+    :git: https://github.com/groue/GRDB.swift.git
+
+CHECKOUT OPTIONS:
+  GRDB.swift:
+    :commit: 0e2daff329040ddf8694cdd1be1bc3e5ba0d4138
+    :git: https://github.com/groue/GRDB.swift.git
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
@@ -181,7 +185,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 4235f949ce1c4e827aeb19705ba5c53f9b85aa10
   GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
   GoogleUtilities: 273e67030e0de313e7304f6dcfa96fc5214f6c23
-  GRDB.swift: 51cc9e57ae8ff7083a9d674c97925aa1de06aac5
+  GRDB.swift: 71ab04a6e727e34c034513c4d15901ea35eb1f0d
   L10n-swift: 8d7edb9c113ac4859a27d6417b47a6bc6cdebf7c
   MarqueeLabel: 2daf039bf916937c8a4c9adfc13577cc5e51b4ce
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
@@ -192,12 +196,11 @@ SPEC CHECKSUMS:
   RxAVFoundation: 468e7278138c717582ae2355115d5ae081b8a16a
   RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
   RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
-  RxGRDB: 4e2686821ae8f8507c6d6d00d3083ae2df84fea3
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
   SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
   Swinject: 48a96cda93633cf2860697b4ce76ab5db9ebaca2
   UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
-PODFILE CHECKSUM: 1b1eb3a56e325e23c9935bf63821d30adaad639b
+PODFILE CHECKSUM: 12cd50b59adf676e0c86c6180836b9d88da1b154
 
 COCOAPODS: 1.6.1

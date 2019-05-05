@@ -943,7 +943,7 @@ extension DataStore: DataStoring {
                         LEFT JOIN gospel ON gospel.categoryUuid = userActionPlayableId.categoryUuid
                         LEFT JOIN music ON music.categoryUuid = userActionPlayableId.categoryUuid
                         """
-                    playables = try UserActionPlayable.fetchAll(db, sql)
+                    playables = try UserActionPlayable.fetchAll(db, sql: sql)
                     DDLogDebug("playables: \(String(describing: playables))")
                 }
                 single(.success(playables))

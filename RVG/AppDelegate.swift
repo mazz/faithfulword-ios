@@ -11,9 +11,10 @@ import LNPopupController
 import CocoaLumberjack
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
 
     var window: UIWindow?
+    private static var lastPushNotificationCheck = "lastPushNotificationCheck"
 
     private let dependencyModule = AppDependencyModule()
     private lazy var appCoordinator: AppCoordinator = { [unowned self] in
@@ -45,9 +46,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
 //        Fabric.with([Crashlytics.self])
 
 //        setupAudioSession()
+        
+        self.optInForPushNotifications(application: UIApplication.shared)
+
 
         return true
     }
+    
+    func optInForPushNotifications(application: UIApplication) {
+        UserDefaults.standard.set(Date(), forKey: AppDelegate.lastPushNotificationCheck)
+        
+        application.registerForRemoteNotifications()
+        
+        UNUserNotificationCenter.current().delegate = self
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: {_, _ in })
+        
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self as! MessagingDelegate
+        //        FIRMessaging.messaging().delegate = self
+        Messaging.messaging().shouldEstablishDirectChannel = true
+    }
+
 
     private func setupAudioSession() {
         // Setup AVAudioSession to indicate to the system you how intend to play audio.
@@ -134,6 +157,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
         }
     }
 
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
+        DDLogDebug("response.actionIdentifier: \(response.actionIdentifier)")
+        //        Messaging.messaging().appDidReceiveMessage()
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(UNNotificationPresentationOptions.alert)
+    }
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Swift.Error) {
         // Print the error to console (you should alert the user that registration failed)
         DDLogDebug("APNs registration failed: \(error)")
@@ -182,3 +214,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate /*, UNUserNotificationCent
     }
 }
 
+
+
+extension AppDelegate {
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        DDLogDebug("Firebase didRefreshRegistrationToken token: \(fcmToken)")
+        if let apnsToken = Messaging.messaging().apnsToken {
+            let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
+            self.updatePushToken(fcmToken: fcmToken,
+                                 apnsToken: apnsTokenString,
+                                 preferredLanguage: L10n.shared.preferredLanguage,
+                                 userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
+        }
+    }
+    
+    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+        DDLogDebug("messaging remoteMessage.appData: \(remoteMessage.appData)")
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        DDLogDebug("Firebase didRefreshRegistrationToken token: \(fcmToken)")
+
+    }
+}

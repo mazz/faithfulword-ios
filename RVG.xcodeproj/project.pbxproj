@@ -113,6 +113,7 @@
 		4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65601EEB42B600C59DD5 /* Looper.swift */; };
 		4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */; };
 		4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */; };
+		4CE7CBE1227E78FB0062B9AA /* OriginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* OriginViewController.swift */; };
 		4CEF753B2026CBA300C1BBF3 /* CategoryListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */; };
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
@@ -184,7 +185,6 @@
 		70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */; };
 		70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */; };
 		70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20611E6479A800AF619F /* AppDelegate.swift */; };
-		70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* OriginViewController.swift */; };
 		70CD20671E6479A800AF619F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20651E6479A800AF619F /* Main.storyboard */; };
 		70CD20691E6479A800AF619F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20681E6479A800AF619F /* Assets.xcassets */; };
 		70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */; };
@@ -1020,7 +1020,6 @@
 				"${BUILT_PRODUCTS_DIR}/RxAVFoundation/RxAVFoundation.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
-				"${BUILT_PRODUCTS_DIR}/RxGRDB/RxGRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework",
 				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
@@ -1043,7 +1042,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAVFoundation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swinject.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
@@ -1198,7 +1196,6 @@
 				4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
-				70CD20641E6479A800AF619F /* OriginViewController.swift in Sources */,
 				4C9E06C81EDBBF6800282247 /* ContactUsModel.swift in Sources */,
 				4C250394216868120069AB49 /* String+Hashing.swift in Sources */,
 				4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */,
@@ -1267,6 +1264,7 @@
 				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
 				4C3EA131206A6EB600310024 /* UIView+Constraining.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
+				4CE7CBE1227E78FB0062B9AA /* OriginViewController.swift in Sources */,
 				701F01551E65DA2E0010B320 /* ClassicReachability.swift in Sources */,
 				4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */,
 				68BBC8851FCD12400008962B /* AppVersioning.swift in Sources */,
@@ -1412,6 +1410,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;

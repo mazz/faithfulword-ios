@@ -47,7 +47,7 @@ public final class RxReachability {
     
     // MARK: Dependencies
     
-    private let reachabilityManager: NetworkReachabilityManaging?
+    private var reachabilityManager: NetworkReachabilityManaging?
     
     /// Initializes an instance of RxReachability and hooks up internal callbacks for
     /// reachability updates.
