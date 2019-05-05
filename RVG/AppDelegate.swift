@@ -44,11 +44,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }, completion: { _ in },
            context: .other)
 
-//        Fabric.with([Crashlytics.self])
+        Fabric.with([Crashlytics.self])
 
 //        setupAudioSession()
         
         self.optInForPushNotifications(application: UIApplication.shared)
+
+
+        return true
+    }
+    
+    func optInForPushNotifications(application: UIApplication) {
+        UserDefaults.standard.set(Date(), forKey: AppDelegate.lastPushNotificationCheck)
         
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
@@ -74,32 +81,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         application.registerForRemoteNotifications()
-
-
-        return true
-    }
-    
-    func optInForPushNotifications(application: UIApplication) {
-        UserDefaults.standard.set(Date(), forKey: AppDelegate.lastPushNotificationCheck)
-        
-//        application.registerForRemoteNotifications()
-//
-//        Messaging.messaging().delegate = self
-//
-//        //        FIRMessaging.messaging().delegate = self
-////        Messaging.messaging().shouldEstablishDirectChannel = true
-////        Messaging.messaging().useMessagingDelegateForDirectChannel = true
-//
-//        UNUserNotificationCenter.current().delegate = self
-//
-//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-//        UNUserNotificationCenter.current().requestAuthorization(
-//            options: authOptions,
-//            completionHandler: {_, _ in
-//
-//        })
-//
-//        FirebaseApp.configure()
     }
 
 
@@ -173,7 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                                                     }
                                                 }
                                                 catch {
-                                                    DDLogDebug("error: \(error)")
+                                                    DDLogDebug("pushTokenUpdate error: \(error)")
                                                 }
 
                                             case let .failure(error):
@@ -325,7 +306,8 @@ extension AppDelegate {
             self.updatePushToken(fcmToken: fcmToken,
                                  apnsToken: apnsTokenString,
                                  preferredLanguage: L10n.shared.preferredLanguage,
-                                 userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
+                                 userAgent: Device.userAgent(),
+                                 userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
         }
     }
 
