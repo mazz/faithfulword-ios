@@ -15,7 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     var window: UIWindow?
     private static var lastPushNotificationCheck = "lastPushNotificationCheck"
-
+    let gcmMessageIDKey = "gcm.message_id"
+    
     private let dependencyModule = AppDependencyModule()
     private lazy var appCoordinator: AppCoordinator = { [unowned self] in
         self.dependencyModule.resolver.resolve(AppCoordinator.self)!
@@ -48,6 +49,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 //        setupAudioSession()
         
         self.optInForPushNotifications(application: UIApplication.shared)
+        
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        
+        UNUserNotificationCenter.current().delegate = self
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { (_, error) in
+            guard error == nil else{
+                print(error!.localizedDescription)
+                return
+            }
+        }
+        
+        //get application instance ID
+        InstanceID.instanceID().instanceID { (result, error) in
+            if let error = error {
+                print("Error fetching remote instance ID: \(error)")
+            } else if let result = result {
+                print("Remote instance ID token: \(result.token)")
+            }
+        }
+        
+        application.registerForRemoteNotifications()
 
 
         return true
@@ -56,19 +82,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func optInForPushNotifications(application: UIApplication) {
         UserDefaults.standard.set(Date(), forKey: AppDelegate.lastPushNotificationCheck)
         
-        application.registerForRemoteNotifications()
-        
-        UNUserNotificationCenter.current().delegate = self
-        
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: {_, _ in })
-        
-        FirebaseApp.configure()
-        Messaging.messaging().delegate = self as! MessagingDelegate
-        //        FIRMessaging.messaging().delegate = self
-        Messaging.messaging().shouldEstablishDirectChannel = true
+//        application.registerForRemoteNotifications()
+//
+//        Messaging.messaging().delegate = self
+//
+//        //        FIRMessaging.messaging().delegate = self
+////        Messaging.messaging().shouldEstablishDirectChannel = true
+////        Messaging.messaging().useMessagingDelegateForDirectChannel = true
+//
+//        UNUserNotificationCenter.current().delegate = self
+//
+//        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+//        UNUserNotificationCenter.current().requestAuthorization(
+//            options: authOptions,
+//            completionHandler: {_, _ in
+//
+//        })
+//
+//        FirebaseApp.configure()
     }
 
 
@@ -157,12 +188,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
-        DDLogDebug("response.actionIdentifier: \(response.actionIdentifier)")
-        //        Messaging.messaging().appDidReceiveMessage()
+//    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: () -> Void) {
+//        DDLogDebug("response.actionIdentifier: \(response.actionIdentifier)")
+//        //        Messaging.messaging().appDidReceiveMessage()
+//    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        DDLogDebug("response \(response)")
+        print("Handle push from background or closed")
+        // if you set a member variable in didReceiveRemoteNotification, you  will know if this is from closed or background
+        print("\(response.notification.request.content.userInfo)")
+
+        if response.actionIdentifier == UNNotificationDismissActionIdentifier {
+            DDLogDebug("Message Closed")
+        }
+        else if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            print ("App is Open")
+        }
+        
+        // Else handle any custom actions. . .
+        completionHandler()
     }
     
+    // handle notifications while in foreground
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("Handle push from foreground")
+        print("\(notification.request.content.userInfo)")
+
         completionHandler(UNNotificationPresentationOptions.alert)
     }
 
@@ -170,15 +225,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Print the error to console (you should alert the user that registration failed)
         DDLogDebug("APNs registration failed: \(error)")
     }
-    
-    
-    // Push notification received
-    func application(_ application: UIApplication, didReceiveRemoteNotification data: [AnyHashable : Any]) {
-        // Print notification payload data
-        DDLogDebug("Push notification received: \(data)")
-        Messaging.messaging().appDidReceiveMessage(data)
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+        
+        // Print full message.
+        print(userInfo)
+        switch application.applicationState {
+            
+        case .inactive:
+            print("Inactive")
+            //Show the view with the content of the push
+            completionHandler(.newData)
+            
+        case .background:
+            print("Background")
+            //Refresh the local model
+            completionHandler(.newData)
+            
+        case .active:
+            print("Active")
+            //Show an in-app banner
+            completionHandler(.newData)
+        }
     }
+    
+//    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//        // Print notification payload data
+//        DDLogDebug("Push notification received: \(userInfo)")
+//        Messaging.messaging().appDidReceiveMessage(data)
+//
+//        completionHandler(UIBackgroundFetchResult)
+//
+//    }
+//    // Push notification received
+//    func application(_ application: UIApplication, didReceiveRemoteNotification data: [AnyHashable : Any]) {
+//
+//
+//
+//    }
+    
+//    func userNotificationCenter(_ center: UNUserNotificationCenter,  willPresent notification: UNNotification, withCompletionHandler   completionHandler: @escaping (_ options:   UNNotificationPresentationOptions) -> Void) {
+//        print("Handle push from foreground")
+//        // custom code to handle push while app is in the foreground
+//        print("\(notification.request.content.userInfo)")
+//    }
+    
+//    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+//        print("Handle push from background or closed")
+//        // if you set a member variable in didReceiveRemoteNotification, you  will know if this is from closed or background
+//        print("\(response.notification.request.content.userInfo)")
+//    }
+    
     func applicationWillResignActive(_ application: UIApplication) {
         DDLogDebug("applicationWillResignActive")
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -227,6 +328,7 @@ extension AppDelegate {
                                  userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
         }
     }
+
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
         DDLogDebug("messaging remoteMessage.appData: \(remoteMessage.appData)")
@@ -236,4 +338,6 @@ extension AppDelegate {
         DDLogDebug("Firebase didRefreshRegistrationToken token: \(fcmToken)")
 
     }
+    
+    
 }
