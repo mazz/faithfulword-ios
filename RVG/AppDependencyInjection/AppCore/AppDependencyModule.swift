@@ -31,7 +31,7 @@ internal final class AppDependencyModule {
 
             container.register(DataService.self) { resolver in
                 return DataService(dataStore: DataStore(),
-                                   kjvrvgNetworking: MoyaProvider<KJVRVGService>(),
+                                   networkingApi: MoyaProvider<FwbcApiService>(),
                                    reachability: resolver.resolve(RxClassicReachable.self)!)
                 }.inObjectScope(.container)
 

@@ -134,7 +134,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                          preferredLanguage: String,
                          userAgent: String,
                          userVersion: String) {
-        let provider = MoyaProvider<KJVRVGService>()
+        let provider = MoyaProvider<FwbcApiService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
         provider.request(.pushTokenUpdate(fcmToken: fcmToken,
                                           apnsToken: apnsToken,

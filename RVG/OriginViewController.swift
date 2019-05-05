@@ -13,7 +13,7 @@ import RxSwift
 import UserNotifications
 import Firebase
 
-class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppVersioning, UNUserNotificationCenterDelegate {
+class OriginViewController: UIViewController, MFMailComposeViewControllerDelegate, AppVersioning, UNUserNotificationCenterDelegate {
     
     @IBOutlet weak var homeTitleLabel: UILabel!
     @IBOutlet weak var rightHomeButton: UIButton!
@@ -113,12 +113,12 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
 //    }
     
     @IBAction func showPlayer(_ sender: AnyObject) {
-        PlaybackService_depr.sharedInstance().avoidRestartOnLoad = true
-        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
-            
-            viewController.modalTransitionStyle = .crossDissolve
-            self.present(viewController, animated: true, completion: nil)
-        }
+//        PlaybackService_depr.sharedInstance().avoidRestartOnLoad = true
+//        if let viewController = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "PlayerContainerViewController") as? PlayerContainerViewController {
+//
+//            viewController.modalTransitionStyle = .crossDissolve
+//            self.present(viewController, animated: true, completion: nil)
+//        }
     }
     
     
@@ -131,11 +131,11 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         
         refreshTitles()
         
-        if (PlaybackService_depr.sharedInstance().player != nil) {
-            self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
-        } else {
-            self.navigationItem.rightBarButtonItem = nil
-        }
+//        if (PlaybackService_depr.sharedInstance().player != nil) {
+//            self.navigationItem.rightBarButtonItem = self.booksRightBarButtonItem
+//        } else {
+//            self.navigationItem.rightBarButtonItem = nil
+//        }
         
         self.navigationItem.title = NSLocalizedString("Bible", comment: "").l10n()
         
@@ -145,7 +145,7 @@ class OriginViewController: BaseClass, MFMailComposeViewControllerDelegate, AppV
         let provider = MoyaProvider<KJVRVGService>()
         
         let errorClosure = { (error: Swift.Error) -> Void in
-            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
+//            self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("There was a problem loading the chapters.", comment: "").l10n())
             DDLogDebug("error: \(error)")
             
             DispatchQueue.main.async {
@@ -458,12 +458,12 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
             // no action, just close menu
         }
         if indexPath.row == 1 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "GospelViewController_depr")
-            self.navigationController?.pushViewController(vc, animated: true)
+//            let vc = self.pushVc(strBdName: "Main", vcName: "GospelViewController_depr")
+//            self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 2 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "MusicViewController")
-            self.navigationController?.pushViewController(vc, animated: true)
+//            let vc = self.pushVc(strBdName: "Main", vcName: "MusicViewController")
+//            self.navigationController?.pushViewController(vc, animated: true)
         }
         if indexPath.row == 3 {
             let svc = SFSafariViewController(url: NSURL(string: "http://faithfulwordbaptist.org/")! as URL)
@@ -472,13 +472,13 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
         else if indexPath.row == 4 {
             shareTextButton()
         }
-        else if indexPath.row == 5 {
-            let vc = self.pushVc(strBdName: "Main", vcName: "OtherLanguagesViewController") as! OtherLanguagesViewController
-//            let videoURL = URL(fileURLWithPath:Bundle.main.path(forResource: "other-languages-sm", ofType: "m4v")!)
-//            vc.looper = QueuePlayerLooper(videoURL: videoURL, loopCount: -1)
-            
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
+//        else if indexPath.row == 5 {
+//            let vc = self.pushVc(strBdName: "Main", vcName: "OtherLanguagesViewController") as! OtherLanguagesViewController
+////            let videoURL = URL(fileURLWithPath:Bundle.main.path(forResource: "other-languages-sm", ofType: "m4v")!)
+////            vc.looper = QueuePlayerLooper(videoURL: videoURL, loopCount: -1)
+//            
+//            self.navigationController?.pushViewController(vc, animated: true)
+//        }
         else if indexPath.row == 6 {
             
             UIApplication.shared.open(NSURL(string:"http://faithfulwordbaptist.org/donate.html")! as URL, options: [:], completionHandler: nil)
@@ -497,7 +497,7 @@ extension OriginViewController: UITableViewDelegate, UITableViewDataSource {
             if MFMailComposeViewController.canSendMail() {
                 self.present(mailComposeViewController, animated: true, completion: nil)
             } else {
-                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: "").l10n())
+//                self.showSingleButtonAlertWithoutAction(title: NSLocalizedString("Mail services are not available", comment: "").l10n())
             }
         }
         toggleMenu(UIButton())

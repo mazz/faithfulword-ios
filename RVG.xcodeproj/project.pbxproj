@@ -56,6 +56,8 @@
 		4C5FAD792037B04200397BFF /* UIViewController+Alerting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */; };
 		4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */; };
 		4C619BCF20265CC700E70B6E /* Categorizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C619BCE20265CC700E70B6E /* Categorizable.swift */; };
+		4C78CEC4227F6771006FB8CB /* FwbcApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CEC3227F6771006FB8CB /* FwbcApiService.swift */; };
+		4C78CEC6227F6DC8006FB8CB /* ExtentionsAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CEC5227F6DC8006FB8CB /* ExtentionsAll.swift */; };
 		4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5466200EF7D30038B265 /* LoginSequencer.swift */; };
 		4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5468200EF7E60038B265 /* AccountService.swift */; };
 		4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D546A200EF80F0038B265 /* ApplicationUser.swift */; };
@@ -113,7 +115,6 @@
 		4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65601EEB42B600C59DD5 /* Looper.swift */; };
 		4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */; };
 		4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */; };
-		4CE7CBE1227E78FB0062B9AA /* OriginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20631E6479A800AF619F /* OriginViewController.swift */; };
 		4CEF753B2026CBA300C1BBF3 /* CategoryListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */; };
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
@@ -138,9 +139,6 @@
 		683D5B881F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683D5B871F1A7E3B0019ED0E /* EnvironmentUrlItemKey.swift */; };
 		683D5B8A1F1A7ECA0019ED0E /* EnvironmentUrlItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683D5B891F1A7ECA0019ED0E /* EnvironmentUrlItems.swift */; };
 		6854EED71F01F649007BB502 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6854EED61F01F649007BB502 /* AVFoundation.framework */; };
-		686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */; };
-		686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233EA1EFF71FC0046D952 /* PlayerViewController.swift */; };
-		686233EE1EFF71FC0046D952 /* PlaybackService_depr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686233EB1EFF71FC0046D952 /* PlaybackService_depr.swift */; };
 		687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6CD1EC00AE3002EDCC3 /* Localizable.strings */; };
 		687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 687BF6D81EC014B2002EDCC3 /* InfoPlist.strings */; };
 		687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687BF6DB1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift */; };
@@ -149,10 +147,6 @@
 		689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */; };
 		689880551F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */; };
 		689880571F16F52600CC2BC5 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 689880561F16F52600CC2BC5 /* MediaPlayer.framework */; };
-		6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */; };
-		689A05451ED27A9E00D3232D /* Bible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689A05441ED27A9E00D3232D /* Bible.swift */; };
-		689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */; };
-		68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */; };
 		68B2B1021F56486C00D986D4 /* KJVRVGService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68B2B1011F56486C00D986D4 /* KJVRVGService.swift */; };
 		68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68BA0A871F87128900D3B57D /* GoogleService-Info.plist */; };
 		68BBC8831FCCFD290008962B /* AppVersionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BBC8821FCCFD290008962B /* AppVersionResponse.swift */; };
@@ -163,10 +157,8 @@
 		68BE69CE1EEA35240082956D /* MediaGospelResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69CD1EEA35240082956D /* MediaGospelResponse.swift */; };
 		68BE69D01EEA3B730082956D /* Gospel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69CF1EEA3B730082956D /* Gospel.swift */; };
 		68BE69D21EEA3C600082956D /* GospelResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D11EEA3C600082956D /* GospelResponse.swift */; };
-		68BE69D41EEA3FBF0082956D /* GospelViewController_depr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69D31EEA3FBF0082956D /* GospelViewController_depr.swift */; };
 		68BE69D81EEBBB5B0082956D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68BE69D71EEBBB5B0082956D /* SafariServices.framework */; };
 		68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */; };
-		68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */; };
 		68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */; };
 		68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */; };
 		68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = 68E2BE411EBC143400FCD897 /* UIView+Debug.m */; };
@@ -176,19 +168,11 @@
 		68F0F3FB1F11EC7B00718AFF /* MediaMusicResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3FA1F11EC7B00718AFF /* MediaMusicResponse.swift */; };
 		68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68F0F3FC1F11EF6F00718AFF /* MusicResponse.swift */; };
 		701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F014F1E65DA000010B320 /* LoadingIndicator.swift */; };
-		701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */; };
 		701F01551E65DA2E0010B320 /* ClassicReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01541E65DA2E0010B320 /* ClassicReachability.swift */; };
-		701F01571E65DA440010B320 /* BaseClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01561E65DA440010B320 /* BaseClass.swift */; };
-		701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701F01581E65DA590010B320 /* CommonMethodsClass.swift */; };
-		703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703D12B81E67156D0093E1AA /* ChapterViewController.swift */; };
-		709234321E673BDE001F1621 /* classsDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709234311E673BDE001F1621 /* classsDownload.swift */; };
-		70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */; };
-		70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */; };
 		70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20611E6479A800AF619F /* AppDelegate.swift */; };
 		70CD20671E6479A800AF619F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20651E6479A800AF619F /* Main.storyboard */; };
 		70CD20691E6479A800AF619F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70CD20681E6479A800AF619F /* Assets.xcassets */; };
 		70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70CD206A1E6479A800AF619F /* LaunchScreen.storyboard */; };
-		70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD209F1E64857D00AF619F /* ExtentionsAll.swift */; };
 		70CD20A71E6486CC00AF619F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20A61E6486CC00AF619F /* Constants.swift */; };
 		97769D88BA86A46CCEE3EC52 /* Pods_FaithfulWord.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE01C3698E5471BCABAB308B /* Pods_FaithfulWord.framework */; };
 		F463A90D1F68DAD00012CFEB /* LanguagesSupportedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F463A90C1F68DAD00012CFEB /* LanguagesSupportedResponse.swift */; };
@@ -249,6 +233,8 @@
 		4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerting.swift"; sourceTree = "<group>"; };
 		4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
 		4C619BCE20265CC700E70B6E /* Categorizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categorizable.swift; sourceTree = "<group>"; };
+		4C78CEC3227F6771006FB8CB /* FwbcApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FwbcApiService.swift; sourceTree = "<group>"; };
+		4C78CEC5227F6DC8006FB8CB /* ExtentionsAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtentionsAll.swift; sourceTree = "<group>"; };
 		4C7D5466200EF7D30038B265 /* LoginSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequencer.swift; sourceTree = "<group>"; };
 		4C7D5468200EF7E60038B265 /* AccountService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountService.swift; sourceTree = "<group>"; };
 		4C7D546A200EF80F0038B265 /* ApplicationUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationUser.swift; sourceTree = "<group>"; };
@@ -333,9 +319,6 @@
 		683D5B8E1F1EE89C0019ED0E /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		684C50271F80B51900E243BB /* KJVRVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KJVRVG.entitlements; sourceTree = "<group>"; };
 		6854EED61F01F649007BB502 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerContainerViewController.swift; sourceTree = "<group>"; };
-		686233EA1EFF71FC0046D952 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
-		686233EB1EFF71FC0046D952 /* PlaybackService_depr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackService_depr.swift; sourceTree = "<group>"; };
 		687BF6CB1EC00AC4002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		687BF6CC1EC00AC4002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		687BF6CE1EC00AE3002EDCC3 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; lineEnding = 0; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
@@ -347,11 +330,7 @@
 		689880521F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicTableViewCell.swift; sourceTree = "<group>"; };
 		689880531F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaMusicTableViewCell.xib; sourceTree = "<group>"; };
 		689880561F16F52600CC2BC5 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherLanguagesViewController.swift; sourceTree = "<group>"; };
-		689A05441ED27A9E00D3232D /* Bible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bible.swift; sourceTree = "<group>"; };
 		689DEFD11EB9753F00371829 /* DonateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DonateViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMusicViewController.swift; sourceTree = "<group>"; };
-		68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaGospelViewController.swift; sourceTree = "<group>"; };
 		68B2B1011F56486C00D986D4 /* KJVRVGService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KJVRVGService.swift; sourceTree = "<group>"; };
 		68BA0A871F87128900D3B57D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		68BBC8821FCCFD290008962B /* AppVersionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionResponse.swift; sourceTree = "<group>"; };
@@ -362,7 +341,6 @@
 		68BE69CD1EEA35240082956D /* MediaGospelResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaGospelResponse.swift; sourceTree = "<group>"; };
 		68BE69CF1EEA3B730082956D /* Gospel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Gospel.swift; sourceTree = "<group>"; };
 		68BE69D11EEA3C600082956D /* GospelResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GospelResponse.swift; sourceTree = "<group>"; };
-		68BE69D31EEA3FBF0082956D /* GospelViewController_depr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GospelViewController_depr.swift; sourceTree = "<group>"; };
 		68BE69D71EEBBB5B0082956D /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		68BE69D91EEBBED20082956D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		68BE69DA1EEBBED20082956D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
@@ -377,7 +355,6 @@
 		68BE69E31EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; lineEnding = 0; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		68BE69E41EEBBF240082956D /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		68BE69E71EEBC0C80082956D /* LanguageIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LanguageIdentifier.swift; sourceTree = "<group>"; };
-		68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		68BF02D91F12977300D7F2CA /* MusicTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTableViewCell.swift; sourceTree = "<group>"; };
 		68BF02DA1F12977300D7F2CA /* MusicTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MusicTableViewCell.xib; sourceTree = "<group>"; };
 		68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RVG-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -393,15 +370,8 @@
 		68F2EA712038A0CA00566484 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		68F2EA722038A0CB00566484 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		701F014F1E65DA000010B320 /* LoadingIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingIndicator.swift; sourceTree = "<group>"; };
-		701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceSingleTon.swift; sourceTree = "<group>"; };
 		701F01541E65DA2E0010B320 /* ClassicReachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassicReachability.swift; sourceTree = "<group>"; };
-		701F01561E65DA440010B320 /* BaseClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BaseClass.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		701F01581E65DA590010B320 /* CommonMethodsClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonMethodsClass.swift; sourceTree = "<group>"; };
-		703D12B81E67156D0093E1AA /* ChapterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ChapterViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		708F578A1E7482B10011639A /* RVG.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RVG.entitlements; sourceTree = "<group>"; };
-		709234311E673BDE001F1621 /* classsDownload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = classsDownload.swift; sourceTree = "<group>"; };
-		70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AboutUsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyPolicy.swift; sourceTree = "<group>"; };
 		70CD205E1E6479A800AF619F /* Faithful Word.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Faithful Word.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70CD20611E6479A800AF619F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70CD20631E6479A800AF619F /* OriginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginViewController.swift; sourceTree = "<group>"; };
@@ -412,7 +382,6 @@
 		70CD20781E6479A800AF619F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70CD20811E6479A800AF619F /* RVGUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RVGUITests.swift; sourceTree = "<group>"; };
 		70CD20831E6479A900AF619F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		70CD209F1E64857D00AF619F /* ExtentionsAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtentionsAll.swift; sourceTree = "<group>"; };
 		70CD20A61E6486CC00AF619F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		90A03204187BF6ACC5EE5AFF /* Pods-FaithfulWord.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FaithfulWord.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord.debug.xcconfig"; sourceTree = "<group>"; };
 		9B5BF908FBAC3BA805A10681 /* Pods_RVGUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVGUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -641,6 +610,7 @@
 				4C1F0003209D6EDC00938C30 /* AssetPlaybackManager.swift */,
 				4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */,
 				68B2B1011F56486C00D986D4 /* KJVRVGService.swift */,
+				4C78CEC3227F6771006FB8CB /* FwbcApiService.swift */,
 				681E117C1ED1141100B028DD /* EnvironmentService.swift */,
 				4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */,
 			);
@@ -752,20 +722,9 @@
 		70CD20941E64842B00AF619F /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				70C937A01E6B38F900ACE009 /* AboutUsViewController.swift */,
-				703D12B81E67156D0093E1AA /* ChapterViewController.swift */,
 				689DEFD11EB9753F00371829 /* DonateViewController.swift */,
-				68BE69D31EEA3FBF0082956D /* GospelViewController_depr.swift */,
 				4CDD65601EEB42B600C59DD5 /* Looper.swift */,
 				70CD20631E6479A800AF619F /* OriginViewController.swift */,
-				68A3A4511F64F54A0039C36E /* MediaGospelViewController.swift */,
-				689E7B161F1468B00022FFC5 /* MediaMusicViewController.swift */,
-				68BF02D31F11FC4000D7F2CA /* MusicViewController.swift */,
-				6899CFAF1EE0E5320083751A /* OtherLanguagesViewController.swift */,
-				686233EB1EFF71FC0046D952 /* PlaybackService_depr.swift */,
-				686233E91EFF71FC0046D952 /* PlayerContainerViewController.swift */,
-				686233EA1EFF71FC0046D952 /* PlayerViewController.swift */,
-				70C937A31E6B3F9C00ACE009 /* PrivacyPolicy.swift */,
 				4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */,
 			);
 			name = ViewControllers;
@@ -774,15 +733,11 @@
 		70CD20951E64843600AF619F /* HelperClasses */ = {
 			isa = PBXGroup;
 			children = (
+				4C78CEC5227F6DC8006FB8CB /* ExtentionsAll.swift */,
 				701F01531E65DA1F0010B320 /* Rechability */,
 				70C1E9551E6490630031761A /* LoadingIndicator */,
 				70CD20A51E6486B400AF619F /* Constants */,
 				70CD20A41E64869100AF619F /* ThirdParties */,
-				70CD20A11E6485A000AF619F /* InheritanceBaseClass */,
-				70CD209E1E64856300AF619F /* ExtentionsAll */,
-				70CD209B1E64852400AF619F /* CommonMethodsClasss */,
-				70CD20981E6484CF00AF619F /* WebApiClass */,
-				709234311E673BDE001F1621 /* classsDownload.swift */,
 				68E2BE441EBD622300FCD897 /* CurrencyField.swift */,
 			);
 			name = HelperClasses;
@@ -792,7 +747,6 @@
 			isa = PBXGroup;
 			children = (
 				4C1F0005209D6F3800938C30 /* Asset.swift */,
-				689A05441ED27A9E00D3232D /* Bible.swift */,
 				681E117E1ED138DA00B028DD /* Book.swift */,
 				4CA31FAB200E3C0900A94101 /* User.swift */,
 				4C437ACF22346BB600083197 /* UserActionPlayable.swift */,
@@ -822,38 +776,6 @@
 				4CB27EED2230B6D60082931D /* MessageWithSubjectActivityItem.swift */,
 			);
 			name = Models;
-			sourceTree = "<group>";
-		};
-		70CD20981E6484CF00AF619F /* WebApiClass */ = {
-			isa = PBXGroup;
-			children = (
-				701F01511E65DA0E0010B320 /* WebServiceSingleTon.swift */,
-			);
-			name = WebApiClass;
-			sourceTree = "<group>";
-		};
-		70CD209B1E64852400AF619F /* CommonMethodsClasss */ = {
-			isa = PBXGroup;
-			children = (
-				701F01581E65DA590010B320 /* CommonMethodsClass.swift */,
-			);
-			name = CommonMethodsClasss;
-			sourceTree = "<group>";
-		};
-		70CD209E1E64856300AF619F /* ExtentionsAll */ = {
-			isa = PBXGroup;
-			children = (
-				70CD209F1E64857D00AF619F /* ExtentionsAll.swift */,
-			);
-			name = ExtentionsAll;
-			sourceTree = "<group>";
-		};
-		70CD20A11E6485A000AF619F /* InheritanceBaseClass */ = {
-			isa = PBXGroup;
-			children = (
-				701F01561E65DA440010B320 /* BaseClass.swift */,
-			);
-			name = InheritanceBaseClass;
 			sourceTree = "<group>";
 		};
 		70CD20A41E64869100AF619F /* ThirdParties */ = {
@@ -944,6 +866,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				es,
@@ -1139,17 +1062,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70C937A11E6B38F900ACE009 /* AboutUsViewController.swift in Sources */,
 				4C8EE8C41FF6010F003F483A /* DataService.swift in Sources */,
 				4C1F001420A3668400938C30 /* AVURLAsset+Rx.swift in Sources */,
 				701F01501E65DA000010B320 /* LoadingIndicator.swift in Sources */,
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
 				4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */,
 				F463A90D1F68DAD00012CFEB /* LanguagesSupportedResponse.swift in Sources */,
-				686233EE1EFF71FC0046D952 /* PlaybackService_depr.swift in Sources */,
-				701F01571E65DA440010B320 /* BaseClass.swift in Sources */,
 				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
-				709234321E673BDE001F1621 /* classsDownload.swift in Sources */,
 				4C10EAEA209164B7008A8B00 /* PlaybackControlsViewModel.swift in Sources */,
 				4CCE8C931FF4BC8200AFBAF2 /* AppConstants.swift in Sources */,
 				4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */,
@@ -1173,12 +1092,9 @@
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
 				4C39990220229E02008E76E8 /* SideMenuSectionViewModel.swift in Sources */,
 				4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */,
-				686233ED1EFF71FC0046D952 /* PlayerViewController.swift in Sources */,
 				4C25039A2169A1760069AB49 /* AnyObserverMaking.swift in Sources */,
 				4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */,
 				4CFB85022005B66300FEBB53 /* CellContentLayoutStyle.swift in Sources */,
-				689A05451ED27A9E00D3232D /* Bible.swift in Sources */,
-				68BE69D41EEA3FBF0082956D /* GospelViewController_depr.swift in Sources */,
 				4CD5C1BA20242A96007BFC1B /* VerseCell.swift in Sources */,
 				4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
@@ -1200,12 +1116,10 @@
 				4C250394216868120069AB49 /* String+Hashing.swift in Sources */,
 				4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */,
 				4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */,
-				70C937A41E6B3F9C00ACE009 /* PrivacyPolicy.swift in Sources */,
 				4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */,
 				4CCE8C831FF4B7C600AFBAF2 /* BooksViewModel.swift in Sources */,
 				4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */,
 				4CFB84FC2005AEB400FEBB53 /* SettingDrillInCell.swift in Sources */,
-				70CD20A01E64857D00AF619F /* ExtentionsAll.swift in Sources */,
 				4C999C34215F1614002EF2F4 /* RemoteCommandManager.swift in Sources */,
 				4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */,
 				4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */,
@@ -1214,12 +1128,10 @@
 				4C39990020229D6C008E76E8 /* SideMenuViewModel.swift in Sources */,
 				4CCE8C9A1FF5579200AFBAF2 /* AppInfoProviding.swift in Sources */,
 				4C5FAD792037B04200397BFF /* UIViewController+Alerting.swift in Sources */,
-				686233EC1EFF71FC0046D952 /* PlayerContainerViewController.swift in Sources */,
 				4C3EA13E206B265100310024 /* PlaybackViewController.swift in Sources */,
 				4C437AB92232334200083197 /* UserActionsService.swift in Sources */,
 				4C7D546D2013DB220038B265 /* MediaListingViewController.swift in Sources */,
 				4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */,
-				701F01591E65DA590010B320 /* CommonMethodsClass.swift in Sources */,
 				681E117F1ED138DA00B028DD /* Book.swift in Sources */,
 				4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */,
 				4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */,
@@ -1228,6 +1140,7 @@
 				4C1F0006209D6F3800938C30 /* Asset.swift in Sources */,
 				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,
 				4C5FAD7020369A5600397BFF /* RadioListSectionViewModel.swift in Sources */,
+				4C78CEC6227F6DC8006FB8CB /* ExtentionsAll.swift in Sources */,
 				4CB27EEE2230B6D60082931D /* MessageWithSubjectActivityItem.swift in Sources */,
 				4C5FAD7120369A5600397BFF /* RadioListViewModeling.swift in Sources */,
 				4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */,
@@ -1245,7 +1158,6 @@
 				681E117B1ED110CB00B028DD /* Environment.swift in Sources */,
 				68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
-				703D12B91E67156D0093E1AA /* ChapterViewController.swift in Sources */,
 				68F0F3FB1F11EC7B00718AFF /* MediaMusicResponse.swift in Sources */,
 				689880511F147B5900CC2BC5 /* Playable.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
@@ -1257,25 +1169,20 @@
 				4CEF753B2026CBA300C1BBF3 /* CategoryListingViewModel.swift in Sources */,
 				70CD20621E6479A800AF619F /* AppDelegate.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
-				68BF02D41F11FC4000D7F2CA /* MusicViewController.swift in Sources */,
 				4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */,
 				4CCE8C6B1FF4B2A000AFBAF2 /* UIMaking.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
-				689E7B171F1468B00022FFC5 /* MediaMusicViewController.swift in Sources */,
 				4C3EA131206A6EB600310024 /* UIView+Constraining.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
-				4CE7CBE1227E78FB0062B9AA /* OriginViewController.swift in Sources */,
 				701F01551E65DA2E0010B320 /* ClassicReachability.swift in Sources */,
 				4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */,
 				68BBC8851FCD12400008962B /* AppVersioning.swift in Sources */,
-				68A3A4521F64F54A0039C36E /* MediaGospelViewController.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				4C437AD6223C60DB00083197 /* UIFont+PlaybackUI.swift in Sources */,
 				68BE69E81EEBC0C80082956D /* LanguageIdentifier.swift in Sources */,
 				4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */,
 				4C0F4871202542FA00A8904F /* CategoryListingSectionViewModel.swift in Sources */,
 				4C5FAD5F2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift in Sources */,
-				701F01521E65DA0E0010B320 /* WebServiceSingleTon.swift in Sources */,
 				4C3EA137206A71D200310024 /* DeviceNowPlayingBarView.swift in Sources */,
 				68BE69CC1EEA33C50082956D /* MediaGospel.swift in Sources */,
 				68F0F3FD1F11EF6F00718AFF /* MusicResponse.swift in Sources */,
@@ -1286,12 +1193,12 @@
 				4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */,
 				68F0F3F91F11EC1B00718AFF /* MediaMusic.swift in Sources */,
 				4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */,
-				6899CFB01EE0E5320083751A /* OtherLanguagesViewController.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
 				4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */,
 				4C958E9D2090242100A71C59 /* PopupContentController.swift in Sources */,
 				4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */,
 				4C999C33215F160E002EF2F4 /* AssetPlaybackManager.swift in Sources */,
+				4C78CEC4227F6771006FB8CB /* FwbcApiService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

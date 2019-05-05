@@ -63,7 +63,7 @@ public final class DataService {
     // MARK: Dependencies
 
     private let dataStore: DataStoring
-    private let kjvrvgNetworking: MoyaProvider<KJVRVGService>!
+    private let networkingApi: MoyaProvider<FwbcApiService>!
     private let reachability: RxClassicReachable!
 
     // MARK: Fields
@@ -84,10 +84,10 @@ public final class DataService {
 
     internal init(
         dataStore: DataStoring,
-        kjvrvgNetworking: MoyaProvider<KJVRVGService>,
+        networkingApi: MoyaProvider<FwbcApiService>,
         reachability: RxClassicReachable) {
         self.dataStore = dataStore
-        self.kjvrvgNetworking = kjvrvgNetworking
+        self.networkingApi = networkingApi
         self.reachability = reachability
 
         reactToReachability()
@@ -241,7 +241,7 @@ extension DataService: ProductDataServicing {
 //            let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
 //            DDLogDebug("self._responseMap: \(self._responseMap)")
 
-            let moyaResponse = self.kjvrvgNetworking.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
+            let moyaResponse = self.networkingApi.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
             let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
                 do {
                     self._responseMap[bookUuid] = response
@@ -301,7 +301,7 @@ extension DataService: ProductDataServicing {
             
             if loadedSoFar < totalEntries || fetchState == .hasNotFetched {
                 // bookResponse should not be nil because otherwise DataServiceError.decodeFailed would have happened
-                return self.kjvrvgNetworking.rx.request(.books(languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
+                return self.networkingApi.rx.request(.books(languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
                     //            .catchError { _ in Single.just(product) }
                     .map { [unowned self] response -> BookResponse in
                         do {
@@ -398,7 +398,7 @@ extension DataService: ProductDataServicing {
             }
 
             if (loadedSoFar < totalEntries) || (fetchState == .hasNotFetched) && (cachedMedia.count == 0 || modulo == 0) {
-                let moyaResponse = self.kjvrvgNetworking.rx.request(.gospelsMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+                let moyaResponse = self.networkingApi.rx.request(.gospelsMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
                 let mediaGospelResponse: Single<MediaGospelResponse> = moyaResponse.map { response -> MediaGospelResponse in
                     do {
                         self._responseMap[categoryUuid] = response
@@ -496,7 +496,7 @@ extension DataService: ProductDataServicing {
             }
             
             if (loadedSoFar < totalEntries) || (fetchState == .hasNotFetched) && (cachedMedia.count == 0 || modulo == 0) {
-                let moyaResponse = self.kjvrvgNetworking.rx.request(.musicMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
+                let moyaResponse = self.networkingApi.rx.request(.musicMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
                 let mediaMusicResponse: Single<MediaMusicResponse> = moyaResponse.map { response -> MediaMusicResponse in
                     do {
                         self._responseMap[categoryUuid] = response
@@ -566,7 +566,7 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchBibleLanguages()
         case .reachable(_):
             //        var categoryListing: Single<[LanguageIdentifier]> = Single.just([])
-            return self.kjvrvgNetworking.rx.request(.languagesSupported(offset: previousOffset + 1, limit: stride))
+            return self.networkingApi.rx.request(.languagesSupported(offset: previousOffset + 1, limit: stride))
                 .map { response -> LanguagesSupportedResponse in
                     do {
                         // cache response for the next call
@@ -683,7 +683,7 @@ extension DataService: ProductDataServicing {
 
                 if (gospelLoadedSoFar < gospelTotalEntries || gospelFetchState == .hasNotFetched) && (cachedGospelItems.count == 0 || modulo == 0) {
                     DDLogDebug("reachable")
-                    categoryListing = self.kjvrvgNetworking.rx.request(.gospels(languageId: L10n.shared.language, offset: gospelPreviousOffset + 1, limit: stride))
+                    categoryListing = self.networkingApi.rx.request(.gospels(languageId: L10n.shared.language, offset: gospelPreviousOffset + 1, limit: stride))
                         .map { response -> GospelResponse in
                             do {
                                 // cache response for the next call
@@ -748,7 +748,7 @@ extension DataService: ProductDataServicing {
                 }
                 if (musicLoadedSoFar < musicTotalEntries || musicFetchState == .hasNotFetched) && (cachedMusicItems.count == 0 || modulo == 0) {
                     DDLogDebug("reachable")
-                    categoryListing = self.kjvrvgNetworking.rx.request(.music(languageId: L10n.shared.language, offset: musicPreviousOffset + 1, limit: stride))
+                    categoryListing = self.networkingApi.rx.request(.music(languageId: L10n.shared.language, offset: musicPreviousOffset + 1, limit: stride))
                         .map { response -> MusicResponse in
                             do {
                                 // cache response for the next call
