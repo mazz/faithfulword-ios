@@ -27,4 +27,5 @@ target 'FaithfulWord' do
     pod 'RxAVFoundation'
     pod 'MarqueeLabel/Swift'
     pod 'UICircularProgressRing'
+    pod 'MagazineLayout'
 end

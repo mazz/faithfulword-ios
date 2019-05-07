@@ -78,6 +78,7 @@ PODS:
     - L10n-swift/Core
   - L10n-swift/IBInspectable (5.4.1):
     - L10n-swift/Core
+  - MagazineLayout (1.3.1)
   - MarqueeLabel/Swift (3.2.1)
   - MBProgressHUD (1.0.0)
   - Moya/Core (13.0.0):
@@ -118,6 +119,7 @@ DEPENDENCIES:
   - FirebaseInstanceID
   - GRDB.swift (from `https://github.com/groue/GRDB.swift.git`, branch `GRDB-4.0`)
   - L10n-swift
+  - MagazineLayout
   - MarqueeLabel/Swift
   - MBProgressHUD (~> 1.0.0)
   - Moya/RxSwift
@@ -146,6 +148,7 @@ SPEC REPOS:
     - GoogleAppMeasurement
     - GoogleUtilities
     - L10n-swift
+    - MagazineLayout
     - MarqueeLabel
     - MBProgressHUD
     - Moya
@@ -187,6 +190,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 273e67030e0de313e7304f6dcfa96fc5214f6c23
   GRDB.swift: 71ab04a6e727e34c034513c4d15901ea35eb1f0d
   L10n-swift: 8d7edb9c113ac4859a27d6417b47a6bc6cdebf7c
+  MagazineLayout: 9d2f2dd8f6c7592c1fe4d1cc97d402376969218b
   MarqueeLabel: 2daf039bf916937c8a4c9adfc13577cc5e51b4ce
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   Moya: 161263550064ff8a4948e8ff63137fd72a876292
@@ -201,6 +205,6 @@ SPEC CHECKSUMS:
   Swinject: 48a96cda93633cf2860697b4ce76ab5db9ebaca2
   UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
 
-PODFILE CHECKSUM: 12cd50b59adf676e0c86c6180836b9d88da1b154
+PODFILE CHECKSUM: 25f24fc8b718ce6016ebceaabb5969daa2cd399d
 
 COCOAPODS: 1.6.1

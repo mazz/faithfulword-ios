@@ -77,6 +77,26 @@ public final class DataStore {
         
         migrator.registerMigration("v1.3") { db in
             do {
+                try db.create(table: "org") { orgTable in
+                    DDLogDebug("created: \(orgTable)")
+                    //                orgTable.column("chapterId", .integer).primaryKey()
+                    
+                    orgTable.column("uuid", .text).primaryKey()
+                    orgTable.column("bannerPath", .text)
+                    orgTable.column("basename", .text)
+                    orgTable.column("shortname", .text)
+                    orgTable.column("insertedAt", .double)
+                    orgTable.column("largeThumbnailPath", .text)
+                    orgTable.column("medThumbnailPath", .text)
+                    orgTable.column("smallThumbnailPath", .text)
+                }
+            }
+            catch {
+                DDLogDebug("error making org table: \(error)")
+            }
+            
+            
+            do {
                 try db.create(table: "user") { userTable in
                     DDLogDebug("created: \(userTable)")
                     userTable.column("userId", .integer).primaryKey()

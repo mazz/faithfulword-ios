@@ -2,10 +2,35 @@ import Foundation
 import Moya
 
 public enum FwbcApiService {
-    case churches
-    case churchesMediaSermons(cid: String)
-    case appVersions
+    case appVersions(offset: Int, limit: Int)
     case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String)
+    // v1.1/languages/supported
+    // v1.2/languages/supported
+    // v1.3/languages/supported?offset=1&limit=50
+    case languagesSupported(offset: Int, limit: Int)
+    // v1.3/orgs/default?offset=1&limit=50
+    case defaultOrgs(offset: Int, limit: Int)
+    
+    // v1.3/orgs/{uuid}/channels?language-id=en&offset=1&limit=50
+    case channels(uuid: String, offset: Int, limit: Int)
+    
+    // v1.3/channels/{uuid}/playlists?language-id=en&offset=1&limit=50
+    case playlists(uuid: String, offset: Int, limit: Int)
+    
+    // v1.3/playlists/{uuid}/media?language-id=en&offset=1&limit=50
+    case mediaItems(uuid: String, offset: Int, limit: Int)
+    
+    // v1.3/search
+    case search(query: String,
+        mediaCategory: String,
+        playlistUuid: String,
+        channelUuid: String,
+        publishedAfter: TimeInterval,
+        updatedAfter: TimeInterval,
+        presentedAfter: TimeInterval,
+        offset: Int,
+        limit: Int)
+    
     // v1.1/music/{gid}/media
     // v1.2/music/{gid}/media
     // v1.3/music/{uuid}/media?language-id=en&offset=1&limit=50
@@ -14,10 +39,6 @@ public enum FwbcApiService {
     // v1.2/music?language-id=en
     // v1.3/music?language-id=en&offset=1&limit=50
     case music(languageId: String, offset: Int, limit: Int)
-    // v1.1/languages/supported
-    // v1.2/languages/supported
-    // v1.3/languages/supported?offset=1&limit=50
-    case languagesSupported(offset: Int, limit: Int)
     // v1.1/gospels?language-id=en
     // v1.2/gospels?language-id=en
     // v1.3/gospels?language-id=en&offset=1&limit=50
@@ -45,20 +66,29 @@ extension FwbcApiService: TargetType {
     //    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v1.3")! }
     public var path: String {
         switch self {
-        case .churches:
-            return "/churches"
-        case .churchesMediaSermons(let cid):
-            return "/churches/\(cid)/media/sermon"
         case .pushTokenUpdate(_, _, _, _, _):
             return "/device/pushtoken/update"
-        case .appVersions:
+        case .appVersions(_, _):
             return "/app/versions"
+        case .languagesSupported(_, _):
+            return "/languages/supported"
+        case .defaultOrgs(_, _):
+            return "/orgs/default"
+            
+        case .channels(let uuid, _, _):
+            return "/orgs/\(uuid)/channels"
+        case .playlists(let uuid, _, _):
+            return "/channels/\(uuid)/playlists"
+        case .mediaItems(let uuid, _, _):
+            return "/playlists/\(uuid)/media"
+        case .search(_, _, _, _, _, _, _, _, _):
+            return "/search"
+            
+            
         case .musicMedia(let uuid, _, _):
             return "/music/\(uuid)/media"
         case .music(_, _, _):
             return "/music"
-        case .languagesSupported(_, _):
-            return "/languages/supported"
         case .gospels(_, _, _):
             return "/gospels"
         case .gospelsMedia(let uuid, _, _):
@@ -72,16 +102,34 @@ extension FwbcApiService: TargetType {
     
     public var method: Moya.Method {
         switch self {
-        case .churches,
-             .churchesMediaSermons,
-             .appVersions,
-             .languagesSupported,
-             .musicMedia,
-             .music,
-             .booksChapterMedia,
-             .gospels,
-             .gospelsMedia,
-             .books:
+        case .appVersions:
+            return .get
+        case .languagesSupported:
+            return .get
+        case .defaultOrgs:
+            return .get
+            
+        case .channels:
+            return .get
+        case .playlists:
+            return .get
+        case .mediaItems:
+            return .get
+        case .search:
+            return .post
+            
+            
+        case .musicMedia:
+            return .get
+        case .music:
+            return .get
+        case .booksChapterMedia:
+            return .get
+        case .gospels:
+            return .get
+        case .gospelsMedia:
+            return .get
+        case .books:
             return .get
         case .pushTokenUpdate:
             return .post
@@ -89,15 +137,62 @@ extension FwbcApiService: TargetType {
     }
     public var parameters: [String: Any]? {
         switch self {
-        case .churches:
-            return nil
-        case .churchesMediaSermons(_):
-            return nil
-        case .appVersions:
-            return nil
+        case .appVersions(let offset, let limit):
+            return ["offset": offset,
+                    "limit": limit]
+        case .pushTokenUpdate(let fcmToken,
+                              let apnsToken,
+                              let preferredLanguage,
+                              let userAgent,
+                              let userVersion):
+            return ["fcmToken": fcmToken,
+                    "apnsToken": apnsToken,
+                    "preferredLanguage": preferredLanguage,
+                    "userAgent": userAgent,
+                    "userVersion": userVersion]
         case .languagesSupported(let offset, let limit):
             return ["offset": offset,
                     "limit": limit]
+        case .defaultOrgs(let offset, let limit):
+            return ["offset": offset,
+                    "limit": limit]
+            
+        case .channels(_, let offset, let limit):
+            return ["offset": offset, "limit": limit]
+        case .playlists(_, let offset, let limit):
+            return ["offset": offset, "limit": limit]
+        case .mediaItems(_, let offset, let limit):
+            return ["offset": offset, "limit": limit]
+        case .search(let query,
+                     let mediaCategory,
+                     let playlistUuid,
+                     let channelUuid,
+                     let publishedAfter,
+                     let updatedAfter,
+                     let presentedAfter,
+                     let offset,
+                     let limit):
+            return ["query": query,
+                    "mediaCategory": mediaCategory,
+                    "playlistUuid": playlistUuid,
+                    "channelUuid": channelUuid,
+                    "publishedAfter": publishedAfter,
+                    "updatedAfter": updatedAfter,
+                    "presentedAfter": presentedAfter,
+                    "offset": offset,
+                    "limit": limit]
+            
+            //        case search(query: String,
+            //                    mediaCategory: String,
+            //                    playlistUuid: String,
+            //                    channelUuid: String,
+            //                    publishedAfter: TimeInterval,
+            //                    updatedAfter: TimeInterval,
+            //                    presentedAfter: TimeInterval,
+            //                    offset: Int,
+            //                    limit: Int)
+            
+            
         case .musicMedia(_, let offset, let limit):
             return ["offset": offset, "limit": limit]
         case .music(let languageId, let offset, let limit):
@@ -114,43 +209,45 @@ extension FwbcApiService: TargetType {
             return ["language-id": languageId,
                     "offset": offset,
                     "limit": limit]
-        case .pushTokenUpdate(let fcmToken,
-                              let apnsToken,
-                              let preferredLanguage,
-                              let userAgent,
-                              let userVersion):
-            return ["fcmToken": fcmToken,
-                    "apnsToken": apnsToken,
-                    "preferredLanguage": preferredLanguage,
-                    "userAgent": userAgent,
-                    "userVersion": userVersion]
         }
     }
     public var parameterEncoding: ParameterEncoding {
         switch self {
-        case .churches,
-             .churchesMediaSermons,
-             .appVersions,
-             .languagesSupported,
-             .musicMedia,
-             .music,
-             .booksChapterMedia,
-             .gospels,
-             .gospelsMedia,
-             .books:
-            return URLEncoding.default // Send parameters in URL for GET, DELETE and HEAD. For other HTTP methods, parameters will be sent in request body
+        case .appVersions:
+            return URLEncoding.default
         case .pushTokenUpdate:
             return JSONEncoding.default // Send parameters as JSON in request body
+        case .languagesSupported:
+            return URLEncoding.default
+        case .defaultOrgs:
+            return URLEncoding.default // Send parameters in URL for GET, DELETE and HEAD. For other HTTP methods, parameters will be sent in request body
+        case .channels:
+            return URLEncoding.default
+        case .playlists:
+            return URLEncoding.default
+        case .mediaItems:
+            return URLEncoding.default
+        case .search:
+            return JSONEncoding.default // Send parameters as JSON in request body
+            
+        case .musicMedia(let uuid, let offset, let limit):
+            return URLEncoding.default
+        case .music(let languageId, let offset, let limit):
+            return URLEncoding.default
+        case .gospels(let languageId, let offset, let limit):
+            return URLEncoding.default
+        case .gospelsMedia(let uuid, let offset, let limit):
+            return URLEncoding.default
+        case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
+            return URLEncoding.default
+        case .books(let languageId, let offset, let limit):
+            return URLEncoding.default
         }
     }
     public var sampleData: Data {
         switch self {
-        case .churches:
-            return "churches 1up".utf8Encoded
-        case .churchesMediaSermons(let cid):
-            return "{\"cid\": \(cid),\"}".utf8Encoded
-        case .appVersions:
-            return "app versions 1up".utf8Encoded
+        case .appVersions(let offset, let limit):
+            return "{\"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .pushTokenUpdate(let fcmToken,
                               let apnsToken,
                               let preferredLanguage,
@@ -164,6 +261,31 @@ extension FwbcApiService: TargetType {
                 "userVersion": userVersion
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
+        case .languagesSupported(let offset, let limit):
+            return "{\"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
+        case .defaultOrgs(let offset, let limit):
+            return "{\"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
+            
+        case .channels(let uuid, let offset, let limit):
+            return "{\"uuid\": \(uuid), \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
+        case .playlists(let uuid, let offset, let limit):
+            return "{\"uuid\": \(uuid), \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
+        case .mediaItems(let uuid, let offset, let limit):
+            return "{\"uuid\": \(uuid), \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
+            
+        case .search(let query,
+                     let mediaCategory,
+                     let playlistUuid,
+                     let channelUuid,
+                     let publishedAfter,
+                     let updatedAfter,
+                     let presentedAfter,
+                     let offset,
+                     let limit):
+            return "{\"query\": \(query), \"mediaCategory\": \(mediaCategory), \"playlistUuid\": \(playlistUuid), \"channelUuid\": \(channelUuid), \"publishedAfter\": \(publishedAfter), \"updatedAfter\": \(updatedAfter), \"presentedAfter\": \(presentedAfter), \"offset\": \(offset), \"limit\": \(limit)}".utf8Encoded
+            
+            
+            
         case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
             return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .gospels(let languageId, let offset, let limit):
@@ -176,19 +298,68 @@ extension FwbcApiService: TargetType {
             return "{\"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .books(let languageId, let offset, let limit):
             return "{\"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
-        case .languagesSupported(let offset, let limit):
-            return "{\"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         }
     }
     public var task: Task {
         switch self {
-        case .churches:
-            return .requestPlain
-        case .churchesMediaSermons(let cid):
-            return .requestParameters(parameters:  ["cid": cid],
+        case .appVersions(let offset, let limit):
+            return .requestParameters(parameters:  ["offset": offset,
+                                                    "limit": limit],
                                       encoding: URLEncoding.default)
-        case .appVersions:
-            return .requestPlain
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion):
+            return .requestParameters(parameters:  ["fcmToken": fcmToken,
+                                                    "apnsToken": apnsToken,
+                                                    "preferredLanguage": preferredLanguage,
+                                                    "userAgent": userAgent,
+                                                    "userVersion": userVersion],
+                                      encoding: JSONEncoding.default)
+        case .languagesSupported(let offset, let limit):
+            return .requestParameters(parameters:  ["offset": offset,
+                                                    "limit": limit],
+                                      encoding: URLEncoding.default)
+        case .defaultOrgs(let offset, let limit):
+            return .requestParameters(parameters:  ["offset": offset,
+                                                    "limit": limit],
+                                      encoding: URLEncoding.default)
+            
+        case .channels(let uuid, let offset, let limit):
+            return .requestParameters(parameters:  ["uuid": uuid,
+                                                    "offset": offset,
+                                                    "limit": limit],
+                                      encoding: URLEncoding.default)
+        case .playlists(let uuid, let offset, let limit):
+            return .requestParameters(parameters:  ["uuid": uuid,
+                                                    "offset": offset,
+                                                    "limit": limit],
+                                      encoding: URLEncoding.default)
+        case .mediaItems(let uuid, let offset, let limit):
+            return .requestParameters(parameters:  ["uuid": uuid,
+                                                    "offset": offset,
+                                                    "limit": limit],
+                                      encoding: URLEncoding.default)
+            
+        case .search(let query,
+                     let mediaCategory,
+                     let playlistUuid,
+                     let channelUuid,
+                     let publishedAfter,
+                     let updatedAfter,
+                     let presentedAfter,
+                     let offset,
+                     let limit):
+            return .requestParameters(parameters:  ["query": query,
+                                                    "mediaCategory": mediaCategory,
+                                                    "playlistUuid": playlistUuid,
+                                                    "channelUuid": channelUuid,
+                                                    "publishedAfter": publishedAfter,
+                                                    "updatedAfter": updatedAfter,
+                                                    "presentedAfter": presentedAfter,
+                                                    "offset": offset,
+                                                    "limit": limit],
+                                      encoding: JSONEncoding.default)
+            
+            
+            
         case .musicMedia(let uuid, let offset, let limit):
             return .requestParameters(parameters:  ["uuid": uuid,
                                                     "offset": offset,
@@ -202,17 +373,6 @@ extension FwbcApiService: TargetType {
         case .books(let languageId, let offset, let limit):
             return .requestParameters(parameters:  ["language-id": languageId,
                                                     "offset": offset,
-                                                    "limit": limit],
-                                      encoding: URLEncoding.default)
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion):
-            return .requestParameters(parameters:  ["fcmToken": fcmToken,
-                                                    "apnsToken": apnsToken,
-                                                    "preferredLanguage": preferredLanguage,
-                                                    "userAgent": userAgent,
-                                                    "userVersion": userVersion],
-                                      encoding: JSONEncoding.default)
-        case .languagesSupported(let offset, let limit):
-            return .requestParameters(parameters:  ["offset": offset,
                                                     "limit": limit],
                                       encoding: URLEncoding.default)
         case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
