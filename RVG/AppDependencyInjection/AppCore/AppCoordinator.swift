@@ -143,38 +143,95 @@ extension AppCoordinator: NavigationCoordinating {
         self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] defaultOrgs in
             DDLogDebug("default orgs: \(defaultOrgs)")
             orgs = self.productService.defaultOrgs.value
-            self.swapInMainFlow()
+//            self.swapInMainFlow()
+            switch self.networkStatus.value {
+            case .notReachable:
+                DDLogDebug("orgs: \(orgs)")
+                if orgs.count == 0 {
+                    DDLogDebug("⚠️ No internet and no Org found, can't do anything")
+                    self.swapInNoResourceFlow()
+                } else {
+                    if let uuid: String = orgs.first?.uuid {
+                        self.loadChannels(for: uuid)
+                    }
+                }
+                
+            case .reachable(_):
+                DDLogDebug("orgs: \(orgs)")
+                if orgs.count == 0 {
+                    DDLogDebug("⚠️ Internet but no Org found, can't do anything")
+                    self.swapInNoResourceFlow()
+                } else {
+                    if let uuid: String = orgs.first?.uuid {
+                        self.loadChannels(for: uuid)
+                    }
+                }
+            case .unknown:
+                DDLogDebug("orgs: \(orgs)")
+                if orgs.count == 0 {
+                    DDLogDebug("⚠️ No internet and no Org found, can't do anything")
+                    self.swapInNoResourceFlow()
+                } else {
+                    if let uuid: String = orgs.first?.uuid {
+                        self.loadChannels(for: uuid)
+                    }
+                }
+            }
         }) { error in
             DDLogDebug("error: \(error)")
         }.disposed(by: self.bag)
 
-        switch self.networkStatus.value {
-        case .notReachable:
-            DDLogDebug("orgs: \(orgs)")
-            
-        case .reachable(_):
-            DDLogDebug("orgs: \(orgs)")
-//            self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self]  defaultOrgs in
-//                DDLogDebug("default orgs: \(defaultOrgs)")
-//                orgs = self.productService.defaultOrgs.value
-//                self.swapInMainFlow()
-//            })
-//                .disposed(by: self.bag)
-
-        case .unknown:
-            DDLogDebug("orgs: \(orgs)")
-//            self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self]  defaultOrgs in
-//                DDLogDebug("default orgs: \(defaultOrgs)")
-//                orgs = self.productService.defaultOrgs.value
-//                self.swapInMainFlow()
-//            })
-//                .disposed(by: self.bag)
-        }
-        
-        self.swapInMainFlow()
-
     }
     
+    private func loadChannels(for orgUuid: String) {
+        var channels: [Channel] = []
+        
+        self.productService.fetchChannels(for: orgUuid, offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] chans in
+            DDLogDebug("channels: \(channels)")
+            channels = self.productService.channels.value
+            //            self.swapInMainFlow()
+            switch self.networkStatus.value {
+            case .notReachable:
+                DDLogDebug("orgs: \(channels)")
+                if channels.count == 0 {
+                    DDLogDebug("⚠️ No internet and no channels found, can't do anything")
+                } else {
+                    self.swapInMainFlow()
+                }
+                
+            case .reachable(_):
+                DDLogDebug("orgs: \(channels)")
+                if channels.count == 0 {
+                    DDLogDebug("⚠️ Internet but no channels found, can't do anything")
+                } else {
+                    self.swapInMainFlow()
+                }
+            case .unknown:
+                DDLogDebug("orgs: \(channels)")
+                if channels.count == 0 {
+                    DDLogDebug("⚠️ No internet and no channels found, can't do anything")
+                } else {
+                    self.swapInMainFlow()
+                }
+            }
+        }) { error in
+            DDLogDebug("error: \(error)")
+            }.disposed(by: self.bag)
+        
+    }
+
+    /// Puts the no network/resources flow on top of the rootViewController
+    /// this should be shown only when neither there is auth/orgs/channels nor network at the same time
+    private func swapInNoResourceFlow() {
+        DDLogDebug("swapInNoResourceFlow")
+        //        resettableInitialCoordinator.value.flow(with: { [unowned self] initialFlowViewController in
+        //            self.rootViewController.plant(initialFlowViewController, withAnimation: GoseAnimations.fade)
+        //        }, completion: { [unowned self] _ in
+        //            self.swapInMainFlow()
+        //            self.resettableInitialCoordinator.reset()
+        //        }, context: .other)
+    }
+
     /// Puts the initial flow (unauthenticated state) on top of the rootViewController,
     /// and sets up the initial flow to be replaced by the main flow when complete.
     private func swapInInitialFlow() {

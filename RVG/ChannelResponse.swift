@@ -1,9 +1,9 @@
 import Foundation
 
-public struct OrgResponse: Codable {
+public struct ChannelResponse: Codable {
     public var pageSize: Int
     public var pageNumber: Int
-    public var result: [Org]
+    public var result: [Channel]
     public var status: String
     public var totalPages: Int
     public var totalEntries: Int

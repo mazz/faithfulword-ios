@@ -9,7 +9,11 @@ public protocol DataStoring {
     func fetchDefaultOrgs() -> Single<[Org]>
     func addDefaultOrgs(orgs: [Org]) -> Single<[Org]>
     func deleteDefaultOrgs() -> Single<Void>
-    
+
+    func fetchChannels(for channelUuid: String) -> Single<[Channel]>
+    func addChannels(channels: [Channel]) -> Single<[Channel]>
+    func deleteChannels() -> Single<Void>
+
     func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -99,7 +103,28 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making org table: \(error)")
             }
-            
+
+            do {
+                try db.create(table: "channel") { channelTable in
+                    DDLogDebug("created: \(channelTable)")
+                    //                orgTable.column("chapterId", .integer).primaryKey()
+                    
+                    channelTable.column("uuid", .text).primaryKey()
+                    channelTable.column("orgUuid", .text)
+                    channelTable.column("bannerPath", .text)
+                    channelTable.column("basename", .text)
+                    channelTable.column("ordinal", .integer)
+                    channelTable.column("insertedAt", .double)
+                    channelTable.column("updatedAt", .double)
+                    channelTable.column("largeThumbnailPath", .text)
+                    channelTable.column("medThumbnailPath", .text)
+                    channelTable.column("smallThumbnailPath", .text)
+                }
+            }
+            catch {
+                DDLogDebug("error making org table: \(error)")
+            }
+
             
             do {
                 try db.create(table: "user") { userTable in
@@ -319,9 +344,9 @@ extension DataStore: DataStoring {
                     for org in orgs {
                         DDLogDebug("org: \(org)")
                         //            try! self.dbQueue.inDatabase { db in
-                        var storeLang: Org = org
+                        var storeOrg: Org = org
                         //                            storeLang.userId = user.userId
-                        try storeLang.insert(db)
+                        try storeOrg.insert(db)
                     }
                     //                    }
                     return .commit
@@ -340,6 +365,64 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     try Org.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+
+    //MARK: Channel
+    
+    public func fetchChannels(for orgUuid: String) -> Single<[Channel]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetched: [Channel] = []
+                try self.dbPool.read { db in
+                    fetched = try Channel.filter(Column("orgUuid") == orgUuid).fetchAll(db)
+                }
+                single(.success(fetched))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func addChannels(channels: [Channel]) -> Single<[Channel]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    if let user = try User.fetchOne(db) {
+                    for channel in channels {
+                        DDLogDebug("channel: \(channel)")
+                        //            try! self.dbQueue.inDatabase { db in
+                        var storeChannel: Channel = channel
+                        //                            storeLang.userId = user.userId
+                        try storeChannel.insert(db)
+                    }
+                    //                    }
+                    return .commit
+                }
+                single(.success(channels))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func deleteChannels() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try Channel.deleteAll(db)
                     return .commit
                 }
                 single(.success(()))

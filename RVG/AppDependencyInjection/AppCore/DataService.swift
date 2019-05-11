@@ -41,13 +41,16 @@ public protocol AccountDataServicing {
 public protocol ProductDataServicing {
 //    var orgs: Observable<[Org]> { get }
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
+    func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     func deletePersistedDefaultOrgs() -> Single<Void>
+    func deletePersistedChannels() -> Single<Void>
 //    func orgs(offset: Int, limit: Int) -> Single<[Org]>
 
     // ~~~~~~~~~~~
     
     var books: Observable<[Book]> { get }
     var orgs: Observable<[Org]> { get }
+    var channels: Observable<[Channel]> { get }
 
     func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]>
     func fetchAndObserveBooks(stride: Int) -> Single<[Book]>
@@ -81,7 +84,8 @@ public final class DataService {
 
     // MARK: UserDataServicing
     private var _orgs = Field<[Org]>([])
-    
+    private var _channels = Field<[Channel]>([])
+
     private var _languageIdentifier = Field<String>("test init identifier")
     private var _session = Field<String?>(nil)
     // MARK: ProductDataServicing
@@ -211,7 +215,7 @@ extension DataService: ProductDataServicing {
             return _orgs.asObservable()
         }
     }
-    
+
     public func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
         switch self.networkStatus.value {
             
@@ -244,6 +248,52 @@ extension DataService: ProductDataServicing {
         }
     }
     
+    public var channels: Observable<[Channel]> {
+        switch self.networkStatus.value {
+        case .notReachable:
+            DDLogDebug("DataService reachability.notReachable")
+            return _channels.asObservable()
+        case .reachable(_):
+            DDLogDebug("DataService reachability.reachable")
+            return _channels.asObservable()
+        case .unknown:
+            DDLogDebug("DataService reachability.unknown")
+            return _channels.asObservable()
+        }
+    }
+
+    public func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]> {
+        switch self.networkStatus.value {
+            
+        case .unknown:
+            return self.dataStore.fetchChannels(for: orgUuid)
+        case .notReachable:
+            return self.dataStore.fetchChannels(for: orgUuid)
+        case .reachable(_):
+            let moyaResponse = self.networkingApi.rx.request(.channels(uuid: orgUuid, offset: offset, limit: limit))
+            let response: Single<ChannelResponse> = moyaResponse.map { response -> ChannelResponse in
+                do {
+                    //                    self._responseMap[bookUuid] = response
+                    let jsonObj = try response.mapJSON()
+                    DDLogDebug("jsonObj: \(jsonObj)")
+                    return try response.map(ChannelResponse.self)
+                } catch {
+                    throw DataServiceError.decodeFailed
+                }
+            }
+            return response.flatMap { [unowned self] response -> Single<[Channel]> in
+                DDLogDebug("response.result: \(response.result)")
+                return self.replacePersistedChannels(channels: response.result)
+                }
+                .do(onSuccess: { [unowned self] products in
+                    self._channels.value = products
+                    //            self._persistedBooks.value = products
+                })
+            //            return storedOrgs
+            
+        }
+    }
+
     public var books: Observable<[Book]> {
         switch self.networkStatus.value {
         case .notReachable:
@@ -847,6 +897,17 @@ extension DataService: ProductDataServicing {
     
     public func deletePersistedDefaultOrgs() -> Single<Void> {
         return self.dataStore.deleteDefaultOrgs()
+    }
+
+    private func replacePersistedChannels(channels: [Channel]) -> Single<[Channel]> {
+        return dataStore.deleteChannels()
+            .flatMap { [unowned self] _ in
+                self.dataStore.addChannels(channels: channels)
+        }
+    }
+    
+    public func deletePersistedChannels() -> Single<Void> {
+        return self.dataStore.deleteChannels()
     }
 
     // MARK: Private helpers
