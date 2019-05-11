@@ -39,7 +39,15 @@ public protocol AccountDataServicing {
 
 /// Provides product related data to the app
 public protocol ProductDataServicing {
+//    var orgs: Observable<[Org]> { get }
+    func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
+    func deletePersistedDefaultOrgs() -> Single<Void>
+//    func orgs(offset: Int, limit: Int) -> Single<[Org]>
+
+    // ~~~~~~~~~~~
+    
     var books: Observable<[Book]> { get }
+    var orgs: Observable<[Org]> { get }
 
     func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]>
     func fetchAndObserveBooks(stride: Int) -> Single<[Book]>
@@ -72,6 +80,8 @@ public final class DataService {
     private let bag = DisposeBag()
 
     // MARK: UserDataServicing
+    private var _orgs = Field<[Org]>([])
+    
     private var _languageIdentifier = Field<String>("test init identifier")
     private var _session = Field<String?>(nil)
     // MARK: ProductDataServicing
@@ -188,6 +198,52 @@ enum FetchState {
 }
 
 extension DataService: ProductDataServicing {
+    public var orgs: Observable<[Org]> {
+        switch self.networkStatus.value {
+        case .notReachable:
+            DDLogDebug("DataService reachability.notReachable")
+            return _orgs.asObservable()
+        case .reachable(_):
+            DDLogDebug("DataService reachability.reachable")
+            return _orgs.asObservable()
+        case .unknown:
+            DDLogDebug("DataService reachability.unknown")
+            return _orgs.asObservable()
+        }
+    }
+    
+    public func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
+        switch self.networkStatus.value {
+            
+        case .unknown:
+            return self.dataStore.fetchDefaultOrgs()
+        case .notReachable:
+            return self.dataStore.fetchDefaultOrgs()
+        case .reachable(_):
+            let moyaResponse = self.networkingApi.rx.request(.defaultOrgs(offset: offset, limit: limit))
+            let response: Single<OrgResponse> = moyaResponse.map { response -> OrgResponse in
+                do {
+//                    self._responseMap[bookUuid] = response
+                    let jsonObj = try response.mapJSON()
+                    DDLogDebug("jsonObj: \(jsonObj)")
+                    return try response.map(OrgResponse.self)
+                } catch {
+                    throw DataServiceError.decodeFailed
+                }
+            }
+            return response.flatMap { [unowned self] response -> Single<[Org]> in
+                DDLogDebug("response.result: \(response.result)")
+                return self.replacePersistedDefaultOrgs(orgs: response.result)
+            }
+            .do(onSuccess: { [unowned self] products in
+                self._orgs.value = products
+                //            self._persistedBooks.value = products
+            })
+//            return storedOrgs
+            
+        }
+    }
+    
     public var books: Observable<[Book]> {
         switch self.networkStatus.value {
         case .notReachable:
@@ -202,8 +258,6 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    
-    
     public func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]> {
         
         var mediaChapterResponse: MediaChapterResponse!
@@ -784,6 +838,17 @@ extension DataService: ProductDataServicing {
         return categoryListing
     }
 
+    private func replacePersistedDefaultOrgs(orgs: [Org]) -> Single<[Org]> {
+        return dataStore.deleteDefaultOrgs()
+            .flatMap { [unowned self] _ in
+                self.dataStore.addDefaultOrgs(orgs: orgs)
+        }
+    }
+    
+    public func deletePersistedDefaultOrgs() -> Single<Void> {
+        return self.dataStore.deleteDefaultOrgs()
+    }
+
     // MARK: Private helpers
     private func replacePersistedBooks(_ books: [Book]) -> Single<[Book]> {
         return dataStore.deleteAllBooks()
@@ -814,6 +879,7 @@ extension DataService: ProductDataServicing {
             })
             .asObservable()
     }
+    
     private func loadCategory(for categoryListingType: CategoryListingType) -> Observable<String> {
         return dataStore.fetchCategoryList(for: categoryListingType)
             .do(onSuccess: { [unowned self] categorizable in

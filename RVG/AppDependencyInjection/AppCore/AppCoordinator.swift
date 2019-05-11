@@ -103,7 +103,31 @@ extension AppCoordinator: NavigationCoordinating {
             .subscribe(onNext: { [unowned self] authState in
                 if authState == .authenticated {
                     DDLogDebug("authenticated")
-                    self.checkUserBooks()
+                    
+                    // we must fetch and set the user language before we do
+                    // anything, really
+                    self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
+                        DDLogDebug("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
+                        L10n.shared.language = userLanguage
+                        
+                        //            self.swapInMainFlow()
+                        
+                        switch self.networkStatus.value {
+                        case .notReachable:
+                            self.loadDefaultOrg()
+
+                        case .reachable(_):
+                            self.loadDefaultOrg()
+
+                        case .unknown:
+                            self.loadDefaultOrg()
+                        }
+                    }, onError: { error in
+                        DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
+                    }).disposed(by: self.bag)
+
+                    
+                    
                 } else if authState == .unauthenticated {
                     self.swapInInitialFlow()
                     DDLogDebug("unauthenticated")
@@ -112,42 +136,43 @@ extension AppCoordinator: NavigationCoordinating {
             .disposed(by: bag)
     }
     
-    private func checkUserBooks() {
-        // we must fetch and set the user language before we do
-        // anything, really
-        self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
-            DDLogDebug("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
-            L10n.shared.language = userLanguage
+    private func loadDefaultOrg() {
+        
+        var orgs: [Org] = []
+
+        self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] defaultOrgs in
+            DDLogDebug("default orgs: \(defaultOrgs)")
+            orgs = self.productService.defaultOrgs.value
+            self.swapInMainFlow()
+        }) { error in
+            DDLogDebug("error: \(error)")
+        }.disposed(by: self.bag)
+
+        switch self.networkStatus.value {
+        case .notReachable:
+            DDLogDebug("orgs: \(orgs)")
             
-            //            self.swapInMainFlow()
-            
-            switch self.networkStatus.value {
-            case .notReachable:
-                self.swapInMainFlow()
-            case .reachable(_):
-                self.productService.deleteBooks().subscribe(onSuccess: { [unowned self] in
-                    self.swapInMainFlow()
-                })
-            case .unknown:
-                self.swapInMainFlow()
-            }
-            
-            // startup just get first 50 books
-            //            self.productService.fetchBooks(offset: 1, limit: 50).subscribe(onSuccess: { [unowned self] in
-            //                if self.productService.userBooks.value.count > 0 {
-            //                    DDLogDebug("self.productService.userProducts.value: \(self.productService.userBooks.value)")
-            //                    self.swapInMainFlow()
-            //                } else {
-            //                    self.swapInAccountSetupFlow()
-            //                }
-            //                }, onError: { [unowned self] error in
-            //                    DDLogDebug("Check user products failed with error: \(error.localizedDescription)")
-            //                    self.swapInMainFlow()
-            //            }).disposed(by: self.bag)
-            
-        }, onError: { error in
-            DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
-        }).disposed(by: bag)
+        case .reachable(_):
+            DDLogDebug("orgs: \(orgs)")
+//            self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self]  defaultOrgs in
+//                DDLogDebug("default orgs: \(defaultOrgs)")
+//                orgs = self.productService.defaultOrgs.value
+//                self.swapInMainFlow()
+//            })
+//                .disposed(by: self.bag)
+
+        case .unknown:
+            DDLogDebug("orgs: \(orgs)")
+//            self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self]  defaultOrgs in
+//                DDLogDebug("default orgs: \(defaultOrgs)")
+//                orgs = self.productService.defaultOrgs.value
+//                self.swapInMainFlow()
+//            })
+//                .disposed(by: self.bag)
+        }
+        
+        self.swapInMainFlow()
+
     }
     
     /// Puts the initial flow (unauthenticated state) on top of the rootViewController,

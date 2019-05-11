@@ -6,6 +6,10 @@ import L10n_swift
 public protocol DataStoring {
     //    func latestCachedUser() -> Single<String?>
     
+    func fetchDefaultOrgs() -> Single<[Org]>
+    func addDefaultOrgs(orgs: [Org]) -> Single<[Org]>
+    func deleteDefaultOrgs() -> Single<Void>
+    
     func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -86,6 +90,7 @@ public final class DataStore {
                     orgTable.column("basename", .text)
                     orgTable.column("shortname", .text)
                     orgTable.column("insertedAt", .double)
+                    orgTable.column("updatedAt", .double)
                     orgTable.column("largeThumbnailPath", .text)
                     orgTable.column("medThumbnailPath", .text)
                     orgTable.column("smallThumbnailPath", .text)
@@ -286,6 +291,66 @@ public final class DataStore {
 
 // MARK: <DataStoring>
 extension DataStore: DataStoring {
+    // MARK: Org
+    
+    public func fetchDefaultOrgs() -> Single<[Org]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchOrgs: [Org] = []
+                //                let chapters: [Org]!
+                try self.dbPool.read { db in
+                    fetchOrgs = try Org.fetchAll(db)
+                }
+                single(.success(fetchOrgs))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    
+    public func addDefaultOrgs(orgs: [Org]) -> Single<[Org]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    if let user = try User.fetchOne(db) {
+                    for org in orgs {
+                        DDLogDebug("org: \(org)")
+                        //            try! self.dbQueue.inDatabase { db in
+                        var storeLang: Org = org
+                        //                            storeLang.userId = user.userId
+                        try storeLang.insert(db)
+                    }
+                    //                    }
+                    return .commit
+                }
+                single(.success(orgs))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func deleteDefaultOrgs() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try Org.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+
     
     //MARK: User
     

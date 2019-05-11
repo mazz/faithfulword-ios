@@ -13,8 +13,12 @@ public enum ProductServiceError: Error {
 
 public protocol ProductServicing {
 
+    func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<Void>
+    func deleteDefaultOrgs() -> Single<Void>
+
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
+    var defaultOrgs: Field<[Org]> { get }
     //    var userChapters: Field<[Playable]> { get }
     //    var persistedUserBooks: Field<[Book]> { get }
 
@@ -33,6 +37,7 @@ public protocol ProductServicing {
 public final class ProductService {
 
     public let userBooks: Field<[Book]>
+    public let defaultOrgs: Field<[Org]>
     //    public var userChapters: Field<[Playable]>
 
     //    public let persistedUserBooks: Field<[Book]>
@@ -45,6 +50,7 @@ public final class ProductService {
     public init(dataService: ProductDataServicing) {
         self.dataService = dataService
         userBooks = Field(value: [], observable: dataService.books)
+        defaultOrgs = Field(value: [], observable: dataService.orgs)
         //        userChapters = Field(value: [], observable: dataService.chapters)
         //        persistedUserBooks = Field(value: [], observable: dataService.persistedBooks)
     }
@@ -52,6 +58,16 @@ public final class ProductService {
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
+    
+    public func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<Void> {
+        return dataService.fetchAndObserveDefaultOrgs(offset: offset, limit: limit).toVoid()
+    }
+
+    public func deleteDefaultOrgs() -> Single<Void> {
+        return dataService.deletePersistedDefaultOrgs()
+    }
+
+    
 
     public func fetchChapters(for bookUuid: String, stride: Int) -> Single<[Playable]> {
         return dataService.chapters(for: bookUuid, stride: stride)
