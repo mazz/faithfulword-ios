@@ -15,7 +15,7 @@ internal enum MediaListingItemType {
     //    case field(String, String)
     //    case option(SettingOptionType)
     //    case action(name: String)
-    case drillIn(type: MediaListingDrillInType, iconName: String, title: String, showBottomSeparator: Bool)
+    case drillIn(type: MediaListingDrillInType, iconName: String, title: String, presenter: String, showBottomSeparator: Bool)
     //    case info(String)
 }
 

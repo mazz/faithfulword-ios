@@ -62,6 +62,8 @@
 		4C78CECA22813502006FB8CB /* OrgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CEC922813502006FB8CB /* OrgResponse.swift */; };
 		4C78CECC2286F97D006FB8CB /* ChannelResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CECB2286F97D006FB8CB /* ChannelResponse.swift */; };
 		4C78CECE2286F99F006FB8CB /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CECD2286F99F006FB8CB /* Channel.swift */; };
+		4C78CED022876D22006FB8CB /* MediaItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C78CECF22876D22006FB8CB /* MediaItemCell.xib */; };
+		4C78CED222876D5F006FB8CB /* MediaItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CED122876D5F006FB8CB /* MediaItemCell.swift */; };
 		4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5466200EF7D30038B265 /* LoginSequencer.swift */; };
 		4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D5468200EF7E60038B265 /* AccountService.swift */; };
 		4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D546A200EF80F0038B265 /* ApplicationUser.swift */; };
@@ -243,6 +245,8 @@
 		4C78CEC922813502006FB8CB /* OrgResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgResponse.swift; sourceTree = "<group>"; };
 		4C78CECB2286F97D006FB8CB /* ChannelResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelResponse.swift; sourceTree = "<group>"; };
 		4C78CECD2286F99F006FB8CB /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		4C78CECF22876D22006FB8CB /* MediaItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaItemCell.xib; sourceTree = "<group>"; };
+		4C78CED122876D5F006FB8CB /* MediaItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItemCell.swift; sourceTree = "<group>"; };
 		4C7D5466200EF7D30038B265 /* LoginSequencer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequencer.swift; sourceTree = "<group>"; };
 		4C7D5468200EF7E60038B265 /* AccountService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountService.swift; sourceTree = "<group>"; };
 		4C7D546A200EF80F0038B265 /* ApplicationUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationUser.swift; sourceTree = "<group>"; };
@@ -493,13 +497,9 @@
 				4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */,
 				4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */,
 				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
-				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
-				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
 				4C8EE8C31FF6010F003F483A /* DataService.swift */,
 				4C250391216867050069AB49 /* DownloadDataService.swift */,
 				4C2503972168691A0069AB49 /* DownloadService.swift */,
-				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
-				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
 				4C5FAD682035258E00397BFF /* LanguageService.swift */,
 				4C437AB82232334200083197 /* UserActionsService.swift */,
 				4C437AD32239F07000083197 /* HistoryService.swift */,
@@ -507,14 +507,7 @@
 				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
 				4C8EE8C11FF60105003F483A /* ProductService.swift */,
 				4C5FAD762037AEE600397BFF /* RadioListViewController.swift */,
-				4C5FAD722037211F00397BFF /* RadioSelectionCell.swift */,
-				4C5FAD732037211F00397BFF /* RadioSelectionCell.xib */,
-				4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */,
-				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
-				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
 				4C21A729201843DC000F02CE /* SlideAnimationController.swift */,
-				4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */,
-				4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */,
 				4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */,
 				4CFB84FF2005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift */,
 				4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */,
@@ -527,8 +520,6 @@
 				4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */,
 				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
 				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
-				4CD5C1B820242A96007BFC1B /* VerseCell.swift */,
-				4CD5C1B920242A96007BFC1B /* VerseCell.xib */,
 			);
 			path = AppCore;
 			sourceTree = "<group>";
@@ -554,8 +545,23 @@
 		4C3EA133206A714300310024 /* AppUI */ = {
 			isa = PBXGroup;
 			children = (
+				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
+				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
+				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
+				4CA31F8D2008594D00A94101 /* DeviceGroupSelectionCell.xib */,
+				4C5FAD722037211F00397BFF /* RadioSelectionCell.swift */,
+				4C5FAD732037211F00397BFF /* RadioSelectionCell.xib */,
+				4CFB84FB2005AEB400FEBB53 /* SettingDrillInCell.swift */,
+				4CFB84F82005AE1900FEBB53 /* SettingDrillInCell.xib */,
+				4CFB84F72005AE1900FEBB53 /* SettingDrillInCellStacked.xib */,
+				4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */,
+				4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */,
+				4CD5C1B820242A96007BFC1B /* VerseCell.swift */,
+				4CD5C1B920242A96007BFC1B /* VerseCell.xib */,
 				4CBE0F732160932400646F76 /* SlimSlider.swift */,
 				4C3EA134206A716400310024 /* Playback */,
+				4C78CECF22876D22006FB8CB /* MediaItemCell.xib */,
+				4C78CED122876D5F006FB8CB /* MediaItemCell.swift */,
 			);
 			path = AppUI;
 			sourceTree = "<group>";
@@ -908,6 +914,7 @@
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
 				4C3EA138206A71D200310024 /* DeviceNowPlayingBarView.xib in Resources */,
+				4C78CED022876D22006FB8CB /* MediaItemCell.xib in Resources */,
 				4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
 				68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */,
@@ -1177,6 +1184,7 @@
 				689880511F147B5900CC2BC5 /* Playable.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
 				4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */,
+				4C78CED222876D5F006FB8CB /* MediaItemCell.swift in Sources */,
 				4CCE8C7D1FF4B60400AFBAF2 /* RxReachability.swift in Sources */,
 				4C5FAD742037212000397BFF /* RadioSelectionCell.swift in Sources */,
 				4C437ABB223356C600083197 /* UserActionsViewModel.swift in Sources */,

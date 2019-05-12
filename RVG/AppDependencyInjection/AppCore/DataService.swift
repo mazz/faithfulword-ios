@@ -356,7 +356,7 @@ extension DataService: ProductDataServicing {
             }
             let storedChapters: Single<[Playable]> = mediaChapterResponse.flatMap { [unowned self] mediaChapterResponse -> Single<[Playable]> in
                 DDLogDebug("mediaChapterResponse.result: \(mediaChapterResponse.result)")
-                return self.appendPersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
+                return self.replacePersistedChapters(chapters: mediaChapterResponse.result, for: bookUuid)
             }
             return storedChapters
         case .unknown:
