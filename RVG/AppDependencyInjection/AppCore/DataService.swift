@@ -40,8 +40,9 @@ public protocol AccountDataServicing {
 /// Provides product related data to the app
 public protocol ProductDataServicing {
 //    var orgs: Observable<[Org]> { get }
-    func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
+    func fetchAndObservePlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
+    func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
     func deletePersistedChannels() -> Single<Void>
 //    func orgs(offset: Int, limit: Int) -> Single<[Org]>
@@ -182,7 +183,7 @@ extension DataService: HistoryDataServicing {
 
 extension DataService: AccountDataServicing {
     public func fetchSession() -> Single<String> {
-        return Single.just("a-fake-session")
+        return Single.just(UUID().uuidString)
             .flatMap { [unowned self] in
                 self.dataStore.addUser(session: $0) }
             .do(onSuccess: { [unowned self] session in
@@ -262,6 +263,38 @@ extension DataService: ProductDataServicing {
         }
     }
 
+    public func fetchAndObservePlaylists(for channelUuid: String) -> Single<[Playlist]> {
+        switch self.networkStatus.value {
+            
+        case .unknown:
+            return self.dataStore.fetchPlaylists(for: channelUuid)
+        case .notReachable:
+            return self.dataStore.fetchPlaylists(for: channelUuid)
+        case .reachable(_):
+            let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, offset: 1, limit: 1000))
+            let response: Single<PlaylistResponse> = moyaResponse.map { response -> PlaylistResponse in
+                do {
+                    //                    self._responseMap[bookUuid] = response
+                    let jsonObj = try response.mapJSON()
+                    DDLogDebug("jsonObj: \(jsonObj)")
+                    return try response.map(PlaylistResponse.self)
+                } catch {
+                    throw DataServiceError.decodeFailed
+                }
+            }
+            return Single.just([])
+//            return response.flatMap { [unowned self] response -> Single<[Playlist]> in
+//                DDLogDebug("response.result: \(response.result)")
+//                return self.replacePersistedChannels(channels: response.result)
+//                }
+//                .do(onSuccess: { [unowned self] products in
+//                    self._channels.value = products
+//                    //            self._persistedBooks.value = products
+//                })
+            
+        }
+    }
+    
     public func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]> {
         switch self.networkStatus.value {
             

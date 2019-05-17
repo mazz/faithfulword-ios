@@ -14,6 +14,8 @@ public protocol DataStoring {
     func addChannels(channels: [Channel]) -> Single<[Channel]>
     func deleteChannels() -> Single<Void>
 
+    func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]>
+    
     func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -122,15 +124,33 @@ public final class DataStore {
                 }
             }
             catch {
-                DDLogDebug("error making org table: \(error)")
+                DDLogDebug("error making channel table: \(error)")
             }
-
-            
+            do {
+                try db.create(table: "playlist") { playlistTable in
+                    DDLogDebug("created: \(playlistTable)")
+                    playlistTable.column("uuid", .text).primaryKey()
+                    playlistTable.column("channelUuid", .text)
+                    playlistTable.column("bannerPath", .text)
+                    playlistTable.column("localizedname", .text)
+                    playlistTable.column("languageId", .text)
+                    playlistTable.column("mediaCategory", .text)
+                    playlistTable.column("ordinal", .integer)
+                    playlistTable.column("insertedAt", .double)
+                    playlistTable.column("updatedAt", .double)
+                    playlistTable.column("largeThumbnailPath", .text)
+                    playlistTable.column("medThumbnailPath", .text)
+                    playlistTable.column("smallThumbnailPath", .text)
+                }
+            }
+            catch {
+                DDLogDebug("error making playlist table: \(error)")
+            }
             do {
                 try db.create(table: "user") { userTable in
                     DDLogDebug("created: \(userTable)")
                     userTable.column("userId", .integer).primaryKey()
-                    userTable.column("userUuid", .text)
+                    userTable.column("uuid", .text)
                     userTable.column("name", .text)
                     userTable.column("session", .text)
                     userTable.column("pushNotifications", .boolean)
@@ -434,6 +454,23 @@ extension DataStore: DataStoring {
         }
     }
 
+    //MARK: Playlist
+    
+    public func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetched: [Playlist] = []
+                try self.dbPool.read { db in
+                    fetched = try Playlist.filter(Column("channelUuid") == channelUuid).fetchAll(db)
+                }
+                single(.success(fetched))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
     
     //MARK: User
     
@@ -444,7 +481,12 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     if try User.fetchCount(db) == 0 {
                         
-                        var user = User(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
+                        var user = User(userId: nil,
+                                        uuid: NSUUID().uuidString,
+                                        name: "name",
+                                        session: session,
+                                        pushNotifications:false,
+                                        language: L10n.shared.language) //(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
                         try user.insert(db)
                         resultSession = user.session
                     }
@@ -459,6 +501,71 @@ extension DataStore: DataStoring {
         }
         //        return Single.just("")
     }
+    
+    // MARK: User Update
+    
+    public func updateUser(updatingUser: User) -> Single<User> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    if let user = try User.filter(Column("uuid") == updatingUser.uuid).fetchOne(db) {
+                        var storeUser: User = user
+                        storeUser.name = updatingUser.name
+                        storeUser.session = updatingUser.session
+                        storeUser.pushNotifications = updatingUser.pushNotifications
+                        storeUser.language = updatingUser.language
+                        try storeUser.update(db)
+                    }
+                    return .commit
+                }
+                single(.success(updatingUser))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    
+//    public func updateUser(updatingUser: User) -> Single<Void> {
+//        return Single.create { [unowned self] single in
+//            do {
+//                try self.dbPool.writeInTransaction { db in
+//                    if let book = try User.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
+//
+//                    if let user = try User.fetchOne(db) {
+//                        var storeUser: User = user
+//                        storeUser.language = identifier
+//                        try storeUser.update(db)
+//                    }
+//                    return .commit
+//                }
+//                single(.success(identifier))
+//            } catch {
+//                DDLogDebug("error: \(error)")
+//                single(.error(error))
+//            }
+//            return Disposables.create {}
+//        }
+////        return Single.create { [unowned self] single in
+////            do {
+////                try self.dbPool.writeInTransaction { db in
+////                    if let user = try User.fetchOne(db) {
+////                        var storeUser: User = user
+////                        storeUser.language = identifier
+////                        try storeUser.update(db)
+////                    }
+////                    return .commit
+////                }
+////                single(.success(identifier))
+////            } catch {
+////                DDLogDebug("error: \(error)")
+////                single(.error(error))
+////            }
+////            return Disposables.create {}
+////        }
+//    }
     
     // MARK: -- User Language
     
@@ -608,7 +715,7 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
-                    if let book = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db){
+                    if let book = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
                         DDLogDebug("found chapter book: \(book)")
                         for chapter in chapters {
                             var mediaChapter = MediaChapter(uuid: chapter.uuid,

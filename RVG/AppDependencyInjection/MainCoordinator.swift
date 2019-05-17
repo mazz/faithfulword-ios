@@ -9,7 +9,6 @@ internal enum MainRevealState {
 }
 
 /// Coordinator in charge of all navigation in authenticated state.
-/// Handles navigation between the main and device selection flows.
 internal final class MainCoordinator: NSObject {
     // MARK: Fields
 
@@ -34,6 +33,8 @@ internal final class MainCoordinator: NSObject {
     private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
     private let resettableBibleLanguageCoordinator: Resettable<BibleLanguageCoordinator>
 
+    private let productService: ProductServicing
+
     //    private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
 
     //    private let resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>
@@ -48,7 +49,8 @@ internal final class MainCoordinator: NSObject {
         resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>,
         resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>,
         resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>,
-        resettableBibleLanguageCoordinator: Resettable<BibleLanguageCoordinator>
+        resettableBibleLanguageCoordinator: Resettable<BibleLanguageCoordinator>,
+        productService: ProductServicing
 
         //                  resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>,
         //                  resettableDeviceSelectionCoordinator: Resettable<DeviceSelectionCoordinator>,
@@ -61,6 +63,8 @@ internal final class MainCoordinator: NSObject {
         self.resettableSideMenuCoordinator = resettableSideMenuCoordinator
         self.resettableCategoryListingCoordinator = resettableCategoryListingCoordinator
         self.resettableBibleLanguageCoordinator = resettableBibleLanguageCoordinator
+        self.productService = productService
+
 
         //        self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
 
@@ -81,11 +85,30 @@ extension MainCoordinator: NavigationCoordinating {
     ///   - setup: Closure that passes the initial main navigation-controller to the caller.
     ///   - completion: Called when main flow completed (e.g. logout).
     internal func flow(with setup: FlowSetup, completion: @escaping FlowCompletion, context: FlowContext) {
-        let mainViewController = appUIMaking.makeMain()
-        attachRootMenuAction(to: mainViewController)
-        attachSettingAction(to: mainViewController)
-
-        mainNavigationController = UINavigationController(rootViewController: mainViewController)
+        
+        // by this point we are sure that we are:
+        // -    authenticated
+        // -    fetched the default org
+        // -    fetched all the channels of the default org
+        
+        // we now need to load all the playlists of a channel of our choice
+        // for now, let's get the Bible channel and then pass the playlist that contains
+        // the old and new testaments
+        
+        var mainViewController: MainViewController!
+        
+        if let bibleChannel: Channel = productService.channels.value.first(where: { $0.basename == "Bible" }) {
+            DDLogDebug("bibleChannel: \(bibleChannel)")
+            
+            mainViewController = appUIMaking.makeMainWithChannel(channelUuid: bibleChannel.uuid)
+            attachRootMenuAction(to: mainViewController)
+            attachSettingAction(to: mainViewController)
+            
+            mainNavigationController = UINavigationController(rootViewController: mainViewController)
+        } else {
+            DDLogError("fatal error, need a Bible Channel! Bailing!")
+            completion(FlowCompletionType.error)
+        }
 
         // keep original state of hamburger so we know what frame to toggle back to
 //        originalMenuFrame = self.mainNavigationController.view.frame
@@ -129,6 +152,10 @@ extension MainCoordinator: NavigationCoordinating {
         //        viewController.navigationItem.rightBarButtonItem = close
     }
 
+    private func goToPlaylist(for playlistUuid: String) {
+        DDLogDebug("goToPlaylist: \(playlistUuid)")
+    }
+    
     private func goToBook(for bookUuid: String) {
         // do not use a new flow, because Chapters is part of the Book flow AFAICT
         //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
@@ -253,6 +280,16 @@ extension MainCoordinator: NavigationCoordinating {
 
 // MARK: Event handling for the main flow.
 extension MainCoordinator {
+    private func handle(eventsFrom mainViewModel: PlaylistViewModel) {
+        mainViewModel.drillInEvent.next { [unowned self] type in
+            switch type {
+                
+            case .playlistItemType(let item):
+                DDLogDebug("handle event: \(item)")
+                self.goToPlaylist(for: item.uuid)
+            }
+        }
+    }
 
     private func handle(eventsFrom mainViewModel: BooksViewModel) {
         mainViewModel.drillInEvent.next { [unowned self] type in

@@ -216,7 +216,8 @@ internal final class AppDependencyModule {
                 },
                 resettableBibleLanguageCoordinator: Resettable {
                     resolver.resolve(BibleLanguageCoordinator.self)!
-                }
+                },
+                productService: resolver.resolve(ProductServicing.self)!
             )
         }
         container.register(BooksViewModel.self) { resolver in
@@ -236,9 +237,17 @@ internal final class AppDependencyModule {
 //                remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!
             )
             }.inObjectScope(.transient)
+        
         container.register(CategoryListingViewModel.self) { resolver, categoryType in
             CategoryListingViewModel(
                 categoryType: categoryType,
+                productService: resolver.resolve(ProductServicing.self)!
+            )
+            }.inObjectScope(.transient)
+
+        container.register(PlaylistViewModel.self) { resolver, channelUuid in
+            PlaylistViewModel(
+                channelUuid: channelUuid,
                 productService: resolver.resolve(ProductServicing.self)!
             )
             }.inObjectScope(.transient)

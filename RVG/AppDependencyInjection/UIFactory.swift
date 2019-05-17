@@ -9,6 +9,7 @@ internal protocol AppUIMaking {
     func makeRoot() -> RootViewController
     func makePlayer() -> PlaybackViewController
     //    func makeInitial() -> InitialViewController
+    func makeMainWithChannel(channelUuid: String) -> MainViewController
     func makeMain() -> MainViewController
     func makeInlineWebBrowser(url: URL) -> SFSafariViewController
     func makeMailComposer() -> MFMailComposeViewController?
@@ -98,11 +99,16 @@ extension UIFactory: AppUIMaking {
     //            .make(storyboardName: StoryboardName.main)
     //    }
     //
+    internal func makeMainWithChannel(channelUuid: String) -> MainViewController {
+        let controller = MainViewController.make(storyboardName: StoryboardName.main)
+//        controller.booksViewModel = resolver.resolve(BooksViewModel.self)
+        controller.viewModel = resolver.resolve(PlaylistViewModel.self, argument: channelUuid)
+        return controller
+    }
+
     internal func makeMain() -> MainViewController {
-        let controller = MainViewController
-            .make(storyboardName: StoryboardName.main)
-        controller.viewModel = resolver
-            .resolve(BooksViewModel.self)
+        let controller = MainViewController.make(storyboardName: StoryboardName.main)
+        controller.booksViewModel = resolver.resolve(BooksViewModel.self)
         return controller
     }
 

@@ -4,7 +4,7 @@ import GRDB
 public struct Channel: Codable {
 //    var userId: Int64?
     var uuid: String
-    var orgUuid: String
+    public var orgUuid: String
     public var bannerPath: String?
     public var basename: String
     public var ordinal: Int?

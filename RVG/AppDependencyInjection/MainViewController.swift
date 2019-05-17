@@ -11,12 +11,13 @@ public final class MainViewController: UIViewController {
 
     // MARK: Dependencies
     
-    internal var viewModel: BooksViewModel!
-    
+    internal var booksViewModel: BooksViewModel!
+    internal var viewModel: PlaylistViewModel!
+
     // MARK: Fields
 
     private let nowPlayingBar = DeviceNowPlayingBarView.fromUiNib()
-    private var viewModelSections: [BooksSectionViewModel] = []
+    private var viewModelSections: [PlaylistSectionViewModel] = []
     private let bag = DisposeBag()
     
     // MARK: Lifecycle
@@ -57,15 +58,15 @@ public final class MainViewController: UIViewController {
             .subscribe(viewModel.selectItemEvent.asObserver())
             .disposed(by: bag)
 
-        viewModel.title
-            .asObservable()
-            .bind(to: rx.title)
-            .disposed(by: bag)
+//        viewModel.title
+//            .asObservable()
+//            .bind(to: rx.title)
+//            .disposed(by: bag)
     }
 
     
-    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<BooksSectionViewModel> {
-        let dataSource = RxCollectionViewSectionedReloadDataSource<BooksSectionViewModel>(
+    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel> {
+        let dataSource = RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel>(
             configureCell: { (dataSource, collectionView, indexPath, item) in
                 switch item {
                 case let .drillIn(_, iconName, title, showBottomSeparator):
@@ -122,7 +123,7 @@ extension MainViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMoreBooks()
+//            viewModel.fetchMoreBooks()
         }
     }
     
@@ -135,7 +136,7 @@ extension MainViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMoreBooks()
+//            viewModel.fetchMoreBooks()
         }
     }
 }

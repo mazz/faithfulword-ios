@@ -8,6 +8,7 @@ public typealias FlowSetup = (UIViewController) -> Void
 public enum FlowCompletionType {
     case finished
     case cancelled
+    case error
 }
 
 /// Instructions for tearing down after a coordinator completes its flow.

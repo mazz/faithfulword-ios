@@ -18,6 +18,8 @@ public protocol ProductServicing {
 
     func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<Void>
     func deleteChannels() -> Single<Void>
+    
+    func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]>
 
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
@@ -64,6 +66,11 @@ public final class ProductService {
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
+    
+    public func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]> {
+        return dataService.fetchAndObservePlaylists(for: channelUuid)
+    }
+    
     public func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<Void> {
         return dataService.fetchAndObserveChannels(for: orgUuid, offset: offset, limit: limit).toVoid()
     }
