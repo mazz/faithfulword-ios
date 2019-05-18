@@ -78,6 +78,13 @@ final class PlaylistViewModel {
     }
     
     func fetchPlaylist(stride: Int) {
+        
+        productService.fetchPlaylists(for: self.channelUuid).subscribe(onSuccess: { playlists in
+            DDLogDebug("fetchPlaylists: \(playlists)")
+        }) { error in
+            DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
+        }
+        
 //        switch self.playlistType {
 //        case .gospel?:
 //            DDLogDebug("gospel")

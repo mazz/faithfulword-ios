@@ -271,7 +271,7 @@ extension DataService: ProductDataServicing {
         case .notReachable:
             return self.dataStore.fetchPlaylists(for: channelUuid)
         case .reachable(_):
-            let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, offset: 1, limit: 1000))
+            let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, languageId: L10n.shared.language, offset: 1, limit: 1000))
             let response: Single<PlaylistResponse> = moyaResponse.map { response -> PlaylistResponse in
                 do {
                     //                    self._responseMap[bookUuid] = response
@@ -282,15 +282,16 @@ extension DataService: ProductDataServicing {
                     throw DataServiceError.decodeFailed
                 }
             }
-            return Single.just([])
-//            return response.flatMap { [unowned self] response -> Single<[Playlist]> in
-//                DDLogDebug("response.result: \(response.result)")
-//                return self.replacePersistedChannels(channels: response.result)
-//                }
-//                .do(onSuccess: { [unowned self] products in
-//                    self._channels.value = products
-//                    //            self._persistedBooks.value = products
-//                })
+            //            return Single.just([])
+            return response.flatMap { [unowned self] response -> Single<[Playlist]> in
+                //                return Single.just([])
+                DDLogDebug("response.result: \(response.result)")
+                return self.replacePersistedPlaylists(playlists: response.result)
+            }
+            //                .do(onSuccess: { [unowned self] products in
+            ////                    self._channels.value = products
+            //                    //            self._persistedBooks.value = products
+            //                })
             
         }
     }
@@ -921,6 +922,8 @@ extension DataService: ProductDataServicing {
         return categoryListing
     }
 
+    // Orgs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
     private func replacePersistedDefaultOrgs(orgs: [Org]) -> Single<[Org]> {
         return dataStore.deleteDefaultOrgs()
             .flatMap { [unowned self] _ in
@@ -932,6 +935,8 @@ extension DataService: ProductDataServicing {
         return self.dataStore.deleteDefaultOrgs()
     }
 
+    // Channels ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     private func replacePersistedChannels(channels: [Channel]) -> Single<[Channel]> {
         return dataStore.deleteChannels()
             .flatMap { [unowned self] _ in
@@ -942,6 +947,21 @@ extension DataService: ProductDataServicing {
     public func deletePersistedChannels() -> Single<Void> {
         return self.dataStore.deleteChannels()
     }
+
+    // Playlists ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    private func replacePersistedPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
+        return dataStore.deletePlaylists()
+            .flatMap { [unowned self] _ in
+                self.dataStore.addPlaylists(playlists: playlists)
+        }
+    }
+    
+    public func deletePersistedPlaylists() -> Single<Void> {
+        return self.dataStore.deletePlaylists()
+    }
+
+    // Books ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // MARK: Private helpers
     private func replacePersistedBooks(_ books: [Book]) -> Single<[Book]> {

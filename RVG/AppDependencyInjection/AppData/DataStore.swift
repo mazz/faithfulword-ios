@@ -15,7 +15,9 @@ public protocol DataStoring {
     func deleteChannels() -> Single<Void>
 
     func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]>
-    
+    func addPlaylists(playlists: [Playlist]) -> Single<[Playlist]>
+    func deletePlaylists() -> Single<Void>
+
     func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -469,6 +471,46 @@ extension DataStore: DataStoring {
                 single(.error(error))
             }
             return Disposables.create {}
+        }
+    }
+    
+    public func addPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    if let user = try User.fetchOne(db) {
+                    for playlist in playlists {
+                        DDLogDebug("playlist: \(playlist)")
+                        //            try! self.dbQueue.inDatabase { db in
+                        var storePlaylist: Playlist = playlist
+                        //                            storeLang.userId = user.userId
+                        try storePlaylist.insert(db)
+                    }
+                    //                    }
+                    return .commit
+                }
+                single(.success(playlists))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func deletePlaylists() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try Playlist.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
         }
     }
     

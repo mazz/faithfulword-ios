@@ -15,7 +15,7 @@ public enum FwbcApiService {
     case channels(uuid: String, offset: Int, limit: Int)
     
     // v1.3/channels/{uuid}/playlists?language-id=en&offset=1&limit=50
-    case playlists(uuid: String, offset: Int, limit: Int)
+    case playlists(uuid: String, languageId: String, offset: Int, limit: Int)
     
     // v1.3/playlists/{uuid}/media?language-id=en&offset=1&limit=50
     case mediaItems(uuid: String, offset: Int, limit: Int)
@@ -77,7 +77,7 @@ extension FwbcApiService: TargetType {
             
         case .channels(let uuid, _, _):
             return "/orgs/\(uuid)/channels"
-        case .playlists(let uuid, _, _):
+        case .playlists(let uuid, _, _, _):
             return "/channels/\(uuid)/playlists"
         case .mediaItems(let uuid, _, _):
             return "/playlists/\(uuid)/media"
@@ -159,8 +159,8 @@ extension FwbcApiService: TargetType {
             
         case .channels(_, let offset, let limit):
             return ["offset": offset, "limit": limit]
-        case .playlists(_, let offset, let limit):
-            return ["offset": offset, "limit": limit]
+        case .playlists(_, let languageId, let offset, let limit):
+            return ["language-id": languageId, "offset": offset, "limit": limit]
         case .mediaItems(_, let offset, let limit):
             return ["offset": offset, "limit": limit]
         case .search(let query,
@@ -268,8 +268,8 @@ extension FwbcApiService: TargetType {
             
         case .channels(let uuid, let offset, let limit):
             return "{\"uuid\": \(uuid), \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
-        case .playlists(let uuid, let offset, let limit):
-            return "{\"uuid\": \(uuid), \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
+        case .playlists(let uuid, let languageId, let offset, let limit):
+            return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .mediaItems(let uuid, let offset, let limit):
             return "{\"uuid\": \(uuid), \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
             
@@ -322,13 +322,12 @@ extension FwbcApiService: TargetType {
                                                     "limit": limit],
                                       encoding: URLEncoding.default)
             
-        case .channels(let uuid, let offset, let limit):
-            return .requestParameters(parameters:  ["uuid": uuid,
-                                                    "offset": offset,
+        case .channels(_, let offset, let limit):
+            return .requestParameters(parameters: [ "offset": offset,
                                                     "limit": limit],
                                       encoding: URLEncoding.default)
-        case .playlists(let uuid, let offset, let limit):
-            return .requestParameters(parameters:  ["uuid": uuid,
+        case .playlists(_, let languageId, let offset, let limit):
+            return .requestParameters(parameters: ["language-id": languageId,
                                                     "offset": offset,
                                                     "limit": limit],
                                       encoding: URLEncoding.default)
