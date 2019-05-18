@@ -35,7 +35,6 @@ final class PlaylistViewModel {
     
     // MARK: Dependencies
     
-//    private let playlistType: PlaylistType!
     private let channelUuid: String!
     private let productService: ProductServicing!
     
@@ -43,7 +42,6 @@ final class PlaylistViewModel {
     
     internal init(channelUuid: String,
                   productService: ProductServicing) {
-//        self.playlistType = playlistType
         self.channelUuid = channelUuid
         self.productService = productService
         setupDataSource()
@@ -54,17 +52,32 @@ final class PlaylistViewModel {
         self.playlists.asObservable()
             .map { $0.map {
                 var icon: String = "feetprint"
-                
-//                switch self.playlistType {
-//                case .gospel?:
-//                    icon = "feetprint"
-//                case .music?:
-//                    icon = "disc_icon_white"
-//                case .preaching?:
-//                    icon = "preaching"
-//                default:
-//                    icon = "feetprint"
-//                }
+                switch $0.mediaCategory {
+                case MediaCategory.bible.rawValue:
+                    icon = "books-stack-of-three"
+                case MediaCategory.gospel.rawValue:
+                    icon = "creation"
+                case MediaCategory.livestream.rawValue:
+                    icon = "creation"
+                case MediaCategory.motivation.rawValue:
+                    icon = "creation"
+                case MediaCategory.movie.rawValue:
+                    icon = "creation"
+                case MediaCategory.music.rawValue:
+                    icon = "creation"
+                case MediaCategory.podcast.rawValue:
+                    icon = "creation"
+                case MediaCategory.preaching.rawValue:
+                    icon = "creation"
+                case MediaCategory.testimony.rawValue:
+                    icon = "creation"
+                case MediaCategory.tutorial.rawValue:
+                    icon = "creation"
+                case MediaCategory.conference.rawValue:
+                    icon = "creation"
+                default:
+                    icon = "creation"
+                }
                 return PlaylistItemType.drillIn(type: .playlistItemType(item: $0), iconName: icon, title: $0.localizedname, showBottomSeparator: true)
                 }
             }
@@ -78,33 +91,11 @@ final class PlaylistViewModel {
     }
     
     func fetchPlaylist(stride: Int) {
-        
         productService.fetchPlaylists(for: self.channelUuid).subscribe(onSuccess: { playlists in
             DDLogDebug("fetchPlaylists: \(playlists)")
+            self.playlists.value = playlists
         }) { error in
             DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
-        }
-        
-//        switch self.playlistType {
-//        case .gospel?:
-//            DDLogDebug("gospel")
-//
-////            self.productService.fetchPlaylist(for: .gospel, stride: 50).subscribe(onSuccess: { listing in
-////                self.playlists.value = listing
-////            }) { error in
-////                DDLogDebug("fetchPlaylist failed with error: \(error.localizedDescription)")
-////                }.disposed(by: self.bag)
-//        case .music?:
-//            DDLogDebug("music")
-////            self.productService.fetchPlaylist(for: .music, stride: 50).subscribe(onSuccess: { listing in
-////                self.playlists.value = listing
-////            }) { error in
-////                DDLogDebug("fetchPlaylist failed with error: \(error.localizedDescription)")
-////                }.disposed(by: self.bag)
-//        case .preaching?:
-//            DDLogDebug("preaching")
-//        default:
-//            DDLogDebug("feetprint")
-//        }
+        }.disposed(by: self.bag)
     }
 }

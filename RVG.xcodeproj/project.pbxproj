@@ -98,6 +98,7 @@
 		4C7EB898228B8EA8000E8DAB /* BookResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB877228B8EA8000E8DAB /* BookResponse.swift */; };
 		4C7EB89A228E6322000E8DAB /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB899228E6322000E8DAB /* Playlist.swift */; };
 		4C7EB89C228E6C1B000E8DAB /* PlaylistResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB89B228E6C1B000E8DAB /* PlaylistResponse.swift */; };
+		4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */; };
 		4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */; };
 		4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */; };
 		4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */; };
@@ -286,6 +287,7 @@
 		4C7EB877228B8EA8000E8DAB /* BookResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BookResponse.swift; path = Model/BookResponse.swift; sourceTree = "<group>"; };
 		4C7EB899228E6322000E8DAB /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Playlist.swift; path = Model/Playlist.swift; sourceTree = "<group>"; };
 		4C7EB89B228E6C1B000E8DAB /* PlaylistResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlaylistResponse.swift; path = Model/PlaylistResponse.swift; sourceTree = "<group>"; };
+		4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaCategory.swift; path = Model/MediaCategory.swift; sourceTree = "<group>"; };
 		4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Single+Utilities.swift"; sourceTree = "<group>"; };
 		4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Parsing.swift"; sourceTree = "<group>"; };
@@ -807,6 +809,7 @@
 				4C7EB862228B8EA6000E8DAB /* SessionError.swift */,
 				4C7EB858228B8EA6000E8DAB /* User.swift */,
 				4C7EB863228B8EA7000E8DAB /* UserActionPlayable.swift */,
+				4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1148,6 +1151,7 @@
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
 				4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
+				4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				4C7EB88C228B8EA8000E8DAB /* Music.swift in Sources */,
 				4C7EB89C228E6C1B000E8DAB /* PlaylistResponse.swift in Sources */,
