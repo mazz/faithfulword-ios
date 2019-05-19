@@ -149,6 +149,35 @@ public final class DataStore {
                 DDLogDebug("error making playlist table: \(error)")
             }
             do {
+                try db.create(table: "mediaitem") { mediaItemTable in
+                    DDLogDebug("created: \(mediaItemTable)")
+                    mediaItemTable.column("contentProviderLink", .text)
+                    mediaItemTable.column("insertedAt", .double)
+                    mediaItemTable.column("ipfsLink", .text)
+                    mediaItemTable.column("languageId", .text)
+                    mediaItemTable.column("localizedname", .text)
+                    mediaItemTable.column("largeThumbnailPath", .text)
+                    mediaItemTable.column("mediaCategory", .text)
+                    mediaItemTable.column("medium", .text)
+                    mediaItemTable.column("medThumbnailPath", .text)
+                    mediaItemTable.column("ordinal", .integer)
+                    mediaItemTable.column("path", .text)
+                    mediaItemTable.column("playlistUuid", .text)
+                    mediaItemTable.column("presentedAt", .double)
+                    mediaItemTable.column("publishedAt", .double)
+                    mediaItemTable.column("smallThumbnailPath", .text)
+                    mediaItemTable.column("sourceMaterial", .text)
+                    mediaItemTable.column("tags", .text)
+                    mediaItemTable.column("trackNumber", .integer)
+                    mediaItemTable.column("updatedAt", .double)
+
+                    mediaItemTable.column("uuid", .text).primaryKey()
+                }
+            }
+            catch {
+                DDLogDebug("error making mediaitem table: \(error)")
+            }
+            do {
                 try db.create(table: "user") { userTable in
                     DDLogDebug("created: \(userTable)")
                     userTable.column("userId", .integer).primaryKey()

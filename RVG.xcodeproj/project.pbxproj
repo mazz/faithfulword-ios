@@ -99,6 +99,8 @@
 		4C7EB89A228E6322000E8DAB /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB899228E6322000E8DAB /* Playlist.swift */; };
 		4C7EB89C228E6C1B000E8DAB /* PlaylistResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB89B228E6C1B000E8DAB /* PlaylistResponse.swift */; };
 		4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */; };
+		4C7EB8A0228FB240000E8DAB /* MediaItemResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */; };
+		4C7EB8A2228FB283000E8DAB /* MediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB8A1228FB283000E8DAB /* MediaItem.swift */; };
 		4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */; };
 		4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */; };
 		4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */; };
@@ -288,6 +290,8 @@
 		4C7EB899228E6322000E8DAB /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Playlist.swift; path = Model/Playlist.swift; sourceTree = "<group>"; };
 		4C7EB89B228E6C1B000E8DAB /* PlaylistResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlaylistResponse.swift; path = Model/PlaylistResponse.swift; sourceTree = "<group>"; };
 		4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaCategory.swift; path = Model/MediaCategory.swift; sourceTree = "<group>"; };
+		4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaItemResponse.swift; path = Model/MediaItemResponse.swift; sourceTree = "<group>"; };
+		4C7EB8A1228FB283000E8DAB /* MediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItem.swift; sourceTree = "<group>"; };
 		4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Single+Utilities.swift"; sourceTree = "<group>"; };
 		4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Parsing.swift"; sourceTree = "<group>"; };
@@ -810,6 +814,8 @@
 				4C7EB858228B8EA6000E8DAB /* User.swift */,
 				4C7EB863228B8EA7000E8DAB /* UserActionPlayable.swift */,
 				4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */,
+				4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */,
+				4C7EB8A1228FB283000E8DAB /* MediaItem.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1114,6 +1120,7 @@
 				4CFB850820064BA300FEBB53 /* BooksSectionViewModel.swift in Sources */,
 				4C7EB87D228B8EA8000E8DAB /* AppVersionResponse.swift in Sources */,
 				4C7EB88F228B8EA8000E8DAB /* MediaGospelResponse.swift in Sources */,
+				4C7EB8A0228FB240000E8DAB /* MediaItemResponse.swift in Sources */,
 				4C5FAD612031D5B400397BFF /* BibleLanguageCoordinator.swift in Sources */,
 				4C7EB894228B8EA8000E8DAB /* MediaChapter.swift in Sources */,
 				4C437AD42239F07000083197 /* HistoryService.swift in Sources */,
@@ -1205,6 +1212,7 @@
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
 				4C7EB891228B8EA8000E8DAB /* Gospel.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
+				4C7EB8A2228FB283000E8DAB /* MediaItem.swift in Sources */,
 				4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */,
 				4C78CED222876D5F006FB8CB /* MediaItemCell.swift in Sources */,
 				4C7EB892228B8EA8000E8DAB /* ContactUsModel.swift in Sources */,

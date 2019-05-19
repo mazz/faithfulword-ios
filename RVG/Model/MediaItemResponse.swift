@@ -1,0 +1,11 @@
+import Foundation
+
+public struct MediaItemResponse: Codable {
+    public var pageSize: Int
+    public var pageNumber: Int
+    public var result: [MediaItem]
+    public var status: String
+    public var totalPages: Int
+    public var totalEntries: Int
+    public var version: String
+}
