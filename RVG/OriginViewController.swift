@@ -357,13 +357,14 @@ class OriginViewController: UIViewController, MFMailComposeViewControllerDelegat
                          apnsToken: String,
                          preferredLanguage: String,
                          userAgent: String,
-        userVersion: String) {
+                        userVersion: String,
+                        userUuid: String) {
         let provider = MoyaProvider<KJVRVGService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
         provider.request(.pushTokenUpdate(fcmToken: fcmToken,
                                           apnsToken: apnsToken,
                                           preferredLanguage: preferredLanguage,
-                                          userAgent: userAgent, userVersion: userVersion)) { result in
+                                          userAgent: userAgent, userVersion: userVersion, userUuid: userUuid)) { result in
                                             switch result {
                                             case let .success(moyaResponse):
                                                 do {

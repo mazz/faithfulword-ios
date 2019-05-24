@@ -5,6 +5,7 @@ public struct User: Codable {
     var userId: Int64?
     public var uuid: String
     public var name: String
+    public var email: String?
     public var session: String
     public var pushNotifications: Bool
     public var language: String
@@ -39,8 +40,9 @@ public struct User: Codable {
 // Define colums so that we can build GRDB requests
 extension User {
     enum Columns {
-        static let name = Column("name")
         static let uuid = Column("uuid")
+        static let name = Column("name")
+        static let email = Column("email")
         static let session = Column("session")
         static let pushNotifications = Column("pushNotifications")
         static let language = Column("language")

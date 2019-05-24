@@ -124,7 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 self.updatePushToken(fcmToken: firebaseToken,
                                      apnsToken: apnsTokenString,
                                      preferredLanguage: L10n.shared.preferredLanguage,
-                                     userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
+                                     userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, userUuid: NSUUID().uuidString)
             }
         }
     }
@@ -133,13 +133,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                          apnsToken: String,
                          preferredLanguage: String,
                          userAgent: String,
-                         userVersion: String) {
+                         userVersion: String,
+                         userUuid: String) {
         let provider = MoyaProvider<FwbcApiService>()
         // deviceUniqueIdentifier: String, apnsToken: String, fcmToken: String, nonce:
         provider.request(.pushTokenUpdate(fcmToken: fcmToken,
                                           apnsToken: apnsToken,
                                           preferredLanguage: preferredLanguage,
-                                          userAgent: userAgent, userVersion: userVersion)) { result in
+                                          userAgent: userAgent, userVersion: userVersion, userUuid: userUuid)) { result in
                                             switch result {
                                             case let .success(moyaResponse):
                                                 do {
@@ -307,7 +308,9 @@ extension AppDelegate {
                                  apnsToken: apnsTokenString,
                                  preferredLanguage: L10n.shared.preferredLanguage,
                                  userAgent: Device.userAgent(),
-                                 userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String)
+                                 userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String,
+                                 // TODO: cache User.uuid in product or a session service
+                                 userUuid: NSUUID().uuidString)
         }
     }
 

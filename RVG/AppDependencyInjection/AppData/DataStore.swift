@@ -183,6 +183,7 @@ public final class DataStore {
                     userTable.column("userId", .integer).primaryKey()
                     userTable.column("uuid", .text)
                     userTable.column("name", .text)
+                    userTable.column("email", .text)
                     userTable.column("session", .text)
                     userTable.column("pushNotifications", .boolean)
                     userTable.column("language", .text)
@@ -555,6 +556,7 @@ extension DataStore: DataStoring {
                         var user = User(userId: nil,
                                         uuid: NSUUID().uuidString,
                                         name: "name",
+                                        email: "test@test",
                                         session: session,
                                         pushNotifications:false,
                                         language: L10n.shared.language) //(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)

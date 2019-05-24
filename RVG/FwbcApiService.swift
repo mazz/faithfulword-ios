@@ -3,7 +3,7 @@ import Moya
 
 public enum FwbcApiService {
     case appVersions(offset: Int, limit: Int)
-    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String)
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String, userUuid: String)
     // v1.1/languages/supported
     // v1.2/languages/supported
     // v1.3/languages/supported?offset=1&limit=50
@@ -66,7 +66,7 @@ extension FwbcApiService: TargetType {
     //    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v1.3")! }
     public var path: String {
         switch self {
-        case .pushTokenUpdate(_, _, _, _, _):
+        case .pushTokenUpdate(_, _, _, _, _, _):
             return "/device/pushtoken/update"
         case .appVersions(_, _):
             return "/app/versions"
@@ -144,12 +144,14 @@ extension FwbcApiService: TargetType {
                               let apnsToken,
                               let preferredLanguage,
                               let userAgent,
-                              let userVersion):
+                              let userVersion,
+                              let userUuid):
             return ["fcmToken": fcmToken,
                     "apnsToken": apnsToken,
                     "preferredLanguage": preferredLanguage,
                     "userAgent": userAgent,
-                    "userVersion": userVersion]
+                    "userVersion": userVersion,
+                    "userUuid": userUuid]
         case .languagesSupported(let offset, let limit):
             return ["offset": offset,
                     "limit": limit]
@@ -252,13 +254,15 @@ extension FwbcApiService: TargetType {
                               let apnsToken,
                               let preferredLanguage,
                               let userAgent,
-                              let userVersion):
+                              let userVersion,
+                              let userUuid):
             let pushTokenJson = [
                 "fcmToken": fcmToken,
                 "apnsToken": apnsToken,
                 "preferredLanguage": preferredLanguage,
                 "userAgent": userAgent,
-                "userVersion": userVersion
+                "userVersion": userVersion,
+                "userUuid": userUuid
             ]
             return jsonSerializedUTF8(json: pushTokenJson)
         case .languagesSupported(let offset, let limit):
@@ -306,12 +310,13 @@ extension FwbcApiService: TargetType {
             return .requestParameters(parameters:  ["offset": offset,
                                                     "limit": limit],
                                       encoding: URLEncoding.default)
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion):
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion, let userUuid):
             return .requestParameters(parameters:  ["fcmToken": fcmToken,
                                                     "apnsToken": apnsToken,
                                                     "preferredLanguage": preferredLanguage,
                                                     "userAgent": userAgent,
-                                                    "userVersion": userVersion],
+                                                    "userVersion": userVersion,
+                                                    "userUuid": userUuid],
                                       encoding: JSONEncoding.default)
         case .languagesSupported(let offset, let limit):
             return .requestParameters(parameters:  ["offset": offset,
