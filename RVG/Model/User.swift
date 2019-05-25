@@ -3,7 +3,7 @@ import GRDB
 
 public struct User: Codable {
     var userId: Int64?
-    public var uuid: String
+    public var uuid: String?
     public var name: String
     public var email: String?
     public var session: String
