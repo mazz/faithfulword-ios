@@ -40,7 +40,7 @@ public protocol AccountDataServicing {
 /// Provides product related data to the app
 public protocol ProductDataServicing {
 //    var orgs: Observable<[Org]> { get }
-    func fetchAndObservePlaylists(for channelUuid: String) -> Single<[Playlist]>
+    func fetchAndObservePlaylists(for channelUuid: String) -> Single<(PlaylistResponse, [Playlist])>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
@@ -263,36 +263,25 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    public func fetchAndObservePlaylists(for channelUuid: String) -> Single<[Playlist]> {
-        switch self.networkStatus.value {
-            
-        case .unknown:
-            return self.dataStore.fetchPlaylists(for: channelUuid)
-        case .notReachable:
-            return self.dataStore.fetchPlaylists(for: channelUuid)
-        case .reachable(_):
-            let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, languageId: L10n.shared.language, offset: 1, limit: 1000))
-            let response: Single<PlaylistResponse> = moyaResponse.map { response -> PlaylistResponse in
-                do {
-                    //                    self._responseMap[bookUuid] = response
-                    let jsonObj = try response.mapJSON()
-                    DDLogDebug("jsonObj: \(jsonObj)")
-                    return try response.map(PlaylistResponse.self)
-                } catch {
-                    throw DataServiceError.decodeFailed
-                }
+    public func fetchAndObservePlaylists(for channelUuid: String) -> Single<(PlaylistResponse, [Playlist])> {
+
+        let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, languageId: L10n.shared.language, offset: 1, limit: 1000))
+        let response: Single<PlaylistResponse> = moyaResponse.map { response -> PlaylistResponse in
+            do {
+//                let jsonObj = try response.mapJSON()
+//                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(PlaylistResponse.self)
+            } catch {
+                throw DataServiceError.decodeFailed
             }
-            //            return Single.just([])
-            return response.flatMap { [unowned self] response -> Single<[Playlist]> in
-                //                return Single.just([])
-                DDLogDebug("response.result: \(response.result)")
-                return self.replacePersistedPlaylists(playlists: response.result)
-            }
-            //                .do(onSuccess: { [unowned self] products in
-            ////                    self._channels.value = products
-            //                    //            self._persistedBooks.value = products
-            //                })
-            
+        }
+        
+        return response.flatMap { [unowned self] response -> Single<(PlaylistResponse, [Playlist])> in
+            let playlist: Single<[Playlist]> = self.replacePersistedPlaylists(playlists: response.result)
+            return playlist.map({ playlist -> (PlaylistResponse, [Playlist]) in
+                let tuple: (PlaylistResponse, [Playlist]) = (response, playlist)
+                return tuple
+            })
         }
     }
     

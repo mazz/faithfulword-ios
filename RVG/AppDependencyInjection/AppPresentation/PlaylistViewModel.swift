@@ -91,7 +91,7 @@ final class PlaylistViewModel {
     }
     
     func fetchPlaylist(stride: Int) {
-        productService.fetchPlaylists(for: self.channelUuid).subscribe(onSuccess: { playlists in
+        productService.fetchPlaylists(for: self.channelUuid).subscribe(onSuccess: { (playlistResponse, playlists) in
             DDLogDebug("fetchPlaylists: \(playlists)")
             self.playlists.value = playlists
         }) { error in
