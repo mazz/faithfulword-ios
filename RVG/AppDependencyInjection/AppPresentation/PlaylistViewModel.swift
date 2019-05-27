@@ -1,8 +1,11 @@
 import Foundation
 import RxSwift
 
+private struct Constants {
+    static let limit: Int = 50
+}
+
 final class PlaylistViewModel {
-    
     public func section(at index: Int) -> PlaylistSectionViewModel {
         return sections.value[index]
     }
@@ -30,20 +33,52 @@ final class PlaylistViewModel {
     }
     
     public func fetchMorePlaylists() {
-        self.fetchPlaylist(stride: 50)
+        if self.totalEntries <= self.playlists.value.count {
+            return
+        }
+        
+        switch self.networkStatus.value {
+        case .notReachable:
+            DDLogDebug("PlaylistViewModel reachability.notReachable")
+            // do nothing for now
+        case .reachable(_):
+            DDLogDebug("PlaylistViewModel reachability.reachable")
+            self.fetchPlaylist(offset: lastOffset + 1,
+                               limit: Constants.limit,
+                               cacheRule: .fetchAndAppend)
+        case .unknown:
+            DDLogDebug("PlaylistViewModel reachability.unknown")
+            // do nothing for now
+        }
+
     }
     
     // MARK: Dependencies
     
     private let channelUuid: String!
     private let productService: ProductServicing!
+    private let reachability: RxClassicReachable!
     
+    // MARK: Fields
+    
+    private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
+    
+    private var totalEntries: Int = -1
+    private var totalPages: Int = -1
+    private var pageSize: Int = -1
+    private var pageNumber: Int = -1
+    
+    private var lastOffset: Int = 0
+
     private var bag = DisposeBag()
     
     internal init(channelUuid: String,
-                  productService: ProductServicing) {
+                  productService: ProductServicing,
+                  reachability: RxClassicReachable                  
+        ) {
         self.channelUuid = channelUuid
         self.productService = productService
+        self.reachability = reachability
         setupDataSource()
     }
     
@@ -87,15 +122,39 @@ final class PlaylistViewModel {
                 ]
             }.disposed(by: self.bag)
         
-        self.fetchPlaylist(stride: 50)
+        self.fetchPlaylist(offset: lastOffset + 1, limit: Constants.limit, cacheRule: .fetchAndAppend)
+        
+        reactToReachability()
     }
     
-    func fetchPlaylist(stride: Int) {
-        productService.fetchPlaylists(for: self.channelUuid).subscribe(onSuccess: { (playlistResponse, playlists) in
+    func fetchPlaylist(offset: Int, limit: Int, cacheRule: CacheRule) {
+        productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheRule: cacheRule).subscribe(onSuccess: { (playlistResponse, playlists) in
             DDLogDebug("fetchPlaylists: \(playlists)")
-            self.playlists.value = playlists
+            self.playlists.value.append(contentsOf: playlists)
+            self.totalEntries = playlistResponse.totalEntries
+            self.totalPages = playlistResponse.totalPages
+            self.pageSize = playlistResponse.pageSize
+            self.pageNumber = playlistResponse.pageNumber
+
+            self.lastOffset += 1
         }) { error in
             DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
         }.disposed(by: self.bag)
+    }
+    
+    private func reactToReachability() {
+        reachability.startNotifier().asObservable()
+            .subscribe(onNext: { networkStatus in
+                self.networkStatus.value = networkStatus
+                
+                switch networkStatus {
+                case .unknown:
+                    DDLogDebug("PlaylistViewModel \(self.reachability.status.value)")
+                case .notReachable:
+                    DDLogDebug("PlaylistViewModel \(self.reachability.status.value)")
+                case .reachable(_):
+                    DDLogDebug("PlaylistViewModel \(self.reachability.status.value)")
+                }
+            }).disposed(by: bag)
     }
 }

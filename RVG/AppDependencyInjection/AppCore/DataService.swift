@@ -10,6 +10,13 @@ public enum DataServiceError: Error {
     case offsetOutofRange
 }
 
+public enum CacheRule {
+    case use
+    case bypass
+    case fetchAndReplace
+    case fetchAndAppend
+}
+
 public protocol UserDataServicing {
     var languageIdentifier: Observable<String> { get }
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -40,7 +47,7 @@ public protocol AccountDataServicing {
 /// Provides product related data to the app
 public protocol ProductDataServicing {
 //    var orgs: Observable<[Org]> { get }
-    func fetchAndObservePlaylists(for channelUuid: String) -> Single<(PlaylistResponse, [Playlist])>
+    func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
@@ -263,9 +270,9 @@ extension DataService: ProductDataServicing {
         }
     }
 
-    public func fetchAndObservePlaylists(for channelUuid: String) -> Single<(PlaylistResponse, [Playlist])> {
+    public func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])> {
 
-        let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, languageId: L10n.shared.language, offset: 1, limit: 1000))
+        let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
         let response: Single<PlaylistResponse> = moyaResponse.map { response -> PlaylistResponse in
             do {
 //                let jsonObj = try response.mapJSON()
@@ -277,7 +284,7 @@ extension DataService: ProductDataServicing {
         }
         
         return response.flatMap { [unowned self] response -> Single<(PlaylistResponse, [Playlist])> in
-            let playlist: Single<[Playlist]> = self.replacePersistedPlaylists(playlists: response.result)
+            let playlist: Single<[Playlist]> = self.appendPersistedPlaylists(playlists: response.result)
             return playlist.map({ playlist -> (PlaylistResponse, [Playlist]) in
                 let tuple: (PlaylistResponse, [Playlist]) = (response, playlist)
                 return tuple
@@ -939,6 +946,10 @@ extension DataService: ProductDataServicing {
 
     // Playlists ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    private func appendPersistedPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
+        return self.dataStore.addPlaylists(playlists: playlists)
+    }
+
     private func replacePersistedPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
         return dataStore.deletePlaylists()
             .flatMap { [unowned self] _ in

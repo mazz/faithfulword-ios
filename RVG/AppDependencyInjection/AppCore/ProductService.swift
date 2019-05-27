@@ -20,7 +20,10 @@ public protocol ProductServicing {
     func deleteChannels() -> Single<Void>
     
 //    func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]>
-    func fetchPlaylists(for channelUuid: String) -> Single<(PlaylistResponse, [Playlist])>
+    func fetchPlaylists(for channelUuid: String,
+                        offset: Int,
+                        limit: Int,
+                        cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
     var defaultOrgs: Field<[Org]> { get }
@@ -67,8 +70,14 @@ public final class ProductService {
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
     
-    public func fetchPlaylists(for channelUuid: String) -> Single<(PlaylistResponse, [Playlist])> {
-        return dataService.fetchAndObservePlaylists(for: channelUuid)
+    public func fetchPlaylists(for channelUuid: String,
+                               offset: Int,
+                               limit: Int,
+                               cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])> {
+        return dataService.fetchAndObservePlaylists(for: channelUuid,
+                                                    offset: offset,
+                                                    limit: limit,
+                                                    cacheRule: cacheRule)
     }
     
     public func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<Void> {

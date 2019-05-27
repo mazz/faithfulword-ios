@@ -248,7 +248,8 @@ internal final class AppDependencyModule {
         container.register(PlaylistViewModel.self) { resolver, channelUuid in
             PlaylistViewModel(
                 channelUuid: channelUuid,
-                productService: resolver.resolve(ProductServicing.self)!
+                productService: resolver.resolve(ProductServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
             )
             }.inObjectScope(.transient)
 
