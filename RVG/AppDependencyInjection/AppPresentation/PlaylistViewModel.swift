@@ -139,34 +139,7 @@ final class PlaylistViewModel {
             }
         }) { error in
             DDLogDebug("error getting persistedPlaylists: \(error)")
-            }.disposed(by: self.bag)
-        
-        
-//        switch self.networkStatus.value {
-//        case .unknown:
-//            DDLogDebug("network status: \(ClassicReachability.NetworkStatus.unknown)")
-//        case .notReachable:
-//        DDLogDebug("network status: \(ClassicReachability.NetworkStatus.notReachable)")
-//        productService.persistedPlaylists(for: self.channelUuid).subscribe(onSuccess: { [unowned self] playlists in
-//            if playlists.count == 0 {
-//                DDLogError("no playlists and no network! should probably make the user aware somehow")
-//            } else {
-//                self.playlists.value = playlists
-//            }
-//        }) { error in
-//            DDLogDebug("error getting persistedPlaylists: \(error)")
-//            }.disposed(by: self.bag)
-//        case .reachable(_):
-//            productService.persistedPlaylists(for: self.channelUuid).subscribe(onSuccess: { [unowned self] playlists in
-//                if playlists.count == 0 {
-//                    self.fetchPlaylist(offset: self.lastOffset + 1, limit: Constants.limit, cacheRule: .fetchAndAppend)
-//                } else {
-//                    self.playlists.value = playlists
-//                }
-//            }) { error in
-//                DDLogDebug("error getting persistedPlaylists: \(error)")
-//            }.disposed(by: self.bag)
-//        }
+            }.disposed(by: self.bag)        
     }
     
     func fetchPlaylist(offset: Int, limit: Int, cacheRule: CacheRule) {
