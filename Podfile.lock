@@ -2,73 +2,74 @@ PODS:
   - Alamofire (4.8.2)
   - AlamofireImage (3.5.2):
     - Alamofire (~> 4.8)
-  - CocoaLumberjack/Core (3.5.2)
-  - CocoaLumberjack/Swift (3.5.2):
+  - CocoaLumberjack/Core (3.5.3)
+  - CocoaLumberjack/Swift (3.5.3):
     - CocoaLumberjack/Core
-  - Crashlytics (3.12.0):
-    - Fabric (~> 1.9.0)
+  - Crashlytics (3.13.1):
+    - Fabric (~> 1.10.1)
   - Differentiator (3.1.0)
-  - Fabric (1.9.0)
-  - Firebase/Core (5.20.2):
+  - Fabric (1.10.1)
+  - Firebase/Core (6.1.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.8.1)
-  - Firebase/CoreOnly (5.20.2):
-    - FirebaseCore (= 5.4.1)
-  - Firebase/Messaging (5.20.2):
+    - FirebaseAnalytics (= 6.0.1)
+  - Firebase/CoreOnly (6.1.0):
+    - FirebaseCore (= 6.0.1)
+  - Firebase/Messaging (6.1.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (= 3.5.0)
-  - FirebaseAnalytics (5.8.1):
-    - FirebaseCore (~> 5.4)
-    - FirebaseInstanceID (~> 3.8)
-    - GoogleAppMeasurement (= 5.8.1)
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
+    - FirebaseMessaging (~> 4.0.1)
+  - FirebaseAnalytics (6.0.1):
+    - FirebaseCore (~> 6.0)
+    - FirebaseInstanceID (~> 4.1)
+    - GoogleAppMeasurement (= 6.0.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
   - FirebaseAnalyticsInterop (1.2.0)
-  - FirebaseCore (5.4.1):
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseInstanceID (3.8.1):
-    - FirebaseCore (~> 5.2)
-    - GoogleUtilities/Environment (~> 5.2)
-    - GoogleUtilities/UserDefaults (~> 5.2)
-  - FirebaseMessaging (3.5.0):
+  - FirebaseCore (6.0.1):
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/Logger (~> 6.0)
+  - FirebaseInstanceID (4.1.0):
+    - FirebaseCore (~> 6.0)
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
+  - FirebaseMessaging (4.0.1):
     - FirebaseAnalyticsInterop (~> 1.1)
-    - FirebaseCore (~> 5.2)
-    - FirebaseInstanceID (~> 3.6)
-    - GoogleUtilities/Environment (~> 5.3)
-    - GoogleUtilities/Reachability (~> 5.3)
-    - GoogleUtilities/UserDefaults (~> 5.3)
+    - FirebaseCore (~> 6.0)
+    - FirebaseInstanceID (~> 4.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/Environment (~> 6.0)
+    - GoogleUtilities/Reachability (~> 6.0)
+    - GoogleUtilities/UserDefaults (~> 6.0)
     - Protobuf (~> 3.1)
-  - GoogleAppMeasurement (5.8.1):
-    - GoogleUtilities/AppDelegateSwizzler (~> 5.2)
-    - GoogleUtilities/MethodSwizzler (~> 5.2)
-    - GoogleUtilities/Network (~> 5.2)
-    - "GoogleUtilities/NSData+zlib (~> 5.2)"
+  - GoogleAppMeasurement (6.0.1):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
-  - GoogleUtilities/AppDelegateSwizzler (5.7.0):
+  - GoogleUtilities/AppDelegateSwizzler (6.1.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (5.7.0)
-  - GoogleUtilities/Logger (5.7.0):
+  - GoogleUtilities/Environment (6.1.0)
+  - GoogleUtilities/Logger (6.1.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (5.7.0):
+  - GoogleUtilities/MethodSwizzler (6.1.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (5.7.0):
+  - GoogleUtilities/Network (6.1.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (5.7.0)"
-  - GoogleUtilities/Reachability (5.7.0):
+  - "GoogleUtilities/NSData+zlib (6.1.0)"
+  - GoogleUtilities/Reachability (6.1.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (5.7.0):
+  - GoogleUtilities/UserDefaults (6.1.0):
     - GoogleUtilities/Logger
-  - GRDB.swift (3.7.0):
-    - GRDB.swift/standard (= 3.7.0)
-  - GRDB.swift/standard (3.7.0)
+  - GRDB.swift (4.0.1):
+    - GRDB.swift/standard (= 4.0.1)
+  - GRDB.swift/standard (4.0.1)
   - L10n-swift (5.4.1):
     - L10n-swift/Core (= 5.4.1)
     - L10n-swift/Extension (= 5.4.1)
@@ -78,13 +79,13 @@ PODS:
     - L10n-swift/Core
   - L10n-swift/IBInspectable (5.4.1):
     - L10n-swift/Core
-  - MagazineLayout (1.3.1)
+  - MagazineLayout (1.4.5)
   - MarqueeLabel/Swift (3.2.1)
   - MBProgressHUD (1.0.0)
-  - Moya/Core (13.0.0):
+  - Moya/Core (13.0.1):
     - Alamofire (~> 4.1)
     - Result (~> 4.1)
-  - Moya/RxSwift (13.0.0):
+  - Moya/RxSwift (13.0.1):
     - Moya/Core
     - RxSwift (~> 4.0)
   - nanopb (0.3.901):
@@ -104,9 +105,9 @@ PODS:
     - RxCocoa (~> 4.0)
     - RxSwift (~> 4.0)
   - RxSwift (4.5.0)
-  - SwiftLint (0.31.0)
+  - SwiftLint (0.32.0)
   - Swinject (2.6.0)
-  - UICircularProgressRing (6.1.0)
+  - UICircularProgressRing (6.2.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
@@ -117,7 +118,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Messaging
   - FirebaseInstanceID
-  - GRDB.swift (from `https://github.com/groue/GRDB.swift.git`, branch `GRDB-4.0`)
+  - GRDB.swift (~> 4.0.1)
   - L10n-swift
   - MagazineLayout
   - MarqueeLabel/Swift
@@ -147,6 +148,7 @@ SPEC REPOS:
     - FirebaseMessaging
     - GoogleAppMeasurement
     - GoogleUtilities
+    - GRDB.swift
     - L10n-swift
     - MagazineLayout
     - MarqueeLabel
@@ -163,37 +165,27 @@ SPEC REPOS:
     - Swinject
     - UICircularProgressRing
 
-EXTERNAL SOURCES:
-  GRDB.swift:
-    :branch: GRDB-4.0
-    :git: https://github.com/groue/GRDB.swift.git
-
-CHECKOUT OPTIONS:
-  GRDB.swift:
-    :commit: 0e2daff329040ddf8694cdd1be1bc3e5ba0d4138
-    :git: https://github.com/groue/GRDB.swift.git
-
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlamofireImage: 63cfe3baf1370be6c498149687cf6db3e3b00999
-  CocoaLumberjack: 118bf4a820efc641f79fa487b75ed928dccfae23
-  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
+  Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
   Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
-  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
-  Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
-  FirebaseAnalytics: ece1aa57a4f43c64d53a648b5a5e05151aae947b
+  Fabric: f6f21452846788bb44595d73e9909d79d328e617
+  Firebase: 8d77bb33624ae9b62d745d82ec023de5f70f7e4f
+  FirebaseAnalytics: 629301c2b9925f3537d4093a17a72751ae5b7084
   FirebaseAnalyticsInterop: efbe45c8385ec626e29f9525e5ebd38520dfb6c1
-  FirebaseCore: f1a9a8be1aee4bf71a2fc0f4096df6788bdfda61
-  FirebaseInstanceID: a122b0c258720cf250551bb2bedf48c699f80d90
-  FirebaseMessaging: 4235f949ce1c4e827aeb19705ba5c53f9b85aa10
-  GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
-  GoogleUtilities: 273e67030e0de313e7304f6dcfa96fc5214f6c23
-  GRDB.swift: 71ab04a6e727e34c034513c4d15901ea35eb1f0d
+  FirebaseCore: 66bdef3b310a026880e2a5bc8aa586ab62ce4543
+  FirebaseInstanceID: 27bed93a59b6685f5c3e0c028a878a764fd75c33
+  FirebaseMessaging: 31377e05331d16dc6c9fd82554f9a5c49aa70aed
+  GoogleAppMeasurement: 51d8d9ea48f0ca44484d29cfbdef976fbd4fc336
+  GoogleUtilities: 84df567c76ca84f67b7bb40e769fdd4acc746a10
+  GRDB.swift: 106a830decf1d92a3fc63c6d6a2f6586f6187297
   L10n-swift: 8d7edb9c113ac4859a27d6417b47a6bc6cdebf7c
-  MagazineLayout: 9d2f2dd8f6c7592c1fe4d1cc97d402376969218b
+  MagazineLayout: dcd0e08fbda3f891c77b88bd43997f298e8d496a
   MarqueeLabel: 2daf039bf916937c8a4c9adfc13577cc5e51b4ce
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
-  Moya: 161263550064ff8a4948e8ff63137fd72a876292
+  Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
@@ -201,10 +193,10 @@ SPEC CHECKSUMS:
   RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
   RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
-  SwiftLint: 7a0227733d786395817373b2d0ca799fd0093ff3
+  SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
   Swinject: 48a96cda93633cf2860697b4ce76ab5db9ebaca2
-  UICircularProgressRing: b3eba859a515e4d9d38503eec913f09c28450785
+  UICircularProgressRing: 0ff679b05a17f15ad6301a7886686837b8c301a9
 
-PODFILE CHECKSUM: 25f24fc8b718ce6016ebceaabb5969daa2cd399d
+PODFILE CHECKSUM: 2a05e4665747578245176129f4ba4a53d0bbb73a
 
 COCOAPODS: 1.6.1

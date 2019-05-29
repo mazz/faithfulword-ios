@@ -47,6 +47,7 @@ public protocol AccountDataServicing {
 /// Provides product related data to the app
 public protocol ProductDataServicing {
 //    var orgs: Observable<[Org]> { get }
+    func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
@@ -268,6 +269,10 @@ extension DataService: ProductDataServicing {
             DDLogDebug("DataService reachability.unknown")
             return _channels.asObservable()
         }
+    }
+    
+    public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {
+        return dataStore.fetchPlaylists(for: channelUuid)
     }
 
     public func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])> {

@@ -19,7 +19,7 @@ public protocol ProductServicing {
     func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<Void>
     func deleteChannels() -> Single<Void>
     
-//    func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]>
+    func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchPlaylists(for channelUuid: String,
                         offset: Int,
                         limit: Int,
@@ -69,6 +69,10 @@ public final class ProductService {
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
+    
+    public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {
+        return dataService.persistedPlaylists(for: channelUuid)
+    }
     
     public func fetchPlaylists(for channelUuid: String,
                                offset: Int,

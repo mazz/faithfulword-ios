@@ -15,7 +15,7 @@ target 'FaithfulWord' do
     pod 'Moya/RxSwift'
     pod 'RxSwift'
 #    pod 'RxGRDB'
-    pod 'GRDB.swift', :git => 'https://github.com/groue/GRDB.swift.git', :branch => 'GRDB-4.0' 
+    pod 'GRDB.swift', '~> 4.0.1'
     pod 'L10n-swift'
     pod 'SwiftLint'
     pod 'Swinject'
