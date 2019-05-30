@@ -2,13 +2,42 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import MagazineLayout
 
 /// Add service screen
-public final class MainViewController: UIViewController {
+public final class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModelSections[0].items.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        DDLogDebug("viewModelSections[0].items[indexPath.row]: \(viewModelSections[0].items[indexPath.row])")
+        //        }
+        let item: PlaylistItemType = viewModelSections[0].items[indexPath.row]
+        
+        switch item {
+        case let .drillIn(_, iconName, title, showBottomSeparator):
+            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: PlaylistCollectionViewCell.description(), for: indexPath) as! PlaylistCollectionViewCell
+            drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator, showChevron: true)
+            return drillInCell
+        }
+    }
+    
     // MARK: View
     
-    @IBOutlet weak var collectionView: UICollectionView!
-
+    private lazy var collectionView: UICollectionView = {
+        let layout = MagazineLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(UINib(nibName: "PlaylistCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: PlaylistCollectionViewCell.description())
+        collectionView.isPrefetchingEnabled = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = .white
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .always
+        }
+        return collectionView
+    }()
     // MARK: Dependencies
     
     internal var booksViewModel: BooksViewModel!
@@ -26,14 +55,37 @@ public final class MainViewController: UIViewController {
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
 //        embedNowPlayingBar()
-        registerReusableViews()
+//        registerReusableViews()
 //        viewModel.setupDatasource()
-        bindToViewModel()
+//        bindToViewModel()
+        view.addSubview(collectionView)
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
+
         reactToViewModel()
 //        reactToContentSizeChange()
     }
     
     // MARK: Private helpers
+
+//        private func reactToContentSizeChange() {
+//            // Only dynamically change in iOS 11+. With iOS 10, user must re-launch app
+//            if #available(iOS 11, *) {
+//                NotificationCenter.default.rx
+//                    .notification(Notification.Name.UIContentSizeCategory.didChangeNotification)
+//                    .next { [unowned self] _ in
+//                        // With self sizing done in collectionView:cellForItemAt, the layout doesn't yet know to recalculate the layout attributes
+//                        self.collectionView.collectionViewLayout.invalidateLayout()
+//                    }
+//                    .disposed(by: bag)
+//            }
+//        }
 
     private func reactToViewModel() {
         viewModel.sections.asObservable()
@@ -45,24 +97,24 @@ public final class MainViewController: UIViewController {
             }.disposed(by: bag)
     }
     
-    private func registerReusableViews() {
-        collectionView.register(cellType: DeviceGroupSelectionCell.self)
-    }
+//    private func registerReusableViews() {
+//        collectionView.register(cellType: PlaylistCollectionViewCell.self)
+//    }
 
-    private func bindToViewModel() {
-        collectionView.rx.setDelegate(self).disposed(by: bag)
-        viewModel.sections.asObservable()
-            .bind(to: collectionView.rx.items(dataSource: rxDataSource()))
-            .disposed(by: bag)
-        collectionView.rx.itemSelected.asObservable()
-            .subscribe(viewModel.selectItemEvent.asObserver())
-            .disposed(by: bag)
-
-//        viewModel.title
-//            .asObservable()
-//            .bind(to: rx.title)
+//    private func bindToViewModel() {
+//        collectionView.rx.setDelegate(self).disposed(by: bag)
+//        viewModel.sections.asObservable()
+//            .bind(to: collectionView.rx.items(dataSource: rxDataSource()))
 //            .disposed(by: bag)
-    }
+//        collectionView.rx.itemSelected.asObservable()
+//            .subscribe(viewModel.selectItemEvent.asObserver())
+//            .disposed(by: bag)
+//
+////        viewModel.title
+////            .asObservable()
+////            .bind(to: rx.title)
+////            .disposed(by: bag)
+//    }
 
     
     private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel> {
@@ -70,7 +122,7 @@ public final class MainViewController: UIViewController {
             configureCell: { (dataSource, collectionView, indexPath, item) in
                 switch item {
                 case let .drillIn(_, iconName, title, showBottomSeparator):
-                    let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
+                    let drillInCell = collectionView.dequeue(cellType: PlaylistCollectionViewCell.self, for: indexPath)
                     drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
                     return drillInCell
 
@@ -94,7 +146,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         
         switch viewModel.item(at: indexPath) {
         case let .drillIn(_, iconName, title, showBottomSeparator):
-            guard let view = try? UIView.sizingView(for: DeviceGroupSelectionCell.self,
+            guard let view = try? UIView.sizingView(for: PlaylistCollectionViewCell.self,
                                                     bundle: ModuleInfo.bundle) else { break }
             view.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
             return CGSize(width: preferredWidth, height: view.height(for: preferredWidth))
@@ -140,3 +192,42 @@ extension MainViewController: UIScrollViewDelegate {
         }
     }
 }
+
+
+// MARK: UICollectionViewDelegateMagazineLayout
+
+extension MainViewController: UICollectionViewDelegateMagazineLayout {
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeModeForItemAt indexPath: IndexPath) -> MagazineLayoutItemSizeMode {
+        return MagazineLayoutItemSizeMode(widthMode: .fullWidth(respectsHorizontalInsets: true), heightMode: .dynamic)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, visibilityModeForHeaderInSectionAtIndex index: Int) -> MagazineLayoutHeaderVisibilityMode {
+        return MagazineLayout.Default.HeaderVisibilityMode
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, visibilityModeForFooterInSectionAtIndex index: Int) -> MagazineLayoutFooterVisibilityMode {
+        return MagazineLayout.Default.FooterVisibilityMode
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, visibilityModeForBackgroundInSectionAtIndex index: Int) -> MagazineLayoutBackgroundVisibilityMode {
+        return MagazineLayout.Default.BackgroundVisibilityMode
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, horizontalSpacingForItemsInSectionAtIndex index: Int) -> CGFloat {
+        return 12
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, verticalSpacingForElementsInSectionAtIndex index: Int) -> CGFloat {
+        return 0
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForSectionAtIndex index: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 4, bottom: 24, right: 4)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForItemsInSectionAtIndex index: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 4, bottom: 24, right: 4)
+    }
+}
+

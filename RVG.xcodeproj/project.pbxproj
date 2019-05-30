@@ -42,6 +42,8 @@
 		4C437ABB223356C600083197 /* UserActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437ABA223356C600083197 /* UserActionsViewModel.swift */; };
 		4C437AD42239F07000083197 /* HistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437AD32239F07000083197 /* HistoryService.swift */; };
 		4C437AD6223C60DB00083197 /* UIFont+PlaybackUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437AD5223C60DB00083197 /* UIFont+PlaybackUI.swift */; };
+		4C596253229E1E5E00947F73 /* PlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C596251229E1E5E00947F73 /* PlaylistCollectionViewCell.swift */; };
+		4C596254229E1E5E00947F73 /* PlaylistCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C596252229E1E5E00947F73 /* PlaylistCollectionViewCell.xib */; };
 		4C5D60F720A51A5E00ED9958 /* 1sec.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4C5D60F620A51A5D00ED9958 /* 1sec.m4a */; };
 		4C5FAD5F2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */; };
 		4C5FAD612031D5B400397BFF /* BibleLanguageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */; };
@@ -233,6 +235,8 @@
 		4C437ABA223356C600083197 /* UserActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionsViewModel.swift; sourceTree = "<group>"; };
 		4C437AD32239F07000083197 /* HistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryService.swift; sourceTree = "<group>"; };
 		4C437AD5223C60DB00083197 /* UIFont+PlaybackUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+PlaybackUI.swift"; sourceTree = "<group>"; };
+		4C596251229E1E5E00947F73 /* PlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
+		4C596252229E1E5E00947F73 /* PlaylistCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistCollectionViewCell.xib; sourceTree = "<group>"; };
 		4C5D60F620A51A5D00ED9958 /* 1sec.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1sec.m4a; sourceTree = "<group>"; };
 		4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MainCoordinator+SideMenuHandling.swift"; path = "AppPresentation/MainCoordinator+SideMenuHandling.swift"; sourceTree = "<group>"; };
 		4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BibleLanguageCoordinator.swift; sourceTree = "<group>"; };
@@ -580,6 +584,8 @@
 				4C3EA134206A716400310024 /* Playback */,
 				4C78CECF22876D22006FB8CB /* MediaItemCell.xib */,
 				4C78CED122876D5F006FB8CB /* MediaItemCell.swift */,
+				4C596251229E1E5E00947F73 /* PlaylistCollectionViewCell.swift */,
+				4C596252229E1E5E00947F73 /* PlaylistCollectionViewCell.xib */,
 			);
 			path = AppUI;
 			sourceTree = "<group>";
@@ -941,6 +947,7 @@
 				4C78CED022876D22006FB8CB /* MediaItemCell.xib in Resources */,
 				4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
+				4C596254229E1E5E00947F73 /* PlaylistCollectionViewCell.xib in Resources */,
 				68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */,
 				4CD5C1BB20242A96007BFC1B /* VerseCell.xib in Resources */,
 				4C5FAD752037212000397BFF /* RadioSelectionCell.xib in Resources */,
@@ -1163,6 +1170,7 @@
 				4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				4C7EB88C228B8EA8000E8DAB /* Music.swift in Sources */,
+				4C596253229E1E5E00947F73 /* PlaylistCollectionViewCell.swift in Sources */,
 				4C7EB89C228E6C1B000E8DAB /* PlaylistResponse.swift in Sources */,
 				4C250394216868120069AB49 /* String+Hashing.swift in Sources */,
 				4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */,
