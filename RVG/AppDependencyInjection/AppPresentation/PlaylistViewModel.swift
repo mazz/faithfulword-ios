@@ -33,7 +33,7 @@ final class PlaylistViewModel {
     }
     
     public func fetchMorePlaylists() {
-        if self.totalEntries <= self.playlists.value.count {
+        if self.totalEntries != -1 && self.totalEntries <= self.playlists.value.count {
             return
         }
         
@@ -136,6 +136,7 @@ final class PlaylistViewModel {
                 }
             } else {
                 self.playlists.value = playlists
+                self.lastOffset += 1
             }
         }) { error in
             DDLogDebug("error getting persistedPlaylists: \(error)")

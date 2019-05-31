@@ -7,6 +7,9 @@ import MagazineLayout
 /// Add service screen
 public final class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if viewModelSections.count == 0 {
+            return 0
+        }
         return viewModelSections[0].items.count
     }
     
@@ -38,6 +41,9 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
         }
         return collectionView
     }()
+    
+    var itemsUpdatedAtLeastOnce = false
+    
     // MARK: Dependencies
     
     internal var booksViewModel: BooksViewModel!
@@ -89,11 +95,32 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
 
     private func reactToViewModel() {
         viewModel.sections.asObservable()
+            .filter{ $0[0].items.count > 0 }
             .next { [unowned self] sections in
-                // Cache our viewModel sections, so we don't need to read the value while it' still being written to
-                self.viewModelSections = sections
-                
-                self.collectionView.reloadData()
+                // first time loading sections
+                if self.itemsUpdatedAtLeastOnce == false {
+                    self.viewModelSections = sections
+                    self.collectionView.reloadData()
+                    self.itemsUpdatedAtLeastOnce = true
+                }
+                else {
+                    let currentItemsCount: Int = self.viewModelSections[0].items.count
+                    let appendCount: Int = sections[0].items.count - currentItemsCount
+                    let newItems = Array(sections[0].items.suffix(appendCount))
+                    DDLogDebug("newItems.count: \(newItems.count)")
+
+                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
+                    DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
+                    self.viewModelSections = sections
+
+                    DispatchQueue.main.async {
+                        self.collectionView.performBatchUpdates({
+                            self.collectionView.insertItems(at: insertIndexPaths)
+                        }, completion: { result in
+                            self.collectionView.reloadData()
+                        })
+                    }
+                }
             }.disposed(by: bag)
     }
     
@@ -117,24 +144,24 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
 //    }
 
     
-    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel> {
-        let dataSource = RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel>(
-            configureCell: { (dataSource, collectionView, indexPath, item) in
-                switch item {
-                case let .drillIn(_, iconName, title, showBottomSeparator):
-                    let drillInCell = collectionView.dequeue(cellType: PlaylistCollectionViewCell.self, for: indexPath)
-                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
-                    return drillInCell
-
-                }},
-            configureSupplementaryView: { _, collectionView, kind, indexPath in
-                return collectionView.dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: UICollectionReusableView.identifierName,
-                    for: indexPath)
-        })
-        return dataSource
-    }
+//    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel> {
+//        let dataSource = RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel>(
+//            configureCell: { (dataSource, collectionView, indexPath, item) in
+//                switch item {
+//                case let .drillIn(_, iconName, title, showBottomSeparator):
+//                    let drillInCell = collectionView.dequeue(cellType: PlaylistCollectionViewCell.self, for: indexPath)
+//                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
+//                    return drillInCell
+//
+//                }},
+//            configureSupplementaryView: { _, collectionView, kind, indexPath in
+//                return collectionView.dequeueReusableSupplementaryView(
+//                    ofKind: kind,
+//                    withReuseIdentifier: UICollectionReusableView.identifierName,
+//                    for: indexPath)
+//        })
+//        return dataSource
+//    }
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
