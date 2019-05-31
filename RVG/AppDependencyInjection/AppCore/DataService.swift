@@ -49,6 +49,8 @@ public protocol ProductDataServicing {
 //    var orgs: Observable<[Org]> { get }
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
+
+    func persistedChannels(for orgUuid: String) -> Single<[Channel]>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
@@ -211,6 +213,7 @@ enum FetchState {
 }
 
 extension DataService: ProductDataServicing {
+    
     public var orgs: Observable<[Org]> {
         switch self.networkStatus.value {
         case .notReachable:
@@ -257,20 +260,6 @@ extension DataService: ProductDataServicing {
         }
     }
     
-    public var channels: Observable<[Channel]> {
-        switch self.networkStatus.value {
-        case .notReachable:
-            DDLogDebug("DataService reachability.notReachable")
-            return _channels.asObservable()
-        case .reachable(_):
-            DDLogDebug("DataService reachability.reachable")
-            return _channels.asObservable()
-        case .unknown:
-            DDLogDebug("DataService reachability.unknown")
-            return _channels.asObservable()
-        }
-    }
-    
     public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {
         return dataStore.fetchPlaylists(for: channelUuid)
     }
@@ -296,7 +285,30 @@ extension DataService: ProductDataServicing {
             })
         }
     }
+
+    // MARK: Channels
     
+    public var channels: Observable<[Channel]> {
+        switch self.networkStatus.value {
+        case .notReachable:
+            DDLogDebug("DataService reachability.notReachable")
+            return _channels.asObservable()
+        case .reachable(_):
+            DDLogDebug("DataService reachability.reachable")
+            return _channels.asObservable()
+        case .unknown:
+            DDLogDebug("DataService reachability.unknown")
+            return _channels.asObservable()
+        }
+    }
+
+    public func persistedChannels(for orgUuid: String) -> Single<[Channel]> {
+        return dataStore.fetchChannels(for: orgUuid)
+            .do(onSuccess: { [unowned self] channels in
+                self._channels.value = channels
+            })
+    }
+
     public func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]> {
         switch self.networkStatus.value {
             
@@ -322,7 +334,6 @@ extension DataService: ProductDataServicing {
                 }
                 .do(onSuccess: { [unowned self] products in
                     self._channels.value = products
-                    //            self._persistedBooks.value = products
                 })
             //            return storedOrgs
             

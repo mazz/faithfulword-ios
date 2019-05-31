@@ -138,41 +138,41 @@ extension AppCoordinator: NavigationCoordinating {
     
     private func loadDefaultOrg() {
         
-        var orgs: [Org] = []
+        var loadedOrgs: [Org] = []
 
         self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] defaultOrgs in
             DDLogDebug("default orgs: \(defaultOrgs)")
-            orgs = self.productService.defaultOrgs.value
+            loadedOrgs = self.productService.defaultOrgs.value
 //            self.swapInMainFlow()
             switch self.networkStatus.value {
             case .notReachable:
-                DDLogDebug("orgs: \(orgs)")
-                if orgs.count == 0 {
+                DDLogDebug("orgs: \(loadedOrgs)")
+                if loadedOrgs.count == 0 {
                     DDLogDebug("⚠️ No internet and no Org found, can't do anything")
                     self.swapInNoResourceFlow()
                 } else {
-                    if let uuid: String = orgs.first?.uuid {
+                    if let uuid: String = loadedOrgs.first?.uuid {
                         self.loadChannels(for: uuid)
                     }
                 }
                 
             case .reachable(_):
-                DDLogDebug("orgs: \(orgs)")
-                if orgs.count == 0 {
+                DDLogDebug("orgs: \(loadedOrgs)")
+                if loadedOrgs.count == 0 {
                     DDLogDebug("⚠️ Internet but no Org found, can't do anything")
                     self.swapInNoResourceFlow()
                 } else {
-                    if let uuid: String = orgs.first?.uuid {
+                    if let uuid: String = loadedOrgs.first?.uuid {
                         self.loadChannels(for: uuid)
                     }
                 }
             case .unknown:
-                DDLogDebug("orgs: \(orgs)")
-                if orgs.count == 0 {
+                DDLogDebug("orgs: \(loadedOrgs)")
+                if loadedOrgs.count == 0 {
                     DDLogDebug("⚠️ No internet and no Org found, can't do anything")
                     self.swapInNoResourceFlow()
                 } else {
-                    if let uuid: String = orgs.first?.uuid {
+                    if let uuid: String = loadedOrgs.first?.uuid {
                         self.loadChannels(for: uuid)
                     }
                 }
@@ -184,39 +184,49 @@ extension AppCoordinator: NavigationCoordinating {
     }
     
     private func loadChannels(for orgUuid: String) {
-        var channels: [Channel] = []
+        var loadedChannels: [Channel] = []
+
         
-        self.productService.fetchChannels(for: orgUuid, offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] chans in
-            DDLogDebug("channels: \(channels)")
-            channels = self.productService.channels.value
-            //            self.swapInMainFlow()
+        let persistedChannels: Single<[Channel]>  = productService.persistedChannels(for: orgUuid)
+        
+        persistedChannels.subscribe(onSuccess: { persisted in
+            //            if persisted.count == 0 {
             switch self.networkStatus.value {
-            case .notReachable:
-                DDLogDebug("orgs: \(channels)")
-                if channels.count == 0 {
-                    DDLogDebug("⚠️ No internet and no channels found, can't do anything")
-                } else {
-                    self.swapInMainFlow()
-                }
-                
-            case .reachable(_):
-                DDLogDebug("orgs: \(channels)")
-                if channels.count == 0 {
-                    DDLogDebug("⚠️ Internet but no channels found, can't do anything")
-                } else {
-                    self.swapInMainFlow()
-                }
             case .unknown:
-                DDLogDebug("orgs: \(channels)")
-                if channels.count == 0 {
-                    DDLogDebug("⚠️ No internet and no channels found, can't do anything")
+                if persisted.count == 0 {
+                    DDLogError("⚠️ no channels and no network! should probably make the user aware somehow")
                 } else {
-                    self.swapInMainFlow()
+                    loadedChannels = persisted
+                    self.swapInMainFlow(channels: loadedChannels)
+                }
+            case .notReachable:
+                if persisted.count == 0 {
+                    DDLogError("⚠️ no channels and no network! should probably make the user aware somehow")
+                } else {
+                    loadedChannels = persisted
+                    self.swapInMainFlow(channels: loadedChannels)
+                }
+            case .reachable(_):
+                if persisted.count == 0 {
+                    self.productService.fetchChannels(for: orgUuid, offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] fetchedChannels in
+                        //                        DDLogDebug("chans: \(chans)")
+                        loadedChannels = fetchedChannels
+                        self.swapInMainFlow(channels: loadedChannels)
+                        DDLogDebug("loadedChannels: \(loadedChannels)")
+                        if loadedChannels.count == 0 {
+                            DDLogDebug("⚠️ Internet but no channels found, can't do anything")
+                        }
+                    }) { error in
+                        DDLogDebug("error: \(error)")
+                        }.disposed(by: self.bag)
+                } else {
+                    loadedChannels = persisted
+                    self.swapInMainFlow(channels: loadedChannels)
                 }
             }
         }) { error in
-            DDLogDebug("error: \(error)")
-            }.disposed(by: self.bag)
+            DDLogDebug("⚠️ error getting persistedChannels: \(error)")
+        }
         
     }
 
@@ -245,7 +255,7 @@ extension AppCoordinator: NavigationCoordinating {
     }
     
     /// Puts the main flow (logged in state) on top of the rootViewController.
-    private func swapInMainFlow() {
+    private func swapInMainFlow(channels: [Channel]) {
         resettableMainCoordinator.value.flow(with: { [unowned self] mainFlowViewController in
             self.rootViewController.plant(mainFlowViewController, withAnimation: AppAnimations.fade)
             }, completion: { [unowned self] _ in

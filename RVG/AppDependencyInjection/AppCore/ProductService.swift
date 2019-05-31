@@ -16,7 +16,8 @@ public protocol ProductServicing {
     func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<Void>
     func deleteDefaultOrgs() -> Single<Void>
 
-    func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<Void>
+    func persistedChannels(for orgUuid: String) -> Single<[Channel]>
+    func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     func deleteChannels() -> Single<Void>
     
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
@@ -83,9 +84,13 @@ extension ProductService: ProductServicing {
                                                     limit: limit,
                                                     cacheRule: cacheRule)
     }
-    
-    public func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<Void> {
-        return dataService.fetchAndObserveChannels(for: orgUuid, offset: offset, limit: limit).toVoid()
+
+    public func persistedChannels(for orgUuid: String) -> Single<[Channel]> {
+        return dataService.persistedChannels(for: orgUuid)
+    }
+
+    public func fetchChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]> {
+        return dataService.fetchAndObserveChannels(for: orgUuid, offset: offset, limit: limit)
     }
     
     public func deleteChannels() -> Single<Void> {

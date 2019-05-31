@@ -26,6 +26,9 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
         }
     }
     
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.selectItemEvent.onNext(indexPath)
+    }
     // MARK: View
     
     private lazy var collectionView: UICollectionView = {
@@ -60,10 +63,6 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.automaticallyAdjustsScrollViewInsets = false
-//        embedNowPlayingBar()
-//        registerReusableViews()
-//        viewModel.setupDatasource()
-//        bindToViewModel()
         view.addSubview(collectionView)
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -75,7 +74,6 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
             ])
 
         reactToViewModel()
-//        reactToContentSizeChange()
     }
     
     // MARK: Private helpers
@@ -123,45 +121,6 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
                 }
             }.disposed(by: bag)
     }
-    
-//    private func registerReusableViews() {
-//        collectionView.register(cellType: PlaylistCollectionViewCell.self)
-//    }
-
-//    private func bindToViewModel() {
-//        collectionView.rx.setDelegate(self).disposed(by: bag)
-//        viewModel.sections.asObservable()
-//            .bind(to: collectionView.rx.items(dataSource: rxDataSource()))
-//            .disposed(by: bag)
-//        collectionView.rx.itemSelected.asObservable()
-//            .subscribe(viewModel.selectItemEvent.asObserver())
-//            .disposed(by: bag)
-//
-////        viewModel.title
-////            .asObservable()
-////            .bind(to: rx.title)
-////            .disposed(by: bag)
-//    }
-
-    
-//    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel> {
-//        let dataSource = RxCollectionViewSectionedReloadDataSource<PlaylistSectionViewModel>(
-//            configureCell: { (dataSource, collectionView, indexPath, item) in
-//                switch item {
-//                case let .drillIn(_, iconName, title, showBottomSeparator):
-//                    let drillInCell = collectionView.dequeue(cellType: PlaylistCollectionViewCell.self, for: indexPath)
-//                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
-//                    return drillInCell
-//
-//                }},
-//            configureSupplementaryView: { _, collectionView, kind, indexPath in
-//                return collectionView.dequeueReusableSupplementaryView(
-//                    ofKind: kind,
-//                    withReuseIdentifier: UICollectionReusableView.identifierName,
-//                    for: indexPath)
-//        })
-//        return dataSource
-//    }
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
@@ -193,12 +152,9 @@ extension MainViewController {
 
 extension MainViewController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        DDLogDebug("scrollViewDidEndDecelerating scrollView: \(scrollView)")
         
         let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-//        DDLogDebug("offset diff: \(offsetDiff)")
         DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
-//        if scrollView.contentSize.height - scrollView.contentOffset.y <
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
@@ -207,10 +163,8 @@ extension MainViewController: UIScrollViewDelegate {
     }
     
     public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//        DDLogDebug("scrollViewDidEndDragging scrollView: \(scrollView)")
         
         let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-//        DDLogDebug("offset diff: \(offsetDiff)")
         DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {

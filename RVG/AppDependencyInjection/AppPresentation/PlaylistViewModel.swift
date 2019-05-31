@@ -33,6 +33,8 @@ final class PlaylistViewModel {
     }
     
     public func fetchMorePlaylists() {
+        // the case where are using playlists in cache/database
+        // without fetching them from the network
         if self.totalEntries != -1 && self.totalEntries <= self.playlists.value.count {
             return
         }
@@ -40,15 +42,17 @@ final class PlaylistViewModel {
         switch self.networkStatus.value {
         case .notReachable:
             DDLogDebug("PlaylistViewModel reachability.notReachable")
-            // do nothing for now
+            // possibly show an error to user
         case .reachable(_):
+            
+            // we can get playlists from server, so get them
             DDLogDebug("PlaylistViewModel reachability.reachable")
             self.fetchPlaylist(offset: lastOffset + 1,
                                limit: Constants.limit,
                                cacheRule: .fetchAndAppend)
         case .unknown:
             DDLogDebug("PlaylistViewModel reachability.unknown")
-            // do nothing for now
+            // possibly show an error to user
         }
 
     }

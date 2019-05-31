@@ -13,9 +13,10 @@ internal final class MainCoordinator: NSObject {
     // MARK: Fields
 
     private let menuTransitionManager = MenuTransitionManager()
-    internal var mainNavigationController: UINavigationController!
     private var sideMenuController: SideMenuViewController?
-
+    internal var mainNavigationController: UINavigationController!
+    internal var bibleChannelUuid: String?
+    
     private let bag = DisposeBag()
     private var deviceContextBag = DisposeBag()
     private var mainFlowCompletion: FlowCompletion!
@@ -106,7 +107,7 @@ extension MainCoordinator: NavigationCoordinating {
             
             mainNavigationController = UINavigationController(rootViewController: mainViewController)
         } else {
-            DDLogError("fatal error, need a Bible Channel! Bailing!")
+            DDLogError("⚠️ fatal error, need a Bible Channel! Bailing!")
             completion(FlowCompletionType.error)
         }
 
