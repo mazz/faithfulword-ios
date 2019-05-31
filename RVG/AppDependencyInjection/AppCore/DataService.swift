@@ -316,34 +316,23 @@ extension DataService: ProductDataServicing {
     }
 
     public func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]> {
-        switch self.networkStatus.value {
-            
-        case .unknown:
-            return self.dataStore.fetchChannels(for: orgUuid)
-        case .notReachable:
-            return self.dataStore.fetchChannels(for: orgUuid)
-        case .reachable(_):
-            let moyaResponse = self.networkingApi.rx.request(.channels(uuid: orgUuid, offset: offset, limit: limit))
-            let response: Single<ChannelResponse> = moyaResponse.map { response -> ChannelResponse in
-                do {
-                    //                    self._responseMap[bookUuid] = response
-                    let jsonObj = try response.mapJSON()
-                    DDLogDebug("jsonObj: \(jsonObj)")
-                    return try response.map(ChannelResponse.self)
-                } catch {
-                    throw DataServiceError.decodeFailed
-                }
+        let moyaResponse = self.networkingApi.rx.request(.channels(uuid: orgUuid, offset: offset, limit: limit))
+        let response: Single<ChannelResponse> = moyaResponse.map { response -> ChannelResponse in
+            do {
+                let jsonObj = try response.mapJSON()
+//                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(ChannelResponse.self)
+            } catch {
+                throw DataServiceError.decodeFailed
             }
-            return response.flatMap { [unowned self] response -> Single<[Channel]> in
-                DDLogDebug("response.result: \(response.result)")
-                return self.replacePersistedChannels(channels: response.result)
-                }
-                .do(onSuccess: { [unowned self] products in
-                    self._channels.value = products
-                })
-            //            return storedOrgs
-            
         }
+        return response.flatMap { [unowned self] response -> Single<[Channel]> in
+//            DDLogDebug("response.result: \(response.result)")
+            return self.replacePersistedChannels(channels: response.result)
+            }
+            .do(onSuccess: { [unowned self] products in
+                self._channels.value = products
+            })
     }
 
     public var books: Observable<[Book]> {
