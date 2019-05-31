@@ -13,7 +13,8 @@ public enum ProductServiceError: Error {
 
 public protocol ProductServicing {
 
-    func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<Void>
+    func persistedDefaultOrgs() -> Single<[Org]>
+    func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deleteDefaultOrgs() -> Single<Void>
 
     func persistedChannels(for orgUuid: String) -> Single<[Channel]>
@@ -97,8 +98,12 @@ extension ProductService: ProductServicing {
         return dataService.deletePersistedChannels()
     }
 
-    public func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<Void> {
-        return dataService.fetchAndObserveDefaultOrgs(offset: offset, limit: limit).toVoid()
+    public func persistedDefaultOrgs() -> Single<[Org]> {
+        return dataService.persistedDefaultOrgs()
+    }
+
+    public func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
+        return dataService.fetchAndObserveDefaultOrgs(offset: offset, limit: limit)
     }
 
     public func deleteDefaultOrgs() -> Single<Void> {

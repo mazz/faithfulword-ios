@@ -52,6 +52,8 @@ public protocol ProductDataServicing {
 
     func persistedChannels(for orgUuid: String) -> Single<[Channel]>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
+    
+    func persistedDefaultOrgs() -> Single<[Org]>
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
     func deletePersistedChannels() -> Single<Void>
@@ -226,6 +228,10 @@ extension DataService: ProductDataServicing {
             DDLogDebug("DataService reachability.unknown")
             return _orgs.asObservable()
         }
+    }
+    
+    public func persistedDefaultOrgs() -> Single<[Org]> {
+        return dataStore.fetchDefaultOrgs()
     }
 
     public func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
