@@ -98,10 +98,10 @@ extension MainCoordinator: NavigationCoordinating {
         
         var mainViewController: MainViewController!
         
-        if let bibleChannel: Channel = productService.channels.value.first(where: { $0.basename == "Bible" }) {
-            DDLogDebug("bibleChannel: \(bibleChannel)")
+        if let bibleChannelUuid: String = self.bibleChannelUuid {
+            DDLogDebug("bibleChannelUuid: \(bibleChannelUuid)")
             
-            mainViewController = appUIMaking.makeMainWithChannel(channelUuid: bibleChannel.uuid)
+            mainViewController = appUIMaking.makeMainWithChannel(channelUuid: bibleChannelUuid)
             attachRootMenuAction(to: mainViewController)
             attachSettingAction(to: mainViewController)
             

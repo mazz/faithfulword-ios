@@ -270,12 +270,22 @@ extension AppCoordinator: NavigationCoordinating {
     
     /// Puts the main flow (logged in state) on top of the rootViewController.
     private func swapInMainFlow(channels: [Channel]) {
-        resettableMainCoordinator.value.flow(with: { [unowned self] mainFlowViewController in
-            self.rootViewController.plant(mainFlowViewController, withAnimation: AppAnimations.fade)
-            }, completion: { [unowned self] _ in
-                self.swapInInitialFlow()
-                self.resettableMainCoordinator.reset()
-            }, context: .other)
+        
+        if let bibleChannel: Channel = channels.first(where: { $0.basename == "Bible" }) {
+            DDLogDebug("bibleChannel: \(bibleChannel)")
+            resettableMainCoordinator.value.bibleChannelUuid = bibleChannel.uuid
+            resettableMainCoordinator.value.flow(with: { [unowned self] mainFlowViewController in
+                self.rootViewController.plant(mainFlowViewController, withAnimation: AppAnimations.fade)
+                }, completion: { [unowned self] _ in
+                    self.swapInInitialFlow()
+                    self.resettableMainCoordinator.reset()
+                }, context: .other)
+        } else {
+            DDLogError("⚠️ fatal error, need a Bible Channel! Bailing!")
+            self.swapInNoResourceFlow()
+        }
+
+        
     }
     
     /// Puts the splash screen flow on top of the rootViewController, and animates the
