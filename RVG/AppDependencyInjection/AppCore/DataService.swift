@@ -118,7 +118,7 @@ public final class DataService {
         self.reachability = reachability
 
         reactToReachability()
-        loadInMemoryCache()
+//        loadInMemoryCache()
     }
 
     // MARK: Helpers
@@ -232,38 +232,29 @@ extension DataService: ProductDataServicing {
     
     public func persistedDefaultOrgs() -> Single<[Org]> {
         return dataStore.fetchDefaultOrgs()
+            .do(onSuccess: { [unowned self] orgs in
+                self._orgs.value = orgs
+            })
     }
 
     public func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
-        switch self.networkStatus.value {
-            
-        case .unknown:
-            return self.dataStore.fetchDefaultOrgs()
-        case .notReachable:
-            return self.dataStore.fetchDefaultOrgs()
-        case .reachable(_):
-            let moyaResponse = self.networkingApi.rx.request(.defaultOrgs(offset: offset, limit: limit))
-            let response: Single<OrgResponse> = moyaResponse.map { response -> OrgResponse in
-                do {
-//                    self._responseMap[bookUuid] = response
-                    let jsonObj = try response.mapJSON()
-                    DDLogDebug("jsonObj: \(jsonObj)")
-                    return try response.map(OrgResponse.self)
-                } catch {
-                    throw DataServiceError.decodeFailed
-                }
+        let moyaResponse = self.networkingApi.rx.request(.defaultOrgs(offset: offset, limit: limit))
+        let response: Single<OrgResponse> = moyaResponse.map { response -> OrgResponse in
+            do {
+                let jsonObj = try response.mapJSON()
+//                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(OrgResponse.self)
+            } catch {
+                throw DataServiceError.decodeFailed
             }
-            return response.flatMap { [unowned self] response -> Single<[Org]> in
-                DDLogDebug("response.result: \(response.result)")
-                return self.replacePersistedDefaultOrgs(orgs: response.result)
+        }
+        return response.flatMap { [unowned self] response -> Single<[Org]> in
+//            DDLogDebug("response.result: \(response.result)")
+            return self.replacePersistedDefaultOrgs(orgs: response.result)
             }
             .do(onSuccess: { [unowned self] products in
                 self._orgs.value = products
-                //            self._persistedBooks.value = products
             })
-//            return storedOrgs
-            
-        }
     }
     
     public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {

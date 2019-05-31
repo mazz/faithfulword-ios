@@ -139,48 +139,58 @@ extension AppCoordinator: NavigationCoordinating {
     private func loadDefaultOrg() {
         
         var loadedOrgs: [Org] = []
+        
+        let persistedOrgs: Single<[Org]>  = productService.persistedDefaultOrgs()
 
-        self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] defaultOrgs in
-            DDLogDebug("default orgs: \(defaultOrgs)")
-            loadedOrgs = self.productService.defaultOrgs.value
-//            self.swapInMainFlow()
+        persistedOrgs.subscribe(onSuccess: { persisted in
             switch self.networkStatus.value {
-            case .notReachable:
-                DDLogDebug("orgs: \(loadedOrgs)")
-                if loadedOrgs.count == 0 {
-                    DDLogDebug("⚠️ No internet and no Org found, can't do anything")
-                    self.swapInNoResourceFlow()
-                } else {
-                    if let uuid: String = loadedOrgs.first?.uuid {
-                        self.loadChannels(for: uuid)
-                    }
-                }
-                
-            case .reachable(_):
-                DDLogDebug("orgs: \(loadedOrgs)")
-                if loadedOrgs.count == 0 {
-                    DDLogDebug("⚠️ Internet but no Org found, can't do anything")
-                    self.swapInNoResourceFlow()
-                } else {
-                    if let uuid: String = loadedOrgs.first?.uuid {
-                        self.loadChannels(for: uuid)
-                    }
-                }
             case .unknown:
-                DDLogDebug("orgs: \(loadedOrgs)")
-                if loadedOrgs.count == 0 {
+                if persisted.count == 0 {
                     DDLogDebug("⚠️ No internet and no Org found, can't do anything")
                     self.swapInNoResourceFlow()
                 } else {
+                    loadedOrgs = persisted
+                    if let uuid: String = loadedOrgs.first?.uuid {
+                        self.loadChannels(for: uuid)
+                    }
+                }
+            case .notReachable:
+                if persisted.count == 0 {
+                    DDLogDebug("⚠️ No internet and no Org found, can't do anything")
+                    self.swapInNoResourceFlow()
+                } else {
+                    loadedOrgs = persisted
+                    if let uuid: String = loadedOrgs.first?.uuid {
+                        self.loadChannels(for: uuid)
+                    }
+                }
+            case .reachable(_):
+                if persisted.count == 0 {
+                    self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] fetchedOrgs in
+                        loadedOrgs = fetchedOrgs
+                        DDLogDebug("loadedOrgs: \(loadedOrgs)")
+                        if loadedOrgs.count == 0 {
+                            DDLogDebug("⚠️ No internet and no Org found, can't do anything")
+                            self.swapInNoResourceFlow()
+                        } else {
+                            if let uuid: String = loadedOrgs.first?.uuid {
+                                self.loadChannels(for: uuid)
+                            }
+                        }
+                    }) { error in
+                        DDLogDebug("error: \(error)")
+                        }.disposed(by: self.bag)
+                } else {
+                    loadedOrgs = persisted
                     if let uuid: String = loadedOrgs.first?.uuid {
                         self.loadChannels(for: uuid)
                     }
                 }
             }
         }) { error in
-            DDLogDebug("error: \(error)")
-        }.disposed(by: self.bag)
-
+            DDLogDebug("⚠️ error getting persistedDefaultOrgs: \(error)")
+            self.swapInNoResourceFlow()
+        }
     }
     
     private func loadChannels(for orgUuid: String) {
@@ -195,6 +205,7 @@ extension AppCoordinator: NavigationCoordinating {
             case .unknown:
                 if persisted.count == 0 {
                     DDLogError("⚠️ no channels and no network! should probably make the user aware somehow")
+                    self.swapInNoResourceFlow()
                 } else {
                     loadedChannels = persisted
                     self.swapInMainFlow(channels: loadedChannels)
@@ -202,6 +213,7 @@ extension AppCoordinator: NavigationCoordinating {
             case .notReachable:
                 if persisted.count == 0 {
                     DDLogError("⚠️ no channels and no network! should probably make the user aware somehow")
+                    self.swapInNoResourceFlow()
                 } else {
                     loadedChannels = persisted
                     self.swapInMainFlow(channels: loadedChannels)
@@ -215,6 +227,7 @@ extension AppCoordinator: NavigationCoordinating {
                         DDLogDebug("loadedChannels: \(loadedChannels)")
                         if loadedChannels.count == 0 {
                             DDLogDebug("⚠️ Internet but no channels found, can't do anything")
+                            self.swapInNoResourceFlow()
                         }
                     }) { error in
                         DDLogDebug("error: \(error)")
@@ -226,6 +239,7 @@ extension AppCoordinator: NavigationCoordinating {
             }
         }) { error in
             DDLogDebug("⚠️ error getting persistedChannels: \(error)")
+            self.swapInNoResourceFlow()
         }
         
     }
