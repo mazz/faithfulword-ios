@@ -55,6 +55,7 @@
 		4C5FAD772037AEE600397BFF /* RadioListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD762037AEE600397BFF /* RadioListViewController.swift */; };
 		4C5FAD792037B04200397BFF /* UIViewController+Alerting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */; };
 		4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */; };
+		4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */; };
 		4C78CEC4227F6771006FB8CB /* FwbcApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CEC3227F6771006FB8CB /* FwbcApiService.swift */; };
 		4C78CEC6227F6DC8006FB8CB /* ExtentionsAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C78CEC5227F6DC8006FB8CB /* ExtentionsAll.swift */; };
 		4C78CED022876D22006FB8CB /* MediaItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C78CECF22876D22006FB8CB /* MediaItemCell.xib */; };
@@ -248,6 +249,8 @@
 		4C5FAD762037AEE600397BFF /* RadioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioListViewController.swift; sourceTree = "<group>"; };
 		4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerting.swift"; sourceTree = "<group>"; };
 		4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
+		4C6D8E4322A21FD80025DA28 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoProviding.swift; sourceTree = "<group>"; };
 		4C78CEC3227F6771006FB8CB /* FwbcApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FwbcApiService.swift; sourceTree = "<group>"; };
 		4C78CEC5227F6DC8006FB8CB /* ExtentionsAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtentionsAll.swift; sourceTree = "<group>"; };
 		4C78CECF22876D22006FB8CB /* MediaItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaItemCell.xib; sourceTree = "<group>"; };
@@ -449,6 +452,7 @@
 		1B0B08D6C53FEED03CFF156F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C6D8E4322A21FD80025DA28 /* WebKit.framework */,
 				4C2503952168686C0069AB49 /* Security.framework */,
 				4CBE0F5121605CA400646F76 /* QuartzCore.framework */,
 				4C958E98208D3D6500A71C59 /* LNPopupController.framework */,
@@ -518,6 +522,7 @@
 				4CCE8C641FF4B06200AFBAF2 /* AppCoordinator.swift */,
 				4CCE8C661FF4B07700AFBAF2 /* AppDependencyModule.swift */,
 				4CCE8C991FF5579200AFBAF2 /* AppInfoProviding.swift */,
+				4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */,
 				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
 				4C8EE8C31FF6010F003F483A /* DataService.swift */,
 				4C250391216867050069AB49 /* DownloadDataService.swift */,
@@ -1260,6 +1265,7 @@
 				4C7EB87C228B8EA8000E8DAB /* EnvironmentUrlItemKey.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
 				4C7EB895228B8EA8000E8DAB /* LanguagesSupportedResponse.swift in Sources */,
+				4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */,
 				4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */,
 				4C958E9D2090242100A71C59 /* PopupContentController.swift in Sources */,
 				4CA31F9E2009E76700A94101 /* MediaListingViewModel.swift in Sources */,

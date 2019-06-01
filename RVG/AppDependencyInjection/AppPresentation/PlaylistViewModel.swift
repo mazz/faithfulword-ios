@@ -90,7 +90,7 @@ final class PlaylistViewModel {
         reactToReachability()
 
         networkStatus.asObservable()
-            .observeOn(MainScheduler.instance)
+//            .observeOn(MainScheduler.instance)
             .map({ status -> String in
                 
                 var outStatus: String = "unknown"

@@ -24,6 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 //        DDLog.add(DDOSLogger.sharedInstance)
+        
+        setupDeviceInfoCache()
+        
         DDLog.add(DDTTYLogger.sharedInstance)
         DDTTYLogger.sharedInstance.colorsEnabled = true
 
@@ -52,6 +55,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
 
         return true
+    }
+    
+    private func setupDeviceInfoCache() {
+        let deviceInfo = dependencyModule.resolver.resolve(DeviceInfoProviding.self)!
+        UserDefaults.standard.set(deviceInfo.userAgent, forKey: "device_user_agent")
     }
     
     func optInForPushNotifications(application: UIApplication) {
@@ -119,12 +127,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if let firebaseToken = Messaging.messaging().fcmToken {
             DDLogDebug("FCM token: \(firebaseToken)")
 
+            let deviceInfo = dependencyModule.resolver.resolve(DeviceInfoProviding.self)!
+
             if let apnsToken = Messaging.messaging().apnsToken {
                 let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
                 self.updatePushToken(fcmToken: firebaseToken,
                                      apnsToken: apnsTokenString,
                                      preferredLanguage: L10n.shared.preferredLanguage,
-                                     userAgent: Device.userAgent(), userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, userUuid: NSUUID().uuidString)
+                                     userAgent: deviceInfo.userAgent, userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, userUuid: NSUUID().uuidString)
             }
         }
     }
@@ -304,10 +314,13 @@ extension AppDelegate {
         DDLogDebug("Firebase didRefreshRegistrationToken token: \(fcmToken)")
         if let apnsToken = Messaging.messaging().apnsToken {
             let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
+            
+            let deviceInfo = dependencyModule.resolver.resolve(DeviceInfoProviding.self)!
+
             self.updatePushToken(fcmToken: fcmToken,
                                  apnsToken: apnsTokenString,
                                  preferredLanguage: L10n.shared.preferredLanguage,
-                                 userAgent: Device.userAgent(),
+                                 userAgent: deviceInfo.userAgent,
                                  userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String,
                                  // TODO: cache User.uuid in product or a session service
                                  userUuid: NSUUID().uuidString)

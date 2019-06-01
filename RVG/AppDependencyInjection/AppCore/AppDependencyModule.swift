@@ -84,6 +84,10 @@ internal final class AppDependencyModule {
             AppInfoProvider()
         }
 
+        container.register(DeviceInfoProviding.self) { _ in
+            DeviceInfoProvider()
+        }
+
         container.register(AssetPlaybackManager.self) { resolver in
             AssetPlaybackManager()
             }.inObjectScope(.container)

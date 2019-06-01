@@ -120,7 +120,7 @@ internal final class MediaListingViewModel {
         reactToReachability()
         
         networkStatus.asObservable()
-            .observeOn(MainScheduler.instance)
+//            .observeOn(MainScheduler.instance)
             .map({ status -> String in
                 
                 var outStatus: String = "unknown"

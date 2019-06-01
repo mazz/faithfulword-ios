@@ -399,8 +399,12 @@ extension FwbcApiService: TargetType {
     }
     
     public var headers: [String: String]? {
+        var deviceUserAgent: String = ""
+        if let ua: String = UserDefaults.standard.object(forKey: "device_user_agent") as? String {
+            deviceUserAgent = ua
+        }
         return ["Content-type": "application/json",
-                "User-Agent": Device.userAgent()]
+                "User-Agent": deviceUserAgent]
     }
     
     // Helper
