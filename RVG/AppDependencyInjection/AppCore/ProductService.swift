@@ -26,6 +26,13 @@ public protocol ProductServicing {
                         offset: Int,
                         limit: Int,
                         cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
+
+    func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
+    func fetchMediaItems(for playlistUuid: String,
+                        offset: Int,
+                        limit: Int,
+                        cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])>
+
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
     var defaultOrgs: Field<[Org]> { get }
@@ -71,6 +78,21 @@ public final class ProductService {
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
+    
+    public func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]> {
+        return dataService.persistedMediaItems(for: playlistUuid)
+    }
+    
+    public func fetchMediaItems(for playlistUuid: String,
+                         offset: Int,
+                         limit: Int,
+                         cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])> {
+        return dataService.fetchAndObserveMediaItems(for: playlistUuid,
+                                                    offset: offset,
+                                                    limit: limit,
+                                                    cacheRule: cacheRule)
+    }
+
     
     public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {
         return dataService.persistedPlaylists(for: channelUuid)

@@ -155,6 +155,24 @@ extension MainCoordinator: NavigationCoordinating {
 
     private func goToPlaylist(for playlistUuid: String) {
         DDLogDebug("goToPlaylist: \(playlistUuid)")
+        // do not use a new flow, because Chapters is part of the Book flow AFAICT
+        //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
+        
+        self.resettableMediaListingCoordinator.value.playlistId = playlistUuid
+        self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
+        self.resettableMediaListingCoordinator.value.flow(with: { viewController in
+            
+            self.mainNavigationController.pushViewController(
+                viewController,
+                animated: true
+            )
+            //            self.mainNavigationController.present(viewController, animated: true)
+        }, completion: { _ in
+            self.mainNavigationController.dismiss(animated: true)
+            self.resettableMediaListingCoordinator.reset()
+            //            self.resettableSplashScreenCoordinator.reset()
+            
+        }, context: .push(onto: self.mainNavigationController))
     }
     
     private func goToBook(for bookUuid: String) {

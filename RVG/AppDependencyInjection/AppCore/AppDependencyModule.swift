@@ -229,10 +229,11 @@ internal final class AppDependencyModule {
 
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaType in
             MediaListingViewModel(
-                playlistId: playlistId,
+                playlistUuid: playlistId,
                 mediaType: mediaType,
                 productService: resolver.resolve(ProductServicing.self)!,
-                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
 //                assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!,
 //                remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!
             )

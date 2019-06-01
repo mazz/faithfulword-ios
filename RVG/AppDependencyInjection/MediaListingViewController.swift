@@ -27,6 +27,10 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         }
     }
 
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.selectItemEvent.onNext(indexPath)
+    }
+
     // MARK: View
     
 //    @IBOutlet weak var collectionView: UICollectionView!

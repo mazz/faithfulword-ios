@@ -46,7 +46,10 @@ public protocol AccountDataServicing {
 
 /// Provides product related data to the app
 public protocol ProductDataServicing {
-//    var orgs: Observable<[Org]> { get }
+
+    func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
+    func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])>
+
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
 
@@ -245,6 +248,7 @@ extension DataService: ProductDataServicing {
 //                DDLogDebug("jsonObj: \(jsonObj)")
                 return try response.map(OrgResponse.self)
             } catch {
+                DDLogError("Moya decode error: \(error)")
                 throw DataServiceError.decodeFailed
             }
         }
@@ -256,6 +260,38 @@ extension DataService: ProductDataServicing {
                 self._orgs.value = products
             })
     }
+    
+    
+    // MARK: MediaItems
+    
+    public func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]> {
+        return dataStore.fetchMediaItems(for: playlistUuid)
+    }
+    
+    public func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])> {
+        let moyaResponse = self.networkingApi.rx.request(.mediaItems(uuid: playlistUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
+        let response: Single<MediaItemResponse> = moyaResponse.map { response -> MediaItemResponse in
+            do {
+                                let jsonObj = try response.mapJSON()
+                                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(MediaItemResponse.self)
+            } catch {
+                DDLogError("Moya decode error: \(error)")
+                throw DataServiceError.decodeFailed
+            }
+        }
+        
+        return response.flatMap { [unowned self] response -> Single<(MediaItemResponse, [MediaItem])> in
+            let mediaItems: Single<[MediaItem]> = self.appendPersistedMediaItems(mediaItems: response.result) //appendPersistedPlaylists(playlists: response.result)
+            return mediaItems.map({ items -> (MediaItemResponse, [MediaItem]) in
+                let tuple: (MediaItemResponse, [MediaItem]) = (response, items)
+                return tuple
+            })
+        }
+
+    }
+    
+    // MARK: Playlists
     
     public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {
         return dataStore.fetchPlaylists(for: channelUuid)
@@ -270,6 +306,7 @@ extension DataService: ProductDataServicing {
 //                DDLogDebug("jsonObj: \(jsonObj)")
                 return try response.map(PlaylistResponse.self)
             } catch {
+                DDLogError("Moya decode error: \(error)")
                 throw DataServiceError.decodeFailed
             }
         }
@@ -314,6 +351,7 @@ extension DataService: ProductDataServicing {
 //                DDLogDebug("jsonObj: \(jsonObj)")
                 return try response.map(ChannelResponse.self)
             } catch {
+                DDLogError("Moya decode error: \(error)")
                 throw DataServiceError.decodeFailed
             }
         }
@@ -709,6 +747,7 @@ extension DataService: ProductDataServicing {
                         self._responseMap["languagesResponse"] = response
                         return try response.map(LanguagesSupportedResponse.self)
                     } catch {
+                        DDLogError("Moya decode error: \(error)")
                         throw DataServiceError.decodeFailed
                     }
                 }.flatMap { languagesSupportedResponse -> Single<[LanguageIdentifier]> in
@@ -946,6 +985,24 @@ extension DataService: ProductDataServicing {
         return self.dataStore.deleteChannels()
     }
 
+    // MediaItems ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+    private func appendPersistedMediaItems(mediaItems: [MediaItem]) -> Single<[MediaItem]> {
+        return self.dataStore.addMediaItems(items: mediaItems)
+    }
+    
+    private func replacePersistedMediaItems(mediaItems: [MediaItem]) -> Single<[MediaItem]> {
+        return dataStore.deleteMediaItems()
+            .flatMap { [unowned self] _ in
+                self.dataStore.addMediaItems(items: mediaItems)
+        }
+    }
+    
+    public func deletePersistedMediaItems() -> Single<Void> {
+        return self.dataStore.deleteMediaItems()
+    }
+
+    
     // Playlists ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     private func appendPersistedPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {

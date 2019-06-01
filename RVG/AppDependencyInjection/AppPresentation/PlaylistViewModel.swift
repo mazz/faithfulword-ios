@@ -83,12 +83,12 @@ final class PlaylistViewModel {
         self.channelUuid = channelUuid
         self.productService = productService
         self.reachability = reachability
-        reactToReachability()
         setupDataSource()
     }
     
     func setupDataSource() {
-        
+        reactToReachability()
+
         self.playlists.asObservable()
             .map { $0.map {
                 var icon: String = "feetprint"

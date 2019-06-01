@@ -18,6 +18,10 @@ public protocol DataStoring {
     func addPlaylists(playlists: [Playlist]) -> Single<[Playlist]>
     func deletePlaylists() -> Single<Void>
 
+    func fetchMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
+    func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]>
+    func deleteMediaItems() -> Single<Void>
+
     func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -152,6 +156,7 @@ public final class DataStore {
                 try db.create(table: "mediaitem") { mediaItemTable in
                     DDLogDebug("created: \(mediaItemTable)")
                     mediaItemTable.column("contentProviderLink", .text)
+                    mediaItemTable.column("hashId", .text)
                     mediaItemTable.column("insertedAt", .double)
                     mediaItemTable.column("ipfsLink", .text)
                     mediaItemTable.column("languageId", .text)
@@ -164,6 +169,7 @@ public final class DataStore {
                     mediaItemTable.column("path", .text)
                     mediaItemTable.column("playlistUuid", .text)
                     mediaItemTable.column("presentedAt", .double)
+                    mediaItemTable.column("presenterName", .text)
                     mediaItemTable.column("publishedAt", .double)
                     mediaItemTable.column("smallThumbnailPath", .text)
                     mediaItemTable.column("sourceMaterial", .text)
@@ -544,6 +550,63 @@ extension DataStore: DataStoring {
         }
     }
     
+    // MARK: MediaItems
+    public func fetchMediaItems(for playlistUuid: String) -> Single<[MediaItem]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetched: [MediaItem] = []
+                try self.dbPool.read { db in
+                    fetched = try MediaItem.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
+                }
+                single(.success(fetched))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
+    public func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    if let user = try User.fetchOne(db) {
+                    for mediaItem in items {
+                        DDLogDebug("mediaItem: \(mediaItem)")
+                        //            try! self.dbQueue.inDatabase { db in
+                        var storeMediaItem: MediaItem = mediaItem
+                        //                            storeLang.userId = user.userId
+                        try storeMediaItem.insert(db)
+                    }
+                    //                    }
+                    return .commit
+                }
+                single(.success(items))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func deleteMediaItems() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try MediaItem.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+
     //MARK: User
     
     public func addUser(session: String) -> Single<String> {
@@ -790,21 +853,21 @@ extension DataStore: DataStoring {
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let book = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
                         DDLogDebug("found chapter book: \(book)")
-                        for chapter in chapters {
-                            var mediaChapter = MediaChapter(uuid: chapter.uuid,
-                                                            localizedName: chapter.localizedName,
-                                                            path: chapter.path,
-                                                            presenterName: chapter.presenterName,
-                                                            sourceMaterial: chapter.sourceMaterial,
-                                                            categoryUuid: book.categoryUuid,
-                                                            trackNumber: chapter.trackNumber,
-                                                            createdAt: chapter.createdAt,
-                                                            updatedAt: chapter.updatedAt,
-                                                            largeThumbnailPath: chapter.largeThumbnailPath,
-                                                            smallThumbnailPath: chapter.smallThumbnailPath
-                            )
-                            try mediaChapter.insert(db)
-                        }
+//                        for chapter in chapters {
+//                            var mediaChapter = MediaChapter(uuid: chapter.uuid,
+//                                                            localizedName: chapter.localizedName,
+//                                                            path: chapter.path,
+//                                                            presenterName: chapter.presenterName,
+//                                                            sourceMaterial: chapter.sourceMaterial,
+//                                                            categoryUuid: book.categoryUuid,
+//                                                            trackNumber: chapter.trackNumber,
+//                                                            createdAt: chapter.createdAt,
+//                                                            updatedAt: chapter.updatedAt,
+//                                                            largeThumbnailPath: chapter.largeThumbnailPath,
+//                                                            smallThumbnailPath: chapter.smallThumbnailPath
+//                            )
+//                            try mediaChapter.insert(db)
+//                        }
                     }
                     return .commit
                 }
@@ -872,21 +935,21 @@ extension DataStore: DataStoring {
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let gospel = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         DDLogDebug("found gospel: \(gospel)")
-                        for media in mediaGospel {
-                            var mediaGospel = MediaGospel(uuid: media.uuid,
-                                                          localizedName: media.localizedName,
-                                                          path: media.path,
-                                                          presenterName: media.presenterName,
-                                                          sourceMaterial: media.sourceMaterial,
-                                                          categoryUuid: gospel.categoryUuid,
-                                                          trackNumber: media.trackNumber,
-                                                          createdAt: media.createdAt,
-                                                          updatedAt: media.updatedAt,
-                                                          largeThumbnailPath: media.largeThumbnailPath,
-                                                          smallThumbnailPath: media.smallThumbnailPath
-                            )
-                            try mediaGospel.insert(db)
-                        }
+//                        for media in mediaGospel {
+//                            var mediaGospel = MediaGospel(uuid: media.uuid,
+//                                                          localizedName: media.localizedName,
+//                                                          path: media.path,
+//                                                          presenterName: media.presenterName,
+//                                                          sourceMaterial: media.sourceMaterial,
+//                                                          categoryUuid: gospel.categoryUuid,
+//                                                          trackNumber: media.trackNumber,
+//                                                          createdAt: media.createdAt,
+//                                                          updatedAt: media.updatedAt,
+//                                                          largeThumbnailPath: media.largeThumbnailPath,
+//                                                          smallThumbnailPath: media.smallThumbnailPath
+//                            )
+//                            try mediaGospel.insert(db)
+//                        }
                     }
                     return .commit
                 }
@@ -951,21 +1014,21 @@ extension DataStore: DataStoring {
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let music = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         DDLogDebug("found music: \(music)")
-                        for media in mediaMusic {
-                            var mediaMusic = MediaMusic(uuid: media.uuid,
-                                                        localizedName: media.localizedName,
-                                                        path: media.path,
-                                                        presenterName: media.presenterName,
-                                                        sourceMaterial: media.sourceMaterial,
-                                                        categoryUuid: music.categoryUuid,
-                                                        trackNumber: media.trackNumber,
-                                                        createdAt: media.createdAt,
-                                                        updatedAt: media.updatedAt,
-                                                        largeThumbnailPath: media.largeThumbnailPath,
-                                                        smallThumbnailPath: media.smallThumbnailPath
-                            )
-                            try mediaMusic.insert(db)
-                        }
+//                        for media in mediaMusic {
+//                            var mediaMusic = MediaMusic(uuid: media.uuid,
+//                                                        localizedName: media.localizedName,
+//                                                        path: media.path,
+//                                                        presenterName: media.presenterName,
+//                                                        sourceMaterial: media.sourceMaterial,
+//                                                        categoryUuid: music.categoryUuid,
+//                                                        trackNumber: media.trackNumber,
+//                                                        createdAt: media.createdAt,
+//                                                        updatedAt: media.updatedAt,
+//                                                        largeThumbnailPath: media.largeThumbnailPath,
+//                                                        smallThumbnailPath: media.smallThumbnailPath
+//                            )
+//                            try mediaMusic.insert(db)
+//                        }
                     }
                     return .commit
                 }
@@ -1193,24 +1256,43 @@ extension DataStore: DataStoring {
                             var newPosition: Double = Double(position)
                             newPosition = newPosition - 5
                             if newPosition < Double(0) { newPosition = Double(0) }
-
-                            var newAction: UserActionPlayable = UserActionPlayable(userActionPlayableId: nil,
-                                                                                   uuid: UUID().uuidString,
-                                                                                   categoryUuid: playable.categoryUuid,
-                                                                                   playableUuid: playable.uuid,
+                            
+                            let newAction: UserActionPlayable = UserActionPlayable(uuid: UUID().uuidString,
+                                                                                   hashId: playable.hashId,
+                                                                                   playableUuid: playable.playlistUuid,
                                                                                    playablePath: playable.path ?? nil,
-                                                                                   createdAt: Date().timeIntervalSince1970,
-                                                                                   updatedAt: Date().timeIntervalSince1970,
+                                                                                   updatedAt: playable.updatedAt ?? nil,
                                                                                    playbackPosition: Double(newPosition),
                                                                                    downloaded: downloaded,
-                                                                                   localizedName: playable.localizedName ?? nil,
-                                                                                   path: playablePath,
-                                                                                   presenterName: playable.presenterName ?? nil,
-                                                                                   sourceMaterial: playable.sourceMaterial ?? nil,
-                                                                                   trackNumber: playable.trackNumber ?? nil,
+                                                                                   insertedAt: playable.insertedAt,
                                                                                    largeThumbnailPath: playable.largeThumbnailPath ?? nil,
-                                                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil
-                            )
+                                                                                   localizedname: playable.localizedname,
+                                                                                   mediaCategory: playable.mediaCategory,
+                                                                                   path: playablePath,
+                                                                                   playlistUuid: playable.playlistUuid,
+                                                                                   presenterName: playable.presenterName ?? nil,
+                                                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil,
+                                                                                   medThumbnailPath: playable.medThumbnailPath ?? nil,
+                                                                                   sourceMaterial: playable.sourceMaterial ?? nil,
+                                                                                   trackNumber: playable.trackNumber ?? nil)
+
+//                            var newAction: UserActionPlayable = UserActionPlayable(userActionPlayableId: nil,
+//                                                                                   uuid: UUID().uuidString,
+//                                                                                   categoryUuid: playable.playlistUuid,
+//                                                                                   playableUuid: playable.uuid,
+//                                                                                   playablePath: playable.path ?? nil,
+//                                                                                   createdAt: Date().timeIntervalSince1970,
+//                                                                                   updatedAt: Date().timeIntervalSince1970,
+//                                                                                   playbackPosition: Double(newPosition),
+//                                                                                   downloaded: downloaded,
+//                                                                                   localizedName: playable.localizedname,
+//                                                                                   path: playablePath,
+//                                                                                   presenterName: playable.presenterName ?? nil,
+//                                                                                   sourceMaterial: playable.sourceMaterial ?? nil,
+//                                                                                   trackNumber: playable.trackNumber ?? nil,
+//                                                                                   largeThumbnailPath: playable.largeThumbnailPath ?? nil,
+//                                                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil
+//                            )
                             try newAction.insert(db)
                         }
                         

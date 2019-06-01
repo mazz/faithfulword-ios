@@ -56,10 +56,10 @@ extension MediaListingCoordinator: NavigationCoordinating {
             // assignment and loading of the historyPlayable
             popupController.playbackViewModel.selectedPlayable.value = playable
 
-            if let localizedName = playable.localizedName,
+
 //                let presenterName = playable.presenterName,
-                let thumbImage = UIImage(named: "creation") {
-                popupController.popupItem.title = localizedName
+            if let thumbImage = UIImage(named: "creation") {
+                popupController.popupItem.title = playable.localizedname
                 popupController.popupItem.subtitle = playable.presenterName ?? "Unknown"
                 popupController.popupItem.image = thumbImage
                 //                popupController.albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
@@ -84,9 +84,9 @@ extension MediaListingCoordinator: NavigationCoordinating {
     func goToPlayback(for playable: Playable) {
         DDLogDebug("goToPlayback playable: \(playable)")
 
-        guard let _ = playable.localizedName
+//        guard let _ = playable.localizedName
 //            let _ = playable.presenterName
-            else { return }
+//            else { return }
 
         self.resettablePlaybackCoordinator.value.navigationController = self.navigationController!
 

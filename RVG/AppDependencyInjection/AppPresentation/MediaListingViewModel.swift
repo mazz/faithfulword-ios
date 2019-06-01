@@ -1,6 +1,10 @@
 import Foundation
 import RxSwift
 
+private struct Constants {
+    static let limit: Int = 100
+}
+
 internal final class MediaListingViewModel {
     // MARK: Fields
 
@@ -47,31 +51,65 @@ internal final class MediaListingViewModel {
 
     public func fetchMoreMedia() {
         DDLogDebug("fetchMoreMedia")
-        fetchMedia(stride: 100)
-//        productService.fetchBooks(offset: self.sections.value[0].items.count, limit: 50).asObservable()
-//            .subscribeAndDispose(by: self.bag)
+        // the case where are using playlists in cache/database
+        // without fetching them from the network
+        if self.totalEntries != -1 && self.totalEntries <= self.media.value.count {
+            return
+        }
+        
+        switch self.networkStatus.value {
+        case .notReachable:
+            DDLogDebug("MediaListingViewModel reachability.notReachable")
+        // possibly show an error to user
+        case .reachable(_):
+            
+            // we can get playlists from server, so get them
+            DDLogDebug("MediaListingViewModel reachability.reachable")
+            self.fetchMedia(offset: self.lastOffset + 1,
+                            limit: Constants.limit,
+                            cacheRule: .fetchAndAppend)
+        case .unknown:
+            DDLogDebug("MediaListingViewModel reachability.unknown")
+            // possibly show an error to user
+        }
     }
 
     // MARK: Dependencies
-    private let playlistId: String!
+    private let playlistUuid: String!
     private let mediaType: MediaType!
     private let productService: ProductServicing!
     private let assetPlaybackService: AssetPlaybackServicing!
+    private let reachability: RxClassicReachable!
+
 //    private let assetPlaybackManager: AssetPlaybackManager!
 //    private let remoteCommandManager: RemoteCommandManager!
+    // MARK: Fields
+    
+    private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
+    
+    private var totalEntries: Int = -1
+    private var totalPages: Int = -1
+    private var pageSize: Int = -1
+    private var pageNumber: Int = -1
+    
+    private var lastOffset: Int = 0
+
     private let bag = DisposeBag()
 
-    internal init(playlistId: String,
+    internal init(playlistUuid: String,
                   mediaType: MediaType,
                   productService: ProductServicing,
-                  assetPlaybackService: AssetPlaybackServicing)
+                  assetPlaybackService: AssetPlaybackServicing,
+                  reachability: RxClassicReachable)
 //        assetPlaybackManager: AssetPlaybackManager,
 //        remoteCommandManager: RemoteCommandManager)
     {
-        self.playlistId = playlistId
+        self.playlistUuid = playlistUuid
         self.mediaType = mediaType
         self.productService = productService
+        self.reachability = reachability
         self.assetPlaybackService = assetPlaybackService
+        
 //        self.assetPlaybackManager = assetPlaybackManager
 //        self.remoteCommandManager = remoteCommandManager
 
@@ -79,6 +117,8 @@ internal final class MediaListingViewModel {
     }
 
     private func setupDatasource() {
+        reactToReachability()
+
         self.media.asObservable()
             .map { $0.map {
                 let icon: String!
@@ -101,7 +141,7 @@ internal final class MediaListingViewModel {
                     presenter = presenterName
                 }
                 
-                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedName!, presenter: presenter, showBottomSeparator: true) }
+                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true) }
             }
             .next { [unowned self] names in
                 self.sections.value = [
@@ -109,36 +149,58 @@ internal final class MediaListingViewModel {
                 ]
             }.disposed(by: bag)
         
-        fetchMedia(stride: 100)
+        productService.persistedMediaItems(for: self.playlistUuid).subscribe(onSuccess: { [unowned self] persistedMediaItems in
+            if persistedMediaItems.count == 0 {
+                switch self.networkStatus.value {
+                case .unknown:
+                    DDLogError("⚠️ no persistedMediaItems and no network! should probably make the user aware somehow")
+                case .notReachable:
+                    DDLogError("⚠️ no persistedMediaItems and no network! should probably make the user aware somehow")
+                case .reachable(_):
+                    self.fetchMedia(offset: self.lastOffset + 1, limit: Constants.limit, cacheRule: .fetchAndAppend)
+                }
+            } else {
+                self.media.value = persistedMediaItems
+                self.lastOffset += 1
+            }
+        }) { error in
+            DDLogDebug("error getting persistedMediaItems: \(error)")
+
+        }.disposed(by: self.bag)
     }
     
-    func fetchMedia(stride: Int) {
-        switch self.mediaType {
-        case .audioChapter?:
-            self.productService.fetchChapters(for: self.playlistId, stride: 100).subscribe(onSuccess: { chapters in
-                self.media.value = chapters
-                self.assetPlaybackService.playables.value = self.media.value
-            }, onError: { error in
-                DDLogDebug("audioChapter failed with error: \(error.localizedDescription)")
+    func fetchMedia(offset: Int, limit: Int, cacheRule: CacheRule) {
+        productService.fetchMediaItems(for: playlistUuid, offset: offset, limit: limit, cacheRule: cacheRule).subscribe(onSuccess: { (mediaItemResponse, mediaItems) in
+            DDLogDebug("fetchMediaItems: \(mediaItems)")
+            self.media.value.append(contentsOf: mediaItems)
+            self.totalEntries = mediaItemResponse.totalEntries
+            self.totalPages = mediaItemResponse.totalPages
+            self.pageSize = mediaItemResponse.pageSize
+            self.pageNumber = mediaItemResponse.pageNumber
+            
+            self.lastOffset += 1
+        }) { error in
+            DDLogDebug("fetchMediaItems failed with error: \(error.localizedDescription)")
+            }.disposed(by: self.bag)
+    }
+    
+    private func reactToReachability()  {
+        //        return Single.create { [unowned self] single -> Disposable in
+        self.reachability.startNotifier().asObservable()
+            .subscribe(onNext: { networkStatus in
+                self.networkStatus.value = networkStatus
+                //                    single(.success(()))
+                switch networkStatus {
+                case .unknown:
+                    DDLogDebug("MediaListingViewModel \(self.reachability.status.value)")
+                case .notReachable:
+                    DDLogDebug("MediaListingViewModel \(self.reachability.status.value)")
+                case .reachable(_):
+                    DDLogDebug("MediaListingViewModel \(self.reachability.status.value)")
+                }
             }).disposed(by: self.bag)
-            //        case .audioSermon?:
-        //            DDLogDebug("fetch .audioSermon")
-        case .audioGospel?:
-            self.productService.fetchMediaGospel(for: playlistId, stride: 100).subscribe(onSuccess: { mediaGospel in
-                self.media.value = mediaGospel
-                self.assetPlaybackService.playables.value = self.media.value
-            }, onError: { error in
-                DDLogDebug("audioGospel failed with error: \(error.localizedDescription)")
-            }).disposed(by: self.bag)
-        case .audioMusic?:
-            self.productService.fetchMediaMusic(for: playlistId, stride: 100).subscribe(onSuccess: { mediaMusic in
-                self.media.value = mediaMusic
-                self.assetPlaybackService.playables.value = self.media.value
-            }, onError: { error in
-                DDLogDebug("audioMusic failed with error: \(error.localizedDescription)")
-            }).disposed(by: self.bag)
-        default:
-            DDLogDebug("default")
-        }
+        
+        //            return Disposables.create { }
+        //        }
     }
 }

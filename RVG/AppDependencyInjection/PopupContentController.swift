@@ -145,7 +145,7 @@ class PopupContentController: UIViewController {
             .next { [unowned self] playable in
                 guard let path: String = playable.path,
                     let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value,
-                    let localizedName: String = playable.localizedName,
+                    let localizedName: String = playable.localizedname,
                     let presenterName: String = playable.presenterName ?? "Unknown",
                     let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
 
