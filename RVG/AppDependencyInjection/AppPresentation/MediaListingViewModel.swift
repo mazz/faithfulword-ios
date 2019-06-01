@@ -118,6 +118,29 @@ internal final class MediaListingViewModel {
 
     private func setupDatasource() {
         reactToReachability()
+        
+        networkStatus.asObservable()
+            .observeOn(MainScheduler.instance)
+            .map({ status -> String in
+                
+                var outStatus: String = "unknown"
+                switch status {
+                    
+                case .unknown:
+                    outStatus = "unknown"
+                case .notReachable:
+                    outStatus = "notReachable"
+                case .reachable(_):
+                    outStatus = "reachable"
+                }
+                return outStatus
+            })
+            .filter { $0 == "reachable" || $0 == "notReachable"}
+            .take(1)
+            .next { [unowned self] status in
+                DDLogDebug("take status: \(status)")
+                self.initialFetch()
+        }.disposed(by: self.bag)
 
         self.media.asObservable()
             .map { $0.map {
@@ -149,6 +172,9 @@ internal final class MediaListingViewModel {
                 ]
             }.disposed(by: bag)
         
+    }
+    
+    func initialFetch() {
         productService.persistedMediaItems(for: self.playlistUuid).subscribe(onSuccess: { [unowned self] persistedMediaItems in
             if persistedMediaItems.count == 0 {
                 switch self.networkStatus.value {
@@ -165,8 +191,8 @@ internal final class MediaListingViewModel {
             }
         }) { error in
             DDLogDebug("error getting persistedMediaItems: \(error)")
-
-        }.disposed(by: self.bag)
+            
+            }.disposed(by: self.bag)
     }
     
     func fetchMedia(offset: Int, limit: Int, cacheRule: CacheRule) {
@@ -184,12 +210,10 @@ internal final class MediaListingViewModel {
             }.disposed(by: self.bag)
     }
     
-    private func reactToReachability()  {
-        //        return Single.create { [unowned self] single -> Disposable in
+    private func reactToReachability() {
         self.reachability.startNotifier().asObservable()
             .subscribe(onNext: { networkStatus in
                 self.networkStatus.value = networkStatus
-                //                    single(.success(()))
                 switch networkStatus {
                 case .unknown:
                     DDLogDebug("MediaListingViewModel \(self.reachability.status.value)")
@@ -199,8 +223,5 @@ internal final class MediaListingViewModel {
                     DDLogDebug("MediaListingViewModel \(self.reachability.status.value)")
                 }
             }).disposed(by: self.bag)
-        
-        //            return Disposables.create { }
-        //        }
     }
 }

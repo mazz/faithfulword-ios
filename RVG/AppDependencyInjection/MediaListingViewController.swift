@@ -231,15 +231,15 @@ extension MediaListingViewController: UICollectionViewDelegateMagazineLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, verticalSpacingForElementsInSectionAtIndex index: Int) -> CGFloat {
-        return 12
+        return 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForSectionAtIndex index: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 24, left: 4, bottom: 24, right: 4)
+        return UIEdgeInsets(top: 0, left: 4, bottom: 24, right: 4)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForItemsInSectionAtIndex index: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 24, left: 4, bottom: 24, right: 4)
+        return UIEdgeInsets(top: 0, left: 4, bottom: 24, right: 4)
     }
 }
 
