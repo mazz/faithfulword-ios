@@ -3,14 +3,14 @@ import GRDB
 
 public struct UserActionPlayable: Codable, Playable {
 //    public var userActionPlayableId: Int64?
-    public var uuid: String
+    public var downloaded: Bool
 //    public var categoryUuid: String?
     public var hashId: String
     public var playableUuid: String
     public var playablePath: String?
-    public var updatedAt: Double?
     public var playbackPosition: Double
-    public var downloaded: Bool
+    public var updatedAt: Double?
+    public var uuid: String
     // Playable
 //    public var localizedName: String?
 //    public var path: String?
@@ -53,26 +53,26 @@ public struct UserActionPlayable: Codable, Playable {
 extension UserActionPlayable {
     enum Columns {
 //        static let userActionPlayableId = Column("userActionPlayableId")
-        static let uuid = Column("uuid")
+        static let downloaded = Column("downloaded")
         static let playablePath = Column("playablePath")
         static let insertedAt = Column("insertedAt")
         static let updatedAt = Column("updatedAt")
         static let playbackPosition = Column("playbackPosition")
-        static let downloaded = Column("downloaded")
+        static let uuid = Column("uuid")
 
         // Playable
-        static let playableUuid = Column("playableUuid")
         static let hashId = Column("hashId")
-        static let playlistUuid = Column("playlistUuid")
+        static let largeThumbnailPath = Column("smallThumbnailPath")
         static let localizedname = Column("localizedname")
         static let mediaCategory = Column("mediaCategory")
+        static let medThumbnailPath = Column("medThumbnailPath")
         static let path = Column("path")
+        static let playableUuid = Column("playableUuid")
+        static let playlistUuid = Column("playlistUuid")
         static let presenterName = Column("presenterName")
         static let sourceMaterial = Column("sourceMaterial")
-        static let trackNumber = Column("trackNumber")
-        static let largeThumbnailPath = Column("largeThumbnailPath")
-        static let medThumbnailPath = Column("smallThumbnailPath")
         static let smallThumbnailPath = Column("smallThumbnailPath")
+        static let trackNumber = Column("trackNumber")
     }
 }
 

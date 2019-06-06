@@ -319,24 +319,27 @@ public final class DataStore {
             do {
                 try db.create(table: "useractionplayable") { userActionPlayableTable in
                     DDLogDebug("created: \(userActionPlayableTable)")
-                    userActionPlayableTable.column("userActionPlayableId", .integer).primaryKey()
-                    userActionPlayableTable.column("uuid", .text)
+                    userActionPlayableTable.column("downloaded", .boolean)
+                    userActionPlayableTable.column("hashId", .text)
                     userActionPlayableTable.column("playableUuid", .text)
                     userActionPlayableTable.column("playablePath", .text)
-                    userActionPlayableTable.column("createdAt", .double)
-                    userActionPlayableTable.column("updatedAt", .double)
                     userActionPlayableTable.column("playbackPosition", .double)
-                    userActionPlayableTable.column("downloaded", .boolean)
+                    userActionPlayableTable.column("updatedAt", .double)
+                    userActionPlayableTable.column("userActionPlayableId", .integer).primaryKey()
+                    userActionPlayableTable.column("uuid", .text)
 
                     // Playable
-                    userActionPlayableTable.column("categoryUuid", .text)
-                    userActionPlayableTable.column("localizedName", .text)
+                    userActionPlayableTable.column("insertedAt", .double)
+                    userActionPlayableTable.column("largeThumbnailPath", .text)
+                    userActionPlayableTable.column("localizedname", .text)
+                    userActionPlayableTable.column("mediaCategory", .text)
+                    userActionPlayableTable.column("medThumbnailPath", .text)
                     userActionPlayableTable.column("path", .text)
+                    userActionPlayableTable.column("playlistUuid", .text)
                     userActionPlayableTable.column("presenterName", .text)
                     userActionPlayableTable.column("sourceMaterial", .text)
-                    userActionPlayableTable.column("trackNumber", .integer)
-                    userActionPlayableTable.column("largeThumbnailPath", .text)
                     userActionPlayableTable.column("smallThumbnailPath", .text)
+                    userActionPlayableTable.column("trackNumber", .integer)
                 }
             }
             catch {
@@ -1257,42 +1260,25 @@ extension DataStore: DataStoring {
                             newPosition = newPosition - 5
                             if newPosition < Double(0) { newPosition = Double(0) }
                             
-                            let newAction: UserActionPlayable = UserActionPlayable(uuid: UUID().uuidString,
-                                                                                   hashId: playable.hashId,
-                                                                                   playableUuid: playable.playlistUuid,
-                                                                                   playablePath: playable.path ?? nil,
-                                                                                   updatedAt: playable.updatedAt ?? nil,
-                                                                                   playbackPosition: Double(newPosition),
-                                                                                   downloaded: downloaded,
-                                                                                   insertedAt: playable.insertedAt,
-                                                                                   largeThumbnailPath: playable.largeThumbnailPath ?? nil,
-                                                                                   localizedname: playable.localizedname,
-                                                                                   mediaCategory: playable.mediaCategory,
-                                                                                   path: playablePath,
-                                                                                   playlistUuid: playable.playlistUuid,
-                                                                                   presenterName: playable.presenterName ?? nil,
-                                                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil,
-                                                                                   medThumbnailPath: playable.medThumbnailPath ?? nil,
-                                                                                   sourceMaterial: playable.sourceMaterial ?? nil,
-                                                                                   trackNumber: playable.trackNumber ?? nil)
-
-//                            var newAction: UserActionPlayable = UserActionPlayable(userActionPlayableId: nil,
-//                                                                                   uuid: UUID().uuidString,
-//                                                                                   categoryUuid: playable.playlistUuid,
-//                                                                                   playableUuid: playable.uuid,
-//                                                                                   playablePath: playable.path ?? nil,
-//                                                                                   createdAt: Date().timeIntervalSince1970,
-//                                                                                   updatedAt: Date().timeIntervalSince1970,
-//                                                                                   playbackPosition: Double(newPosition),
-//                                                                                   downloaded: downloaded,
-//                                                                                   localizedName: playable.localizedname,
-//                                                                                   path: playablePath,
-//                                                                                   presenterName: playable.presenterName ?? nil,
-//                                                                                   sourceMaterial: playable.sourceMaterial ?? nil,
-//                                                                                   trackNumber: playable.trackNumber ?? nil,
-//                                                                                   largeThumbnailPath: playable.largeThumbnailPath ?? nil,
-//                                                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil
-//                            )
+                            let newAction: UserActionPlayable =
+                                UserActionPlayable(downloaded: downloaded,
+                                                   hashId: playable.hashId,
+                                                   playableUuid: playable.playlistUuid,
+                                                   playablePath: playable.path ?? nil,
+                                                   playbackPosition: Double(newPosition),
+                                                   updatedAt: playable.updatedAt ?? nil,
+                                                   uuid: UUID().uuidString,
+                                                   insertedAt: playable.insertedAt,
+                                                   largeThumbnailPath: playable.largeThumbnailPath ?? nil,
+                                                   localizedname: playable.localizedname,
+                                                   mediaCategory: playable.mediaCategory,
+                                                   path: playablePath,
+                                                   playlistUuid: playable.playlistUuid,
+                                                   presenterName: playable.presenterName ?? nil,
+                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil,
+                                                   medThumbnailPath: playable.medThumbnailPath ?? nil,
+                                                   sourceMaterial: playable.sourceMaterial ?? nil,
+                                                   trackNumber: playable.trackNumber ?? nil)
                             try newAction.insert(db)
                         }
                         

@@ -10,16 +10,16 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         if viewModelSections.count == 0 {
             return 0
         }
-        return viewModelSections[0].items.count
+        return viewModelSections[section].items.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         
 //        if viewModelSections[0].items.count > 0 {
-        DDLogDebug("viewModelSections[0].items[indexPath.row]: \(viewModelSections[0].items[indexPath.row])")
+        DDLogDebug("viewModelSections[indexPath.section].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
 //        }
-        let item: MediaListingItemType = viewModelSections[0].items[indexPath.row]
+        let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
     
         switch item {
         case let .drillIn(_, iconName, title, presenter, showBottomSeparator):
@@ -45,18 +45,6 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
 //        collectionView.register(MediaItemCell.self, forCellWithReuseIdentifier: MediaItemCell.description())
         collectionView.register(UINib(nibName: "MediaItemCell", bundle: nil), forCellWithReuseIdentifier: MediaItemCell.description())
 
-//        collectionView.register(
-//            Header.self,
-//            forSupplementaryViewOfKind: MagazineLayout.SupplementaryViewKind.sectionHeader,
-//            withReuseIdentifier: Header.description())
-//        collectionView.register(
-//            Footer.self,
-//            forSupplementaryViewOfKind: MagazineLayout.SupplementaryViewKind.sectionFooter,
-//            withReuseIdentifier: Footer.description())
-//        collectionView.register(
-//            Background.self,
-//            forSupplementaryViewOfKind: MagazineLayout.SupplementaryViewKind.sectionBackground,
-//            withReuseIdentifier: Background.description())
         collectionView.isPrefetchingEnabled = false
         collectionView.dataSource = self
         collectionView.delegate = self

@@ -46,6 +46,7 @@
 	<string>This app requires access to the photo library.</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>remote-notification</string>
 		<string>audio</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

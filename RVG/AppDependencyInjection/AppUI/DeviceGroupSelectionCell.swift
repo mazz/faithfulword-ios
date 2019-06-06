@@ -1,6 +1,7 @@
+import MagazineLayout
 import UIKit
 
-final class DeviceGroupSelectionCell: UICollectionViewCell {
+final class DeviceGroupSelectionCell: MagazineLayoutCollectionViewCell {
 
     // MARK: View
     
@@ -15,6 +16,10 @@ final class DeviceGroupSelectionCell: UICollectionViewCell {
     
     // MARK: Lifecycle
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
     public override func awakeFromNib() {
         super.awakeFromNib()
         self.contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -26,7 +31,10 @@ final class DeviceGroupSelectionCell: UICollectionViewCell {
         iconImageView.image = nil
         groupSelectionLabel.text = nil
         
-        self.widthConstraint?.isActive = false
+//        self.widthConstraint?.isActive = false
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+
     }
     
     // MARK: Public
@@ -36,6 +44,8 @@ final class DeviceGroupSelectionCell: UICollectionViewCell {
         groupSelectionLabel.text = label
         separatorView.isHidden = !showBottomSeparator
         chevronImageView.isHidden = !showChevron
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
     
     public func setWidth(_ width: CGFloat) {
