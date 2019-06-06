@@ -7,8 +7,10 @@ import MagazineLayout
 /// Add service screen
 public final class MediaListingViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return viewModelSections[0].items.count // MediaListingItemType
+        if viewModelSections.count == 0 {
+            return 0
+        }
+        return viewModelSections[0].items.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
@@ -65,6 +67,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         return collectionView
     }()
 
+    var itemsUpdatedAtLeastOnce = false
     
     // MARK: Dependencies
     
@@ -100,13 +103,33 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     private func reactToViewModel() {
         viewModel.sections.asObservable()
+            .observeOn(MainScheduler.instance)
+            .filter{ $0[0].items.count > 0 }
             .next { [unowned self] sections in
-                // Cache our viewModel sections, so we don't need to read the value while it' still being written to
-                self.viewModelSections = sections
-                DispatchQueue.main.async {
+                // first time loading sections
+                if self.itemsUpdatedAtLeastOnce == false {
+                    self.viewModelSections = sections
                     self.collectionView.reloadData()
+                    self.itemsUpdatedAtLeastOnce = true
                 }
-                
+                else {
+                    let currentItemsCount: Int = self.viewModelSections[0].items.count
+                    let appendCount: Int = sections[0].items.count - currentItemsCount
+                    let newItems = Array(sections[0].items.suffix(appendCount))
+                    DDLogDebug("newItems.count: \(newItems.count)")
+                    
+                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
+                    DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
+                    self.viewModelSections = sections
+                    
+                    DispatchQueue.main.async {
+                        self.collectionView.performBatchUpdates({
+                            self.collectionView.insertItems(at: insertIndexPaths)
+                        }, completion: { result in
+                            self.collectionView.reloadData()
+                        })
+                    }
+                }
             }.disposed(by: bag)
     }
 

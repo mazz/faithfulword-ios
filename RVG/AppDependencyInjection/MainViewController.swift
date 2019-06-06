@@ -93,6 +93,7 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
 
     private func reactToViewModel() {
         viewModel.sections.asObservable()
+            .observeOn(MainScheduler.instance)
             .filter{ $0[0].items.count > 0 }
             .next { [unowned self] sections in
                 // first time loading sections
