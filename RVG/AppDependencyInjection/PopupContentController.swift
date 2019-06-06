@@ -90,6 +90,7 @@ class PopupContentController: UIViewController {
         
         playbackViewModel.playDisabled
             .asObservable()
+            .observeOn(MainScheduler.instance)
             .next { [unowned self] playDisabled in
                 self.playPauseButton.isEnabled = !playDisabled
                 self.fullPlayPauseButton.isEnabled = !playDisabled
@@ -98,6 +99,7 @@ class PopupContentController: UIViewController {
         
         playbackViewModel.playbackState
             .asObservable()
+            .observeOn(MainScheduler.instance)
             .next { [unowned self] playbackState in
                 guard let pauseImage: UIImage = UIImage(named: "pause"),
                     let playImage: UIImage = UIImage(named: "play"),
@@ -141,6 +143,7 @@ class PopupContentController: UIViewController {
         // useractionplayable db table
         playbackViewModel.playbackPlayable
             .asObservable()
+            .observeOn(MainScheduler.instance)
             .filterNils()
             .next { [unowned self] playable in
                 guard let path: String = playable.path,
