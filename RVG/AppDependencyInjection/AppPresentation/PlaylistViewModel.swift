@@ -1,5 +1,6 @@
 import Foundation
 import RxSwift
+import GRDB
 
 private struct Constants {
     static let limit: Int = 50
@@ -36,6 +37,10 @@ final class PlaylistViewModel {
         // the case where are using playlists in cache/database
         // without fetching them from the network
         if self.totalEntries != -1 && self.totalEntries <= self.playlists.value.count {
+            return
+        }
+        
+        if self.totalEntries == self.playlists.value.count {
             return
         }
         
@@ -183,7 +188,36 @@ final class PlaylistViewModel {
 
             self.lastOffset += 1
         }) { error in
-            DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
+            
+            if let dbError: DatabaseError = error as? DatabaseError {
+                switch dbError.extendedResultCode {
+                case .SQLITE_CONSTRAINT:            // any constraint error
+                    DDLogDebug("SQLITE_CONSTRAINT error")
+                    // it is possible that we already have some or all the playlists
+                    // from a previous run and that the last fetch tried to
+                    // insert values that were already present. So increment
+                    // lastOffset by one so that eventually we will stop getting
+                    // errors
+                    if self.playlists.value.count == limit {
+                        self.lastOffset += 1
+                    }
+                    
+                    // we got a SQLITE_CONSTRAINT error, assume that we at least have
+                    // `limit` number of items
+                    // this will stop the data service from continually calling the server
+                    // because of the fetchMorePlaylists() guards
+                    if self.playlists.value.count >= limit {
+                        self.totalEntries = self.playlists.value.count
+                    }
+                default:                            // any other database error
+                    DDLogDebug("some db error: \(dbError)")
+                }
+                
+            } else {
+                DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
+            }
+            
+            
         }.disposed(by: self.bag)
     }
     

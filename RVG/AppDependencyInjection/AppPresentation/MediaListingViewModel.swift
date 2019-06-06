@@ -1,5 +1,6 @@
 import Foundation
 import RxSwift
+import GRDB
 
 private struct Constants {
     static let limit: Int = 100
@@ -51,26 +52,30 @@ internal final class MediaListingViewModel {
 
     public func fetchMoreMedia() {
         DDLogDebug("fetchMoreMedia")
-        // the case where are using playlists in cache/database
+        // the case where are using media in cache/database
         // without fetching them from the network
         if self.totalEntries != -1 && self.totalEntries <= self.media.value.count {
+            return
+        }
+        
+        if self.totalEntries == self.media.value.count {
             return
         }
         
         switch self.networkStatus.value {
         case .notReachable:
             DDLogDebug("MediaListingViewModel reachability.notReachable")
-        // possibly show an error to user
+        // do nothing because we can't fetch
         case .reachable(_):
             
-            // we can get playlists from server, so get them
+            // we can get media from server, so get them
             DDLogDebug("MediaListingViewModel reachability.reachable")
             self.fetchMedia(offset: self.lastOffset + 1,
                             limit: Constants.limit,
                             cacheRule: .fetchAndAppend)
         case .unknown:
             DDLogDebug("MediaListingViewModel reachability.unknown")
-            // possibly show an error to user
+            // do nothing because we can't fetch
         }
     }
 
@@ -206,7 +211,36 @@ internal final class MediaListingViewModel {
             
             self.lastOffset += 1
         }) { error in
-            DDLogDebug("fetchMediaItems failed with error: \(error.localizedDescription)")
+            
+            if let dbError: DatabaseError = error as? DatabaseError {
+                switch dbError.extendedResultCode {
+                case .SQLITE_CONSTRAINT:            // any constraint error
+                    DDLogDebug("SQLITE_CONSTRAINT error")
+                    // it is possible that we already have some or all the media
+                    // from a previous run and that the last fetch tried to
+                    // insert values that were already present. So increment
+                    // lastOffset by one so that eventually we will stop getting
+                    // errors
+                    if self.media.value.count == limit {
+                        self.lastOffset += 1
+                    }
+                    
+                    // we got a SQLITE_CONSTRAINT error, assume that we at least have
+                    // `limit` number of items
+                    // this will stop the data service from continually calling the server
+                    // because of the fetchMoreMedia() guards
+                    if self.media.value.count >= limit {
+                        self.totalEntries = self.media.value.count
+                    }
+                default:                            // any other database error
+                    DDLogDebug("some db error: \(dbError)")
+                }
+                
+            } else {
+                DDLogDebug("fetchMedia failed with error: \(error.localizedDescription)")
+            }
+            
+            
             }.disposed(by: self.bag)
     }
     
