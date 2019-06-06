@@ -3,7 +3,7 @@ import RxSwift
 import GRDB
 
 private struct Constants {
-    static let limit: Int = 50
+    static let limit: Int = 100
 }
 
 final class PlaylistViewModel {
@@ -170,7 +170,7 @@ final class PlaylistViewModel {
                 }
             } else {
                 self.playlists.value = playlists
-                self.lastOffset += 1
+                self.lastOffset = Int(ceil(CGFloat(playlists.count / Constants.limit)))
             }
         }) { error in
             DDLogDebug("error getting persistedPlaylists: \(error)")
@@ -198,17 +198,17 @@ final class PlaylistViewModel {
                     // insert values that were already present. So increment
                     // lastOffset by one so that eventually we will stop getting
                     // errors
-                    if self.playlists.value.count == limit {
-                        self.lastOffset += 1
-                    }
+//                    if self.playlists.value.count == limit && self.totalEntries == -1 {
+//                        self.lastOffset += 1
+//                    }
                     
                     // we got a SQLITE_CONSTRAINT error, assume that we at least have
                     // `limit` number of items
                     // this will stop the data service from continually calling the server
                     // because of the fetchMorePlaylists() guards
-                    if self.playlists.value.count >= limit {
-                        self.totalEntries = self.playlists.value.count
-                    }
+//                    if self.playlists.value.count >= limit && self.totalEntries == -1 {
+//                        self.totalEntries = self.playlists.value.count
+//                    }
                 default:                            // any other database error
                     DDLogDebug("some db error: \(dbError)")
                 }

@@ -192,7 +192,7 @@ internal final class MediaListingViewModel {
                 }
             } else {
                 self.media.value = persistedMediaItems
-                self.lastOffset += 1
+                self.lastOffset = Int(ceil(CGFloat(persistedMediaItems.count / Constants.limit)))
             }
         }) { error in
             DDLogDebug("error getting persistedMediaItems: \(error)")
@@ -221,17 +221,17 @@ internal final class MediaListingViewModel {
                     // insert values that were already present. So increment
                     // lastOffset by one so that eventually we will stop getting
                     // errors
-                    if self.media.value.count == limit {
-                        self.lastOffset += 1
-                    }
+//                    if self.media.value.count == limit && self.totalEntries == -1 {
+//                        self.lastOffset += 1
+//                    }
                     
                     // we got a SQLITE_CONSTRAINT error, assume that we at least have
                     // `limit` number of items
                     // this will stop the data service from continually calling the server
                     // because of the fetchMoreMedia() guards
-                    if self.media.value.count >= limit {
-                        self.totalEntries = self.media.value.count
-                    }
+//                    if self.media.value.count >= limit && self.totalEntries == -1 {
+//                        self.totalEntries = self.media.value.count
+//                    }
                 default:                            // any other database error
                     DDLogDebug("some db error: \(dbError)")
                 }
