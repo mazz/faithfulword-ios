@@ -10,7 +10,7 @@ public enum DataServiceError: Error {
     case offsetOutofRange
 }
 
-public enum CacheRule {
+public enum CacheDirective {
     case use
     case bypass
     case fetchAndReplace
@@ -48,10 +48,10 @@ public protocol AccountDataServicing {
 public protocol ProductDataServicing {
 
     func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
-    func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])>
+    func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
 
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
-    func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
+    func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])>
 
     func persistedChannels(for orgUuid: String) -> Single<[Channel]>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
@@ -268,7 +268,7 @@ extension DataService: ProductDataServicing {
         return dataStore.fetchMediaItems(for: playlistUuid)
     }
     
-    public func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])> {
+    public func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])> {
         let moyaResponse = self.networkingApi.rx.request(.mediaItems(uuid: playlistUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
         let response: Single<MediaItemResponse> = moyaResponse.map { response -> MediaItemResponse in
             do {
@@ -297,8 +297,10 @@ extension DataService: ProductDataServicing {
         return dataStore.fetchPlaylists(for: channelUuid)
     }
 
-    public func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])> {
+    public func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])> {
 
+        // if the cacheDirective is .fetchAndReplace then also fetch
+        // if the persisted channel is older than the
         let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
         let response: Single<PlaylistResponse> = moyaResponse.map { response -> PlaylistResponse in
             do {

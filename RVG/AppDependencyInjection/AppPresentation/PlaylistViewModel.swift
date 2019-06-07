@@ -54,7 +54,7 @@ final class PlaylistViewModel {
             DDLogDebug("PlaylistViewModel reachability.reachable")
             self.fetchPlaylist(offset: lastOffset + 1,
                                limit: Constants.limit,
-                               cacheRule: .fetchAndAppend)
+                               cacheDirective: .fetchAndAppend)
         case .unknown:
             DDLogDebug("PlaylistViewModel reachability.unknown")
             // possibly show an error to user
@@ -166,7 +166,9 @@ final class PlaylistViewModel {
                 case .notReachable:
                     DDLogError("⚠️ no playlists and no network! should probably make the user aware somehow")
                 case .reachable(_):
-                    self.fetchPlaylist(offset: self.lastOffset + 1, limit: Constants.limit, cacheRule: .fetchAndAppend)
+                    self.fetchPlaylist(offset: self.lastOffset + 1,
+                                       limit: Constants.limit,
+                                       cacheDirective: .fetchAndReplace)
                 }
             } else {
                 self.playlists.value = playlists
@@ -177,8 +179,8 @@ final class PlaylistViewModel {
             }.disposed(by: self.bag)
     }
     
-    func fetchPlaylist(offset: Int, limit: Int, cacheRule: CacheRule) {
-        productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheRule: cacheRule).subscribe(onSuccess: { (playlistResponse, playlists) in
+    func fetchPlaylist(offset: Int, limit: Int, cacheDirective: CacheDirective) {
+        productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (playlistResponse, playlists) in
             DDLogDebug("fetchPlaylists: \(playlists)")
             self.playlists.value.append(contentsOf: playlists)
             self.totalEntries = playlistResponse.totalEntries

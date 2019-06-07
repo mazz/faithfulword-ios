@@ -25,13 +25,13 @@ public protocol ProductServicing {
     func fetchPlaylists(for channelUuid: String,
                         offset: Int,
                         limit: Int,
-                        cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])>
+                        cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])>
 
     func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
     func fetchMediaItems(for playlistUuid: String,
                         offset: Int,
                         limit: Int,
-                        cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])>
+                        cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
 
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
@@ -86,11 +86,11 @@ extension ProductService: ProductServicing {
     public func fetchMediaItems(for playlistUuid: String,
                          offset: Int,
                          limit: Int,
-                         cacheRule: CacheRule) -> Single<(MediaItemResponse, [MediaItem])> {
+                         cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])> {
         return dataService.fetchAndObserveMediaItems(for: playlistUuid,
                                                     offset: offset,
                                                     limit: limit,
-                                                    cacheRule: cacheRule)
+                                                    cacheDirective: cacheDirective)
     }
 
     
@@ -101,11 +101,11 @@ extension ProductService: ProductServicing {
     public func fetchPlaylists(for channelUuid: String,
                                offset: Int,
                                limit: Int,
-                               cacheRule: CacheRule) -> Single<(PlaylistResponse, [Playlist])> {
+                               cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])> {
         return dataService.fetchAndObservePlaylists(for: channelUuid,
                                                     offset: offset,
                                                     limit: limit,
-                                                    cacheRule: cacheRule)
+                                                    cacheDirective: cacheDirective)
     }
 
     public func persistedChannels(for orgUuid: String) -> Single<[Channel]> {

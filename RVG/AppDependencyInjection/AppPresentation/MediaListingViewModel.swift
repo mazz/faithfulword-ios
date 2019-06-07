@@ -72,7 +72,7 @@ internal final class MediaListingViewModel {
             DDLogDebug("MediaListingViewModel reachability.reachable")
             self.fetchMedia(offset: self.lastOffset + 1,
                             limit: Constants.limit,
-                            cacheRule: .fetchAndAppend)
+                            cacheDirective: .fetchAndAppend)
         case .unknown:
             DDLogDebug("MediaListingViewModel reachability.unknown")
             // do nothing because we can't fetch
@@ -188,7 +188,7 @@ internal final class MediaListingViewModel {
                 case .notReachable:
                     DDLogError("⚠️ no persistedMediaItems and no network! should probably make the user aware somehow")
                 case .reachable(_):
-                    self.fetchMedia(offset: self.lastOffset + 1, limit: Constants.limit, cacheRule: .fetchAndAppend)
+                    self.fetchMedia(offset: self.lastOffset + 1, limit: Constants.limit, cacheDirective: .fetchAndAppend)
                 }
             } else {
                 self.media.value = persistedMediaItems
@@ -200,8 +200,8 @@ internal final class MediaListingViewModel {
             }.disposed(by: self.bag)
     }
     
-    func fetchMedia(offset: Int, limit: Int, cacheRule: CacheRule) {
-        productService.fetchMediaItems(for: playlistUuid, offset: offset, limit: limit, cacheRule: cacheRule).subscribe(onSuccess: { (mediaItemResponse, mediaItems) in
+    func fetchMedia(offset: Int, limit: Int, cacheDirective: CacheDirective) {
+        productService.fetchMediaItems(for: playlistUuid, offset: offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (mediaItemResponse, mediaItems) in
             DDLogDebug("fetchMediaItems: \(mediaItems)")
             self.media.value.append(contentsOf: mediaItems)
             self.totalEntries = mediaItemResponse.totalEntries
