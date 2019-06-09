@@ -127,5 +127,20 @@
             </objects>
             <point key="canvasLocation" x="1442" y="98"/>
         </scene>
+        <!--Channel View Controller-->
+        <scene sceneID="5El-Iy-6Vs">
+            <objects>
+                <viewController storyboardIdentifier="ChannelViewController" id="tdX-eo-mfc" customClass="ChannelViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="RnR-7h-Tbk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <viewLayoutGuide key="safeArea" id="Bph-0d-vSn"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zvw-7b-IjQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="121" y="786"/>
+        </scene>
     </scenes>
 </document>

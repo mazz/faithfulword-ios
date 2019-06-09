@@ -10,7 +10,7 @@ import Foundation
 import MessageUI
 
 protocol SideMenuHandling {
-    func goToCategoryFlow(categoryType: CategoryListingType)
+    func goToChannel(channelUuid: String)
     func goToExternalWebBrowser(url: URL)
     func goToMailComposer()
     func goToInlineWebBrowser(url: URL)
@@ -21,23 +21,42 @@ extension MainCoordinator: SideMenuHandling {
         
     }
     
-    func goToCategoryFlow(categoryType: CategoryListingType) {
+    func goToChannel(channelUuid: String) {
         self.mainNavigationController.dismiss(animated: true, completion: {
             
-            self.resettableCategoryListingCoordinator.value.categoryType = categoryType
-            self.resettableCategoryListingCoordinator.value.mainNavigationController = self.mainNavigationController
-            self.resettableCategoryListingCoordinator.value.flow(with: { viewController in
+            self.resettableChannelCoordinator.value.channelUuid = channelUuid
+            self.resettableChannelCoordinator.value.mainNavigationController = self.mainNavigationController
+            self.resettableChannelCoordinator.value.flow(with: { viewController in
                 self.mainNavigationController.pushViewController(
                     viewController,
                     animated: true
                 )
             }, completion: { _ in
                 self.mainNavigationController.dismiss(animated: true)
-                self.resettableCategoryListingCoordinator.reset()
+                self.resettableChannelCoordinator.reset()
             }, context: .push(onto: self.mainNavigationController))
             
         })
     }
+
+//    func goToCategoryFlow(categoryType: CategoryListingType) {
+//        self.mainNavigationController.dismiss(animated: true, completion: {
+//
+////            self.resettableChannelCoordinator.value.categoryType = categoryType
+//
+//            self.resettableChannelCoordinator.value.mainNavigationController = self.mainNavigationController
+//            self.resettableChannelCoordinator.value.flow(with: { viewController in
+//                self.mainNavigationController.pushViewController(
+//                    viewController,
+//                    animated: true
+//                )
+//            }, completion: { _ in
+//                self.mainNavigationController.dismiss(animated: true)
+//                self.resettableChannelCoordinator.reset()
+//            }, context: .push(onto: self.mainNavigationController))
+//
+//        })
+//    }
     
     func goToExternalWebBrowser(url: URL) {
         self.mainNavigationController.dismiss(animated: true) {

@@ -4,7 +4,7 @@ import RxCocoa
 import RxDataSources
 import MagazineLayout
 
-public final class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+public final class ChannelViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if viewModelSections.count == 0 {
             return 0
@@ -48,12 +48,10 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
     
     // MARK: Dependencies
     
-    internal var booksViewModel: BooksViewModel!
     internal var viewModel: PlaylistViewModel!
-
+    
     // MARK: Fields
-
-    private let nowPlayingBar = DeviceNowPlayingBarView.fromUiNib()
+    
     private var viewModelSections: [PlaylistSectionViewModel] = []
     private let bag = DisposeBag()
     
@@ -71,25 +69,25 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
-
+        
         reactToViewModel()
     }
     
     // MARK: Private helpers
-
-//        private func reactToContentSizeChange() {
-//            // Only dynamically change in iOS 11+. With iOS 10, user must re-launch app
-//            if #available(iOS 11, *) {
-//                NotificationCenter.default.rx
-//                    .notification(Notification.Name.UIContentSizeCategory.didChangeNotification)
-//                    .next { [unowned self] _ in
-//                        // With self sizing done in collectionView:cellForItemAt, the layout doesn't yet know to recalculate the layout attributes
-//                        self.collectionView.collectionViewLayout.invalidateLayout()
-//                    }
-//                    .disposed(by: bag)
-//            }
-//        }
-
+    
+    //        private func reactToContentSizeChange() {
+    //            // Only dynamically change in iOS 11+. With iOS 10, user must re-launch app
+    //            if #available(iOS 11, *) {
+    //                NotificationCenter.default.rx
+    //                    .notification(Notification.Name.UIContentSizeCategory.didChangeNotification)
+    //                    .next { [unowned self] _ in
+    //                        // With self sizing done in collectionView:cellForItemAt, the layout doesn't yet know to recalculate the layout attributes
+    //                        self.collectionView.collectionViewLayout.invalidateLayout()
+    //                    }
+    //                    .disposed(by: bag)
+    //            }
+    //        }
+    
     private func reactToViewModel() {
         viewModel.sections.asObservable()
             .observeOn(MainScheduler.instance)
@@ -106,11 +104,11 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
                     let appendCount: Int = sections[0].items.count - currentItemsCount
                     let newItems = Array(sections[0].items.suffix(appendCount))
                     DDLogDebug("newItems.count: \(newItems.count)")
-
+                    
                     let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
                     DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
                     self.viewModelSections = sections
-
+                    
                     DispatchQueue.main.async {
                         self.collectionView.performBatchUpdates({
                             self.collectionView.insertItems(at: insertIndexPaths)
@@ -123,7 +121,7 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
     }
 }
 
-extension MainViewController: UICollectionViewDelegateFlowLayout {
+extension ChannelViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -141,7 +139,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension MainViewController {
+extension ChannelViewController {
     public func plant(_ viewController: UIViewController, withAnimation animation: AppAnimations.Animatable? = nil) {
         if let residualPresentedViewController = children.first?.presentedViewController {
             residualPresentedViewController.dismiss(animated: true, completion: nil)
@@ -150,7 +148,7 @@ extension MainViewController {
     }
 }
 
-extension MainViewController: UIScrollViewDelegate {
+extension ChannelViewController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
@@ -177,7 +175,7 @@ extension MainViewController: UIScrollViewDelegate {
 
 // MARK: UICollectionViewDelegateMagazineLayout
 
-extension MainViewController: UICollectionViewDelegateMagazineLayout {
+extension ChannelViewController: UICollectionViewDelegateMagazineLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeModeForItemAt indexPath: IndexPath) -> MagazineLayoutItemSizeMode {
         return MagazineLayoutItemSizeMode(widthMode: .fullWidth(respectsHorizontalInsets: true), heightMode: .dynamic)

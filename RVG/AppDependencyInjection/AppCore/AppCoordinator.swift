@@ -270,10 +270,17 @@ extension AppCoordinator: NavigationCoordinating {
     
     /// Puts the main flow (logged in state) on top of the rootViewController.
     private func swapInMainFlow(channels: [Channel]) {
-        
-        if let bibleChannel: Channel = channels.first(where: { $0.basename == "Bible" }) {
-            DDLogDebug("bibleChannel: \(bibleChannel)")
-            resettableMainCoordinator.value.bibleChannelUuid = bibleChannel.uuid
+        if let bibleChannelUuid: String = channels.first(where: { $0.basename == "Bible" })?.uuid,
+            let gospelChannelUuid: String = channels.first(where: { $0.basename == "Gospel" })?.uuid,
+            let preachingChannelUuid: String = channels.first(where: { $0.basename == "Preaching" })?.uuid,
+            let musicChannelUuid: String = channels.first(where: { $0.basename == "Music" })?.uuid {
+            DDLogDebug("bibleChannelUuid: \(bibleChannelUuid)")
+            resettableMainCoordinator.value.bibleChannelUuid = bibleChannelUuid
+            
+            resettableMainCoordinator.value.gospelChannelUuid = gospelChannelUuid
+            resettableMainCoordinator.value.preachingChannelUuid = preachingChannelUuid
+            resettableMainCoordinator.value.musicChannelUuid = musicChannelUuid
+            
             resettableMainCoordinator.value.flow(with: { [unowned self] mainFlowViewController in
                 self.rootViewController.plant(mainFlowViewController, withAnimation: AppAnimations.fade)
                 }, completion: { [unowned self] _ in

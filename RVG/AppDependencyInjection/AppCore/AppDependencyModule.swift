@@ -193,8 +193,16 @@ internal final class AppDependencyModule {
             )
         }
 
-        container.register(CategoryListingCoordinator.self) { resolver in
-            CategoryListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+//        container.register(CategoryListingCoordinator.self) { resolver in
+//            CategoryListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+//                                       resettableMediaListingCoordinator: Resettable {
+//                                        resolver.resolve(MediaListingCoordinator.self)!
+//                }
+//            )
+//        }
+
+        container.register(ChannelCoordinator.self) { resolver in
+            ChannelCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
                                        resettableMediaListingCoordinator: Resettable {
                                         resolver.resolve(MediaListingCoordinator.self)!
                 }
@@ -215,8 +223,8 @@ internal final class AppDependencyModule {
                 resettableSideMenuCoordinator: Resettable {
                     resolver.resolve(SideMenuCoordinator.self)!
                 },
-                resettableCategoryListingCoordinator: Resettable {
-                    resolver.resolve(CategoryListingCoordinator.self)!
+                resettableChannelCoordinator: Resettable {
+                    resolver.resolve(ChannelCoordinator.self)!
                 },
                 resettableBibleLanguageCoordinator: Resettable {
                     resolver.resolve(BibleLanguageCoordinator.self)!

@@ -15,8 +15,11 @@ internal final class MainCoordinator: NSObject {
     private let menuTransitionManager = MenuTransitionManager()
     private var sideMenuController: SideMenuViewController?
     internal var mainNavigationController: UINavigationController!
+    internal var gospelChannelUuid: String?
+    internal var preachingChannelUuid: String?
+    internal var musicChannelUuid: String?
     internal var bibleChannelUuid: String?
-    
+
     private let bag = DisposeBag()
     private var deviceContextBag = DisposeBag()
     private var mainFlowCompletion: FlowCompletion!
@@ -30,7 +33,8 @@ internal final class MainCoordinator: NSObject {
     internal let appUIMaking: AppUIMaking
     //    private let resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>
     private let resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>
-    internal let resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>
+//    internal let resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>
+    internal let resettableChannelCoordinator: Resettable<ChannelCoordinator>
     private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
     private let resettableBibleLanguageCoordinator: Resettable<BibleLanguageCoordinator>
 
@@ -49,7 +53,7 @@ internal final class MainCoordinator: NSObject {
                   //                  resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
         resettableMediaListingCoordinator: Resettable<MediaListingCoordinator>,
         resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>,
-        resettableCategoryListingCoordinator: Resettable<CategoryListingCoordinator>,
+        resettableChannelCoordinator: Resettable<ChannelCoordinator>,
         resettableBibleLanguageCoordinator: Resettable<BibleLanguageCoordinator>,
         productService: ProductServicing
 
@@ -62,7 +66,7 @@ internal final class MainCoordinator: NSObject {
         self.appUIMaking = appUIMaking
         self.resettableMediaListingCoordinator = resettableMediaListingCoordinator
         self.resettableSideMenuCoordinator = resettableSideMenuCoordinator
-        self.resettableCategoryListingCoordinator = resettableCategoryListingCoordinator
+        self.resettableChannelCoordinator = resettableChannelCoordinator
         self.resettableBibleLanguageCoordinator = resettableBibleLanguageCoordinator
         self.productService = productService
 
@@ -372,13 +376,28 @@ extension MainCoordinator {
                     self.dismiss()
                 case .gospel:
                     DDLogDebug(".soulwinning")
-                    self.goToCategoryFlow(categoryType: .gospel)
+                    if let channelUuid: String = self.gospelChannelUuid {
+                        self.goToChannel(channelUuid: channelUuid)
+                    } else {
+                        DDLogError("⚠️ fatal error, need a soulwinning/Gospel Channel! Bailing!")
+                        self.mainFlowCompletion(FlowCompletionType.error)
+                    }
                 case .preaching:
                     DDLogDebug(".preaching")
-                    self.goToCategoryFlow(categoryType: .preaching)
+                    if let channelUuid: String = self.preachingChannelUuid {
+                        self.goToChannel(channelUuid: channelUuid)
+                    } else {
+                        DDLogError("⚠️ fatal error, need a preaching Channel! Bailing!")
+                        self.mainFlowCompletion(FlowCompletionType.error)
+                    }
                 case .music:
                     DDLogDebug(".music")
-                    self.goToCategoryFlow(categoryType: .music)
+                    if let channelUuid: String = self.musicChannelUuid {
+                        self.goToChannel(channelUuid: channelUuid)
+                    } else {
+                        DDLogError("⚠️ fatal error, need a music Channel! Bailing!")
+                        self.mainFlowCompletion(FlowCompletionType.error)
+                    }
                 case .aboutUs:
                     DDLogDebug(".aboutUs")
                     self.goToExternalWebBrowser(url: NSURL(
