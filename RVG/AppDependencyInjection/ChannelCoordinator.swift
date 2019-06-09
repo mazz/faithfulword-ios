@@ -33,7 +33,7 @@ extension ChannelCoordinator: NavigationCoordinating {
 //            attachRootMenuAction(to: channelViewController)
 //            attachSettingAction(to: channelViewController)
             
-            mainNavigationController = UINavigationController(rootViewController: channelViewController)
+//            mainNavigationController = UINavigationController(rootViewController: channelViewController)
         } else {
             DDLogError("⚠️ fatal error, need a Bible Channel! Bailing!")
             completion(FlowCompletionType.error)
@@ -54,11 +54,8 @@ extension ChannelCoordinator: NavigationCoordinating {
         self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
             
-            self.mainNavigationController.pushViewController(
-                viewController,
-                animated: true
-            )
-            //            self.mainNavigationController.present(viewController, animated: true)
+        self.mainNavigationController.pushViewController(viewController, animated: true)
+//        self.mainNavigationController.present(viewController, animated: true)
         }, completion: { _ in
             self.mainNavigationController.dismiss(animated: true)
             self.resettableMediaListingCoordinator.reset()
