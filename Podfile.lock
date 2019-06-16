@@ -7,7 +7,7 @@ PODS:
     - CocoaLumberjack/Core
   - Crashlytics (3.13.1):
     - Fabric (~> 1.10.1)
-  - Differentiator (3.1.0)
+  - Differentiator (4.0.1)
   - Fabric (1.10.1)
   - Firebase/Core (6.2.0):
     - Firebase/CoreOnly
@@ -82,12 +82,12 @@ PODS:
   - MagazineLayout (1.4.5)
   - MarqueeLabel/Swift (3.2.1)
   - MBProgressHUD (1.0.0)
-  - Moya/Core (13.0.1):
+  - Moya/Core (14.0.0-alpha.1):
     - Alamofire (~> 4.1)
     - Result (~> 4.1)
-  - Moya/RxSwift (13.0.1):
+  - Moya/RxSwift (14.0.0-alpha.1):
     - Moya/Core
-    - RxSwift (~> 4.0)
+    - RxSwift (~> 5.0)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
@@ -95,22 +95,21 @@ PODS:
   - nanopb/encode (0.3.901)
   - Protobuf (3.8.0)
   - Result (4.1.0)
-  - RxAVFoundation (2.1.0):
-    - RxCocoa (~> 4.0)
-    - RxSwift (~> 4.0)
-  - RxCocoa (4.5.0):
-    - RxSwift (>= 4.4.2, ~> 4.4)
-  - RxDataSources (3.1.0):
-    - Differentiator (~> 3.0)
-    - RxCocoa (~> 4.0)
-    - RxSwift (~> 4.0)
-  - RxSwift (4.5.0)
+  - RxCocoa (5.0.0):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxDataSources (4.0.1):
+    - Differentiator (~> 4.0)
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
+  - RxRelay (5.0.0):
+    - RxSwift (~> 5)
+  - RxSwift (5.0.0)
   - SwiftLint (0.33.0)
   - Swinject (2.6.1)
   - UICircularProgressRing (6.2.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.7)
   - AlamofireImage (~> 3.3)
   - CocoaLumberjack/Swift
   - Crashlytics
@@ -123,8 +122,7 @@ DEPENDENCIES:
   - MagazineLayout
   - MarqueeLabel/Swift
   - MBProgressHUD (~> 1.0.0)
-  - Moya/RxSwift
-  - RxAVFoundation
+  - Moya/RxSwift (~> 14.0.0-alpha.1)
   - RxCocoa
   - RxDataSources
   - RxSwift
@@ -157,9 +155,9 @@ SPEC REPOS:
     - nanopb
     - Protobuf
     - Result
-    - RxAVFoundation
     - RxCocoa
     - RxDataSources
+    - RxRelay
     - RxSwift
     - SwiftLint
     - Swinject
@@ -170,7 +168,7 @@ SPEC CHECKSUMS:
   AlamofireImage: 63cfe3baf1370be6c498149687cf6db3e3b00999
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   Crashlytics: 5aa8e90dcbf2f34898b4f5a0037787531246cca0
-  Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
+  Differentiator: 886080237d9f87f322641dedbc5be257061b0602
   Fabric: f6f21452846788bb44595d73e9909d79d328e617
   Firebase: 5965bac23e7fcb5fa6d926ed429c9ecef8a2014e
   FirebaseAnalytics: 629301c2b9925f3537d4093a17a72751ae5b7084
@@ -185,18 +183,18 @@ SPEC CHECKSUMS:
   MagazineLayout: dcd0e08fbda3f891c77b88bd43997f298e8d496a
   MarqueeLabel: 2daf039bf916937c8a4c9adfc13577cc5e51b4ce
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
-  Moya: f4a4b80ff2f8a4ffc208dfb31cd91636622fee6e
+  Moya: 65485239114b3b327a17dc2e839f6c8b7143aae9
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
-  RxAVFoundation: 468e7278138c717582ae2355115d5ae081b8a16a
-  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
-  RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
-  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
+  RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
+  RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
+  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SwiftLint: fed9c66336e41fc74dc48a73678380718f0c8b0e
   Swinject: b624462f47b635a64f89a60a247baa5fccec14e1
   UICircularProgressRing: 0ff679b05a17f15ad6301a7886686837b8c301a9
 
-PODFILE CHECKSUM: 2a05e4665747578245176129f4ba4a53d0bbb73a
+PODFILE CHECKSUM: de3e52b134ede3d91ec21326fd5c9108e1aa4cde
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.7.2

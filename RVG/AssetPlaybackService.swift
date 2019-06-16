@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 import AVFoundation
 import MediaPlayer
-import RxAVFoundation
+//import RxAVFoundation
 
 public protocol AssetPlaybackServicing {
 

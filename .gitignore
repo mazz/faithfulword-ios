@@ -8,3 +8,6 @@ xcschememanagement.plist
 Pods/
 Carthage/
 .DS_Store
+.bundle
+bundle/
+

@@ -234,7 +234,7 @@ class PopupContentController: UIViewController {
                 //                DDLogDebug("time: \(time)")
             })
             .distinctUntilChanged()
-            .throttle(0.3, scheduler: MainScheduler.instance)
+            .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
             .bind(to: playbackViewModel.sliderScrubEvent)
             .disposed(by: bag)
         fullPlaybackSlider.isContinuous = true
@@ -245,7 +245,7 @@ class PopupContentController: UIViewController {
         actualPlaybackProgress.asObservable()
             .observeOn(MainScheduler.instance)
             .filter { [unowned self] _ in !self.sliderInUse.value }
-            .debounce(0.2, scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(200), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] progress in
                 self.fullPlaybackSlider.value = progress
                 DDLogDebug("field progress: \(progress)")
