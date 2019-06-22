@@ -30,6 +30,11 @@ public struct MediaItem: Codable, Playable {
     public var updatedAt: TimeInterval?
     public var uuid: String
     
+    //
+    // a MediaItem is many-to-one to Playlist
+    //
+    static let mediaitemForeignKey = ForeignKey([Columns.playlistUuid])
+
 //    enum CodingKeys: String, CodingKey {
 ////        case createdAt
 ////        case categoryUuid

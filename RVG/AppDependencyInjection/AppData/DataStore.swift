@@ -118,7 +118,7 @@ public final class DataStore {
                     //                orgTable.column("chapterId", .integer).primaryKey()
                     
                     channelTable.column("uuid", .text).primaryKey()
-                    channelTable.column("orgUuid", .text)
+                    channelTable.column("orgUuid", .text).references("org", onDelete: .cascade)
                     channelTable.column("bannerPath", .text)
                     channelTable.column("basename", .text)
                     channelTable.column("ordinal", .integer)
@@ -136,7 +136,7 @@ public final class DataStore {
                 try db.create(table: "playlist") { playlistTable in
                     DDLogDebug("created: \(playlistTable)")
                     playlistTable.column("uuid", .text).primaryKey()
-                    playlistTable.column("channelUuid", .text)
+                    playlistTable.column("channelUuid", .text).references("channel", onDelete: .cascade)
                     playlistTable.column("bannerPath", .text)
                     playlistTable.column("localizedname", .text)
                     playlistTable.column("languageId", .text)
@@ -167,7 +167,7 @@ public final class DataStore {
                     mediaItemTable.column("medThumbnailPath", .text)
                     mediaItemTable.column("ordinal", .integer)
                     mediaItemTable.column("path", .text)
-                    mediaItemTable.column("playlistUuid", .text)
+                    mediaItemTable.column("playlistUuid", .text).references("playlist", onDelete: .cascade)
                     mediaItemTable.column("presentedAt", .double)
                     mediaItemTable.column("presenterName", .text)
                     mediaItemTable.column("publishedAt", .double)

@@ -14,6 +14,16 @@ public struct Channel: Codable {
     public var medThumbnailPath: String?
     public var smallThumbnailPath: String?
 
+    //
+    // a Channel is many-to-one to Org
+    //
+    static let channelForeignKey = ForeignKey([Columns.orgUuid])
+    
+    //
+    // a Channel is one-to-many to Playlist
+    //
+    static let playlists = hasMany(Playlist.self, using: Playlist.playlistForeignKey)
+
 //    enum CodingKeys: String, CodingKey {
 ////        case userId
 //        case uuid

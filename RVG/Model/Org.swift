@@ -13,6 +13,11 @@ public struct Org: Codable {
     public var medThumbnailPath: String?
     public var smallThumbnailPath: String?
 
+    //
+    // a Org is one-to-many to Channel
+    //
+    static let channels = hasMany(Channel.self, using: Channel.channelForeignKey)
+    
 //    enum CodingKeys: String, CodingKey {
 ////        case userId
 //        case uuid

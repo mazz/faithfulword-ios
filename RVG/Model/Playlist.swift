@@ -15,6 +15,17 @@ public struct Playlist: Codable {
     public var medThumbnailPath: String?
     public var smallThumbnailPath: String?
     
+    
+    //
+    // a Playlist is many-to-one to Channel
+    //
+    static let playlistForeignKey = ForeignKey([Columns.channelUuid])
+
+    //
+    // a Playlist is one-to-many to MediaItem
+    //
+    static let mediaitems = hasMany(MediaItem.self, using: MediaItem.mediaitemForeignKey)
+
 //    enum CodingKeys: String, CodingKey {
 //        case uuid
 //        case channelUuid
