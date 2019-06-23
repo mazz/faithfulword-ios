@@ -13,7 +13,7 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        DDLogDebug("viewModelSections[0].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
+//        DDLogDebug("viewModelSections[0].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
         //        }
         let item: PlaylistItemType = viewModelSections[indexPath.section].items[indexPath.row]
         

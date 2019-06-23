@@ -2,6 +2,7 @@ import Foundation
 
 public protocol Playable {
     var hashId: String { get set }
+    var duration: TimeInterval { get set }
     var insertedAt: TimeInterval { get set }
     var localizedname: String { get set }
     var largeThumbnailPath : String? { get set }

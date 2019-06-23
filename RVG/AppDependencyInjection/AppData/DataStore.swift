@@ -156,6 +156,7 @@ public final class DataStore {
                 try db.create(table: "mediaitem") { mediaItemTable in
                     DDLogDebug("created: \(mediaItemTable)")
                     mediaItemTable.column("contentProviderLink", .text)
+                    mediaItemTable.column("duration", .double)
                     mediaItemTable.column("hashId", .text)
                     mediaItemTable.column("insertedAt", .double)
                     mediaItemTable.column("ipfsLink", .text)
@@ -325,8 +326,8 @@ public final class DataStore {
                     userActionPlayableTable.column("playablePath", .text)
                     userActionPlayableTable.column("playbackPosition", .double)
                     userActionPlayableTable.column("updatedAt", .double)
-                    userActionPlayableTable.column("userActionPlayableId", .integer).primaryKey()
-                    userActionPlayableTable.column("uuid", .text)
+//                    userActionPlayableTable.column("userActionPlayableId", .integer)
+                    userActionPlayableTable.column("uuid", .text).primaryKey()
 
                     // Playable
                     userActionPlayableTable.column("insertedAt", .double)
@@ -1222,8 +1223,9 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     // update
+                    DDLogDebug("try action update playable.uuid: \(playable.uuid)")
                     if let action = try UserActionPlayable.filter(Column("playableUuid") == playable.uuid).fetchOne(db) {
-                        DDLogDebug("found action: \(action)")
+                        DDLogDebug("action found: \(action) playable.uuid: \(playable.uuid)")
                         
                         if let playablePath = playable.path,
                             let prodUrl: URL = URL(string: playablePath) {
@@ -1233,13 +1235,13 @@ extension DataStore: DataStoring {
                             DDLogDebug("file there update? \(downloaded)")
                             
                             // back up 5 seconds to help the user remember the context, unless < 0
-                            var newPosition: Double = Double(position)
-                            newPosition = newPosition - 5
-                            if newPosition < Double(0) { newPosition = Double(0) }
+//                            var newPosition: Double = Double(position)
+//                            newPosition = newPosition - 5
+//                            if newPosition < Double(0) { newPosition = Double(0) }
                             
                             // db update
                             var storeAction: UserActionPlayable = action
-                            storeAction.playbackPosition = Double(newPosition)
+                            storeAction.playbackPosition = Double(position)
                             storeAction.updatedAt = Date().timeIntervalSince1970
                             storeAction.downloaded = downloaded
                             try storeAction.update(db)
@@ -1247,6 +1249,7 @@ extension DataStore: DataStoring {
                         
                     } else {
                         // insert
+                        DDLogDebug("action not found, playable.uuid: \(playable.uuid)")
                         if let playablePath = playable.path,
                             let prodUrl: URL = URL(string: playablePath)
                         {
@@ -1256,16 +1259,16 @@ extension DataStore: DataStoring {
                             DDLogDebug("file there insert? \(downloaded)")
                             
                             // back up 5 seconds to help the user remember the context, unless < 0
-                            var newPosition: Double = Double(position)
-                            newPosition = newPosition - 5
-                            if newPosition < Double(0) { newPosition = Double(0) }
+//                            var newPosition: Double = Double(position)
+//                            newPosition = newPosition - 5
+//                            if newPosition < Double(0) { newPosition = Double(0) }
                             
                             let newAction: UserActionPlayable =
                                 UserActionPlayable(downloaded: downloaded,
                                                    hashId: playable.hashId,
-                                                   playableUuid: playable.playlistUuid,
+                                                   playableUuid: playable.uuid,
                                                    playablePath: playable.path ?? nil,
-                                                   playbackPosition: Double(newPosition),
+                                                   playbackPosition: Double(0),
                                                    updatedAt: playable.updatedAt ?? nil,
                                                    uuid: UUID().uuidString,
                                                    insertedAt: playable.insertedAt,

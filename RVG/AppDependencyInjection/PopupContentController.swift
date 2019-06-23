@@ -9,8 +9,9 @@ import UICircularProgressRing
 
 public enum PlaybackSpeed {
     case oneX
-    case onePointTwoFiveX
     case onePointFiveX
+    case onePointSevenFiveX
+    case twoX
 }
 
 public enum RepeatSetting {
@@ -156,7 +157,8 @@ class PopupContentController: UIViewController {
                 
                 var playbackPosition: Double = 0
                 var playableUuid: String = playable.uuid
-                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable {
+                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
+                    historyPlayable.mediaCategory == "preaching" {
                     playbackPosition = historyPlayable.playbackPosition
                     playableUuid = historyPlayable.playableUuid
                 }
@@ -483,10 +485,12 @@ class PopupContentController: UIViewController {
             switch playbackSpeed {
             case 1.0:
                 self.playbackSpeed = .oneX
-            case 1.25:
-                self.playbackSpeed = .onePointTwoFiveX
             case 1.5:
                 self.playbackSpeed = .onePointFiveX
+            case 1.75:
+                self.playbackSpeed = .onePointSevenFiveX
+            case 2.0:
+                self.playbackSpeed = .twoX
             default:
                 self.playbackSpeed = .oneX
             }
@@ -533,23 +537,31 @@ class PopupContentController: UIViewController {
         
         //        switch speed {
         if playbackSpeed == .oneX {
-            playbackSpeed = .onePointTwoFiveX
-            speedTitle = "1.25"
-            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
-                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
-                UserDefaults.standard.set(1.25, forKey: UserPrefs.playbackSpeed.rawValue)
-            }
-
-        }
-        else if playbackSpeed == .onePointTwoFiveX {
             playbackSpeed = .onePointFiveX
             speedTitle = "1.5"
             if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
                 fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
                 UserDefaults.standard.set(1.5, forKey: UserPrefs.playbackSpeed.rawValue)
             }
+
         }
         else if playbackSpeed == .onePointFiveX {
+            playbackSpeed = .onePointSevenFiveX
+            speedTitle = "1.75"
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+                UserDefaults.standard.set(1.75, forKey: UserPrefs.playbackSpeed.rawValue)
+            }
+        }
+        else if playbackSpeed == .onePointSevenFiveX {
+            playbackSpeed = .twoX
+            speedTitle = "2.0"
+            if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {
+                fullToggleSpeedButton.setAttributedTitle(NSAttributedString(string: speedTitle.appending("x"), attributes: attribs), for: .normal)
+                UserDefaults.standard.set(2.0, forKey: UserPrefs.playbackSpeed.rawValue)
+            }
+        }
+        else if playbackSpeed == .twoX {
             playbackSpeed = .oneX
             speedTitle = "1.0"
             if let attribs: [NSAttributedString.Key : Any] = fullToggleSpeedButton.currentAttributedTitle?.attributes(at: 0, effectiveRange: nil) {

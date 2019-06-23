@@ -17,7 +17,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     {
         
 //        if viewModelSections[0].items.count > 0 {
-        DDLogDebug("viewModelSections[indexPath.section].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
+//        DDLogDebug("viewModelSections[indexPath.section].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
 //        }
         let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
     
