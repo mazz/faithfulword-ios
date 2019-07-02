@@ -11,3 +11,4 @@ Carthage/
 .bundle
 bundle/
 
+build/
