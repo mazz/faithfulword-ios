@@ -21,6 +21,7 @@ public struct MediaChapter: Codable, Playable {
     public var categoryUuid: String?
     //    public var createdAt: Double?
     public var contentProviderLink: String?
+    public var duration: TimeInterval
     public var hashId: String
     public var insertedAt: TimeInterval
     public var ipfsLink: String?
@@ -50,6 +51,7 @@ public struct MediaChapter: Codable, Playable {
 extension MediaChapter {
     enum Columns {
 //        static let userId = Column("userId")
+        static let duration = Column("duration")
         static let uuid = Column("uuid")
         static let localizedName = Column("localizedName")
         static let path = Column("path")

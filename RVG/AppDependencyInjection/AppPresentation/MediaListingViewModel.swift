@@ -192,6 +192,7 @@ internal final class MediaListingViewModel {
                 }
             } else {
                 self.media.value = persistedMediaItems
+                self.assetPlaybackService.playables.value = self.media.value
                 self.lastOffset = Int(ceil(CGFloat(persistedMediaItems.count / Constants.limit)))
             }
         }) { error in
@@ -210,6 +211,8 @@ internal final class MediaListingViewModel {
             self.pageNumber = mediaItemResponse.pageNumber
             
             self.lastOffset += 1
+            
+            self.assetPlaybackService.playables.value = self.media.value
         }) { error in
             
             if let dbError: DatabaseError = error as? DatabaseError {

@@ -38,8 +38,6 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var fullProgressDownloadButton: UIButton!
     @IBOutlet weak var fullProgressShareButton: UIButton!
     
-    var estimatedPlaybackPosition: Float = Float(0)
-    var estimatedDuration: Float = Float(0)
     
     let dateComponentFormatter = DateComponentsFormatter()
     let accessibilityDateComponentsFormatter = DateComponentsFormatter()
@@ -63,6 +61,8 @@ class PopupContentController: UIViewController {
     private let sliderInUse = Variable<Bool>(false)
     
     internal let actualPlaybackProgress = Field<Float>(0)
+    internal let estimatedDuration = Field<Float>(0)
+    var estimatedPlaybackPosition: Float = Float(0)
     
     private var repeatMode: RepeatSetting = .repeatOff {
         didSet {
@@ -157,8 +157,9 @@ class PopupContentController: UIViewController {
                 
                 var playbackPosition: Double = 0
                 var playableUuid: String = playable.uuid
-                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
-                    historyPlayable.mediaCategory == "preaching" {
+                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable {
+//                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
+//                    historyPlayable.mediaCategory == "preaching" {
                     playbackPosition = historyPlayable.playbackPosition
                     playableUuid = historyPlayable.playableUuid
                 }
@@ -167,6 +168,9 @@ class PopupContentController: UIViewController {
                 if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
                     playbackRate = playbackSpeed
                 }
+                
+                DDLogDebug("Asset playableUuid: \(playableUuid)")
+
                 self.playbackAsset = Asset(name: localizedName,
                                       artist: presenterName,
                                       uuid: playableUuid,
@@ -639,7 +643,7 @@ class PopupContentController: UIViewController {
             let duration: Float = Float(playbackViewModel.assetPlaybackService.assetPlaybackManager.duration)
             //            DDLogDebug("duration: \(duration)")
             if !duration.isNaN {
-                estimatedDuration = duration
+                estimatedDuration.value = duration
                 //                DDLogDebug("assetPlaybackManager.duration: \(assetPlaybackManager.duration)")
                 fullPlaybackSlider.minimumValue = Float(0)
                 fullPlaybackSlider.maximumValue = playbackViewModel.assetPlaybackService.assetPlaybackManager.duration
@@ -657,8 +661,8 @@ class PopupContentController: UIViewController {
                 }
                 actualPlaybackProgress.value = playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition
                 
-                if estimatedDuration != 0 {
-                    let remainingTime: Float = Float(estimatedDuration - playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition)
+                if estimatedDuration.value != 0 {
+                    let remainingTime: Float = Float(estimatedDuration.value - playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition)
                     guard let stringValue = dateComponentFormatter.string(from: TimeInterval(remainingTime)) else { return }
                     
                     if let timeAttribs: [NSAttributedString.Key : Any] = fullTotalPlaybackDurationLabel.attributedText?.attributes(at: 0, effectiveRange: nil) {
@@ -690,7 +694,7 @@ class PopupContentController: UIViewController {
             fullPlaybackSlider.value = Float(0)
             
             estimatedPlaybackPosition = Float(0)
-            estimatedDuration = Float(0)
+            estimatedDuration.value = Float(0)
 //            resetUIDefaults()
         }
     }

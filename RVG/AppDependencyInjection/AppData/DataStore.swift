@@ -225,6 +225,7 @@ public final class DataStore {
                     chapterTable.column("sourceMaterial", .text)
                     chapterTable.column("trackNumber", .integer)
                     chapterTable.column("createdAt", .double)
+                    chapterTable.column("duration", .double)
                     chapterTable.column("updatedAt", .double)
                     chapterTable.column("largeThumbnailPath", .text)
                     chapterTable.column("smallThumbnailPath", .text)
@@ -260,6 +261,7 @@ public final class DataStore {
                     gospelTable.column("sourceMaterial", .text)
                     gospelTable.column("trackNumber", .integer)
                     gospelTable.column("createdAt", .double)
+                    gospelTable.column("duration", .double)
                     gospelTable.column("updatedAt", .double)
                     gospelTable.column("largeThumbnailPath", .text)
                     gospelTable.column("smallThumbnailPath", .text)
@@ -295,6 +297,7 @@ public final class DataStore {
                     musicTable.column("sourceMaterial", .text)
                     musicTable.column("trackNumber", .integer)
                     musicTable.column("createdAt", .double)
+                    musicTable.column("duration", .double)
                     musicTable.column("updatedAt", .double)
                     musicTable.column("largeThumbnailPath", .text)
                     musicTable.column("smallThumbnailPath", .text)
@@ -321,6 +324,7 @@ public final class DataStore {
                 try db.create(table: "useractionplayable") { userActionPlayableTable in
                     DDLogDebug("created: \(userActionPlayableTable)")
                     userActionPlayableTable.column("downloaded", .boolean)
+                    userActionPlayableTable.column("duration", .double)
                     userActionPlayableTable.column("hashId", .text)
                     userActionPlayableTable.column("playableUuid", .text)
                     userActionPlayableTable.column("playablePath", .text)
@@ -1225,13 +1229,20 @@ extension DataStore: DataStoring {
                     // update
                     DDLogDebug("try action update playable.uuid: \(playable.uuid)")
                     if let action = try UserActionPlayable.filter(Column("playableUuid") == playable.uuid).fetchOne(db) {
-                        DDLogDebug("action found: \(action) playable.uuid: \(playable.uuid)")
+                        // update existing action
+                        
+//                        DDLogDebug("action found: \(action) playable.uuid: \(playable.uuid)")
+                        
+                        // media that we will store the actual playback position
+                        let storePlayableDuration: [MediaCategory] = [.preaching]
                         
                         if let playablePath = playable.path,
                             let prodUrl: URL = URL(string: playablePath) {
                             let pathExtension: String = prodUrl.pathExtension
                             let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(pathExtension)"))).path)
                             let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
+                            
+//                            playable.duration = TimeInterval(duration)
                             DDLogDebug("file there update? \(downloaded)")
                             
                             // back up 5 seconds to help the user remember the context, unless < 0
@@ -1241,14 +1252,24 @@ extension DataStore: DataStoring {
                             
                             // db update
                             var storeAction: UserActionPlayable = action
-                            storeAction.playbackPosition = Double(position)
+//                            storeAction.playbackPosition = Double(position)
+                            
+                            // if we are currently playing .preaching then store actual playback position because
+                            // preaching content is typically long duration
+                            
+                            if let category = MediaCategory(rawValue: storeAction.mediaCategory) {
+                                storeAction.playbackPosition = (storePlayableDuration.contains(category)) ? Double(position) : Double(0)
+                            } else {
+                                storeAction.playbackPosition = Double(0)
+                            }
+                            
                             storeAction.updatedAt = Date().timeIntervalSince1970
                             storeAction.downloaded = downloaded
                             try storeAction.update(db)
                         }
                         
                     } else {
-                        // insert
+                        // insert new action
                         DDLogDebug("action not found, playable.uuid: \(playable.uuid)")
                         if let playablePath = playable.path,
                             let prodUrl: URL = URL(string: playablePath)
@@ -1265,6 +1286,7 @@ extension DataStore: DataStoring {
                             
                             let newAction: UserActionPlayable =
                                 UserActionPlayable(downloaded: downloaded,
+                                                   duration: playable.duration,
                                                    hashId: playable.hashId,
                                                    playableUuid: playable.uuid,
                                                    playablePath: playable.path ?? nil,

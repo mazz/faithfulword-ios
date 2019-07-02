@@ -34,6 +34,7 @@ public struct MediaGospel: Codable, Playable {
     public var categoryUuid: String?
     //    public var createdAt: Double?
     public var contentProviderLink: String?
+    public var duration: TimeInterval
     public var hashId: String
     public var insertedAt: TimeInterval
     public var ipfsLink: String?
@@ -70,6 +71,7 @@ extension MediaGospel {
         static let presenterName = Column("presenterName")
         static let sourceMaterial = Column("sourceMaterial")
         static let categoryUuid = Column("categoryUuid")
+        static let duration = Column("duration")
         static let trackNumber = Column("trackNumber")
         static let createdAt = Column("createdAt")
         static let updatedAt = Column("updatedAt")

@@ -22,6 +22,7 @@ public struct MediaMusic: Codable, Playable {
     public var categoryUuid: String?
     //    public var createdAt: Double?
     public var contentProviderLink: String?
+    public var duration: TimeInterval
     public var hashId: String
     public var insertedAt: TimeInterval
     public var ipfsLink: String?
@@ -54,6 +55,7 @@ extension MediaMusic {
         static let uuid = Column("uuid")
         static let localizedName = Column("localizedName")
         static let path = Column("path")
+        static let duration = Column("duration")
         static let presenterName = Column("presenterName")
         static let sourceMaterial = Column("sourceMaterial")
         static let categoryUuid = Column("categoryUuid")

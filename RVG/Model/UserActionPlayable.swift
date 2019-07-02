@@ -4,6 +4,7 @@ import GRDB
 public struct UserActionPlayable: Codable, Playable {
 //    public var userActionPlayableId: Int64?
     public var downloaded: Bool
+    public var duration: TimeInterval
 //    public var categoryUuid: String?
     public var hashId: String
     public var playableUuid: String
@@ -54,6 +55,7 @@ extension UserActionPlayable {
     enum Columns {
 //        static let userActionPlayableId = Column("userActionPlayableId")
         static let downloaded = Column("downloaded")
+        static let duration = Column("duration")
         static let playablePath = Column("playablePath")
         static let insertedAt = Column("insertedAt")
         static let updatedAt = Column("updatedAt")
