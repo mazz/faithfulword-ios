@@ -200,20 +200,7 @@ extension MediaListingViewController: UIScrollViewDelegate {
             DDLogDebug("fetch!")
             viewModel.fetchMoreMedia()
         }
-    }
-    
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        //        DDLogDebug("scrollViewDidEndDragging scrollView: \(scrollView)")
-        
-        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-        //        DDLogDebug("offset diff: \(offsetDiff)")
-        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
-        
-        if offsetDiff - collectionView.frame.size.height <= 20.0 {
-            DDLogDebug("fetch!")
-            viewModel.fetchMoreMedia()
-        }
-    }
+    }    
 }
 
 
