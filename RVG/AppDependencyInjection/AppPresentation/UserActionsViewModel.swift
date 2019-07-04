@@ -17,7 +17,9 @@ internal final class UserActionsViewModel {
 
     // MARK: from client
     public var progressEvent = PublishSubject<Float>()
-    
+    // (progress, duration)
+    public var playbackEvent = PublishSubject<(Float, Float)>()
+
     // MARK: to client
     public var playbackHistory = PublishSubject<[Playable]>()
 
@@ -35,12 +37,12 @@ internal final class UserActionsViewModel {
     }
     
     func setupBindings() {
-        progressEvent.asObservable()
+        playbackEvent.asObservable()
             .throttle(1.5, scheduler: ConcurrentDispatchQueueScheduler(qos: .default))
-            .subscribe(onNext: { [unowned self] progressValue in
-                DDLogDebug("progressValue: \(progressValue)")
+            .subscribe(onNext: { [unowned self] progressValue, durationValue in
+                DDLogDebug("progressValue: \(progressValue), durationValue: \(durationValue)")
                 if let playable: Playable = self.playable {
-                    self.userActionsService.updatePlaybackPosition(playable: playable, position: progressValue)
+                    self.userActionsService.updatePlaybackPosition(playable: playable, position: progressValue, duration: durationValue)
                         .asObservable()
                         .subscribeAndDispose(by: self.bag)
                     
@@ -48,12 +50,11 @@ internal final class UserActionsViewModel {
                         .asObservable()
                         .next({ playables in
                             self.playbackHistory.onNext(playables)
-
                         })
                 }
             })
             .disposed(by: bag)
+
     }
 }
-
 

@@ -54,7 +54,7 @@ public protocol DataStoring {
     
     // MARK: history
     
-    func updatePlayableHistory(playable: Playable, position: Float) -> Single<Void>
+    func updatePlayableHistory(playable: Playable, position: Float, duration: Float) -> Single<Void>
     func fetchPlayableHistory() -> Single<[Playable]>
     func fetchLastState(playableUuid: String) -> Single<UserActionPlayable?>
     
@@ -1221,7 +1221,7 @@ extension DataStore: DataStoring {
     
     // MARK: User Actions
     
-    public func updatePlayableHistory(playable: Playable, position: Float) -> Single<Void> {
+    public func updatePlayableHistory(playable: Playable, position: Float, duration: Float) -> Single<Void> {
         // let update: Single<Void> =
         return Single.create { [unowned self] single in
             do {
@@ -1254,11 +1254,21 @@ extension DataStore: DataStoring {
                             var storeAction: UserActionPlayable = action
 //                            storeAction.playbackPosition = Double(position)
                             
-                            // if we are currently playing .preaching then store actual playback position because
-                            // preaching content is typically long duration
-                            
+                            // reset progress if there is less than 10 seconds left to play
+                            var storePosition: Float = position
+
                             if let category = MediaCategory(rawValue: storeAction.mediaCategory) {
-                                storeAction.playbackPosition = (storePlayableDuration.contains(category)) ? Double(position) : Double(0)
+                                if duration > 0 {
+                                    let timeToEnd: Float = duration - position
+                                    
+                                    // if we are near the end, set position to 0
+                                    if timeToEnd < 10 {
+                                        storePosition = 0
+                                    }
+                                }
+                                // if we are currently playing .preaching then store actual playback position because
+                                // preaching content is typically long duration
+                                storeAction.playbackPosition = (storePlayableDuration.contains(category)) ? Double(storePosition) : Double(0)
                             } else {
                                 storeAction.playbackPosition = Double(0)
                             }

@@ -24,7 +24,7 @@ public protocol UserDataServicing {
 }
 
 public protocol UserActionsDataServicing {
-    func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void>
+    func updatePlaybackPosition(playable: Playable, position: Float, duration: Float) -> Single<Void>
 //    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
 }
 
@@ -174,9 +174,9 @@ extension DataService: UserDataServicing {
 }
 
 extension DataService: UserActionsDataServicing {
-    public func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void> {
-        DDLogDebug("updatePlaybackPosition(playable: \(playable) position: \(position)")
-        return dataStore.updatePlayableHistory(playable: playable, position: position)
+    public func updatePlaybackPosition(playable: Playable, position: Float, duration: Float) -> Single<Void> {
+//        DDLogDebug("updatePlaybackPosition(playable: \(playable) position: \(position)")
+        return dataStore.updatePlayableHistory(playable: playable, position: position, duration: duration)
 //        return Single.just(())
     }
     

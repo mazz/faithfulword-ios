@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 
 protocol UserActionsServicing {
-    func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void>
+    func updatePlaybackPosition(playable: Playable, position: Float, duration: Float) -> Single<Void>
 //    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
 }
 
@@ -15,8 +15,8 @@ public final class UserActionsService: UserActionsServicing {
         self.dataService = dataService
     }
     
-    public func updatePlaybackPosition(playable: Playable, position: Float) -> Single<Void> {
-        return dataService.updatePlaybackPosition(playable: playable, position: position)
+    public func updatePlaybackPosition(playable: Playable, position: Float, duration: Float) -> Single<Void> {
+        return dataService.updatePlaybackPosition(playable: playable, position: position, duration: duration)
             .do(onSuccess: { _ in
                 DDLogDebug("playback position updated")
             })

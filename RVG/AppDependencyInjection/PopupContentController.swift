@@ -260,10 +260,10 @@ class PopupContentController: UIViewController {
         
         listenForSliderUserEvents()
         
-        actualPlaybackProgress.asObservable()
-            .observeOn(MainScheduler.instance)
-            .bind(to: userActionsViewModel.progressEvent)
-            .disposed(by: bag)
+//        actualPlaybackProgress.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .bind(to: userActionsViewModel.progressEvent)
+//            .disposed(by: bag)
         
         userActionsViewModel.playbackHistory
             .observeOn(MainScheduler.instance)
@@ -272,6 +272,10 @@ class PopupContentController: UIViewController {
             })
             .disposed(by: bag)
 
+        Observable.combineLatest(actualPlaybackProgress.asObservable(), estimatedDuration.asObservable())
+            .observeOn(MainScheduler.instance)
+            .bind(to: userActionsViewModel.playbackEvent)
+            .disposed(by: self.bag)
     }
     
     func bindDownloadingViewModel() {
