@@ -13,43 +13,40 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="u2c-Xc-3MG" customClass="MediaItemCell" customModule="Faithful_Word" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="240" height="64"/>
+            <rect key="frame" x="0.0" y="0.0" width="240" height="81"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                <rect key="frame" x="0.0" y="0.0" width="240" height="64"/>
+                <rect key="frame" x="0.0" y="0.0" width="240" height="81"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tLc-fm-MH0">
-                        <rect key="frame" x="60" y="6" width="145" height="21.5"/>
+                        <rect key="frame" x="60" y="15" width="145" height="21.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMh-UH-Wga">
-                        <rect key="frame" x="60" y="29.5" width="148" height="16"/>
-                        <constraints>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="ucv-Ka-S78"/>
-                        </constraints>
+                        <rect key="frame" x="60" y="38.5" width="148" height="16"/>
                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                         <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="creation" translatesAutoresizingMaskIntoConstraints="NO" id="DpP-KH-2cW" userLabel="Art Image">
-                        <rect key="frame" x="4" y="8" width="48" height="48"/>
+                        <rect key="frame" x="4" y="16.5" width="48" height="48"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="48" id="09t-8P-vqu"/>
                             <constraint firstAttribute="height" constant="48" id="POm-hi-6ho"/>
                         </constraints>
                     </imageView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play" translatesAutoresizingMaskIntoConstraints="NO" id="jQz-xF-R6O" userLabel="Play State Image">
-                        <rect key="frame" x="60" y="45" width="12" height="12"/>
+                        <rect key="frame" x="60" y="54" width="12" height="12"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="12" id="EUv-rd-MEA"/>
                             <constraint firstAttribute="width" constant="12" id="SNR-kD-0XP"/>
                         </constraints>
                     </imageView>
                     <button opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CFT-HW-hPR">
-                        <rect key="frame" x="205" y="21" width="19" height="22"/>
+                        <rect key="frame" x="205" y="29.5" width="19" height="22"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="9Eh-6Y-O6t"/>
                         </constraints>
@@ -58,11 +55,12 @@
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="tLc-fm-MH0" firstAttribute="top" secondItem="u2c-Xc-3MG" secondAttribute="top" constant="6" id="0wh-uF-OXd"/>
+                <constraint firstItem="tLc-fm-MH0" firstAttribute="top" secondItem="u2c-Xc-3MG" secondAttribute="top" constant="15" id="0wh-uF-OXd"/>
                 <constraint firstItem="tLc-fm-MH0" firstAttribute="leading" secondItem="DpP-KH-2cW" secondAttribute="trailing" constant="8" id="0zJ-T7-heU"/>
                 <constraint firstItem="CFT-HW-hPR" firstAttribute="leading" secondItem="tLc-fm-MH0" secondAttribute="trailing" id="9Au-z8-OCw"/>
                 <constraint firstItem="jQz-xF-R6O" firstAttribute="leading" secondItem="DpP-KH-2cW" secondAttribute="trailing" constant="8" id="EKZ-kl-4fh"/>
-                <constraint firstAttribute="bottom" secondItem="jQz-xF-R6O" secondAttribute="bottom" constant="7" id="HVR-Tg-cgB"/>
+                <constraint firstAttribute="bottom" secondItem="jQz-xF-R6O" secondAttribute="bottom" constant="15" id="HVR-Tg-cgB"/>
+                <constraint firstItem="CFT-HW-hPR" firstAttribute="leading" secondItem="QMh-UH-Wga" secondAttribute="trailing" constant="-3" id="OuG-Lj-CvT"/>
                 <constraint firstItem="jQz-xF-R6O" firstAttribute="top" secondItem="QMh-UH-Wga" secondAttribute="bottom" constant="-0.5" id="RYZ-UO-58Z"/>
                 <constraint firstItem="QMh-UH-Wga" firstAttribute="top" secondItem="tLc-fm-MH0" secondAttribute="bottom" constant="2" id="Raa-GY-Icm"/>
                 <constraint firstItem="CFT-HW-hPR" firstAttribute="centerY" secondItem="u2c-Xc-3MG" secondAttribute="centerY" id="YQr-R5-pfh"/>
