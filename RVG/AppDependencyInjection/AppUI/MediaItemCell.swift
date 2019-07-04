@@ -33,6 +33,10 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
         presenterLabel.text = presenter
         titleLabel.text = title
         
+        artworkImageView.layer.cornerRadius = 5
+        artworkImageView.layer.masksToBounds = true
+        artworkImageView.layer.borderWidth = 0
+
         
         contentView.backgroundColor = UIColor.white
         self.setNeedsLayout()

@@ -19,11 +19,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="240" height="64"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tLc-fm-MH0">
-                        <rect key="frame" x="60" y="6" width="148" height="21.5"/>
-                        <constraints>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="VR2-af-YOf"/>
-                        </constraints>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tLc-fm-MH0">
+                        <rect key="frame" x="60" y="6" width="145" height="21.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -53,6 +50,9 @@
                     </imageView>
                     <button opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CFT-HW-hPR">
                         <rect key="frame" x="205" y="21" width="19" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="19" id="9Eh-6Y-O6t"/>
+                        </constraints>
                         <state key="normal" image="ellipsis-small"/>
                     </button>
                 </subviews>
@@ -60,13 +60,13 @@
             <constraints>
                 <constraint firstItem="tLc-fm-MH0" firstAttribute="top" secondItem="u2c-Xc-3MG" secondAttribute="top" constant="6" id="0wh-uF-OXd"/>
                 <constraint firstItem="tLc-fm-MH0" firstAttribute="leading" secondItem="DpP-KH-2cW" secondAttribute="trailing" constant="8" id="0zJ-T7-heU"/>
+                <constraint firstItem="CFT-HW-hPR" firstAttribute="leading" secondItem="tLc-fm-MH0" secondAttribute="trailing" id="9Au-z8-OCw"/>
                 <constraint firstItem="jQz-xF-R6O" firstAttribute="leading" secondItem="DpP-KH-2cW" secondAttribute="trailing" constant="8" id="EKZ-kl-4fh"/>
                 <constraint firstAttribute="bottom" secondItem="jQz-xF-R6O" secondAttribute="bottom" constant="7" id="HVR-Tg-cgB"/>
                 <constraint firstItem="jQz-xF-R6O" firstAttribute="top" secondItem="QMh-UH-Wga" secondAttribute="bottom" constant="-0.5" id="RYZ-UO-58Z"/>
                 <constraint firstItem="QMh-UH-Wga" firstAttribute="top" secondItem="tLc-fm-MH0" secondAttribute="bottom" constant="2" id="Raa-GY-Icm"/>
                 <constraint firstItem="CFT-HW-hPR" firstAttribute="centerY" secondItem="u2c-Xc-3MG" secondAttribute="centerY" id="YQr-R5-pfh"/>
                 <constraint firstItem="DpP-KH-2cW" firstAttribute="leading" secondItem="u2c-Xc-3MG" secondAttribute="leading" constant="4" id="gwe-mh-29s"/>
-                <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="tLc-fm-MH0" secondAttribute="trailing" constant="32" id="i30-j7-OFS"/>
                 <constraint firstItem="QMh-UH-Wga" firstAttribute="leading" secondItem="DpP-KH-2cW" secondAttribute="trailing" constant="8" id="olr-6Z-ZHJ"/>
                 <constraint firstAttribute="trailing" secondItem="CFT-HW-hPR" secondAttribute="trailing" constant="16" id="u6Z-Nr-fHd"/>
                 <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="QMh-UH-Wga" secondAttribute="trailing" constant="32" id="yOV-nK-j1j"/>

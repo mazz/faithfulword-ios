@@ -36,9 +36,14 @@ final class PlaylistCollectionViewCell: MagazineLayoutCollectionViewCell {
     
     public func populate(iconName: String, label: String, showBottomSeparator: Bool, showChevron: Bool = true) {
         iconImageView.image = UIImage.uiAsset(name: iconName)
+        iconImageView.layer.cornerRadius = 5
+        iconImageView.layer.masksToBounds = true
+        iconImageView.layer.borderWidth = 0
+
         groupSelectionLabel.text = label
         separatorView.isHidden = !showBottomSeparator
         chevronImageView.isHidden = !showChevron
+
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
