@@ -24,7 +24,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         switch item {
         case let .drillIn(_, iconName, title, presenter, showBottomSeparator):
             let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
-            drillInCell.set(title: title, presenter: presenter)
+            drillInCell.set(title: title, presenter: presenter, showBottomSeparator: showBottomSeparator)
             return drillInCell
         }
     }
@@ -200,7 +200,7 @@ extension MediaListingViewController: UIScrollViewDelegate {
             DDLogDebug("fetch!")
             viewModel.fetchMoreMedia()
         }
-    }    
+    }
 }
 
 

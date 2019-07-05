@@ -6,10 +6,11 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     // MARK: Private
 
 
-    @IBOutlet weak var artworkImageView: UIImageView!
-    @IBOutlet weak var presenterLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var playStateImageView: UIImageView!
+    @IBOutlet private weak var artworkImageView: UIImageView!
+    @IBOutlet private weak var presenterLabel: UILabel!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var separatorView: UIView!
+    @IBOutlet private weak var playStateImageView: UIImageView!
     
     // MARK: Lifecycle
     
@@ -28,7 +29,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
         self.layoutIfNeeded()
     }
     
-    func set(title: String, presenter: String) {
+    func set(title: String, presenter: String, showBottomSeparator: Bool) {
 //        titleLabel.text = text
         presenterLabel.text = presenter
         titleLabel.text = title
@@ -37,6 +38,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
         artworkImageView.layer.masksToBounds = true
         artworkImageView.layer.borderWidth = 0
 
+        separatorView.isHidden = !showBottomSeparator
         
         contentView.backgroundColor = UIColor.white
         self.setNeedsLayout()

@@ -137,7 +137,7 @@ final class PlaylistViewModel {
                 case MediaCategory.podcast.rawValue:
                     icon = "creation"
                 case MediaCategory.preaching.rawValue:
-                    icon = "creation"
+                    icon = "preaching"
                 case MediaCategory.testimony.rawValue:
                     icon = "creation"
                 case MediaCategory.tutorial.rawValue:
