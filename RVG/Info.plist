@@ -65,5 +65,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+    <key>CFBundleDisplayName</key>
+    <string>$(PRODUCT_NAME)</string>
 </dict>
 </plist>
+
