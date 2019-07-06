@@ -52,12 +52,15 @@
                             <constraint firstAttribute="width" constant="12" id="SNR-kD-0XP"/>
                         </constraints>
                     </imageView>
-                    <button opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CFT-HW-hPR">
-                        <rect key="frame" x="205" y="29.5" width="19" height="22"/>
+                    <button opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CFT-HW-hPR">
+                        <rect key="frame" x="205" y="25" width="19" height="31"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="19" id="9Eh-6Y-O6t"/>
                         </constraints>
                         <state key="normal" image="ellipsis-small"/>
+                        <connections>
+                            <action selector="handleMoreButtonTap:" destination="u2c-Xc-3MG" eventType="touchUpInside" id="apn-uw-KQ2"/>
+                        </connections>
                     </button>
                 </subviews>
             </view>
@@ -84,6 +87,7 @@
             <size key="customSize" width="240" height="50"/>
             <connections>
                 <outlet property="artworkImageView" destination="DpP-KH-2cW" id="xo8-um-yhD"/>
+                <outlet property="moreButton" destination="CFT-HW-hPR" id="GpF-PX-xrd"/>
                 <outlet property="playStateImageView" destination="jQz-xF-R6O" id="lyx-Yq-vXS"/>
                 <outlet property="presenterLabel" destination="QMh-UH-Wga" id="0oM-8L-iZk"/>
                 <outlet property="separatorView" destination="gaW-av-pK1" id="gg9-lW-RER"/>

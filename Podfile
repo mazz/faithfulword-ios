@@ -29,4 +29,6 @@ target 'FaithfulWord' do
     pod 'MarqueeLabel/Swift'
     pod 'UICircularProgressRing'
     pod 'MagazineLayout'
+    # action sheets
+    pod 'XLActionController'
 end

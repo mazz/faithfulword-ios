@@ -42,6 +42,12 @@
 		4C437ABB223356C600083197 /* UserActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437ABA223356C600083197 /* UserActionsViewModel.swift */; };
 		4C437AD42239F07000083197 /* HistoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437AD32239F07000083197 /* HistoryService.swift */; };
 		4C437AD6223C60DB00083197 /* UIFont+PlaybackUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C437AD5223C60DB00083197 /* UIFont+PlaybackUI.swift */; };
+		4C4A2CD022D01B82008BB79A /* SpotifyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A2CCE22D01B7F008BB79A /* SpotifyCell.xib */; };
+		4C4A2CD122D01B82008BB79A /* Spotify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A2CCF22D01B7F008BB79A /* Spotify.swift */; };
+		4C4A2CD422D01F2F008BB79A /* ActionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A2CD322D01F2F008BB79A /* ActionData.swift */; };
+		4C4A2CD622D01F58008BB79A /* ActionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A2CD522D01F58008BB79A /* ActionCell.swift */; };
+		4C4A2CD922D020C4008BB79A /* YoutubeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A2CD722D020BF008BB79A /* YoutubeCell.xib */; };
+		4C4A2CDA22D020C4008BB79A /* Youtube.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A2CD822D020C1008BB79A /* Youtube.swift */; };
 		4C596253229E1E5E00947F73 /* PlaylistCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C596251229E1E5E00947F73 /* PlaylistCollectionViewCell.swift */; };
 		4C596254229E1E5E00947F73 /* PlaylistCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C596252229E1E5E00947F73 /* PlaylistCollectionViewCell.xib */; };
 		4C5D60F720A51A5E00ED9958 /* 1sec.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4C5D60F620A51A5D00ED9958 /* 1sec.m4a */; };
@@ -238,6 +244,12 @@
 		4C437ABA223356C600083197 /* UserActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionsViewModel.swift; sourceTree = "<group>"; };
 		4C437AD32239F07000083197 /* HistoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryService.swift; sourceTree = "<group>"; };
 		4C437AD5223C60DB00083197 /* UIFont+PlaybackUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+PlaybackUI.swift"; sourceTree = "<group>"; };
+		4C4A2CCE22D01B7F008BB79A /* SpotifyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SpotifyCell.xib; sourceTree = "<group>"; };
+		4C4A2CCF22D01B7F008BB79A /* Spotify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spotify.swift; sourceTree = "<group>"; };
+		4C4A2CD322D01F2F008BB79A /* ActionData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionData.swift; sourceTree = "<group>"; };
+		4C4A2CD522D01F58008BB79A /* ActionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCell.swift; sourceTree = "<group>"; };
+		4C4A2CD722D020BF008BB79A /* YoutubeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YoutubeCell.xib; sourceTree = "<group>"; };
+		4C4A2CD822D020C1008BB79A /* Youtube.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Youtube.swift; sourceTree = "<group>"; };
 		4C596251229E1E5E00947F73 /* PlaylistCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCollectionViewCell.swift; sourceTree = "<group>"; };
 		4C596252229E1E5E00947F73 /* PlaylistCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlaylistCollectionViewCell.xib; sourceTree = "<group>"; };
 		4C5D60F620A51A5D00ED9958 /* 1sec.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1sec.m4a; sourceTree = "<group>"; };
@@ -576,6 +588,7 @@
 		4C3EA133206A714300310024 /* AppUI */ = {
 			isa = PBXGroup;
 			children = (
+				4C4A2CD222D01F18008BB79A /* ActionSheet */,
 				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
 				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
 				4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */,
@@ -607,6 +620,19 @@
 				4C3EA139206A720D00310024 /* Playback.storyboard */,
 			);
 			path = Playback;
+			sourceTree = "<group>";
+		};
+		4C4A2CD222D01F18008BB79A /* ActionSheet */ = {
+			isa = PBXGroup;
+			children = (
+				4C4A2CD522D01F58008BB79A /* ActionCell.swift */,
+				4C4A2CD322D01F2F008BB79A /* ActionData.swift */,
+				4C4A2CCF22D01B7F008BB79A /* Spotify.swift */,
+				4C4A2CCE22D01B7F008BB79A /* SpotifyCell.xib */,
+				4C4A2CD822D020C1008BB79A /* Youtube.swift */,
+				4C4A2CD722D020BF008BB79A /* YoutubeCell.xib */,
+			);
+			path = ActionSheet;
 			sourceTree = "<group>";
 		};
 		4C7D5465200EF7A90038B265 /* Account */ = {
@@ -955,12 +981,14 @@
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
 				687BF6DA1EC014B2002EDCC3 /* InfoPlist.strings in Resources */,
 				4C3EA138206A71D200310024 /* DeviceNowPlayingBarView.xib in Resources */,
+				4C4A2CD922D020C4008BB79A /* YoutubeCell.xib in Resources */,
 				4C78CED022876D22006FB8CB /* MediaItemCell.xib in Resources */,
 				4CA31F8E2008594D00A94101 /* DeviceGroupSelectionCell.xib in Resources */,
 				68BC8AE71EC5662A00FBC7C2 /* MainMenuTableViewCell.xib in Resources */,
 				4C596254229E1E5E00947F73 /* PlaylistCollectionViewCell.xib in Resources */,
 				68B5F3BC1F88F67B0044D74C /* GoogleService-Info.plist in Resources */,
 				4CD5C1BB20242A96007BFC1B /* VerseCell.xib in Resources */,
+				4C4A2CD022D01B82008BB79A /* SpotifyCell.xib in Resources */,
 				4C5FAD752037212000397BFF /* RadioSelectionCell.xib in Resources */,
 				70CD206C1E6479A800AF619F /* LaunchScreen.storyboard in Resources */,
 				4C3EA13A206A720D00310024 /* Playback.storyboard in Resources */,
@@ -1008,6 +1036,7 @@
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework",
 				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
+				"${BUILT_PRODUCTS_DIR}/XLActionController/XLActionController.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -1031,6 +1060,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swinject.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XLActionController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1171,10 +1201,12 @@
 				4C7EB887228B8EA8000E8DAB /* Channel.swift in Sources */,
 				4CCE8C7B1FF4B5CA00AFBAF2 /* RootViewController.swift in Sources */,
 				4C7EB898228B8EA8000E8DAB /* BookResponse.swift in Sources */,
+				4C4A2CD122D01B82008BB79A /* Spotify.swift in Sources */,
 				4CCE8C7F1FF4B6D000AFBAF2 /* AppAnimations.swift in Sources */,
 				4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */,
 				4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */,
 				4CFB85002005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift in Sources */,
+				4C4A2CD422D01F2F008BB79A /* ActionData.swift in Sources */,
 				4C7EB854228B8BBD000E8DAB /* PlaylistSectionViewModel.swift in Sources */,
 				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
@@ -1182,6 +1214,7 @@
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
 				4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
+				4C4A2CDA22D020C4008BB79A /* Youtube.swift in Sources */,
 				4C7EB88C228B8EA8000E8DAB /* Music.swift in Sources */,
 				4C596253229E1E5E00947F73 /* PlaylistCollectionViewCell.swift in Sources */,
 				4C7EB89C228E6C1B000E8DAB /* PlaylistResponse.swift in Sources */,
@@ -1221,6 +1254,7 @@
 				4C7EB889228B8EA8000E8DAB /* Playable.swift in Sources */,
 				4C5FAD7120369A5600397BFF /* RadioListViewModeling.swift in Sources */,
 				4CFB850B2007098200FEBB53 /* UIView+Sizing.swift in Sources */,
+				4C4A2CD622D01F58008BB79A /* ActionCell.swift in Sources */,
 				4CCE8C9C1FF55DD700AFBAF2 /* Field.swift in Sources */,
 				4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
@@ -1461,7 +1495,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = KJVRVG.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
@@ -1489,7 +1523,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = KJVRVG.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Collin Schneide (AW22Z53SAJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;

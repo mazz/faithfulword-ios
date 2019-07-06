@@ -2,6 +2,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import XLActionController
 import MagazineLayout
 
 /// Add service screen
@@ -22,9 +23,13 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
     
         switch item {
-        case let .drillIn(_, iconName, title, presenter, showBottomSeparator):
+        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator):
             let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
-            drillInCell.set(title: title, presenter: presenter, showBottomSeparator: showBottomSeparator)
+            switch enumPlayable {
+                
+            case .playable(let item):
+                drillInCell.set(uuid: item.uuid, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator)
+            }
             return drillInCell
         }
     }
@@ -81,6 +86,11 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+        
+
 //        registerReusableViews()
 //        bindToViewModel()
         reactToViewModel()
@@ -147,6 +157,32 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         collectionView.rx.itemSelected.asObservable()
             .subscribe(viewModel.selectItemEvent.asObserver())
             .disposed(by: bag)
+    }
+    
+    @objc func handleUserDidTapMoreNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        
+        let actionController = YoutubeActionController()
+        
+//        actionController.addAction(Action(ActionData(title: "Add to Watch Later", image: UIImage(named: "yt-add-to-watch-later-icon")!), style: .default, handler: { action in
+//        }))
+        actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+        }))
+        actionController.addAction(Action(ActionData(title: "Share...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
+        }))
+        actionController.addAction(Action(ActionData(title: "Cancel", image: UIImage(named: "yt-cancel-icon")!), style: .cancel, handler: nil))
+        
+        present(actionController, animated: true, completion: nil)
+
+        //        if let fileDownload: FileDownload = notification.object as? FileDownload,
+        //            let downloadAsset: Asset = self.downloadAsset.value {
+        //            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
+        //            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+        //
+        //                self.downloadState.onNext(.initiating)
+        //            }
+        //
+        //        }
     }
     
     private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<MediaListingSectionViewModel> {

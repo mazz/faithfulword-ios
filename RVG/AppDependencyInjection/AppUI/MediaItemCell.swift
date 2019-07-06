@@ -2,7 +2,8 @@ import MagazineLayout
 import UIKit
 
 final class MediaItemCell: MagazineLayoutCollectionViewCell {
-
+    static let mediaItemCellUserDidTapMoreNotification = Notification.Name("mediaItemCellUserDidTapMoreNotification")
+    
     // MARK: Private
 
 
@@ -11,11 +12,16 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var separatorView: UIView!
     @IBOutlet private weak var playStateImageView: UIImageView!
+    @IBOutlet private weak var moreButton: UIButton!
+
+    var mediaUuid: String? = nil
     
     // MARK: Lifecycle
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        
+        
     }
     
     // MARK: Internal
@@ -29,8 +35,11 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
         self.layoutIfNeeded()
     }
     
-    func set(title: String, presenter: String, showBottomSeparator: Bool) {
+//    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool) {
+    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool) {
 //        titleLabel.text = text
+        mediaUuid = uuid
+        
         presenterLabel.text = presenter
         titleLabel.text = title
         
@@ -43,5 +52,10 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
         contentView.backgroundColor = UIColor.white
         self.setNeedsLayout()
         self.layoutIfNeeded()
+    }
+    
+
+    @IBAction func handleMoreButtonTap(_ sender: Any) {
+            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: mediaUuid)
     }
 }
