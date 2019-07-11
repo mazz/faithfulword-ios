@@ -906,7 +906,6 @@
 				33FE5B74C59638D836131FA2 /* [CP] Embed Pods Frameworks */,
 				4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */,
 				4C958E9A208D3D9700A71C59 /* Run Carthage Copy Frameworks */,
-				4C958E9B2090184A00A71C59 /* Run Carthage Check Outdated */,
 				4C2F8028218D473700EBA81A /* swiftlint */,
 			);
 			buildRules = (
@@ -1118,20 +1117,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-		4C958E9B2090184A00A71C59 /* Run Carthage Check Outdated */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Carthage Check Outdated";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage outdated --xcode-warnings";
 		};
 		7944956FD7A8380C34FBDF37 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
