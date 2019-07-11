@@ -148,16 +148,16 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         collectionView.register(cellType: DeviceGroupSelectionCell.self)
     }
 
-    private func bindToViewModel() {
-        collectionView.rx.setDelegate(self).disposed(by: bag)
-        viewModel.sections.asObservable()
-            .bind(to: collectionView.rx.items(dataSource: rxDataSource()))
-            .disposed(by: bag)
-
-        collectionView.rx.itemSelected.asObservable()
-            .subscribe(viewModel.selectItemEvent.asObserver())
-            .disposed(by: bag)
-    }
+//    private func bindToViewModel() {
+//        collectionView.rx.setDelegate(self).disposed(by: bag)
+//        viewModel.sections.asObservable()
+//            .bind(to: collectionView.rx.items(dataSource: rxDataSource()))
+//            .disposed(by: bag)
+//
+//        collectionView.rx.itemSelected.asObservable()
+//            .subscribe(viewModel.selectItemEvent.asObserver())
+//            .disposed(by: bag)
+//    }
     
     @objc func handleUserDidTapMoreNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
@@ -185,24 +185,24 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         //        }
     }
     
-    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<MediaListingSectionViewModel> {
-        let dataSource = RxCollectionViewSectionedReloadDataSource<MediaListingSectionViewModel>(
-            configureCell: { (dataSource, collectionView, indexPath, item) in
-                switch item {
-                case let .drillIn(_, iconName, title, presenter, showBottomSeparator):
-                    let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
-                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator, showChevron: false)
-                    return drillInCell
-
-                }},
-            configureSupplementaryView: { _, collectionView, kind, indexPath in
-                return collectionView.dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: UICollectionReusableView.identifierName,
-                    for: indexPath)
-        })
-        return dataSource
-    }
+//    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<MediaListingSectionViewModel> {
+//        let dataSource = RxCollectionViewSectionedReloadDataSource<MediaListingSectionViewModel>(
+//            configureCell: { (dataSource, collectionView, indexPath, item) in
+//                switch item {
+//                case let .drillIn(_, iconName, title, presenter, showBottomSeparator):
+//                    let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
+//                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator, showChevron: false)
+//                    return drillInCell
+//
+//                }},
+//            configureSupplementaryView: { _, collectionView, kind, indexPath in
+//                return collectionView.dequeueReusableSupplementaryView(
+//                    ofKind: kind,
+//                    withReuseIdentifier: UICollectionReusableView.identifierName,
+//                    for: indexPath)
+//        })
+//        return dataSource
+//    }
 }
 
 //extension MediaListingViewController: UICollectionViewDelegateFlowLayout {
