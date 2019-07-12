@@ -15,6 +15,8 @@ protocol DownloadServicing {
     //    var state: Observable<FileDownloadState> { get }
 //    var fileDownload: Observable<FileDownload> { get }
     var downloadMap: [String: DownloadDataService] { get }
+    var operations: [String: DownloadOperation] { get }
+    var fileDownloads: [String: FileDownload] { get }
     func fetchDownload(url: String, filename: String) -> Single<Void>
 //    func activeDownload(filename: String) -> Observable<FileDownload>
 //    func cancelDownload(filename: String) -> Single<Void>
@@ -33,7 +35,9 @@ public final class DownloadService: NSObject {
     }
     
     public var downloadMap: [String: DownloadDataService] = [:]
-    
+    public var operations: [String: DownloadOperation] = [:]
+    public var fileDownloads: [String: FileDownload] = [:]
+
     
     //    public private(set) var media = Field<[Playable]>([])
     //    public var progress: Observable<Float> {
@@ -67,14 +71,70 @@ extension DownloadService: URLSessionDownloadDelegate {
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         DDLogDebug("didFinishDownloadingTo: session: \(String(describing: session)) downloadTask: \(downloadTask) location: \(location)")
+        
+        if let identifier: String = session.configuration.identifier,
+            let finishingDownload: DownloadOperation = operations[identifier] {
+            finishingDownload.cancel()
+        }
+        
+//        DispatchQueue.main.async { [unowned self] in
+            if let identifier: String = session.configuration.identifier,
+                let fileDownload: FileDownload = self.fileDownloads[identifier] {
+                
+                var download = fileDownload
+                download.state = .complete
+                // refresh mapped download
+                self.fileDownloads[identifier] = download
+                
+                NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCompleteNotification, object: download)
+                
+                let fullPath: URL = self.saveLocationUrl(identifier: identifier)
+                DDLogDebug("fullPath: \(fullPath)")
+                
+                // capture the audio file as a Data blob and then write it
+                // to temp dir
+                
+                do {
+                    let audioData: Data = try Data(contentsOf: location, options: .uncached)
+                    try audioData.write(to: fullPath, options: .atomicWrite)
+                } catch {
+                    DDLogDebug("error writing audio file: \(error)")
+                    return
+                }
+                
+                do {
+                    // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
+                    try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
+                } catch {
+                    DDLogDebug("error while setting file permissions")
+                }
+            }
+//        }
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        DDLogDebug("didFinishDownloadingTo: session: \(String(describing: session)) downloadTask: \(downloadTask) totalBytesWritten: \(totalBytesWritten) totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
+        DDLogDebug("didWriteData: session: \(String(describing: session)) downloadTask: \(downloadTask) totalBytesWritten: \(totalBytesWritten) totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
+        
+        DispatchQueue.main.async { [unowned self] in
+            if let identifier: String = session.configuration.identifier,
+                let fileDownload: FileDownload = self.fileDownloads[identifier] {
+                var download = fileDownload
+                download.completedCount = totalBytesWritten
+                download.totalCount = totalBytesExpectedToWrite
+                download.progress = Float(totalBytesWritten/totalBytesExpectedToWrite)
+                download.state = .inProgress
+                
+                // refresh mapped download
+                self.fileDownloads[identifier] = download
+                
+                NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: download)
+            }
+        }
+
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
-        DDLogDebug("didFinishDownloadingTo: session: \(String(describing: session)) downloadTask: \(downloadTask) fileOffset: \(fileOffset) expectedTotalBytes: \(expectedTotalBytes)")
+        DDLogDebug("didResumeAtOffset: session: \(String(describing: session)) downloadTask: \(downloadTask) fileOffset: \(fileOffset) expectedTotalBytes: \(expectedTotalBytes)")
     }
 
 }
@@ -82,31 +142,28 @@ extension DownloadService: URLSessionDownloadDelegate {
 extension DownloadService: DownloadServicing {
     func fetchDownload(url: String, filename: String) -> Single<Void> {
         DDLogDebug("fetchDownload")
-        let configuration = URLSessionConfiguration.background(withIdentifier: "app.fwsaved.downloadsession")
+        let identifier: String = "app.fwsaved.downloadsession_\(filename)"
+        let configuration = URLSessionConfiguration.background(withIdentifier: identifier)
         let sessionQueue = OperationQueue()
         let urlSession: URLSession = URLSession(configuration: configuration, delegate: self, delegateQueue: sessionQueue)
 
-//        NSURL * url = [NSURL URLWithString:@"http://www.hdwallpapersinn.com/wp-content/uploads/2012/09/HD-Wallpaper-1920x1080.jpg"];
-//        NSURLSessionConfiguration * backgroundConfig = [NSURLSessionConfiguration backgroundSessionConfiguration:@"backgroundtask1"];
-//
-//        NSURLSession *backgroundSeesion = [NSURLSession sessionWithConfiguration: backgroundConfig delegate:self delegateQueue: [NSOperationQueue mainQueue]];
-//
-//        NSURLSessionDownloadTask * downloadTask =[ backgroundSeesion downloadTaskWithURL:url];
-//        [downloadTask resume];
         if let remoteUrl = URL(string: url) {
-            let task: URLSessionDownloadTask = urlSession.downloadTask(with: remoteUrl)
-            task.resume()
+            let operation = DownloadOperation(session: urlSession, downloadTaskURL: remoteUrl)
+
+            queue.addOperation(operation)
+            operations[identifier] = operation
+            
+            let fileDownload: FileDownload = FileDownload(url: remoteUrl,
+                                                          localUrl: saveLocationUrl(identifier: identifier),
+                                                          progress: 0,
+                                                          totalCount: 0,
+                                                          completedCount: 0,
+                                                          state: .initiating)
+            fileDownloads[identifier] = fileDownload
+
+            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: fileDownload)
+
         }
-        
-        //        if let remoteUrl: URL = URL(string: url) {
-////            let operation = DownloadOperation(session: urlSession, downloadTaskURL: remoteUrl, completionHandler: { (localURL, response, error) in
-////                print("finished downloading \(url) local: \(String(describing: localURL))")
-////            })
-//            let operation = DownloadOperation(session: urlSession, downloadTaskURL: remoteUrl, completionHandler: nil)
-//
-//            queue.addOperation(operation)
-//        }
-        
         return Single.just(())
         
         
@@ -169,6 +226,48 @@ extension DownloadService: DownloadServicing {
             }
             return Disposables.create { }
         }
+    }
+}
+
+extension DownloadService {
+    func saveLocationUrl(identifier: String) -> URL {
+        let components = identifier.split(separator:"_")
+        let targetFilename: String = String(components[1])
+        
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let url: URL = urls[urls.endIndex - 1]
+        
+        let directory: URL = url.appendingPathComponent("Saved/")
+        
+        do {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            DDLogDebug("error while creating directory")
+        }
+        
+        let fullPath: URL = directory.appendingPathComponent(targetFilename)
+        
+        DDLogDebug("fullPath: \(fullPath)")
+        
+        return fullPath
+        
+        // capture the audio file as a Data blob and then write it
+        // to temp dir
+        
+//        do {
+//            let audioData: Data = try Data(contentsOf: location, options: .uncached)
+//            try audioData.write(to: fullPath, options: .atomicWrite)
+//        } catch {
+//            DDLogDebug("error writing audio file: \(error)")
+//            return
+//        }
+//
+//        do {
+//            // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
+//            try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
+//        } catch {
+//            DDLogDebug("error while setting file permissions")
+//        }
     }
 }
 

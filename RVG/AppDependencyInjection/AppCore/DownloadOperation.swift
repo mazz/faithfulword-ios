@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DownloadOperation : Operation {
+public class DownloadOperation : Operation {
     
     private var task : URLSessionDownloadTask!
     
@@ -31,35 +31,27 @@ class DownloadOperation : Operation {
         }
     }
     
-    override var isReady: Bool { return state == .ready }
-    override var isExecuting: Bool { return state == .executing }
-    override var isFinished: Bool { return state == .finished }
+    override public var isReady: Bool { return state == .ready }
+    override public var isExecuting: Bool { return state == .executing }
+    override public var isFinished: Bool { return state == .finished }
     
-    init(session: URLSession, downloadTaskURL: URL, completionHandler: ((URL?, URLResponse?, Error?) -> Void)?) {
+    init(session: URLSession, downloadTaskURL: URL) {
         super.init()
+        /*
+         set the operation state to finished once
+         the download task is completed or have error
+         */
+//        self?.state = .finished
         
         // use weak self to prevent retain cycle
-        task = session.downloadTask(with: downloadTaskURL, completionHandler: { [weak self] (localURL, response, error) in
-            
-            /*
-             if there is a custom completionHandler defined,
-             pass the result gotten in downloadTask's completionHandler to the
-             custom completionHandler
-             */
-            if let completionHandler = completionHandler {
-                // localURL is the temporary URL the downloaded file is located
-                completionHandler(localURL, response, error)
-            }
-            
-            /*
-             set the operation state to finished once
-             the download task is completed or have error
-             */
-            self?.state = .finished
-        })
+//        task = session.downloadTask(with
+        
+        task = session.downloadTask(with: downloadTaskURL)
+        task.resume()
+
     }
     
-    override func start() {
+    override public func start() {
         /*
          if the operation or queue got cancelled even
          before the operation has started, set the
@@ -79,7 +71,7 @@ class DownloadOperation : Operation {
         self.task.resume()
     }
     
-    override func cancel() {
+    override public func cancel() {
         super.cancel()
         
         // cancel the downloading
