@@ -25,7 +25,12 @@ protocol DownloadServicing {
 }
 
 public final class DownloadService: NSObject {
-    
+    static let fileDownloadDidInitiateNotification = Notification.Name("fileDownloadDidInitiateNotification")
+    static let fileDownloadDidProgressNotification = Notification.Name("fileDownloadDidProgressNotification")
+    static let fileDownloadDidCompleteNotification = Notification.Name("fileDownloadDidCompleteNotification")
+    static let fileDownloadDidErrorNotification = Notification.Name("fileDownloadDidErrorNotification")
+    static let fileDownloadDidCancelNotification = Notification.Name("fileDownloadDidCancelNotification")
+
     // MARK: Fields(
     private let bag = DisposeBag()
     private var queue: OperationQueue {
@@ -85,7 +90,7 @@ extension DownloadService: URLSessionDownloadDelegate {
             // refresh mapped download
             self.fileDownloads[identifier] = download
             
-            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCompleteNotification, object: download)
+            NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: download)
             
             let fullPath: URL = self.saveLocationUrl(identifier: identifier)
             DDLogDebug("fullPath: \(fullPath)")
@@ -113,9 +118,10 @@ extension DownloadService: URLSessionDownloadDelegate {
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         DDLogDebug("didWriteData: session: \(String(describing: session)) downloadTask: \(downloadTask) totalBytesWritten: \(totalBytesWritten) totalBytesExpectedToWrite: \(totalBytesExpectedToWrite)")
         
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async { [weak self] in
             if let identifier: String = session.configuration.identifier,
-                let fileDownload: FileDownload = self.fileDownloads[identifier] {
+                let weakSelf = self,
+                let fileDownload: FileDownload = weakSelf.fileDownloads[identifier] {
                 var download = fileDownload
                 download.completedCount = totalBytesWritten
                 download.totalCount = totalBytesExpectedToWrite
@@ -123,9 +129,9 @@ extension DownloadService: URLSessionDownloadDelegate {
                 download.state = .inProgress
                 
                 // refresh mapped download
-                self.fileDownloads[identifier] = download
+                weakSelf.fileDownloads[identifier] = download
                 
-                NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: download)
+                NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: download)
             }
         }
 
@@ -159,7 +165,7 @@ extension DownloadService: DownloadServicing {
                                                           state: .initiating)
             fileDownloads[identifier] = fileDownload
 
-            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: fileDownload)
+            NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: fileDownload)
 
         }
         return Single.just(())

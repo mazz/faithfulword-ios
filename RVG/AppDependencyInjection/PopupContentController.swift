@@ -437,7 +437,7 @@ class PopupContentController: UIViewController {
         notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
 
         
-        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidProgressNotification(notification:)), name: DownloadDataService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
 
 //        self.assetPlaybackManager = playbackViewModel.assetPlaybackService.assetPlaybackManager
 
@@ -720,15 +720,19 @@ class PopupContentController: UIViewController {
     }
     
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
-        DDLogDebug("notification: \(notification)")
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(self.playbackAsset.uuid)")
-            if fileDownload.localUrl.lastPathComponent == self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)")) {
-                self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
-                self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
-                
-                DDLogDebug("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+//        DispatchQueue.main.async { [weak self] in
+//            print("notification: \(notification)")
+            if let fileDownload: FileDownload = notification.object as? FileDownload,
+                let playbackAsset = self.playbackAsset
+            {
+                print("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(playbackAsset.uuid)")
+                if fileDownload.localUrl.lastPathComponent == playbackAsset.uuid.appending(String(describing: ".\(playbackAsset.fileExtension)")) {
+                    self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
+                    self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
+                    
+                    print("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+                }
             }
-        }
+//        }
     }
 }

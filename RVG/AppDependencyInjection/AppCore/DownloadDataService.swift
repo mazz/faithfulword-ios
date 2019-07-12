@@ -103,11 +103,6 @@ public protocol FileDownloadDataServicing {
 
 public final class DownloadDataService {
 
-    static let fileDownloadDidInitiateNotification = Notification.Name("fileDownloadDidInitiateNotification")
-    static let fileDownloadDidProgressNotification = Notification.Name("fileDownloadDidProgressNotification")
-    static let fileDownloadDidCompleteNotification = Notification.Name("fileDownloadDidCompleteNotification")
-    static let fileDownloadDidErrorNotification = Notification.Name("fileDownloadDidErrorNotification")
-    static let fileDownloadDidCancelNotification = Notification.Name("fileDownloadDidCancelNotification")
     
     // MARK: Fields
 //    private var stateSubject = BehaviorSubject<FileDownloadState>(value: .initial)
@@ -156,7 +151,7 @@ extension DownloadDataService: FileDownloadDataServicing {
                         internalRequest.cancel()
                         internalFileDownload.state = .cancelled
                         self.fileDownloadSubject.onNext(internalFileDownload)
-                        NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCancelNotification, object: internalFileDownload)
+                        NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: internalFileDownload)
                         single(.success(()))
                     }
                 }
@@ -186,7 +181,7 @@ extension DownloadDataService: FileDownloadDataServicing {
         if let internalFileDownload = self.internalFileDownload {
             // .initiating
             self.fileDownloadSubject.onNext(internalFileDownload)
-            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidInitiateNotification, object: internalFileDownload)
+            NotificationCenter.default.post(name: DownloadService.fileDownloadDidInitiateNotification, object: internalFileDownload)
         }
 
         self.internalRequest = fileWebService.request(fileService, callbackQueue: nil, progress: { progressResponse in
@@ -206,7 +201,7 @@ extension DownloadDataService: FileDownloadDataServicing {
                                 DDLogDebug("internalFileDownload.localUrl: \(internalFileDownload.localUrl)")
                                 // FIXME: it is possible to send at least one .inProgress
                                 // notification even after the file download has been cancelled
-                                NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidProgressNotification, object: internalFileDownload)
+                                NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: internalFileDownload)
                             }
                         }
                     }
@@ -227,7 +222,7 @@ extension DownloadDataService: FileDownloadDataServicing {
                         if statusCode >= Int(200) && statusCode < 400 {
                             internalFileDownload.state = .complete
                             self.fileDownloadSubject.onNext(internalFileDownload)
-                            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCompleteNotification, object: internalFileDownload)
+                            NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: internalFileDownload)
                             do {
                                 // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
                                 try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: internalFileDownload.localUrl.path)
@@ -240,7 +235,7 @@ extension DownloadDataService: FileDownloadDataServicing {
                         else if statusCode >= Int(400) {
                             internalFileDownload.state = .error
                             self.fileDownloadSubject.onNext(internalFileDownload)
-                            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidErrorNotification, object: internalFileDownload)
+                            NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: internalFileDownload)
                         }
                     }
                 }
@@ -250,7 +245,7 @@ extension DownloadDataService: FileDownloadDataServicing {
                         internalFileDownload.state = .error
 
                         self.fileDownloadSubject.onNext(internalFileDownload)
-                        NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidErrorNotification, object: internalFileDownload)
+                        NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: internalFileDownload)
                     }
                     DDLogDebug(".failure: \(String(describing: error.errorDescription)))")
 //                    self.stateSubject.onError(FileDownloadError.internalFailure(error))
