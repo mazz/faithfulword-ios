@@ -77,39 +77,37 @@ extension DownloadService: URLSessionDownloadDelegate {
             finishingDownload.cancel()
         }
         
-//        DispatchQueue.main.async { [unowned self] in
-            if let identifier: String = session.configuration.identifier,
-                let fileDownload: FileDownload = self.fileDownloads[identifier] {
-                
-                var download = fileDownload
-                download.state = .complete
-                // refresh mapped download
-                self.fileDownloads[identifier] = download
-                
-                NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCompleteNotification, object: download)
-                
-                let fullPath: URL = self.saveLocationUrl(identifier: identifier)
-                DDLogDebug("fullPath: \(fullPath)")
-                
-                // capture the audio file as a Data blob and then write it
-                // to temp dir
-                
-                do {
-                    let audioData: Data = try Data(contentsOf: location, options: .uncached)
-                    try audioData.write(to: fullPath, options: .atomicWrite)
-                } catch {
-                    DDLogDebug("error writing audio file: \(error)")
-                    return
-                }
-                
-                do {
-                    // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
-                    try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
-                } catch {
-                    DDLogDebug("error while setting file permissions")
-                }
+        if let identifier: String = session.configuration.identifier,
+            let fileDownload: FileDownload = self.fileDownloads[identifier] {
+            
+            var download = fileDownload
+            download.state = .complete
+            // refresh mapped download
+            self.fileDownloads[identifier] = download
+            
+            NotificationCenter.default.post(name: DownloadDataService.fileDownloadDidCompleteNotification, object: download)
+            
+            let fullPath: URL = self.saveLocationUrl(identifier: identifier)
+            DDLogDebug("fullPath: \(fullPath)")
+            
+            // capture the audio file as a Data blob and then write it
+            // to temp dir
+            
+            do {
+                let audioData: Data = try Data(contentsOf: location, options: .uncached)
+                try audioData.write(to: fullPath, options: .atomicWrite)
+            } catch {
+                DDLogDebug("error writing audio file: \(error)")
+                return
             }
-//        }
+            
+            do {
+                // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
+                try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
+            } catch {
+                DDLogDebug("error while setting file permissions")
+            }
+        }
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
