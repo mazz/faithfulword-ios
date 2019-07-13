@@ -91,6 +91,7 @@ internal final class DownloadingViewModel {
             .disposed(by: bag)
         
         downloadState.asObservable()
+            .observeOn(MainScheduler.instance)
             .next { fileDownloadState in
                 if fileDownloadState == .initial {
                     self.downloadNotStarted.value = true
@@ -145,6 +146,7 @@ internal final class DownloadingViewModel {
             DDLogDebug("completeNotification filedownload: \(fileDownload)")
             if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
                 self.downloadState.onNext(.complete)
+//                self.completedDownload.value = true
             }
         }
     }

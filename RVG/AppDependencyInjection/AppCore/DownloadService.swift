@@ -33,11 +33,11 @@ public final class DownloadService: NSObject {
 
     // MARK: Fields(
     private let bag = DisposeBag()
-    private var queue: OperationQueue {
-        let queue: OperationQueue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        return queue
-    }
+//    private var queue: OperationQueue {
+//        let queue: OperationQueue = OperationQueue()
+//        queue.maxConcurrentOperationCount = 1
+//        return queue
+//    }
     
     public var downloadMap: [String: DownloadDataService] = [:]
     public var operations: [String: DownloadOperation] = [:]
@@ -58,10 +58,18 @@ public final class DownloadService: NSObject {
     //    }
     
     // MARK: Dependencies
-//    private let downloadDataService: FileDownloadDataServicing
-//    
-//    public init(downloadDataService: FileDownloadDataServicing) {
-//        self.downloadDataService = downloadDataService
+//    private var downloadQueue: OperationQueue
+    
+    private let downloadQueue: OperationQueue = {
+        let _queue = OperationQueue()
+        _queue.name = "DownloadServiceOperationQueue"
+        _queue.maxConcurrentOperationCount = 1
+        return _queue
+    }()
+    
+//    public init(downloadQueue: OperationQueue) {
+//        self.downloadQueue = downloadQueue
+//        self.downloadQueue.maxConcurrentOperationCount = 1
 //    }
 }
 
@@ -76,41 +84,81 @@ extension DownloadService: URLSessionDownloadDelegate {
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         DDLogDebug("didFinishDownloadingTo: session: \(String(describing: session)) downloadTask: \(downloadTask) location: \(location)")
+
+        DDLogDebug("FileManager.default.fileExists location: \(location.path) \(FileManager.default.fileExists(atPath: location.path))")
         
-        if let identifier: String = session.configuration.identifier,
-            let finishingDownload: DownloadOperation = operations[identifier] {
-            finishingDownload.cancel()
+        // need to save the file on non-main thread
+        if let identifier: String = session.configuration.identifier {
+//            let weakSelf = self,
+            //            let url: URL = downloadTask.currentRequest?.url,
+//            let finishingDownload: DownloadOperation = self.operations[identifier],
+//            let fileDownload: FileDownload = self.fileDownloads[identifier] {
+//            let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
+//                                                          localUrl: fileDownload.localUrl,
+//                                                          progress: 1.0,
+//                                                          totalCount: fileDownload.completedCount,
+//                                                          completedCount: fileDownload.completedCount,
+//                                                          state: .complete)
+            
+            let fullPath: URL = self.saveLocationUrl(identifier: identifier, removeExistingFile: false)
+            DDLogDebug("FileManager.default.fileExists non-main location: \(location.path) \(FileManager.default.fileExists(atPath: location.path))")
+            
+            self.writeFileToSavedDirectory(localSourceUrl: location, localDestinationUrl: fullPath)
+
         }
         
-        if let identifier: String = session.configuration.identifier,
-            let fileDownload: FileDownload = self.fileDownloads[identifier] {
-            
-            var download = fileDownload
-            download.state = .complete
-            // refresh mapped download
-            self.fileDownloads[identifier] = download
-            
-            NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: download)
-            
-            let fullPath: URL = self.saveLocationUrl(identifier: identifier)
-            DDLogDebug("fullPath: \(fullPath)")
-            
-            // capture the audio file as a Data blob and then write it
-            // to temp dir
-            
-            do {
-                let audioData: Data = try Data(contentsOf: location, options: .uncached)
-                try audioData.write(to: fullPath, options: .atomicWrite)
-            } catch {
-                DDLogDebug("error writing audio file: \(error)")
-                return
-            }
-            
-            do {
-                // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
-                try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
-            } catch {
-                DDLogDebug("error while setting file permissions")
+        DispatchQueue.main.async { [weak self] in
+            DDLogDebug("FileManager.default.fileExists main location: \(location.path) \(FileManager.default.fileExists(atPath: location.path))")
+            if let identifier: String = session.configuration.identifier,
+                let weakSelf = self,
+                //            let url: URL = downloadTask.currentRequest?.url,
+                let finishingDownload: DownloadOperation = weakSelf.operations[identifier],
+                let fileDownload: FileDownload = weakSelf.fileDownloads[identifier] {
+                
+                //        if let identifier: String = session.configuration.identifier {
+                //            let fileDownload: FileDownload = self.fileDownloads[identifier] {
+                
+                //            var download = fileDownload
+                //            download.state = .complete
+                //            // refresh mapped download
+                //            self.fileDownloads[identifier] = download
+                
+                let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
+                                                              localUrl: fileDownload.localUrl,
+                                                              progress: 1.0,
+                                                              totalCount: fileDownload.completedCount,
+                                                              completedCount: fileDownload.completedCount,
+                                                              state: .complete)
+                
+                NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: fileDownload)
+                
+//                let fullPath: URL = weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: false)
+//                DDLogDebug("FileManager.default.fileExists at write time location: \(location.path) \(FileManager.default.fileExists(atPath: location.path))")
+//
+//                weakSelf.writeFileToSavedDirectory(localSourceUrl: location, localDestinationUrl: fullPath)
+                
+                // pretty sure this deletes the file temp location
+                finishingDownload.cancel()
+
+//                DDLogDebug("fullPath: \(fullPath)")
+//
+//                // capture the audio file as a Data blob and then write it
+//                // to temp dir
+//
+//                do {
+//                    let audioData: Data = try Data(contentsOf: location, options: .uncached)
+//                    try audioData.write(to: fullPath, options: .atomicWrite)
+//                } catch {
+//                    DDLogDebug("error writing audio file: \(error)")
+//                    return
+//                }
+//
+//                do {
+//                    // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
+//                    try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
+//                } catch {
+//                    DDLogDebug("error while setting file permissions")
+//                }
             }
         }
     }
@@ -120,18 +168,29 @@ extension DownloadService: URLSessionDownloadDelegate {
         
         DispatchQueue.main.async { [weak self] in
             if let identifier: String = session.configuration.identifier,
+//                let url: URL = downloadTask.currentRequest?.url,
                 let weakSelf = self,
-                let fileDownload: FileDownload = weakSelf.fileDownloads[identifier] {
-                var download = fileDownload
-                download.completedCount = totalBytesWritten
-                download.totalCount = totalBytesExpectedToWrite
-                download.progress = Float(totalBytesWritten/totalBytesExpectedToWrite)
-                download.state = .inProgress
+                let download: FileDownload = weakSelf.fileDownloads[identifier] {
+//                let fileDownload: FileDownload = weakSelf.fileDownloads[identifier] {
+//                var download = fileDownload
+//                download.completedCount = totalBytesWritten
+//                download.totalCount = totalBytesExpectedToWrite
+//                download.progress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
+//                download.state = .inProgress
                 
                 // refresh mapped download
-                weakSelf.fileDownloads[identifier] = download
+//                weakSelf.fileDownloads[identifier] = download
                 
-                NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: download)
+                let fileDownload: FileDownload = FileDownload(url: download.url,
+                                                              localUrl: download.localUrl,
+                                                              progress: Float(totalBytesWritten)/Float(totalBytesExpectedToWrite),
+                                                              totalCount: totalBytesExpectedToWrite,
+                                                              completedCount: totalBytesWritten,
+                                                              state: .inProgress)
+                weakSelf.fileDownloads[identifier] = fileDownload
+
+                DDLogDebug("inflight operations count: \(weakSelf.downloadQueue.operations.count) operations: \(weakSelf.downloadQueue.operations)")
+                NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: fileDownload)
             }
         }
 
@@ -145,7 +204,6 @@ extension DownloadService: URLSessionDownloadDelegate {
 
 extension DownloadService: DownloadServicing {
     func fetchDownload(url: String, filename: String) -> Single<Void> {
-        DDLogDebug("fetchDownload")
         let identifier: String = "app.fwsaved.downloadsession_\(filename)"
         let configuration = URLSessionConfiguration.background(withIdentifier: identifier)
         let sessionQueue = OperationQueue()
@@ -154,18 +212,18 @@ extension DownloadService: DownloadServicing {
         if let remoteUrl = URL(string: url) {
             let operation = DownloadOperation(session: urlSession, downloadTaskURL: remoteUrl)
 
-            queue.addOperation(operation)
+            downloadQueue.addOperation(operation)
             operations[identifier] = operation
-            
+
             let fileDownload: FileDownload = FileDownload(url: remoteUrl,
-                                                          localUrl: saveLocationUrl(identifier: identifier),
+                                                          localUrl: saveLocationUrl(identifier: identifier, removeExistingFile: false),
                                                           progress: 0,
                                                           totalCount: 0,
                                                           completedCount: 0,
                                                           state: .initiating)
             fileDownloads[identifier] = fileDownload
 
-            NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: fileDownload)
+            NotificationCenter.default.post(name: DownloadService.fileDownloadDidInitiateNotification, object: fileDownload)
 
         }
         return Single.just(())
@@ -234,7 +292,28 @@ extension DownloadService: DownloadServicing {
 }
 
 extension DownloadService {
-    func saveLocationUrl(identifier: String) -> URL {
+    
+    func writeFileToSavedDirectory(localSourceUrl: URL, localDestinationUrl: URL) {
+        // capture the audio file as a Data blob and then write it
+        // to temp dir
+        
+        do {
+            let audioData: Data = try Data(contentsOf: localSourceUrl, options: .uncached)
+            try audioData.write(to: localDestinationUrl, options: .atomicWrite)
+        } catch {
+            DDLogDebug("error writing audio file: \(error)")
+            return
+        }
+        
+        do {
+            // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
+            try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: localDestinationUrl.path)
+        } catch {
+            DDLogDebug("error while setting file permissions")
+        }
+    }
+    
+    func saveLocationUrl(identifier: String, removeExistingFile: Bool) -> URL {
         let components = identifier.split(separator:"_")
         let targetFilename: String = String(components[1])
         
@@ -242,15 +321,24 @@ extension DownloadService {
         let url: URL = urls[urls.endIndex - 1]
         
         let directory: URL = url.appendingPathComponent("Saved/")
-        
+        let fileManager = FileManager.default
         do {
-            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
         } catch {
             DDLogDebug("error while creating directory")
         }
         
         let fullPath: URL = directory.appendingPathComponent(targetFilename)
         
+        if removeExistingFile {
+            do {
+                try fileManager.removeItem(atPath: fullPath.path)
+            }
+            catch let error {
+                print("Ooops! Something went wrong removing file: \(error)")
+            }
+        }
+
         DDLogDebug("fullPath: \(fullPath)")
         
         return fullPath

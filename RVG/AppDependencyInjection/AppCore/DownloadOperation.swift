@@ -76,5 +76,6 @@ public class DownloadOperation : Operation {
         
         // cancel the downloading
         self.task.cancel()
+        state = .finished
     }
 }

@@ -179,6 +179,7 @@ internal final class AppDependencyModule {
             }.inObjectScope(.container)
 
         container.register(DownloadServicing.self) { resolver in
+//            return DownloadService(downloadQueue: OperationQueue())
             return DownloadService()
             }.inObjectScope(.container)
     }

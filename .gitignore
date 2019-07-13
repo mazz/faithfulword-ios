@@ -12,3 +12,4 @@ Carthage/
 bundle/
 
 build/
+.schema
