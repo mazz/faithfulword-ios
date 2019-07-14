@@ -180,7 +180,7 @@ internal final class AppDependencyModule {
 
         container.register(DownloadServicing.self) { resolver in
 //            return DownloadService(downloadQueue: OperationQueue())
-            return DownloadService()
+            return DownloadService(reachability: resolver.resolve(RxClassicReachable.self)!)
             }.inObjectScope(.container)
     }
 

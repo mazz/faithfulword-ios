@@ -11,17 +11,10 @@ import RxSwift
 import Moya
 
 protocol DownloadServicing {
-    //    var progress: Observable<Float> { get }
-    //    var state: Observable<FileDownloadState> { get }
-    //    var fileDownload: Observable<FileDownload> { get }
-    var downloadMap: [String: DownloadDataService] { get }
     var operations: [String: DownloadOperation] { get }
     var fileDownloads: [String: FileDownload] { get }
     func fetchDownload(url: String, filename: String) -> Single<Void>
-    //    func activeDownload(filename: String) -> Observable<FileDownload>
     func cancelDownload(filename: String) -> Single<Void>
-    func removeDownload(filename: String) -> Single<Void>
-    func deleteDownloadService(filename: String) -> Single<Void>
 }
 
 public final class DownloadService: NSObject {
@@ -39,26 +32,12 @@ public final class DownloadService: NSObject {
     //        return queue
     //    }
     
-    public var downloadMap: [String: DownloadDataService] = [:]
     public var operations: [String: DownloadOperation] = [:]
     public var fileDownloads: [String: FileDownload] = [:]
     
-    
-    //    public private(set) var media = Field<[Playable]>([])
-    //    public var progress: Observable<Float> {
-    //        return downloadDataService.progress
-    //    }
-    
-    //    public var fileDownload: Observable<FileDownload> {
-    //        return downloadDataService.fileDownload
-    //    }
-    
-    //    public var state: Observable<FileDownloadState> {
-    //        return downloadDataService.state
-    //    }
-    
     // MARK: Dependencies
-    //    private var downloadQueue: OperationQueue
+    private let reachability: RxClassicReachable
+    private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     
     private let downloadQueue: OperationQueue = {
         let _queue = OperationQueue()
@@ -67,10 +46,12 @@ public final class DownloadService: NSObject {
         return _queue
     }()
     
-    //    public init(downloadQueue: OperationQueue) {
-    //        self.downloadQueue = downloadQueue
-    //        self.downloadQueue.maxConcurrentOperationCount = 1
-    //    }
+    init(reachability: RxClassicReachable) {
+        self.reachability = reachability
+        super.init()
+        
+        reactToReachability()
+    }
 }
 
 extension DownloadService: URLSessionDownloadDelegate {
@@ -89,16 +70,6 @@ extension DownloadService: URLSessionDownloadDelegate {
         
         // need to save the file on non-main thread
         if let identifier: String = session.configuration.identifier {
-            //            let weakSelf = self,
-            //            let url: URL = downloadTask.currentRequest?.url,
-            //            let finishingDownload: DownloadOperation = self.operations[identifier],
-            //            let fileDownload: FileDownload = self.fileDownloads[identifier] {
-            //            let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
-            //                                                          localUrl: fileDownload.localUrl,
-            //                                                          progress: 1.0,
-            //                                                          totalCount: fileDownload.completedCount,
-            //                                                          completedCount: fileDownload.completedCount,
-            //                                                          state: .complete)
             
             let fullPath: URL = self.saveLocationUrl(identifier: identifier, removeExistingFile: false)
             DDLogDebug("FileManager.default.fileExists non-main location: \(location.path) \(FileManager.default.fileExists(atPath: location.path))")
@@ -115,14 +86,6 @@ extension DownloadService: URLSessionDownloadDelegate {
                 let finishingDownload: DownloadOperation = weakSelf.operations[identifier],
                 let fileDownload: FileDownload = weakSelf.fileDownloads[identifier] {
                 
-                //        if let identifier: String = session.configuration.identifier {
-                //            let fileDownload: FileDownload = self.fileDownloads[identifier] {
-                
-                //            var download = fileDownload
-                //            download.state = .complete
-                //            // refresh mapped download
-                //            self.fileDownloads[identifier] = download
-                
                 let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
                                                               localUrl: fileDownload.localUrl,
                                                               progress: 1.0,
@@ -132,33 +95,8 @@ extension DownloadService: URLSessionDownloadDelegate {
                 
                 NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: fileDownload)
                 
-                //                let fullPath: URL = weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: false)
-                //                DDLogDebug("FileManager.default.fileExists at write time location: \(location.path) \(FileManager.default.fileExists(atPath: location.path))")
-                //
-                //                weakSelf.writeFileToSavedDirectory(localSourceUrl: location, localDestinationUrl: fullPath)
-                
                 // pretty sure this deletes the file temp location
                 finishingDownload.cancel()
-                
-                //                DDLogDebug("fullPath: \(fullPath)")
-                //
-                //                // capture the audio file as a Data blob and then write it
-                //                // to temp dir
-                //
-                //                do {
-                //                    let audioData: Data = try Data(contentsOf: location, options: .uncached)
-                //                    try audioData.write(to: fullPath, options: .atomicWrite)
-                //                } catch {
-                //                    DDLogDebug("error writing audio file: \(error)")
-                //                    return
-                //                }
-                //
-                //                do {
-                //                    // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
-                //                    try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
-                //                } catch {
-                //                    DDLogDebug("error while setting file permissions")
-                //                }
             }
         }
     }
@@ -171,15 +109,6 @@ extension DownloadService: URLSessionDownloadDelegate {
                 //                let url: URL = downloadTask.currentRequest?.url,
                 let weakSelf = self,
                 let download: FileDownload = weakSelf.fileDownloads[identifier] {
-                //                let fileDownload: FileDownload = weakSelf.fileDownloads[identifier] {
-                //                var download = fileDownload
-                //                download.completedCount = totalBytesWritten
-                //                download.totalCount = totalBytesExpectedToWrite
-                //                download.progress = Float(totalBytesWritten)/Float(totalBytesExpectedToWrite)
-                //                download.state = .inProgress
-                
-                // refresh mapped download
-                //                weakSelf.fileDownloads[identifier] = download
                 
                 let fileDownload: FileDownload = FileDownload(url: download.url,
                                                               localUrl: download.localUrl,
@@ -227,30 +156,17 @@ extension DownloadService: DownloadServicing {
                                                               state: .initiating)
                 weakSelf.fileDownloads[identifier] = fileDownload
                 
-                NotificationCenter.default.post(name: DownloadService.fileDownloadDidInitiateNotification, object: fileDownload)
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: DownloadService.fileDownloadDidInitiateNotification, object: fileDownload)
+                }
+                
                 single(.success(()))
             } else {
                 single(.error(FileDownloadError.downloadFailed("could not start download")))
             }
             return Disposables.create { }
         }
-        //        let downloadDataService: DownloadDataService = DownloadDataService(fileWebService: MoyaProvider<FileWebService>())
-        //        downloadMap[filename] = downloadDataService
-        //        if let service = downloadMap[filename] {
-        //            return service.downloadFile(url: url, filename: filename)
-        //        } else { return Single.just(()) }
     }
-    
-    //    func activeDownload(filename: String) -> Observable<FileDownload> {
-    //        var result: Observable<FileDownload>!
-    //        if let service = downloadMap[filename] {
-    //            result = service.fileDownload
-    //        } else {
-    //            result = Observable.error(FileDownloadError.missingDownload("no download for filename: \(filename)"))
-    //        }
-    //
-    //        return result
-    //    }
     
     // cancelDownload will cancel the download and remove
     // the partial file and remove the filedownload from the map
@@ -276,8 +192,12 @@ extension DownloadService: DownloadServicing {
                 weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: true)
                 weakSelf.fileDownloads[identifier] = nil
                 cancelOperation.cancel()
-                
-                NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
+                weakSelf.operations[identifier] = nil
+
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
+                }
+
                 single(.success(()))
             } else {
                 single(.error(CancelDownloadError.cancelFailed("unknown")))
@@ -285,41 +205,25 @@ extension DownloadService: DownloadServicing {
             return Disposables.create { }
         }
     }
-    
-    // removeDownload will cancel the download, remove the partially downloaded
-    // file and remove it from the downloadMap
-    func removeDownload(filename: String) -> Single<Void> {
-        if let downloadDataService = downloadMap[filename] {
-            return downloadDataService.cancel()
-                .flatMap { downloadDataService.deleteDownload() }
-                .flatMap { self.deleteDownloadService(filename: filename) }
-        } else {
-            return Single.error(FileDownloadError.missingDownload("download could not be removed"))
-        }
-        //        if downloadMap[filename] != nil {
-        //            downloadMap[filename] = nil
-        //
-        //            //            downloadDataService.deleteDownload
-        //        } else {
-        //            result = Single.error(FileDownloadError.missingDownload("download could not be removed"))
-        //        }
-        //        return result
-    }
-    
-    func deleteDownloadService(filename: String) -> Single<Void> {
-        return Single.create { [unowned self] single -> Disposable in
-            if self.downloadMap[filename] != nil {
-                self.downloadMap[filename] = nil
-                single(.success(()))
-            } else {
-                single(.error(FileDownloadError.missingDownload("download could not be removed")))
-            }
-            return Disposables.create { }
-        }
-    }
 }
 
 extension DownloadService {
+    
+    private func reactToReachability() {
+        reachability.startNotifier().asObservable()
+            .subscribe(onNext: { networkStatus in
+                self.networkStatus.value = networkStatus
+                
+                switch networkStatus {
+                case .unknown:
+                    DDLogDebug("DownloadService \(self.reachability.status.value)")
+                case .notReachable:
+                    DDLogDebug("DownloadService \(self.reachability.status.value)")
+                case .reachable(_):
+                    DDLogDebug("DownloadService \(self.reachability.status.value)")
+                }
+            }).disposed(by: bag)
+    }
     
     func writeFileToSavedDirectory(localSourceUrl: URL, localDestinationUrl: URL) {
         // capture the audio file as a Data blob and then write it
@@ -370,24 +274,6 @@ extension DownloadService {
         DDLogDebug("fullPath: \(fullPath)")
         
         return fullPath
-        
-        // capture the audio file as a Data blob and then write it
-        // to temp dir
-        
-        //        do {
-        //            let audioData: Data = try Data(contentsOf: location, options: .uncached)
-        //            try audioData.write(to: fullPath, options: .atomicWrite)
-        //        } catch {
-        //            DDLogDebug("error writing audio file: \(error)")
-        //            return
-        //        }
-        //
-        //        do {
-        //            // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
-        //            try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fullPath.path)
-        //        } catch {
-        //            DDLogDebug("error while setting file permissions")
-        //        }
     }
 }
 
