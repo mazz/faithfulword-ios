@@ -177,27 +177,9 @@ extension DownloadService: DownloadServicing {
         
         return Single.create { [weak self] single -> Disposable in
             
-            if let weakSelf = self,
-                let cancelOperation: DownloadOperation = weakSelf.operations[identifier],
-                let download: FileDownload = weakSelf.fileDownloads[identifier] {
-                
-                // make a download for the cancel notification, then remove it from map
-                let fileDownload: FileDownload = FileDownload(url: download.url,
-                                                              localUrl: weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: false),
-                                                              progress: download.progress,
-                                                              totalCount: download.totalCount,
-                                                              completedCount: download.completedCount,
-                                                              state: .cancelled)
-                // remove existing file
-                weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: true)
-                weakSelf.fileDownloads[identifier] = nil
-                cancelOperation.cancel()
-                weakSelf.operations[identifier] = nil
-
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
-                }
-
+        
+            if let weakSelf = self {
+                weakSelf.cancelDownloadResources(for: identifier)
                 single(.success(()))
             } else {
                 single(.error(CancelDownloadError.cancelFailed("unknown")))
@@ -208,6 +190,30 @@ extension DownloadService: DownloadServicing {
 }
 
 extension DownloadService {
+    
+    func cancelDownloadResources(for identifier: String) {
+//        if let weakSelf = self,
+        if let cancelOperation: DownloadOperation = self.operations[identifier],
+            let download: FileDownload = self.fileDownloads[identifier] {
+            
+            // make a download for the cancel notification, then remove it from map
+            let fileDownload: FileDownload = FileDownload(url: download.url,
+                                                          localUrl: self.saveLocationUrl(identifier: identifier, removeExistingFile: false),
+                                                          progress: download.progress,
+                                                          totalCount: download.totalCount,
+                                                          completedCount: download.completedCount,
+                                                          state: .cancelled)
+            // remove existing file
+            self.saveLocationUrl(identifier: identifier, removeExistingFile: true)
+            self.fileDownloads[identifier] = nil
+            cancelOperation.cancel()
+            self.operations[identifier] = nil
+            
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
+            }
+        }
+    }
     
     private func reactToReachability() {
         reachability.startNotifier().asObservable()
