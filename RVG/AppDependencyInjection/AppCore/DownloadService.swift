@@ -71,7 +71,9 @@ extension DownloadService: URLSessionDownloadDelegate {
         // need to save the file on non-main thread
         if let identifier: String = session.configuration.identifier {
             
-            let fullPath: URL = self.saveLocationUrl(identifier: identifier, removeExistingFile: false)
+            // if it is possible for the download to be interrupted(and no resume implemented)
+            // the best policy is probably to delete the existing file at download initiation
+            let fullPath: URL = self.saveLocationUrl(identifier: identifier, removeExistingFile: true)
             DDLogDebug("FileManager.default.fileExists non-main location: \(location.path) \(FileManager.default.fileExists(atPath: location.path))")
             
             self.writeFileToSavedDirectory(localSourceUrl: location, localDestinationUrl: fullPath)
