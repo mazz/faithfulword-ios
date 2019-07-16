@@ -54,6 +54,41 @@ public final class DownloadService: NSObject {
     }
 }
 
+extension DownloadService: URLSessionTaskDelegate {
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+//        if let identifier: String = session.configuration.identifier {
+//
+//            // delete the file
+//            let fullPath: URL = self.saveLocationUrl(identifier: identifier, removeExistingFile: true)
+//        }
+        DispatchQueue.main.async { [weak self] in
+            if let identifier: String = session.configuration.identifier,
+                let weakSelf = self,
+                //            let url: URL = downloadTask.currentRequest?.url,
+                let errorOperation: DownloadOperation = weakSelf.operations[identifier],
+                let fileDownload: FileDownload = weakSelf.fileDownloads[identifier],
+                let err = error {
+                DDLogDebug("didCompleteWithError: session: \(String(describing: session)) task: \(task) error: \(String(describing: error))")
+
+                //                weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: true)
+                weakSelf.operations[identifier] = nil
+                // pretty sure this deletes the file temp location
+                errorOperation.cancel()
+                let download: FileDownload = FileDownload(url: fileDownload.url,
+                                                          localUrl: fileDownload.localUrl,
+                                                          progress: Float(fileDownload.totalCount)/Float(fileDownload.completedCount),
+                                                          totalCount: fileDownload.totalCount,
+                                                          completedCount: fileDownload.completedCount,
+                                                          state: .error)
+                weakSelf.fileDownloads[identifier] = nil
+                
+                NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: download)
+            }
+        }
+        
+    }
+}
+
 extension DownloadService: URLSessionDownloadDelegate {
     //    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
     //        DDLogDebug("urlSessionDidFinishEvents: \(session)")
@@ -91,7 +126,7 @@ extension DownloadService: URLSessionDownloadDelegate {
                 let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
                                                               localUrl: fileDownload.localUrl,
                                                               progress: 1.0,
-                                                              totalCount: fileDownload.completedCount,
+                                                              totalCount: fileDownload.totalCount,
                                                               completedCount: fileDownload.completedCount,
                                                               state: .complete)
                 
@@ -140,6 +175,8 @@ extension DownloadService: DownloadServicing {
             
             let identifier: String = "app.fwsaved.downloadsession_\(filename)"
             let configuration = URLSessionConfiguration.background(withIdentifier: identifier)
+//            configuration.timeoutIntervalForResource = 5.0
+
             let sessionQueue = OperationQueue()
             let urlSession: URLSession = URLSession(configuration: configuration, delegate: self, delegateQueue: sessionQueue)
             
@@ -178,8 +215,6 @@ extension DownloadService: DownloadServicing {
         let identifier: String = "app.fwsaved.downloadsession_\(filename)"
         
         return Single.create { [weak self] single -> Disposable in
-            
-        
             if let weakSelf = self {
                 weakSelf.cancelDownloadResources(for: identifier)
                 single(.success(()))

@@ -179,5 +179,6 @@ internal final class DownloadingViewModel {
                 self.downloadState.onNext(.initial)
             }
         }
-    }}
+    }
+}
 
