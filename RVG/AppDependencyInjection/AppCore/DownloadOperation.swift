@@ -47,7 +47,7 @@ public class DownloadOperation : Operation {
 //        task = session.downloadTask(with
         
         task = session.downloadTask(with: downloadTaskURL)
-        task.resume()
+//        task.resume()
 
     }
     
