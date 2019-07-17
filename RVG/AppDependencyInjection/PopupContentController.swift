@@ -286,11 +286,87 @@ class PopupContentController: UIViewController {
 //            .map { fileDownloadState in fileDownloadState != .inProgress }
 //            .bind(to: fullDownloadProgress.rx.isHidden)
 //            .disposed(by: bag)
+        
+        
+//        downloadingViewModel.downloadInProgress.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { !$0 }
+//            .bind(to: fullDownloadProgress.rx.isHidden)
+//            .disposed(by: bag)
+
+        downloadingViewModel.downloadNotStarted.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [weak self] downloadNotStarted in
+                if let weakSelf = self {
+                    // user tapped, download beginning
+                    if downloadNotStarted == true {
+                        weakSelf.fullDownloadProgress.isHidden = true
+                        weakSelf.fullProgressDownloadButton.isHidden = true
+                        weakSelf.fullDownloadButton.isHidden = false
+                        weakSelf.fullProgressShareButton.isHidden = true
+
+                        //                        weakSelf.fullDownloadProgress.value = CGFloat(100)
+//                        weakSelf.fullDownloadProgress.style = .ontop
+                    }
+                }
+            }
+            .disposed(by: bag)
+
+        downloadingViewModel.downloadStarting.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [weak self] downloadStarting in
+                if let weakSelf = self {
+                    // user tapped, download beginning
+                    if downloadStarting == true {
+                        weakSelf.fullDownloadProgress.isHidden = false
+                        weakSelf.fullDownloadProgress.value = CGFloat(100)
+                        weakSelf.fullDownloadProgress.style = .dotted
+                        
+                        weakSelf.fullProgressDownloadButton.isHidden = false
+                        weakSelf.fullDownloadButton.isHidden = true
+                        weakSelf.fullProgressShareButton.isHidden = true
+                        
+                    }
+                }
+            }
+            .disposed(by: bag)
+
         downloadingViewModel.downloadInProgress.asObservable()
             .observeOn(MainScheduler.instance)
-            .map { !$0 }
-            .bind(to: fullDownloadProgress.rx.isHidden)
+            .next { [weak self] downloadInProgress in
+                if let weakSelf = self {
+                    // user tapped, download beginning
+                    if downloadInProgress == true {
+                        weakSelf.fullDownloadProgress.isHidden = false
+                        weakSelf.fullProgressDownloadButton.isHidden = false
+                        weakSelf.fullDownloadButton.isHidden = true
+                        weakSelf.fullProgressShareButton.isHidden = true
+
+//                        weakSelf.fullDownloadProgress.value = CGFloat(100)
+                        weakSelf.fullDownloadProgress.style = .ontop
+                    }
+                }
+            }
             .disposed(by: bag)
+        
+        downloadingViewModel.completedDownload.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [weak self] completedDownload in
+                if let weakSelf = self {
+                    // user tapped, download beginning
+                    if completedDownload == true {
+                        weakSelf.fullDownloadProgress.isHidden = true
+                        weakSelf.fullProgressDownloadButton.isHidden = true
+                        weakSelf.fullDownloadButton.isHidden = true
+                        weakSelf.fullProgressShareButton.isHidden = false
+                        
+                        //                        weakSelf.fullDownloadProgress.value = CGFloat(100)
+                        weakSelf.fullDownloadProgress.style = .ontop
+                    }
+                }
+            }
+            .disposed(by: bag)
+
 
         // hide progress stop button on completion or initial
 //        downloadingViewModel.downloadState.asObservable()
@@ -298,13 +374,13 @@ class PopupContentController: UIViewController {
 //            .map { fileDownloadState in fileDownloadState != .inProgress }
 //            .bind(to: fullProgressDownloadButton.rx.isHidden)
 //            .disposed(by: bag)
-        downloadingViewModel.downloadInProgress.asObservable()
-            .observeOn(MainScheduler.instance)
-            .map { !$0 }
-            .bind(to: fullProgressDownloadButton.rx.isHidden)
-            .disposed(by: bag)
-
         
+//        downloadingViewModel.downloadInProgress.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { !$0 }
+//            .bind(to: fullProgressDownloadButton.rx.isHidden)
+//            .disposed(by: bag)
+
         
         // hide download button during download
         //        downloadState.asObservable()
@@ -319,11 +395,12 @@ class PopupContentController: UIViewController {
 //            .map { fileDownloadState in fileDownloadState != .initial }
 //            .bind(to: fullDownloadButton.rx.isHidden)
 //            .disposed(by: bag)
-        downloadingViewModel.downloadNotStarted.asObservable()
-            .observeOn(MainScheduler.instance)
-            .map { !$0 }
-            .bind(to: fullDownloadButton.rx.isHidden)
-            .disposed(by: bag)
+        
+//        downloadingViewModel.downloadNotStarted.asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .map { !$0 }
+//            .bind(to: fullDownloadButton.rx.isHidden)
+//            .disposed(by: bag)
 
         // hide share button if not downloaded yet
 //        downloadingViewModel.downloadState.asObservable()
@@ -331,12 +408,7 @@ class PopupContentController: UIViewController {
 //            .map { fileDownloadState in fileDownloadState != .complete }
 //            .bind(to: fullProgressShareButton.rx.isHidden)
 //            .disposed(by: bag)
-        downloadingViewModel.completedDownload.asObservable()
-            .observeOn(MainScheduler.instance)
-            .map { !$0 }
-            .bind(to: fullProgressShareButton.rx.isHidden)
-            .disposed(by: bag)
-        
+
         
         // set image name based on state
         //        downloadImageNameEvent.asObservable()
