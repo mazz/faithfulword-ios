@@ -10,6 +10,11 @@ public struct User: Codable {
     public var pushNotifications: Bool
     public var language: String
 
+    //
+    // a User is one-to-many to FileDownloadItem
+    //
+    static let downloads = hasMany(FileDownloadItem.self, using: FileDownloadItem.downloaditemForeignKey)
+
 //    enum CodingKeys: String, CodingKey {
 //        case uuid
 //        case name

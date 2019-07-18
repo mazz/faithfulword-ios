@@ -10,7 +10,7 @@ import RxSwift
 
 protocol HistoryServicing {
     func fetchPlaybackHistory() -> Single<[Playable]>
-    func fetchLastState(for playableUuid: String) -> Single<UserActionPlayable?>
+    func fetchLastUserActionPlayableState(for playableUuid: String) -> Single<UserActionPlayable?>
 }
 
 public final class HistoryService: HistoryServicing {
@@ -29,8 +29,8 @@ public final class HistoryService: HistoryServicing {
             })
     }
 // fetchLastState(for playableUuid: String) -> Single<Playable>
-    public func fetchLastState(for playableUuid: String) -> Single<UserActionPlayable?> {
-        return dataService.fetchLastState(for: playableUuid)
+    public func fetchLastUserActionPlayableState(for playableUuid: String) -> Single<UserActionPlayable?> {
+        return dataService.fetchLastUserActionPlayableState(for: playableUuid)
 //            .do(onSuccess: { playable in
 //                DDLogDebug("playable last state \(playable)")
 //            })

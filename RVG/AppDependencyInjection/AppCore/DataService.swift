@@ -30,8 +30,13 @@ public protocol UserActionsDataServicing {
 
 public protocol HistoryDataServicing {
     func fetchPlayableHistory() -> Single<[Playable]>
-    func fetchLastState(for playableUuid: String) -> Single<UserActionPlayable?>
+    func fetchLastUserActionPlayableState(for playableUuid: String) -> Single<UserActionPlayable?>
     //    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
+}
+
+protocol FileDownloadItemDataServicing {
+    func updateFileDownloadItemState(playable: Playable, position: Float, duration: Float) -> Single<Void>
+    func fetchLastFileDownloadItemState(for playableUuid: String) -> Single<FileDownloadItem?>
 }
 
 // Provides account related data to the app
@@ -191,8 +196,18 @@ extension DataService: HistoryDataServicing {
         return dataStore.fetchPlayableHistory()
     }
     
-    public func fetchLastState(for playableUuid: String) -> Single<UserActionPlayable?> {
-        return dataStore.fetchLastState(playableUuid: playableUuid)
+    public func fetchLastUserActionPlayableState(for playableUuid: String) -> Single<UserActionPlayable?> {
+        return dataStore.fetchLastUserActionPlayableState(playableUuid: playableUuid)
+    }
+}
+
+extension DataService: FileDownloadItemDataServicing {
+    func updateFileDownloadItemState(playable: Playable, position: Float, duration: Float) -> Single<Void> {
+        return Single.just(())
+    }
+    
+    public func fetchLastFileDownloadItemState(for playableUuid: String) -> Single<FileDownloadItem?> {
+        return dataStore.fetchLastFileDownloadItemState(playableUuid: playableUuid)
     }
 }
 

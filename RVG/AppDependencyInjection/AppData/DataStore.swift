@@ -56,8 +56,11 @@ public protocol DataStoring {
     
     func updatePlayableHistory(playable: Playable, position: Float, duration: Float) -> Single<Void>
     func fetchPlayableHistory() -> Single<[Playable]>
-    func fetchLastState(playableUuid: String) -> Single<UserActionPlayable?>
+    func fetchLastUserActionPlayableState(playableUuid: String) -> Single<UserActionPlayable?>
     
+    // MARK: Downloadable
+    
+    func fetchLastFileDownloadItemState(playableUuid: String) -> Single<FileDownloadItem?>
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
 
@@ -187,8 +190,8 @@ public final class DataStore {
             do {
                 try db.create(table: "user") { userTable in
                     DDLogDebug("created: \(userTable)")
-                    userTable.column("userId", .integer).primaryKey()
-                    userTable.column("uuid", .text)
+                    userTable.column("uuid", .text).primaryKey()
+                    userTable.column("userId", .integer)
                     userTable.column("name", .text)
                     userTable.column("email", .text)
                     userTable.column("session", .text)
@@ -207,7 +210,7 @@ public final class DataStore {
                     bookTable.column("title", .text)
                     bookTable.column("languageId", .text)
                     bookTable.column("localizedTitle", .text)
-                    bookTable.column("userId", .integer).references("user", onDelete: .cascade)
+                    bookTable.column("uuid", .text).references("user", onDelete: .cascade)
                 }
             }
             catch {
@@ -243,7 +246,7 @@ public final class DataStore {
                     gospelTable.column("title", .text)
                     gospelTable.column("languageId", .text)
                     gospelTable.column("localizedTitle", .text)
-                    gospelTable.column("userId", .integer).references("user", onDelete: .cascade)
+                    gospelTable.column("uuid", .text).references("user", onDelete: .cascade)
                 }
             }
             catch {
@@ -279,7 +282,7 @@ public final class DataStore {
                     musicTable.column("title", .text)
                     musicTable.column("languageId", .text)
                     musicTable.column("localizedTitle", .text)
-                    musicTable.column("userId", .integer).references("user", onDelete: .cascade)
+                    musicTable.column("uuid", .text).references("user", onDelete: .cascade)
                 }
             }
             catch {
@@ -349,6 +352,20 @@ public final class DataStore {
             }
             catch {
                 DDLogDebug("error making useractionplayable table: \(error)")
+            }
+            do {
+                try db.create(table: "downloads") { downloadsTable in
+                    DDLogDebug("created: \(downloadsTable)")
+                    downloadsTable.column("uuid", .text).primaryKey()
+                    downloadsTable.column("playableUuid", .text)
+                    downloadsTable.column("updatedAt", .double)
+                    downloadsTable.column("insertedAt", .double)
+                    downloadsTable.column("fileDownloadState", .text)
+                    downloadsTable.column("userUuid", .text).references("user", onDelete: .cascade)
+                }
+            }
+            catch {
+                DDLogDebug("error making downloads table: \(error)")
             }
         }
         return migrator
@@ -1347,7 +1364,7 @@ extension DataStore: DataStoring {
         }
     }
 
-    public func fetchLastState(playableUuid: String) -> Single<UserActionPlayable?> {
+    public func fetchLastUserActionPlayableState(playableUuid: String) -> Single<UserActionPlayable?> {
         return Single.create { [unowned self] single in
             do {
                 var playable: UserActionPlayable!
@@ -1364,6 +1381,27 @@ extension DataStore: DataStoring {
         }
     }
     
+    
+    // NARK: Downloadable
+    
+    public func fetchLastFileDownloadItemState(playableUuid: String) -> Single<FileDownloadItem?> {
+        return Single.create { [unowned self] single in
+            do {
+                var playable: FileDownloadItem!
+                
+                try self.dbPool.read { db in
+                    playable = try FileDownloadItem.filter(Column("playableUuid") == playableUuid).fetchOne(db)
+                }
+                single(.success(playable))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+
     public func fetchPlayables(for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {

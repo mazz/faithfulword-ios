@@ -156,6 +156,7 @@
 		4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */; };
 		4CD5C1BA20242A96007BFC1B /* VerseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD5C1B820242A96007BFC1B /* VerseCell.swift */; };
 		4CD5C1BB20242A96007BFC1B /* VerseCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CD5C1B920242A96007BFC1B /* VerseCell.xib */; };
+		4CD89B8422E00CE700A1704C /* FileDownloadItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD89B8322E00CE600A1704C /* FileDownloadItem.swift */; };
 		4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD655A1EEB3DA400C59DD5 /* LoopView.swift */; };
 		4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65601EEB42B600C59DD5 /* Looper.swift */; };
 		4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */; };
@@ -358,6 +359,7 @@
 		4CCE8CA31FF569E600AFBAF2 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		4CD5C1B820242A96007BFC1B /* VerseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerseCell.swift; sourceTree = "<group>"; };
 		4CD5C1B920242A96007BFC1B /* VerseCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerseCell.xib; sourceTree = "<group>"; };
+		4CD89B8322E00CE600A1704C /* FileDownloadItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FileDownloadItem.swift; path = Model/FileDownloadItem.swift; sourceTree = "<group>"; };
 		4CDD655A1EEB3DA400C59DD5 /* LoopView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoopView.swift; sourceTree = "<group>"; };
 		4CDD65601EEB42B600C59DD5 /* Looper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Looper.swift; sourceTree = "<group>"; };
 		4CDD65621EEB433600C59DD5 /* QueuePlayerLooper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueuePlayerLooper.swift; sourceTree = "<group>"; };
@@ -862,6 +864,7 @@
 				4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */,
 				4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */,
 				4C7EB8A1228FB283000E8DAB /* MediaItem.swift */,
+				4CD89B8322E00CE600A1704C /* FileDownloadItem.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1199,6 +1202,7 @@
 				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
 				4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */,
+				4CD89B8422E00CE700A1704C /* FileDownloadItem.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
 				4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
