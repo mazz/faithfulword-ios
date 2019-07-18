@@ -60,7 +60,7 @@ public protocol DataStoring {
     
     // MARK: Downloadable
     
-    func fetchLastFileDownloadItemState(playableUuid: String) -> Single<FileDownloadItem?>
+    func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?>
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
 
@@ -354,10 +354,15 @@ public final class DataStore {
                 DDLogDebug("error making useractionplayable table: \(error)")
             }
             do {
-                try db.create(table: "downloads") { downloadsTable in
+                try db.create(table: "download") { downloadsTable in
                     DDLogDebug("created: \(downloadsTable)")
                     downloadsTable.column("uuid", .text).primaryKey()
                     downloadsTable.column("playableUuid", .text)
+                    downloadsTable.column("url", .text)
+                    downloadsTable.column("localUrl", .text)
+                    downloadsTable.column("progress", .double)
+                    downloadsTable.column("totalCount", .integer)
+                    downloadsTable.column("completedCount", .integer)
                     downloadsTable.column("updatedAt", .double)
                     downloadsTable.column("insertedAt", .double)
                     downloadsTable.column("fileDownloadState", .text)
@@ -1384,13 +1389,13 @@ extension DataStore: DataStoring {
     
     // NARK: Downloadable
     
-    public func fetchLastFileDownloadItemState(playableUuid: String) -> Single<FileDownloadItem?> {
+    public func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?> {
         return Single.create { [unowned self] single in
             do {
-                var playable: FileDownloadItem!
+                var playable: FileDownload!
                 
                 try self.dbPool.read { db in
-                    playable = try FileDownloadItem.filter(Column("playableUuid") == playableUuid).fetchOne(db)
+                    playable = try FileDownload.filter(Column("playableUuid") == playableUuid).fetchOne(db)
                 }
                 single(.success(playable))
             } catch {

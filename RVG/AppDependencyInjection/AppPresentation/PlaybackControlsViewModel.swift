@@ -104,7 +104,7 @@ public final class PlaybackControlsViewModel {
             .filterNils()
             .next { [unowned self] selectedPlayable in
                 DDLogDebug("playbackPlayable.asObservable: \(selectedPlayable)")
-                self.historyService.fetchLastState(for: selectedPlayable.uuid)
+                self.historyService.fetchLastUserActionPlayableState(for: selectedPlayable.uuid)
                     .asObservable()
                     .next({ [unowned self] historyPlayable in
                         // if the history item is not nil, assign it to playbackPlayable

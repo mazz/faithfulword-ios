@@ -74,8 +74,15 @@ extension DownloadService: URLSessionTaskDelegate {
                 weakSelf.operations[identifier] = nil
                 // pretty sure this deletes the file temp location
                 errorOperation.cancel()
+//                let download: FileDownload = FileDownload(url: fileDownload.url,
+//                                                          localUrl: fileDownload.localUrl,
+//                                                          progress: Float(fileDownload.totalCount)/Float(fileDownload.completedCount),
+//                                                          totalCount: fileDownload.totalCount,
+//                                                          completedCount: fileDownload.completedCount,
+//                                                          state: .error)
                 let download: FileDownload = FileDownload(url: fileDownload.url,
-                                                          localUrl: fileDownload.localUrl,
+                                                          localUrl: fileDownload.localUrl, updatedAt: Date().timeIntervalSince1970,
+                                                          insertedAt: fileDownload.insertedAt,
                                                           progress: Float(fileDownload.totalCount)/Float(fileDownload.completedCount),
                                                           totalCount: fileDownload.totalCount,
                                                           completedCount: fileDownload.completedCount,
@@ -123,12 +130,15 @@ extension DownloadService: URLSessionDownloadDelegate {
                 let finishingDownload: DownloadOperation = weakSelf.operations[identifier],
                 let fileDownload: FileDownload = weakSelf.fileDownloads[identifier] {
                 
+                
                 let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
-                                                              localUrl: fileDownload.localUrl,
-                                                              progress: 1.0,
-                                                              totalCount: fileDownload.totalCount,
-                                                              completedCount: fileDownload.completedCount,
-                                                              state: .complete)
+                             localUrl: fileDownload.localUrl,
+                             updatedAt: Date().timeIntervalSince1970,
+                             insertedAt: fileDownload.insertedAt,
+                             progress: 1.0,
+                             totalCount: fileDownload.totalCount,
+                             completedCount: fileDownload.completedCount,
+                             state: .complete)
                 
                 NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: fileDownload)
                 
@@ -148,11 +158,14 @@ extension DownloadService: URLSessionDownloadDelegate {
                 let download: FileDownload = weakSelf.fileDownloads[identifier] {
                 
                 let fileDownload: FileDownload = FileDownload(url: download.url,
-                                                              localUrl: download.localUrl,
-                                                              progress: Float(totalBytesWritten)/Float(totalBytesExpectedToWrite),
-                                                              totalCount: totalBytesExpectedToWrite,
-                                                              completedCount: totalBytesWritten,
-                                                              state: .inProgress)
+                             localUrl: download.localUrl,
+                             updatedAt: Date().timeIntervalSince1970,
+                             insertedAt: download.insertedAt,
+                             progress: Float(totalBytesWritten)/Float(totalBytesExpectedToWrite),
+                             totalCount: totalBytesExpectedToWrite,
+                             completedCount: totalBytesWritten,
+                             state: .inProgress)
+
                 weakSelf.fileDownloads[identifier] = fileDownload
                 
                 DDLogDebug("inflight operations count: \(weakSelf.downloadQueue.operations.count) operations: \(weakSelf.downloadQueue.operations)")
@@ -189,6 +202,8 @@ extension DownloadService: DownloadServicing {
                 
                 let fileDownload: FileDownload = FileDownload(url: remoteUrl,
                                                               localUrl: weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: false),
+                                                              updatedAt: Date().timeIntervalSince1970,
+                                                              insertedAt: Date().timeIntervalSince1970,
                                                               progress: 0,
                                                               totalCount: 0,
                                                               completedCount: 0,
@@ -236,6 +251,8 @@ extension DownloadService {
             // make a download for the cancel notification, then remove it from map
             let fileDownload: FileDownload = FileDownload(url: download.url,
                                                           localUrl: self.saveLocationUrl(identifier: identifier, removeExistingFile: false),
+                                                          updatedAt: Date().timeIntervalSince1970,
+                                                          insertedAt: download.insertedAt,
                                                           progress: download.progress,
                                                           totalCount: download.totalCount,
                                                           completedCount: download.completedCount,

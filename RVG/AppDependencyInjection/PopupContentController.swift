@@ -272,6 +272,9 @@ class PopupContentController: UIViewController {
             })
             .disposed(by: bag)
 
+        // combine playback events with duration calculation so that we can store the
+        // duration. We need duration because we need to determine whether or not to
+        // resume playback of long content like preaching
         Observable.combineLatest(actualPlaybackProgress.asObservable(), estimatedDuration.asObservable())
             .observeOn(MainScheduler.instance)
             .bind(to: userActionsViewModel.playbackEvent)

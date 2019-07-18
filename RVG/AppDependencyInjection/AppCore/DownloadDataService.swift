@@ -10,40 +10,6 @@ import Foundation
 import Moya
 import RxSwift
 
-public final class FileDownload {
-    // MARK: Fields
-    public let url: URL
-    public let localUrl: URL
-    public var progress: Float
-    public var totalCount: Int64
-    public var completedCount: Int64
-    public var state: FileDownloadState
-
-    public init(url: URL,
-                localUrl: URL,
-                progress: Float,
-                totalCount: Int64,
-                completedCount: Int64,
-                state: FileDownloadState) {
-        self.url = url
-        self.localUrl = localUrl
-        self.progress = progress
-        self.totalCount = totalCount
-        self.completedCount = completedCount
-        self.state = state
-    }
-}
-
-public enum FileDownloadState {
-    case initial
-    case initiating
-    case inProgress
-    case cancelling
-    case cancelled
-    case complete
-    case error
-    case unknown
-}
 
 public enum FileDownloadError: Error {
     case internalFailure(Error?)
@@ -93,7 +59,7 @@ enum DeleteFileError: Error {
     }
 }
 
-public protocol FileDownloadDataServicing {
+public protocol FileDownloadServicing {
     var state: Observable<FileDownloadState> { get }
 //    var progress: Observable<Float> { get }
     var fileDownload: Observable<FileDownload> { get }
@@ -121,7 +87,7 @@ public final class DownloadDataService {
 }
 
 
-extension DownloadDataService: FileDownloadDataServicing {
+extension DownloadDataService: FileDownloadServicing {
     // MARK: Private Helpers
 
     // MARK: Public API
@@ -141,6 +107,8 @@ extension DownloadDataService: FileDownloadDataServicing {
 
     public func cancel() -> Single<Void> {
         return Single.create { [unowned self] single -> Disposable in
+            
+            var fileDownload: FileDownload!
             if let internalFileDownload = self.internalFileDownload {
                 switch internalFileDownload.state {
                 case .initial, .cancelling, .cancelled, .complete:
@@ -149,9 +117,11 @@ extension DownloadDataService: FileDownloadDataServicing {
                     if let internalRequest = self.internalRequest,
                         let internalFileDownload = self.internalFileDownload {
                         internalRequest.cancel()
-                        internalFileDownload.state = .cancelled
-                        self.fileDownloadSubject.onNext(internalFileDownload)
-                        NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: internalFileDownload)
+                        
+                        fileDownload = internalFileDownload
+                        fileDownload.state = .cancelled
+                        self.fileDownloadSubject.onNext(fileDownload)
+                        NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
                         single(.success(()))
                     }
                 }
@@ -172,6 +142,8 @@ extension DownloadDataService: FileDownloadDataServicing {
         if let remoteUrl = URL(string: url) {
             self.internalFileDownload = FileDownload(url: remoteUrl,
                                                      localUrl: downloadLocation,
+                                                     updatedAt: Date().timeIntervalSince1970,
+                                                     insertedAt: Date().timeIntervalSince1970,
                                                      progress: Float(0),
                                                      totalCount: Int64(0),
                                                      completedCount: Int64(0),
@@ -189,19 +161,22 @@ extension DownloadDataService: FileDownloadDataServicing {
             if let totalUnitCount = progressResponse.progressObject?.totalUnitCount,
                 let completedUnitCount = progressResponse.progressObject?.completedUnitCount {
 
+                var fileDownload: FileDownload!
+
                     if let internalFileDownload = self.internalFileDownload {
-                        internalFileDownload.progress = Float(progressResponse.progress)
-                        internalFileDownload.totalCount = totalUnitCount
-                        internalFileDownload.completedCount = completedUnitCount
+                        fileDownload = internalFileDownload
+                        fileDownload.progress = Float(progressResponse.progress)
+                        fileDownload.totalCount = totalUnitCount
+                        fileDownload.completedCount = completedUnitCount
 
                         if Float(progressResponse.progress) >= 0.0 && Float(progressResponse.progress) < 1.0 {
                             if let internalFileDownload = self.internalFileDownload {
-                                internalFileDownload.state = .inProgress
-                                self.fileDownloadSubject.onNext(internalFileDownload)
-                                DDLogDebug("internalFileDownload.localUrl: \(internalFileDownload.localUrl)")
+                                fileDownload.state = .inProgress
+                                self.fileDownloadSubject.onNext(fileDownload)
+                                DDLogDebug("internalFileDownload.localUrl: \(fileDownload.localUrl)")
                                 // FIXME: it is possible to send at least one .inProgress
                                 // notification even after the file download has been cancelled
-                                NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: internalFileDownload)
+                                NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: fileDownload)
                             }
                         }
                     }
@@ -218,14 +193,17 @@ extension DownloadDataService: FileDownloadDataServicing {
                 if let dataString: String = String(data: response.data, encoding: .utf8) {
                     DDLogDebug(".success: \(dataString)")
                     DDLogDebug(".success statusCode: \(statusCode)")
+                    
+                    var fileDownload: FileDownload!
                     if let internalFileDownload = self.internalFileDownload {
                         if statusCode >= Int(200) && statusCode < 400 {
-                            internalFileDownload.state = .complete
-                            self.fileDownloadSubject.onNext(internalFileDownload)
-                            NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: internalFileDownload)
+                            fileDownload = internalFileDownload
+                            fileDownload.state = .complete
+                            self.fileDownloadSubject.onNext(fileDownload)
+                            NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: fileDownload)
                             do {
                                 // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
-                                try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: internalFileDownload.localUrl.path)
+                                try FileManager.default.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: fileDownload.localUrl.path)
                             } catch {
                                 DDLogDebug("error while setting file permissions")
                             }
@@ -233,19 +211,22 @@ extension DownloadDataService: FileDownloadDataServicing {
                             //                        self.stateSubject.onNext(.complete)
                         }
                         else if statusCode >= Int(400) {
-                            internalFileDownload.state = .error
-                            self.fileDownloadSubject.onNext(internalFileDownload)
-                            NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: internalFileDownload)
+                            fileDownload.state = .error
+                            self.fileDownloadSubject.onNext(fileDownload)
+                            NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: fileDownload)
                         }
                     }
                 }
             case .failure(_):
                 if let error = result.error {
-                    if let internalFileDownload = self.internalFileDownload {
-                        internalFileDownload.state = .error
+                    var fileDownload: FileDownload!
 
-                        self.fileDownloadSubject.onNext(internalFileDownload)
-                        NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: internalFileDownload)
+                    if let internalFileDownload = self.internalFileDownload {
+                        fileDownload = internalFileDownload
+                        fileDownload.state = .error
+
+                        self.fileDownloadSubject.onNext(fileDownload)
+                        NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: fileDownload)
                     }
                     DDLogDebug(".failure: \(String(describing: error.errorDescription)))")
 //                    self.stateSubject.onError(FileDownloadError.internalFailure(error))

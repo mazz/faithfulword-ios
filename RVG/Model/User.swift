@@ -11,9 +11,9 @@ public struct User: Codable {
     public var language: String
 
     //
-    // a User is one-to-many to FileDownloadItem
+    // a User is one-to-many to FileDownload
     //
-    static let downloads = hasMany(FileDownloadItem.self, using: FileDownloadItem.downloaditemForeignKey)
+    static let downloads = hasMany(FileDownload.self, using: FileDownload.downloaditemForeignKey)
 
 //    enum CodingKeys: String, CodingKey {
 //        case uuid
