@@ -129,6 +129,12 @@ internal final class DownloadingViewModel {
 
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+                .asObservable()
+                .subscribeAndDispose(by: bag)
+        }
+
         if let fileDownload: FileDownload = notification.object as? FileDownload,
             let downloadAsset: Asset = self.downloadAsset.value {
             DDLogDebug("initiateNotification filedownload: \(fileDownload)")
@@ -142,6 +148,12 @@ internal final class DownloadingViewModel {
     
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+                .asObservable()
+                .subscribeAndDispose(by: bag)
+        }
+
         if let fileDownload: FileDownload = notification.object as? FileDownload,
             let downloadAsset: Asset = self.downloadAsset.value {
             DDLogDebug("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(downloadAsset.uuid)")
@@ -159,10 +171,18 @@ internal final class DownloadingViewModel {
     
     @objc func handleDownloadDidCompleteNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
+        
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+                .asObservable()
+                .subscribeAndDispose(by: bag)
+        }
+        
         if let fileDownload: FileDownload = notification.object as? FileDownload,
             let downloadAsset: Asset = self.downloadAsset.value {
             DDLogDebug("completeNotification filedownload: \(fileDownload)")
             if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+                
                 self.downloadState.onNext(.complete)
 //                self.completedDownload.value = true
             }
@@ -171,6 +191,12 @@ internal final class DownloadingViewModel {
     
     @objc func handleDownloadDidErrorNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+                .asObservable()
+                .subscribeAndDispose(by: bag)
+        }
+
         if let fileDownload: FileDownload = notification.object as? FileDownload,
             let downloadAsset: Asset = self.downloadAsset.value {
             DDLogDebug("errorNotification filedownload: \(fileDownload)")
@@ -184,6 +210,12 @@ internal final class DownloadingViewModel {
     
     @objc func handleDownloadDidCancelNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+                .asObservable()
+                .subscribeAndDispose(by: bag)
+        }
+
         if let fileDownload: FileDownload = notification.object as? FileDownload,
             let downloadAsset: Asset = self.downloadAsset.value {
             DDLogDebug("cancelNotification filedownload: \(fileDownload)")

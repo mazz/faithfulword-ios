@@ -13,7 +13,9 @@ public protocol FileDownloadable {
 public struct FileDownload: Codable {
     // MARK: Fields
     var url: URL
-    let localUrl: URL
+    var uuid: String
+    var playableUuid: String
+    var localUrl: URL
     var updatedAt: TimeInterval
     var insertedAt: TimeInterval
     var progress: Float
@@ -27,6 +29,8 @@ public struct FileDownload: Codable {
     static let downloaditemForeignKey = ForeignKey([Columns.userUuid])
     
     init(url: URL,
+         uuid: String,
+         playableUuid: String,
          localUrl: URL,
          updatedAt: TimeInterval,
          insertedAt: TimeInterval,
@@ -35,6 +39,8 @@ public struct FileDownload: Codable {
          completedCount: Int64,
          state: FileDownloadState) {
         self.url = url
+        self.uuid = uuid
+        self.playableUuid = playableUuid
         self.localUrl = localUrl
         self.updatedAt = updatedAt
         self.insertedAt = insertedAt
@@ -58,7 +64,7 @@ extension FileDownload {
         static let completedCount = Column("completedCount")
         static let updatedAt = Column("updatedAt")
         static let insertedAt = Column("insertedAt")
-        static let fileDownloadState = Column("fileDownloadState")
+        static let state = Column("state")
         static let userUuid = Column("userUuid")
     }
 }

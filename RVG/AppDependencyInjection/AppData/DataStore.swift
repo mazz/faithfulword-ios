@@ -58,7 +58,7 @@ public protocol DataStoring {
     func fetchPlayableHistory() -> Single<[Playable]>
     func fetchLastUserActionPlayableState(playableUuid: String) -> Single<UserActionPlayable?>
     
-    // MARK: Downloadable
+    // MARK: FileDownload
     
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
     func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?>
@@ -355,7 +355,7 @@ public final class DataStore {
                 DDLogDebug("error making useractionplayable table: \(error)")
             }
             do {
-                try db.create(table: "download") { downloadsTable in
+                try db.create(table: "fileDownload") { downloadsTable in
                     DDLogDebug("created: \(downloadsTable)")
                     downloadsTable.column("uuid", .text).primaryKey()
                     downloadsTable.column("playableUuid", .text)
@@ -366,7 +366,7 @@ public final class DataStore {
                     downloadsTable.column("completedCount", .integer)
                     downloadsTable.column("updatedAt", .double)
                     downloadsTable.column("insertedAt", .double)
-                    downloadsTable.column("fileDownloadState", .text)
+                    downloadsTable.column("state", .integer)
                     downloadsTable.column("userUuid", .text).references("user", onDelete: .cascade)
                 }
             }
@@ -1387,8 +1387,7 @@ extension DataStore: DataStoring {
         }
     }
     
-    
-    // NARK: Downloadable
+    // NARK: FileDownload
     
     public func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
         // let update: Single<Void> =
@@ -1397,66 +1396,36 @@ extension DataStore: DataStoring {
                 try self.dbPool.writeInTransaction { db in
                     // update
                     DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
-                    if let download = try FileDownload.filter(Column("playableUuid") == fileDownload.uuid).fetchOne(db) {
-                        // update existing action
+                    if let download = try FileDownload.filter(Column("playableUuid") == fileDownload.playableUuid).fetchOne(db) {
+                        // update existing download
                         
-                        //                        DDLogDebug("action found: \(action) playable.uuid: \(playable.uuid)")
                         
-//                        if let playablePath = fileDownload.path,
-//                            let prodUrl: URL = URL(string: playablePath) {
-//                            let pathExtension: String = prodUrl.pathExtension
-//                            let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(fileDownload.uuid.appending(String(describing: ".\(pathExtension)"))).path)
-//                            let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
-                            
-                            //                            playable.duration = TimeInterval(duration)
-//                            DDLogDebug("file there update? \(downloaded)")
-                            
-                            // back up 5 seconds to help the user remember the context, unless < 0
-                            //                            var newPosition: Double = Double(position)
-                            //                            newPosition = newPosition - 5
-                            //                            if newPosition < Double(0) { newPosition = Double(0) }
-                            
-                            // db update
-                            var storeDownload: FileDownload = download
-                            //                            storeAction.playbackPosition = Double(position)
-                            
-
-                            
-//                            storeDownload.updatedAt = Date().timeIntervalSince1970
-//                            storeDownload.downloaded = downloaded
-                            try storeDownload.update(db)
-//                        }
+                        // db update
+                        var storeDownload: FileDownload = download
+                        storeDownload.progress = fileDownload.progress
+                        storeDownload.totalCount = fileDownload.totalCount
+                        storeDownload.completedCount = fileDownload.completedCount
+                        storeDownload.state = fileDownload.state
+                        try storeDownload.update(db)
+                        //                        }
                         
                     } else {
                         // insert new action
-                        DDLogDebug("action not found, playable.uuid: \(fileDownload.uuid)")
-//                        if let playablePath = fileDownload.path,
-//                            let prodUrl: URL = URL(string: playablePath)
-//                        {
-//                            let pathExtension: String = prodUrl.pathExtension
-//                            let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(fileDownload.uuid.appending(String(describing: ".\(pathExtension)"))).path)
-//                            let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
-//                            DDLogDebug("file there insert? \(downloaded)")
-                            
-                            // back up 5 seconds to help the user remember the context, unless < 0
-                            //                            var newPosition: Double = Double(position)
-                            //                            newPosition = newPosition - 5
-                            //                            if newPosition < Double(0) { newPosition = Double(0) }
-                            
-                            let newAction: FileDownload =
-                                FileDownload(url: fileDownload.url,
-                                             uuid: fileDownload.uuid,
-                                             playableUuid: fileDownload.playableUuid,
-                                             localUrl: fileDownload.localUrl,
-                                             updatedAt: fileDownload.updatedAt,
-                                             insertedAt: fileDownload.insertedAt,
-                                             progress: fileDownload.progress,
-                                             totalCount: fileDownload.totalCount,
-                                             completedCount: fileDownload.completedCount,
-                                             state: fileDownload.state)
-                            
-                            try newAction.insert(db)
-//                        }
+                        DDLogDebug("fileDownload not found, fileDownload.playableUuid: \(fileDownload.playableUuid)")
+                        let newFileDownload: FileDownload =
+                            FileDownload(url: fileDownload.url,
+                                         uuid: fileDownload.uuid,
+                                         playableUuid: fileDownload.playableUuid,
+                                         localUrl: fileDownload.localUrl,
+                                         updatedAt: fileDownload.updatedAt,
+                                         insertedAt: fileDownload.insertedAt,
+                                         progress: fileDownload.progress,
+                                         totalCount: fileDownload.totalCount,
+                                         completedCount: fileDownload.completedCount,
+                                         state: fileDownload.state)
+                        
+                        try newFileDownload.insert(db)
+                        //                        }
                         
                     }
                     return .commit
@@ -1468,7 +1437,6 @@ extension DataStore: DataStoring {
             }
             return Disposables.create { }
         }
-        //        return Single.just(())
     }
     
     public func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?> {

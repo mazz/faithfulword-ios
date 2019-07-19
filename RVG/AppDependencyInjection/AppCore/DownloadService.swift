@@ -15,6 +15,9 @@ protocol DownloadServicing {
     var fileDownloads: [String: FileDownload] { get }
     func fetchDownload(url: String, filename: String, playableUuid: String) -> Single<Void>
     func cancelDownload(filename: String) -> Single<Void>
+    func storeFileDownload(fileDownload: FileDownload) -> Single<Void>
+    func fetchFileDownloadState(for playableUuid: String) -> Single<FileDownload?>
+
 }
 
 public final class DownloadService: NSObject {
@@ -38,6 +41,8 @@ public final class DownloadService: NSObject {
     // MARK: Dependencies
     private let reachability: RxClassicReachable
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
+    private let dataService: FileDownloadDataServicing
+
     
     private let downloadQueue: OperationQueue = {
         let _queue = OperationQueue()
@@ -46,8 +51,10 @@ public final class DownloadService: NSObject {
         return _queue
     }()
     
-    init(reachability: RxClassicReachable) {
+    init(reachability: RxClassicReachable,
+         dataService: FileDownloadDataServicing) {
         self.reachability = reachability
+        self.dataService = dataService
         super.init()
         
         reactToReachability()
@@ -188,6 +195,14 @@ extension DownloadService: URLSessionDownloadDelegate {
 }
 
 extension DownloadService: DownloadServicing {
+    func storeFileDownload(fileDownload: FileDownload) -> Single<Void> {
+        return self.dataService.updateFileDownloadHistory(fileDownload: fileDownload)
+    }
+    
+    func fetchFileDownloadState(for playableUuid: String) -> Single<FileDownload?> {
+        return self.dataService.fetchLastFileDownloadState(for: playableUuid)
+    }
+    
     func fetchDownload(url: String, filename: String, playableUuid: String) -> Single<Void> {
         
         return Single.create { [weak self] single -> Disposable in
