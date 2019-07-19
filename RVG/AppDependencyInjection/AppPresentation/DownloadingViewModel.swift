@@ -70,7 +70,9 @@ internal final class DownloadingViewModel {
                 if let downloadService = self.downloadService,
                     let downloadAsset: Asset = self.downloadAsset.value {
                     DDLogDebug("downloadAsset.uuid: \(downloadAsset.uuid)")
-                    downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString, filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")))
+                    downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString,
+                                                  filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")),
+                                                  playableUuid: downloadAsset.uuid)
                         .asObservable()
                         .subscribeAndDispose(by: self.bag)
 //                        .subscribe(onSuccess: {

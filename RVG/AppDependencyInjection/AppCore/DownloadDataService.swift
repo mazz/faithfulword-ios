@@ -63,7 +63,7 @@ public protocol FileDownloadServicing {
     var state: Observable<FileDownloadState> { get }
 //    var progress: Observable<Float> { get }
     var fileDownload: Observable<FileDownload> { get }
-    func downloadFile(url: String, filename: String) -> Single<Void>
+    func downloadFile(url: String, filename: String, playableUuid: String) -> Single<Void>
     func deleteDownload() -> Single<Void>
 }
 
@@ -132,7 +132,7 @@ extension DownloadDataService: FileDownloadServicing {
         }
     }
 
-    public func downloadFile(url: String, filename: String) -> Single<Void> {
+    public func downloadFile(url: String, filename: String, playableUuid: String) -> Single<Void> {
         DDLogDebug("downloadFile url: \(url)")
 
 //        self.stateSubject.onNext(.initiating)
@@ -141,6 +141,8 @@ extension DownloadDataService: FileDownloadServicing {
         let downloadLocation: URL = fileService.downloadLocation
         if let remoteUrl = URL(string: url) {
             self.internalFileDownload = FileDownload(url: remoteUrl,
+                                                     uuid: NSUUID().uuidString,
+                                                     playableUuid: playableUuid,
                                                      localUrl: downloadLocation,
                                                      updatedAt: Date().timeIntervalSince1970,
                                                      insertedAt: Date().timeIntervalSince1970,

@@ -35,7 +35,7 @@ public protocol HistoryDataServicing {
 }
 
 protocol FileDownloadDataServicing {
-    func updateFileDownloadState(playable: Playable, position: Float, duration: Float) -> Single<Void>
+    func updateFileDownloadState(fileDownload: FileDownload) -> Single<Void>
     func fetchLastFileDownloadState(for playableUuid: String) -> Single<FileDownload?>
 }
 
@@ -202,7 +202,7 @@ extension DataService: HistoryDataServicing {
 }
 
 extension DataService: FileDownloadDataServicing {
-    func updateFileDownloadState(playable: Playable, position: Float, duration: Float) -> Single<Void> {
+    func updateFileDownloadState(fileDownload: FileDownload) -> Single<Void> {
         return Single.just(())
     }
     

@@ -13,7 +13,7 @@ import Moya
 protocol DownloadServicing {
     var operations: [String: DownloadOperation] { get }
     var fileDownloads: [String: FileDownload] { get }
-    func fetchDownload(url: String, filename: String) -> Single<Void>
+    func fetchDownload(url: String, filename: String, playableUuid: String) -> Single<Void>
     func cancelDownload(filename: String) -> Single<Void>
 }
 
@@ -81,6 +81,8 @@ extension DownloadService: URLSessionTaskDelegate {
 //                                                          completedCount: fileDownload.completedCount,
 //                                                          state: .error)
                 let download: FileDownload = FileDownload(url: fileDownload.url,
+                                                          uuid: fileDownload.uuid,
+                                                          playableUuid: fileDownload.playableUuid,
                                                           localUrl: fileDownload.localUrl, updatedAt: Date().timeIntervalSince1970,
                                                           insertedAt: fileDownload.insertedAt,
                                                           progress: Float(fileDownload.totalCount)/Float(fileDownload.completedCount),
@@ -132,6 +134,8 @@ extension DownloadService: URLSessionDownloadDelegate {
                 
                 
                 let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
+                                                              uuid: fileDownload.uuid,
+                                                              playableUuid: fileDownload.playableUuid,
                              localUrl: fileDownload.localUrl,
                              updatedAt: Date().timeIntervalSince1970,
                              insertedAt: fileDownload.insertedAt,
@@ -158,6 +162,8 @@ extension DownloadService: URLSessionDownloadDelegate {
                 let download: FileDownload = weakSelf.fileDownloads[identifier] {
                 
                 let fileDownload: FileDownload = FileDownload(url: download.url,
+                                                              uuid: download.uuid,
+                                                              playableUuid: download.playableUuid,
                              localUrl: download.localUrl,
                              updatedAt: Date().timeIntervalSince1970,
                              insertedAt: download.insertedAt,
@@ -182,7 +188,7 @@ extension DownloadService: URLSessionDownloadDelegate {
 }
 
 extension DownloadService: DownloadServicing {
-    func fetchDownload(url: String, filename: String) -> Single<Void> {
+    func fetchDownload(url: String, filename: String, playableUuid: String) -> Single<Void> {
         
         return Single.create { [weak self] single -> Disposable in
             
@@ -201,6 +207,8 @@ extension DownloadService: DownloadServicing {
                 weakSelf.operations[identifier] = operation
                 
                 let fileDownload: FileDownload = FileDownload(url: remoteUrl,
+                                                              uuid: NSUUID().uuidString,
+                                                              playableUuid: playableUuid,
                                                               localUrl: weakSelf.saveLocationUrl(identifier: identifier, removeExistingFile: false),
                                                               updatedAt: Date().timeIntervalSince1970,
                                                               insertedAt: Date().timeIntervalSince1970,
@@ -250,6 +258,8 @@ extension DownloadService {
             
             // make a download for the cancel notification, then remove it from map
             let fileDownload: FileDownload = FileDownload(url: download.url,
+                                                          uuid: download.uuid,
+                                                          playableUuid: download.playableUuid,
                                                           localUrl: self.saveLocationUrl(identifier: identifier, removeExistingFile: false),
                                                           updatedAt: Date().timeIntervalSince1970,
                                                           insertedAt: download.insertedAt,

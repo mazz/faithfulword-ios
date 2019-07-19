@@ -60,6 +60,7 @@ public protocol DataStoring {
     
     // MARK: Downloadable
     
+    func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
     func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?>
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
@@ -1388,6 +1389,87 @@ extension DataStore: DataStoring {
     
     
     // NARK: Downloadable
+    
+    public func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
+        // let update: Single<Void> =
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    // update
+                    DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
+                    if let download = try FileDownload.filter(Column("playableUuid") == fileDownload.uuid).fetchOne(db) {
+                        // update existing action
+                        
+                        //                        DDLogDebug("action found: \(action) playable.uuid: \(playable.uuid)")
+                        
+//                        if let playablePath = fileDownload.path,
+//                            let prodUrl: URL = URL(string: playablePath) {
+//                            let pathExtension: String = prodUrl.pathExtension
+//                            let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(fileDownload.uuid.appending(String(describing: ".\(pathExtension)"))).path)
+//                            let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
+                            
+                            //                            playable.duration = TimeInterval(duration)
+//                            DDLogDebug("file there update? \(downloaded)")
+                            
+                            // back up 5 seconds to help the user remember the context, unless < 0
+                            //                            var newPosition: Double = Double(position)
+                            //                            newPosition = newPosition - 5
+                            //                            if newPosition < Double(0) { newPosition = Double(0) }
+                            
+                            // db update
+                            var storeDownload: FileDownload = download
+                            //                            storeAction.playbackPosition = Double(position)
+                            
+
+                            
+//                            storeDownload.updatedAt = Date().timeIntervalSince1970
+//                            storeDownload.downloaded = downloaded
+                            try storeDownload.update(db)
+//                        }
+                        
+                    } else {
+                        // insert new action
+                        DDLogDebug("action not found, playable.uuid: \(fileDownload.uuid)")
+//                        if let playablePath = fileDownload.path,
+//                            let prodUrl: URL = URL(string: playablePath)
+//                        {
+//                            let pathExtension: String = prodUrl.pathExtension
+//                            let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(fileDownload.uuid.appending(String(describing: ".\(pathExtension)"))).path)
+//                            let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
+//                            DDLogDebug("file there insert? \(downloaded)")
+                            
+                            // back up 5 seconds to help the user remember the context, unless < 0
+                            //                            var newPosition: Double = Double(position)
+                            //                            newPosition = newPosition - 5
+                            //                            if newPosition < Double(0) { newPosition = Double(0) }
+                            
+                            let newAction: FileDownload =
+                                FileDownload(url: fileDownload.url,
+                                             uuid: fileDownload.uuid,
+                                             playableUuid: fileDownload.playableUuid,
+                                             localUrl: fileDownload.localUrl,
+                                             updatedAt: fileDownload.updatedAt,
+                                             insertedAt: fileDownload.insertedAt,
+                                             progress: fileDownload.progress,
+                                             totalCount: fileDownload.totalCount,
+                                             completedCount: fileDownload.completedCount,
+                                             state: fileDownload.state)
+                            
+                            try newAction.insert(db)
+//                        }
+                        
+                    }
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create { }
+        }
+        //        return Single.just(())
+    }
     
     public func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?> {
         return Single.create { [unowned self] single in
