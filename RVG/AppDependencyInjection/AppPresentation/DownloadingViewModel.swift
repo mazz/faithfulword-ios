@@ -49,6 +49,10 @@ internal final class DownloadingViewModel {
     deinit {
         
     }
+    
+    public func storedFileDownload(for playableUuid: String) -> Single<FileDownload?> {
+        return self.downloadService.fetchFileDownloadState(for: playableUuid)
+    }
 
     private func setupBindings() {
         cancelDownloadButtonTapEvent.asObservable()
