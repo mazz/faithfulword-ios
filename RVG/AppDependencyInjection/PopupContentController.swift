@@ -185,6 +185,23 @@ class PopupContentController: UIViewController {
                 // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
                 // get mixed-up
                 self.userActionsViewModel.playable = selectedPlayable
+                
+                
+                // initiate the check if we have downloaded the content for this playable before
+                // if it's nil we never downloaded it before so send .initial
+                // otherwise just passthrough
+                self.downloadingViewModel.storedFileDownload(for: playableUuid)
+                    .asObservable()
+                    .take(1)
+                    .subscribe(onNext: { fileDownload in
+                        if let download: FileDownload = fileDownload {
+                            self.downloadingViewModel.downloadState.onNext(download.state)
+                        } else {
+                            self.downloadingViewModel.downloadState.onNext(.initial)
+                        }
+                    })
+                    .disposed(by: self.bag)
+                
             }
             .disposed(by: bag)
         
