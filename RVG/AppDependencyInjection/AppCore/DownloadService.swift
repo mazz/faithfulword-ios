@@ -42,19 +42,26 @@ public final class DownloadService: NSObject {
     private let reachability: RxClassicReachable
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     private let dataService: FileDownloadDataServicing
+    private let downloadQueue: OperationQueue
 
     
-    private let downloadQueue: OperationQueue = {
-        let _queue = OperationQueue()
-        _queue.name = "DownloadServiceOperationQueue"
-        _queue.maxConcurrentOperationCount = 1
-        return _queue
-    }()
+//    private let downloadQueue: OperationQueue = {
+//        let _queue = OperationQueue()
+//        _queue.name = "DownloadServiceOperationQueue"
+//        _queue.maxConcurrentOperationCount = 1
+//        return _queue
+//    }()
     
     init(reachability: RxClassicReachable,
          dataService: FileDownloadDataServicing) {
         self.reachability = reachability
         self.dataService = dataService
+        let queue = OperationQueue()
+        queue.name = "DownloadServiceOperationQueue"
+        queue.maxConcurrentOperationCount = 1
+
+        self.downloadQueue = queue
+        
         super.init()
         
         reactToReachability()

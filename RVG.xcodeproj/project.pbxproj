@@ -62,6 +62,7 @@
 		4C5FAD772037AEE600397BFF /* RadioListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD762037AEE600397BFF /* RadioListViewController.swift */; };
 		4C5FAD792037B04200397BFF /* UIViewController+Alerting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */; };
 		4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */; };
+		4C6C86C722E5488C0006DEE9 /* RPCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6C86C622E548890006DEE9 /* RPCircularProgress.swift */; };
 		4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */; };
 		4C6D8E4D22AC6B310025DA28 /* ChannelCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4C22AC6B2E0025DA28 /* ChannelCoordinator.swift */; };
 		4C6D8E4F22AC6E010025DA28 /* Listable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4E22AC6E000025DA28 /* Listable.swift */; };
@@ -266,6 +267,7 @@
 		4C5FAD762037AEE600397BFF /* RadioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioListViewController.swift; sourceTree = "<group>"; };
 		4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerting.swift"; sourceTree = "<group>"; };
 		4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
+		4C6C86C622E548890006DEE9 /* RPCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCircularProgress.swift; sourceTree = "<group>"; };
 		4C6D8E4322A21FD80025DA28 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoProviding.swift; sourceTree = "<group>"; };
 		4C6D8E4C22AC6B2E0025DA28 /* ChannelCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCoordinator.swift; sourceTree = "<group>"; };
@@ -593,6 +595,7 @@
 		4C3EA133206A714300310024 /* AppUI */ = {
 			isa = PBXGroup;
 			children = (
+				4C6C86C622E548890006DEE9 /* RPCircularProgress.swift */,
 				4C4A2CD222D01F18008BB79A /* ActionSheet */,
 				4CC18BFF20079B4800D7BF3D /* CustomCollectionViewFlowLayout.swift */,
 				4CFB85012005B66300FEBB53 /* CellContentLayoutStyle.swift */,
@@ -1291,6 +1294,7 @@
 				4C2503982168691A0069AB49 /* DownloadService.swift in Sources */,
 				4C6D8E4D22AC6B310025DA28 /* ChannelCoordinator.swift in Sources */,
 				4C7EB852228B88E6000E8DAB /* PlaylistViewModel.swift in Sources */,
+				4C6C86C722E5488C0006DEE9 /* RPCircularProgress.swift in Sources */,
 				4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */,
 				4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */,
 				4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */,
