@@ -31,4 +31,5 @@ target 'FaithfulWord' do
     pod 'MagazineLayout'
     # action sheets
     pod 'XLActionController'
+    pod 'HWIFileDownload'
 end
