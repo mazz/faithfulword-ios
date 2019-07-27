@@ -17,6 +17,8 @@
 		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
 		4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */; };
 		4C21A72E20201148000F02CE /* SideMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C21A72D20201148000F02CE /* SideMenu.storyboard */; };
+		4C22F5A422EA81FA0057DEBE /* DownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A322EA81FA0057DEBE /* DownloadStore.swift */; };
+		4C22F5A622EA8C630057DEBE /* DownloadStateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */; };
 		4C250392216867050069AB49 /* DownloadDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C250391216867050069AB49 /* DownloadDataService.swift */; };
 		4C250394216868120069AB49 /* String+Hashing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C250393216868120069AB49 /* String+Hashing.swift */; };
 		4C2503962168686C0069AB49 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2503952168686C0069AB49 /* Security.framework */; };
@@ -222,6 +224,8 @@
 		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
 		4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCoordinator.swift; sourceTree = "<group>"; };
 		4C21A72D20201148000F02CE /* SideMenu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SideMenu.storyboard; sourceTree = "<group>"; };
+		4C22F5A322EA81FA0057DEBE /* DownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStore.swift; sourceTree = "<group>"; };
+		4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStateItem.swift; sourceTree = "<group>"; };
 		4C250391216867050069AB49 /* DownloadDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadDataService.swift; sourceTree = "<group>"; };
 		4C250393216868120069AB49 /* String+Hashing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hashing.swift"; sourceTree = "<group>"; };
 		4C2503952168686C0069AB49 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -538,6 +542,7 @@
 		4C21A72720161B19000F02CE /* AppCore */ = {
 			isa = PBXGroup;
 			children = (
+				4CEB302922E884FD00E039D3 /* Downloading */,
 				4C7D5465200EF7A90038B265 /* Account */,
 				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
 				4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */,
@@ -547,9 +552,6 @@
 				4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */,
 				4CCE8C901FF4BC1A00AFBAF2 /* BlurAnimationController.swift */,
 				4C8EE8C31FF6010F003F483A /* DataService.swift */,
-				4C250391216867050069AB49 /* DownloadDataService.swift */,
-				4C4A2CDB22D2E23D008BB79A /* DownloadOperation.swift */,
-				4C2503972168691A0069AB49 /* DownloadService.swift */,
 				4C5FAD682035258E00397BFF /* LanguageService.swift */,
 				4C437AB82232334200083197 /* UserActionsService.swift */,
 				4C437AD32239F07000083197 /* HistoryService.swift */,
@@ -685,6 +687,18 @@
 				4CCE8C681FF4B26A00AFBAF2 /* UIFactory.swift */,
 			);
 			path = AppDependencyInjection;
+			sourceTree = "<group>";
+		};
+		4CEB302922E884FD00E039D3 /* Downloading */ = {
+			isa = PBXGroup;
+			children = (
+				4C250391216867050069AB49 /* DownloadDataService.swift */,
+				4C4A2CDB22D2E23D008BB79A /* DownloadOperation.swift */,
+				4C2503972168691A0069AB49 /* DownloadService.swift */,
+				4C22F5A322EA81FA0057DEBE /* DownloadStore.swift */,
+				4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */,
+			);
+			path = Downloading;
 			sourceTree = "<group>";
 		};
 		683D5B861F1A792D0019ED0E /* Service */ = {
@@ -1029,6 +1043,7 @@
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
 				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
+				"${BUILT_PRODUCTS_DIR}/Digger/Digger.framework",
 				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/L10n-swift/L10n_swift.framework",
@@ -1053,6 +1068,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaLumberjack.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Digger.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/L10n_swift.framework",
@@ -1294,6 +1310,7 @@
 				4C2503982168691A0069AB49 /* DownloadService.swift in Sources */,
 				4C6D8E4D22AC6B310025DA28 /* ChannelCoordinator.swift in Sources */,
 				4C7EB852228B88E6000E8DAB /* PlaylistViewModel.swift in Sources */,
+				4C22F5A622EA8C630057DEBE /* DownloadStateItem.swift in Sources */,
 				4C6C86C722E5488C0006DEE9 /* RPCircularProgress.swift in Sources */,
 				4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */,
 				4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */,
@@ -1302,6 +1319,7 @@
 				4C7EB884228B8EA8000E8DAB /* UserActionPlayable.swift in Sources */,
 				4C7EB87C228B8EA8000E8DAB /* EnvironmentUrlItemKey.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
+				4C22F5A422EA81FA0057DEBE /* DownloadStore.swift in Sources */,
 				4C7EB895228B8EA8000E8DAB /* LanguagesSupportedResponse.swift in Sources */,
 				4C4A2CDC22D2E23E008BB79A /* DownloadOperation.swift in Sources */,
 				4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */,
@@ -1423,7 +1441,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1477,7 +1495,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

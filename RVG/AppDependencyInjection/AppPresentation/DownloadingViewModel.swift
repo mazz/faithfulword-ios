@@ -62,8 +62,8 @@ internal final class DownloadingViewModel {
                     let downloadAsset: Asset = self.downloadAsset.value {
 //                    downloadService.removeDownload(filename: downloadAsset.uuid)
                     downloadService.cancelDownload(filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")))
-                        .asObservable()
-                        .subscribeAndDispose(by: self.bag)
+//                        .asObservable()
+//                        .subscribeAndDispose(by: self.bag)
                 }
             })
             .disposed(by: bag)
@@ -77,8 +77,8 @@ internal final class DownloadingViewModel {
                     downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString,
                                                   filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")),
                                                   playableUuid: downloadAsset.uuid)
-                        .asObservable()
-                        .subscribeAndDispose(by: self.bag)
+//                        .asObservable()
+//                        .subscribeAndDispose(by: self.bag)
 //                        .subscribe(onSuccess: {
 //                            DDLogDebug("started download")
 //                        }, onError: { error in
