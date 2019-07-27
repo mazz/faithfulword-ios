@@ -38,7 +38,6 @@ extension DownloadService: HWIFileDownloadDelegate {
             
             
             DispatchQueue.main.async {
-                
                 let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
                                                               uuid: fileDownload.uuid,
                                                               playableUuid: fileDownload.playableUuid,
@@ -189,7 +188,6 @@ public final class DownloadService: NSObject {
     private let reachability: RxClassicReachable
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     private let dataService: FileDownloadDataServicing
-    private let downloadQueue: OperationQueue
     private let downloadStore: DownloadStore
 
     var fileDownloader: HWIFileDownloader? = nil
@@ -198,11 +196,6 @@ public final class DownloadService: NSObject {
          dataService: FileDownloadDataServicing) {
         self.reachability = reachability
         self.dataService = dataService
-        let queue = OperationQueue()
-        queue.name = "DownloadServiceOperationQueue"
-        queue.maxConcurrentOperationCount = 1
-
-        self.downloadQueue = queue
         self.downloadStore = DownloadStore()
         super.init()
         
