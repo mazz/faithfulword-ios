@@ -76,6 +76,9 @@ extension UIFactory: AppUIMaking {
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController {
         let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaListing)
         mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaType)
+        mediaListingViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
+//        mediaListingViewController.downloadingViewModel = resolver.resolve(DownloadingViewModel.self)
+
         //        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
         return mediaListingViewController
     }

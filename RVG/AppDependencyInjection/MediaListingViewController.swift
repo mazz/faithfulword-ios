@@ -23,12 +23,38 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
     
         switch item {
-        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator):
+        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
             let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
             switch enumPlayable {
                 
             case .playable(let item):
-                drillInCell.set(uuid: item.uuid, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator)
+                drillInCell.set(uuid: item.uuid, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
+                
+                if let fileDownload: FileDownload = downloadingItems[item.uuid] {
+                    
+                    drillInCell.progressView.isHidden = false
+                    switch fileDownload.state {
+                    case .initial:
+                        drillInCell.progressView.isHidden = true
+                    case .initiating:
+                        drillInCell.progressView.isHidden = false
+                        drillInCell.progressView.progress = fileDownload.progress
+                    case .inProgress:
+                        drillInCell.progressView.progress = fileDownload.progress
+                    case .cancelling:
+                        drillInCell.progressView.isHidden = true
+                    case .cancelled:
+                        drillInCell.progressView.isHidden = true
+                    case .complete:
+                        drillInCell.progressView.isHidden = true
+                    case .error:
+                        drillInCell.progressView.isHidden = true
+                    case .unknown:
+                        drillInCell.progressView.isHidden = true
+                    }
+                } else {
+                    drillInCell.progressView.isHidden = true
+                }
             }
             return drillInCell
         }
@@ -65,10 +91,15 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     // MARK: Dependencies
     
     internal var viewModel: MediaListingViewModel!
-    
+    internal var playbackViewModel: PlaybackControlsViewModel!
+
     // MARK: Fields
     
     private var viewModelSections: [MediaListingSectionViewModel] = []
+    private var downloadingItems:[String: FileDownload] = [:]
+    
+    private var lastProgressChangedUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
+    private var lastDownloadCompleteUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private let bag = DisposeBag()
     
     // MARK: Lifecycle
@@ -90,11 +121,29 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
         
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
 
 //        registerReusableViews()
 //        bindToViewModel()
         reactToViewModel()
+        bindPlaybackViewModel()
 
+    }
+    deinit {
+        // Remove all KVO and notification observers.
+        let notificationCenter = NotificationCenter.default
+
+        notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+        
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
     }
     
     // MARK: Private helpers
@@ -129,8 +178,140 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     }
                 }
             }.disposed(by: bag)
+        
+        
+        // refresh the collection view every quarter second
+        // so we can see things like download progress happen
+        lastProgressChangedUpdate
+            .observeOn(MainScheduler.instance)
+            .distinctUntilChanged()
+            .throttle(.milliseconds(250), scheduler: MainScheduler.instance)
+            .subscribe { [unowned self] indexPath in
+                //                UIView.setAnimationsEnabled(false)
+                if let path: IndexPath = indexPath.element {
+                    UIView.performWithoutAnimation {
+                        self.collectionView.reloadItemsAtIndexPaths([path], animationStyle: .none)
+                    }
+                }
+                //                UIView.setAnimationsEnabled(true)
+            }
+        .disposed(by: bag)
+
+        // refresh the collection view when a download completes
+        // this should not be throttled to ensure
+        // we capture the update
+        lastDownloadCompleteUpdate
+            .observeOn(MainScheduler.instance)
+            .subscribe { [unowned self] indexPath in
+                //                UIView.setAnimationsEnabled(false)
+                if let path: IndexPath = indexPath.element {
+                    UIView.performWithoutAnimation {
+                        self.collectionView.reloadItemsAtIndexPaths([path], animationStyle: .none)
+                    }
+                }
+                //                UIView.setAnimationsEnabled(true)
+            }
+            .disposed(by: bag)
+
     }
 
+    private func bindPlaybackViewModel() {
+        playbackViewModel.playbackState
+            .asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] playbackState in
+//                guard let pauseImage: UIImage = UIImage(named: "pause"),
+//                    let playImage: UIImage = UIImage(named: "play"),
+//                    let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
+//                    let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause") else { return }
+//
+//                let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
+//                let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
+                switch playbackState {
+                    
+                case .initial:
+                    DDLogDebug("MediaListingViewController: .initial")
+//                    self.playPauseButton.image = playImage
+//                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+//
+//                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+//                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+                case .playing:
+                    DDLogDebug("MediaListingViewController: .playing")
+//                    self.playPauseButton.image = pauseImage
+//                    self.playPauseButton.accessibilityLabel = accessibilityPause
+//
+//                    self.fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
+//                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPause
+                case .paused:
+                    
+                    DDLogDebug("MediaListingViewController: .paused")
+//                    self.playPauseButton.image = playImage
+//                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+//
+//                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+//                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+                case .interrupted:
+                    DDLogDebug("MediaListingViewController: .interrupted")
+//                    self.playPauseButton.image = playImage
+//                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+//
+//                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+//                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+                }
+            }
+            .disposed(by: bag)
+        
+        // playbackViewModel.playbackPlayable could either be a Playable or
+        // a UserActionPlayable depending upon whether it was found in the
+        // useractionplayable db table
+        playbackViewModel.playbackPlayable
+            .asObservable()
+            .observeOn(MainScheduler.instance)
+            .filterNils()
+            .next { [unowned self] playable in
+                guard let path: String = playable.path,
+                    let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value,
+                    let localizedName: String = playable.localizedname,
+                    let presenterName: String = playable.presenterName ?? "Unknown",
+                    let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
+                
+//                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(selectedPlayable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
+//
+//                var playbackPosition: Double = 0
+//                var playableUuid: String = playable.uuid
+//                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable {
+//                    //                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
+//                    //                    historyPlayable.mediaCategory == "preaching" {
+//                    playbackPosition = historyPlayable.playbackPosition
+//                    playableUuid = historyPlayable.playableUuid
+//                }
+//
+//                var playbackRate: Float = 1.0
+//                if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
+//                    playbackRate = playbackSpeed
+//                }
+//
+//                DDLogDebug("Asset playableUuid: \(playableUuid)")
+//
+//                self.playbackAsset = Asset(name: localizedName,
+//                                           artist: presenterName,
+//                                           uuid: playableUuid,
+//                                           fileExtension: prodUrl.pathExtension,
+//                                           playbackPosition: playbackPosition,
+//                                           playbackRate: playbackRate,
+//                                           urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
+//
+//                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.pause()
+//                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
+//                self.downloadingViewModel.downloadAsset.value = self.playbackAsset
+//                // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
+//                // get mixed-up
+//                self.userActionsViewModel.playable = selectedPlayable
+            }
+            .disposed(by: bag)
+
+    }
 //    private func reactToContentSizeChange() {
 //        // Only dynamically change in iOS 11+. With iOS 10, user must re-launch app
 //        if #available(iOS 11, *) {
@@ -159,6 +340,28 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
 //            .disposed(by: bag)
 //    }
     
+    // returns -1 on not found
+    private func indexOfFileDownloadInViewModel(fileDownload: FileDownload) -> IndexPath {
+        // try to find the indexPath of the media item and update
+        // the progressevent with the indexPath so we can reload
+        // a single row in the collectionView and avoid scrolling issues
+        
+        // assume section 0
+        let items: [MediaListingItemType] = viewModelSections[0].items
+        let index: Int = items.firstIndex(where: { item in
+            switch item {
+            case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
+                switch enumPlayable {
+                    
+                case .playable(let item):
+                    return item.uuid == fileDownload.playableUuid
+                }
+            }
+            
+        }) ?? -1
+        return IndexPath(row: index, section: 0)
+    }
+    
     @objc func handleUserDidTapMoreNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         
@@ -185,43 +388,110 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         //        }
     }
     
-//    private func rxDataSource() -> RxCollectionViewSectionedReloadDataSource<MediaListingSectionViewModel> {
-//        let dataSource = RxCollectionViewSectionedReloadDataSource<MediaListingSectionViewModel>(
-//            configureCell: { (dataSource, collectionView, indexPath, item) in
+    @objc func handleDownloadDidInitiateNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("MediaListingViewController initiateNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            // try to find the indexPath of the media item and update
+            // the progressevent with the indexPath so we can reload
+            // a single row in the collectionView and avoid scrolling issues
+            
+            // assume section 0
+//            let items: [MediaListingItemType] = viewModelSections[0].items
+//            let index: Int = items.firstIndex(where: { item in
+////                $0.uuid == fileDownload.playableUuid
+//
 //                switch item {
-//                case let .drillIn(_, iconName, title, presenter, showBottomSeparator):
-//                    let drillInCell = collectionView.dequeue(cellType: DeviceGroupSelectionCell.self, for: indexPath)
-//                    drillInCell.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator, showChevron: false)
-//                    return drillInCell
+//                case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
+//                    switch enumPlayable {
 //
-//                }},
-//            configureSupplementaryView: { _, collectionView, kind, indexPath in
-//                return collectionView.dequeueReusableSupplementaryView(
-//                    ofKind: kind,
-//                    withReuseIdentifier: UICollectionReusableView.identifierName,
-//                    for: indexPath)
-//        })
-//        return dataSource
-//    }
-}
+//                    case .playable(let item):
+////                        drillInCell.set(uuid: item.uuid, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
+//
+//                        return item.uuid == fileDownload.playableUuid
+////                        if let fileDownload: FileDownload = downloadingItems[item.uuid] {
+////
+////                        } else {
+////                        }
+//                    }
+//                }
+//
+//            }) ?? -1
 
-//extension MediaListingViewController: UICollectionViewDelegateFlowLayout {
-//    public func collectionView(_ collectionView: UICollectionView,
-//                               layout collectionViewLayout: UICollectionViewLayout,
-//                               sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let preferredWidth: CGFloat = collectionView.bounds.width
-//
-//
-//        switch viewModel.item(at: indexPath) {
-//        case let .drillIn(_, iconName, title, showBottomSeparator):
-//            guard let view = try? UIView.sizingView(for: DeviceGroupSelectionCell.self,
-//                                                    bundle: ModuleInfo.bundle) else { break }
-//            view.populate(iconName: iconName, label: title, showBottomSeparator: showBottomSeparator)
-//            return CGSize(width: preferredWidth, height: view.height(for: preferredWidth))
-//        }
-//        return CGSize(width: 0.1, height: 0.1)
-//    }
-//}
+            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+            if indexPath.row != -1 {
+                lastProgressChangedUpdate.onNext(indexPath)
+            }
+        }
+    }
+    
+    @objc func handleDownloadDidProgressNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("MediaListingViewController didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+            if indexPath.row != -1 {
+                lastProgressChangedUpdate.onNext(indexPath)
+            }
+
+//            lastProgressChangedUpdate.onNext(Date())
+        }
+    }
+    
+    @objc func handleDownloadDidCompleteNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("MediaListingViewController completeNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+//            lastProgressChangedUpdate.onNext(Date())
+//            lastDownloadCompleteUpdate.onNext(Date())
+            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+            if indexPath.row != -1 {
+                lastDownloadCompleteUpdate.onNext(indexPath)
+            }
+
+        }
+    }
+    
+    @objc func handleDownloadDidErrorNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("MediaListingViewController errorNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+//            lastProgressChangedUpdate.onNext(Date())
+            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+            if indexPath.row != -1 {
+                lastProgressChangedUpdate.onNext(indexPath)
+            }
+
+        }
+    }
+    
+    @objc func handleDownloadDidCancelNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("MediaListingViewController cancelNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+//            lastProgressChangedUpdate.onNext(Date())
+            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+            if indexPath.row != -1 {
+                lastProgressChangedUpdate.onNext(indexPath)
+            }
+
+        }
+    }
+}
 
 extension MediaListingViewController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

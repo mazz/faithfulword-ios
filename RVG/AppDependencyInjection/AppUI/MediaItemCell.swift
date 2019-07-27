@@ -13,6 +13,8 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBOutlet private weak var separatorView: UIView!
     @IBOutlet private weak var playStateImageView: UIImageView!
     @IBOutlet private weak var moreButton: UIButton!
+    @IBOutlet private weak var amountDownloaded: UILabel!
+    @IBOutlet public weak var progressView: UIProgressView!
 
     var mediaUuid: String? = nil
     
@@ -20,7 +22,12 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(MediaItemCell.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
         
+    }
+
+    deinit {
         
     }
     
@@ -36,7 +43,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     }
     
 //    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool) {
-    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool) {
+    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool, showAmountDownloaded: Bool) {
 //        titleLabel.text = text
         mediaUuid = uuid
         
@@ -58,4 +65,18 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBAction func handleMoreButtonTap(_ sender: Any) {
             NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: mediaUuid)
     }
+    
+    @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+//        if let fileDownload: FileDownload = notification.object as? FileDownload,
+//            let downloadAsset: Asset = self.downloadAsset.value {
+//            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
+//            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+//
+//                self.downloadState.onNext(.initiating)
+//            }
+//
+//        }
+    }
+
 }
