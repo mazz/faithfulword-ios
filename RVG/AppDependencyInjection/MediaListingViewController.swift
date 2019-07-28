@@ -184,7 +184,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         // so we can see things like download progress happen
         lastProgressChangedUpdate
             .observeOn(MainScheduler.instance)
-            .distinctUntilChanged()
+//            .distinctUntilChanged()
             .throttle(.milliseconds(250), scheduler: MainScheduler.instance)
             .subscribe { [unowned self] indexPath in
                 //                UIView.setAnimationsEnabled(false)
