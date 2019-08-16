@@ -101,14 +101,14 @@ extension AppCoordinator: NavigationCoordinating {
             // Event only fire on main thread
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] authState in
-                if authState == .authenticated {
-                    DDLogDebug("authenticated")
+                if authState == .authenticated || authState == .emailUnconfirmed || authState == .unauthenticated {
+                    DDLogDebug("authState: \(authState)")
                     
                     // we must fetch and set the user language before we do
                     // anything, really
                     self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
                         DDLogDebug("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
-                        L10n.shared.language = userLanguage
+                        L10n.shared.language = (userLanguage == "") ? "en" : userLanguage
                         
                         //            self.swapInMainFlow()
                         
@@ -128,10 +128,11 @@ extension AppCoordinator: NavigationCoordinating {
 
                     
                     
-                } else if authState == .unauthenticated {
-                    self.swapInInitialFlow()
-                    DDLogDebug("unauthenticated")
                 }
+//                else if authState == .unauthenticated {
+//                    self.swapInInitialFlow()
+//                    DDLogDebug("unauthenticated")
+//                }
             })
             .disposed(by: bag)
     }
@@ -305,10 +306,41 @@ extension AppCoordinator: NavigationCoordinating {
                 self.startHandlingAuthEvents()
                 self.accountService.start()
                 
+                // create a default user once and once-only
+                // because we don't have a login UI or a
+                // way to add a new user
+//                let userUuid: String = NSUUID().uuidString
+//                
+//                let user: UserAppUser = UserAppUser(userId: 0,
+//                                      uuid: userUuid,
+//                                      name: userUuid,
+//                                      email: String(describing: "\(userUuid)@\(userUuid)"),
+//                                      session: userUuid,
+//                                      pushNotifications: false,
+//                                      language: "en")
+                
+                
                 // bootstrap login/fetching of session HERE because we have no login UI
-                self.accountService.startLoginFlow()
-                    .asObservable()
-                    .subscribeAndDispose(by: self.bag)
+                self.accountService.startLoginFlow(email: "joseph@faithfulword.app", password: "password")
+                    .subscribe(onSuccess: { [unowned self] userLoginResponse in
+                        let user: UserAppUser = UserAppUser(userId: 0,
+                                              uuid: NSUUID().uuidString,
+                                              name: userLoginResponse.user.name ?? "unknown",
+                                              email: userLoginResponse.user.email,
+                                              session: userLoginResponse.token,
+                                              pushNotifications: false,
+                                              language: "en",
+                                              userLoginUserUuid: userLoginResponse.user.uuid)
+                        
+                        
+                    }, onError: { error in
+                        DDLogDebug("⚠️ login error! \(error)")
+                    })
+                .disposed(by: self.bag)
+//                    .asObservable()
+                
+                    
+//                    .subscribeAndDispose(by: self.bag)
                 
             }, context: .other)
     }

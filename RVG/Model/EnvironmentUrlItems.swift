@@ -15,7 +15,10 @@ extension EnvironmentUrlItemKey {
         return EnvironmentUrlItemKey(rawValue: "https://api.faithfulword.app")
     }
     static var LocalServerRootUrl: EnvironmentUrlItemKey {
-        return EnvironmentUrlItemKey(rawValue: "http://localhost:6543")
+        //
+//        return EnvironmentUrlItemKey(rawValue: "http://mhanna-mbp15.local:4000")
+        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.13:4000")
+//        return EnvironmentUrlItemKey(rawValue: "http://127.0.0.1:4000")
     }
     static var S3BaseUrl: EnvironmentUrlItemKey {
         return EnvironmentUrlItemKey(rawValue: "https://rvg-tracks-cdn.s3.amazonaws.com")

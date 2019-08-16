@@ -17,7 +17,7 @@ public final class LanguageService: LanguageServicing {
 
     public init(dataService: UserDataServicing) {
         self.dataService = dataService
-        userLanguage = Field("LanguageService init")
+        userLanguage = Field("en")
     }
 
     public func updateUserLanguage(languageIdentifier: String) -> Single<String> {
@@ -30,7 +30,7 @@ public final class LanguageService: LanguageServicing {
     public func fetchUserLanguage() -> Single<String> {
         return dataService.fetchUserLanguage()
             .do(onSuccess: { identifier in
-//                self.userLanguage.value = identifier
+                self.userLanguage.value = identifier
             })
     }
 }

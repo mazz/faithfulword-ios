@@ -36,17 +36,23 @@ public protocol HistoryDataServicing {
 
 protocol FileDownloadDataServicing {
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
-    func fetchLastFileDownloadState(for playableUuid: String) -> Single<FileDownload?>
+    func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
+    func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void>
 }
 
 // Provides account related data to the app
 public protocol AccountDataServicing {
 
     /// Permanent observable providing session objects.
-    var session: Observable<String?> { get }
+    var token: Observable<String?> { get }
+    var loginUser: Observable<UserLoginUser?> { get }
 
-    func fetchSession() -> Single<String>
-
+    func loginUser(email: String, password: String) -> Single<UserLoginResponse>
+    func addUser(user: UserAppUser) -> Single<Void>
+//    func addLoginUser(user: UserLoginUser) -> Single<Void>
+    func fetchUser() -> Single<UserAppUser>
+//    func fetchLoginUser() -> Single<UserLoginUser>
+    func appendPersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser>
 }
 
 /// Provides product related data to the app
@@ -106,9 +112,12 @@ public final class DataService {
     // MARK: UserDataServicing
     private var _orgs = Field<[Org]>([])
     private var _channels = Field<[Channel]>([])
-
+    
     private var _languageIdentifier = Field<String>("test init identifier")
-    private var _session = Field<String?>(nil)
+    
+    // MARK: AccountDataServicing
+    private var _token = Field<String?>(nil)
+    private var _user = Field<UserLoginUser?>(nil)
     // MARK: ProductDataServicing
     private var _books = Field<[Book]>([])
     private var _categories = Field<[String: [Categorizable]]>([:])
@@ -206,25 +215,60 @@ extension DataService: FileDownloadDataServicing {
         return dataStore.updateFileDownloadHistory(fileDownload: fileDownload)
     }
     
-    public func fetchLastFileDownloadState(for playableUuid: String) -> Single<FileDownload?> {
-        return dataStore.fetchLastFileDownloadState(playableUuid: playableUuid)
+    public func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?> {
+        return dataStore.fetchLastFileDownloadHistory(playableUuid: playableUuid)
     }
+    
+    public func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void> {
+        return dataStore.deleteLastFileDownloadHistory(playableUuid: playableUuid)
+    }
+
+    
 }
 
 extension DataService: AccountDataServicing {
-    public func fetchSession() -> Single<String> {
-        return Single.just(UUID().uuidString)
-            .flatMap { [unowned self] in
-                self.dataStore.addUser(session: $0) }
-            .do(onSuccess: { [unowned self] session in
-                self._session.value = session
+    public func loginUser(email: String, password: String) -> Single<UserLoginResponse> {
+        let moyaResponse = self.networkingApi.rx.request(.userLogin(email: email, password: password))
+        let response: Single<UserLoginResponse> = moyaResponse.map { response in
+            do {
+                let jsonObj = try response.mapJSON()
+                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(UserLoginResponse.self)
+            } catch {
+                DDLogError("Moya decode error: \(error)")
+                throw DataServiceError.decodeFailed
+            }
+            
+            }
+            .do(onSuccess: { [unowned self] loginResponse in
+                self._token.value = loginResponse.token
+                self._user.value = loginResponse.user
             })
+        return response
+        
+    }
+    
+    public var user: Single<UserLoginUser?> {
+        return Single.just(_user.value)
+    }
+    
+    public func addUser(user: UserAppUser) -> Single<Void> {
+        return self.dataStore.addUser(addingUser: user)
+            .toVoid()
     }
 
-    public var session: Observable<String?> { return _session.asObservable() }
+    public func fetchUser() -> Single<UserAppUser> {
+        return self.dataStore.fetchUser()
+    }
+
+    public var token: Observable<String?> { return _token.asObservable() }
+    public var loginUser: Observable<UserLoginUser?> { return _user.asObservable() }
 
     // MARK: Helpers
 
+    public func appendPersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser> {
+        return self.dataStore.addLoginUser(addingUser: user)
+    }
 }
 
 enum FetchState {
@@ -1060,7 +1104,7 @@ extension DataService: ProductDataServicing {
         return dataStore.fetchBooks()
             //            .asObservable()
             .do(
-                onNext: { [weak self] books in
+                onSuccess: { [weak self] books in
                     self?._books.value = books
                 },
                 onError: { [weak self] error in

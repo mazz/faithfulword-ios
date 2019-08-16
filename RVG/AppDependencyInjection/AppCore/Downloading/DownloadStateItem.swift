@@ -18,6 +18,7 @@ public final class DownloadStateItem {
     var downloadError: Error? = nil
     var downloadErrorMessageStack: [String]? = nil
     var lastHttpStatusCode: Int? = nil
+    var cancelImmediately: Bool = false
     
     init(downloadIdentifier: String, remoteUrl: URL) {
         self.downloadIdentifier = downloadIdentifier

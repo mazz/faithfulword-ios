@@ -1,6 +1,10 @@
 import Foundation
 import Moya
 
+private enum Constants {
+    static let versionPrefix: String = "/v1.3"
+}
+
 public enum FwbcApiService {
     case appVersions(offset: Int, limit: Int)
     case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String, userUuid: String)
@@ -30,7 +34,12 @@ public enum FwbcApiService {
         presentedAfter: TimeInterval,
         offset: Int,
         limit: Int)
+
+    // login
     
+    // v1.3/auth/identity/callback
+    case userLogin(email: String, password: String)
+
     // v1.1/music/{gid}/media
     // v1.2/music/{gid}/media
     // v1.3/music/{uuid}/media?language-id=en&offset=1&limit=50
@@ -61,42 +70,56 @@ public enum FwbcApiService {
 // MARK: - TargetType Protocol Implementation
 extension FwbcApiService: TargetType {
     
-    //    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v2.0")! }
-    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)/v1.3")! }
-    //    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v1.3")! }
+//        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v2.0")! }
+//    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)/v1.3")! }
+//    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v1.3")! }
+        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)")! }
     public var path: String {
         switch self {
         case .pushTokenUpdate(_, _, _, _, _, _):
-            return "/device/pushtoken/update"
+            return String(describing: "\(Constants.versionPrefix)/device/pushtoken/update")
         case .appVersions(_, _):
-            return "/app/versions"
+            return String(describing: "\(Constants.versionPrefix)/app/versions")
         case .languagesSupported(_, _):
-            return "/languages/supported"
+            return String(describing: "\(Constants.versionPrefix)/languages/supported")
         case .defaultOrgs(_, _):
-            return "/orgs/default"
+            return String(describing: "\(Constants.versionPrefix)/orgs/default")
             
         case .channels(let uuid, _, _):
-            return "/orgs/\(uuid)/channels"
+            return String(describing: "\(Constants.versionPrefix)/orgs/\(uuid)/channels")
+
+//            return "/orgs/\(uuid)/channels"
         case .playlists(let uuid, _, _, _):
-            return "/channels/\(uuid)/playlists"
+            return String(describing: "\(Constants.versionPrefix)/channels/\(uuid)/playlists")
+//            return "/channels/\(uuid)/playlists"
         case .mediaItems(let uuid, _, _, _):
-            return "/playlists/\(uuid)/media"
+            return String(describing: "\(Constants.versionPrefix)/playlists/\(uuid)/media")
+//            return "/playlists/\(uuid)/media"
         case .search(_, _, _, _, _, _, _, _, _):
-            return "/search"
-            
+            return String(describing: "\(Constants.versionPrefix)/search")
+//            return "/search"
+        case .userLogin(_, _):
+            return "/auth/identity/callback"
+
             
         case .musicMedia(let uuid, _, _):
-            return "/music/\(uuid)/media"
+            return String(describing: "\(Constants.versionPrefix)/music/\(uuid)/media")
+//            return "/music/\(uuid)/media"
         case .music(_, _, _):
-            return "/music"
+            return String(describing: "\(Constants.versionPrefix)/music")
+//            return "/music"
         case .gospels(_, _, _):
-            return "/gospels"
+            return String(describing: "\(Constants.versionPrefix)/gospels")
+//            return "/gospels"
         case .gospelsMedia(let uuid, _, _):
-            return "/gospels/\(uuid)/media"
+            return String(describing: "\(Constants.versionPrefix)/gospels/\(uuid)/media")
+//            return "/gospels/\(uuid)/media"
         case .booksChapterMedia(let uuid, _, _, _):
-            return "/books/\(uuid)/media"
+            return String(describing: "\(Constants.versionPrefix)/books/\(uuid)/media")
+//            return "/books/\(uuid)/media"
         case .books(_, _, _):
-            return "/books"
+            return String(describing: "\(Constants.versionPrefix)/books")
+//            return "/books"
         }
     }
     
@@ -116,6 +139,8 @@ extension FwbcApiService: TargetType {
         case .mediaItems:
             return .get
         case .search:
+            return .post
+        case .userLogin:
             return .post
             
             
@@ -183,7 +208,10 @@ extension FwbcApiService: TargetType {
                     "presentedAfter": presentedAfter,
                     "offset": offset,
                     "limit": limit]
-            
+        case .userLogin(let email, let password):
+            return ["email": email,
+                    "password": password]
+
             //        case search(query: String,
             //                    mediaCategory: String,
             //                    playlistUuid: String,
@@ -231,6 +259,8 @@ extension FwbcApiService: TargetType {
             return URLEncoding.default
         case .search:
             return JSONEncoding.default // Send parameters as JSON in request body
+        case .userLogin:
+            return JSONEncoding.default
             
         case .musicMedia(let uuid, let offset, let limit):
             return URLEncoding.default
@@ -288,7 +318,8 @@ extension FwbcApiService: TargetType {
                      let limit):
             return "{\"query\": \(query), \"mediaCategory\": \(mediaCategory), \"playlistUuid\": \(playlistUuid), \"channelUuid\": \(channelUuid), \"publishedAfter\": \(publishedAfter), \"updatedAfter\": \(updatedAfter), \"presentedAfter\": \(presentedAfter), \"offset\": \(offset), \"limit\": \(limit)}".utf8Encoded
             
-            
+        case .userLogin(let email, let password):
+            return "{\"email\": \(email), \"password\": \(password)".utf8Encoded
             
         case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
             return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
@@ -361,6 +392,8 @@ extension FwbcApiService: TargetType {
                                                     "offset": offset,
                                                     "limit": limit],
                                       encoding: JSONEncoding.default)
+        case .userLogin(let email, let password):
+            return .requestParameters(parameters: ["email": email, "password": password], encoding: JSONEncoding.default)
             
             
             

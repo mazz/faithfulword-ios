@@ -18,8 +18,9 @@ protocol DownloadServicing {
 
     func fetchDownload(url: String, filename: String, playableUuid: String) // -> Single<Void>
     func cancelDownload(filename: String) // -> Single<Void>
-    func storeFileDownload(fileDownload: FileDownload) -> Single<Void>
-    func fetchFileDownloadState(for playableUuid: String) -> Single<FileDownload?>
+    func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
+    func fetchFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
+    func deleteFileDownloadHistory(playableUuid: String) -> Single<Void>
 
 }
 
@@ -93,29 +94,38 @@ extension DownloadService: HWIFileDownloadDelegate {
             stateItem.progress?.lastLocalizedDescription = stateItem.progress?.nativeProgress.localizedDescription
             stateItem.progress?.lastLocalizedAdditionalDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
             
-            DDLogDebug("downloadProgressChanged stateItem: \(String(describing: stateItem.progress))")
-            DDLogDebug("downloadProgressChanged fileDownload: \(String(describing: fileDownload))")
+//            DDLogDebug("downloadProgressChanged stateItem: \(String(describing: stateItem.progress))")
+//            DDLogDebug("downloadProgressChanged fileDownload: \(String(describing: fileDownload))")
             
             // create a new FileDownload, store it/update it and post it
             
             DispatchQueue.main.async { [weak self] in
-                if let weakSelf = self,
-                    let hwiProgress: HWIFileDownloadProgress = stateItem.progress {
-
-                    let download: FileDownload = FileDownload(url: fileDownload.url,
-                                                                  uuid: fileDownload.uuid,
-                                                                  playableUuid: fileDownload.playableUuid,
-                                                                  localUrl: fileDownload.localUrl,
-                                                                  updatedAt: Date().timeIntervalSince1970,
-                                                                  insertedAt: fileDownload.insertedAt,
-                                                                  progress: hwiProgress.downloadProgress,
-                                                                  totalCount: hwiProgress.expectedFileSize,
-                                                                  completedCount: hwiProgress.receivedFileSize,
-                                                                  state: .inProgress)
-                    
-                    weakSelf.fileDownloads[identifier] = download
-                    NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: download)
-                }
+                
+                
+                    if let weakSelf = self,
+                        let hwiProgress: HWIFileDownloadProgress = stateItem.progress {
+                        // we have not cancelled, so we will send a progress update
+                        if stateItem.cancelImmediately == false {
+                            var download: FileDownload = FileDownload(url: fileDownload.url,
+                                                                      uuid: fileDownload.uuid,
+                                                                      playableUuid: fileDownload.playableUuid,
+                                                                      localUrl: fileDownload.localUrl,
+                                                                      updatedAt: Date().timeIntervalSince1970,
+                                                                      insertedAt: fileDownload.insertedAt,
+                                                                      progress: hwiProgress.downloadProgress,
+                                                                      totalCount: hwiProgress.expectedFileSize,
+                                                                      completedCount: hwiProgress.receivedFileSize,
+                                                                      state: .inProgress)//,
+                            //                                                                  userUuid: "DB7F19C8-1A16-4D2F-8509-EDA538A3157B")
+                            
+                            download.extendedDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
+                            
+                            weakSelf.fileDownloads[identifier] = download
+                            NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: download)
+                        } else {
+                            DDLogDebug("stateItem.cancelImmediately: \(String(describing: stateItem.cancelImmediately))")
+                        }
+                    }
             }
         }
     }
@@ -123,11 +133,18 @@ extension DownloadService: HWIFileDownloadDelegate {
     public func downloadFailed(withIdentifier identifier: String, error: Error, httpStatusCode: Int, errorMessagesStack: [String]?, resumeData: Data?) {
         DDLogDebug("downloadFailed: \(String(describing: identifier)) error: \(error) httpStatusCode: \(httpStatusCode) errorMessagesStack:\(errorMessagesStack ?? [""])")
         
-        if let stateItem: DownloadStateItem = self.fileDownloadStateItems[identifier],
-            let fileDownload: FileDownload = self.fileDownloads[identifier] {
+//        if let stateItem: DownloadStateItem = self.fileDownloadStateItems[identifier],
+        if let fileDownload: FileDownload = self.fileDownloads[identifier] {
+//            let fileDownloader: HWIFileDownloader = self.fileDownloader,
+//            let downloadProgress: HWIFileDownloadProgress = fileDownloader.downloadProgress(forIdentifier: identifier) {
             
             DispatchQueue.main.async { [weak self] in
                 if let weakSelf = self {
+//                    let hwiProgress: HWIFileDownloadProgress = stateItem.progress {
+
+//                    stateItem.progress = downloadProgress
+//                    stateItem.progress?.lastLocalizedDescription = stateItem.progress?.nativeProgress.localizedDescription
+//                    stateItem.progress?.lastLocalizedAdditionalDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
 
                     let download: FileDownload = FileDownload(url: fileDownload.url,
                                                               uuid: fileDownload.uuid,
@@ -135,11 +152,14 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                               localUrl: fileDownload.localUrl,
                                                               updatedAt: Date().timeIntervalSince1970,
                                                               insertedAt: fileDownload.insertedAt,
-                                                              progress: Float(fileDownload.totalCount)/Float(fileDownload.completedCount),
+                                                              progress: Float(fileDownload.completedCount)/Float(fileDownload.totalCount),
                                                               totalCount: fileDownload.totalCount,
                                                               completedCount: fileDownload.completedCount,
-                                                              state: .error)
+                                                              state: .error)//,
+//                                                              userUuid: "DB7F19C8-1A16-4D2F-8509-EDA538A3157B")
                     
+//                    download.extendedDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
+
                     NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: download)
                     weakSelf.removeDownloadResources(for: identifier)
                 }
@@ -204,12 +224,16 @@ public final class DownloadService: NSObject {
 }
 
 extension DownloadService: DownloadServicing {
-    func storeFileDownload(fileDownload: FileDownload) -> Single<Void> {
+    func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
         return self.dataService.updateFileDownloadHistory(fileDownload: fileDownload)
     }
     
-    func fetchFileDownloadState(for playableUuid: String) -> Single<FileDownload?> {
-        return self.dataService.fetchLastFileDownloadState(for: playableUuid)
+    func fetchFileDownloadHistory(playableUuid: String) -> Single<FileDownload?> {
+        return self.dataService.fetchLastFileDownloadHistory(playableUuid: playableUuid)
+    }
+    
+    func deleteFileDownloadHistory(playableUuid: String) -> Single<Void> {
+        return self.dataService.deleteLastFileDownloadHistory(playableUuid: playableUuid)
     }
     
     func fetchDownload(url: String, filename: String, playableUuid: String) { // -> Single<Void> {
@@ -230,7 +254,8 @@ extension DownloadService: DownloadServicing {
                                                           progress: 0,
                                                           totalCount: 0,
                                                           completedCount: 0,
-                                                          state: .initiating)
+                                                          state: .initiating)//,
+//                                                          userUuid: userUuid)
             fileDownloads[identifier] = fileDownload
             
             DispatchQueue.main.async {
@@ -253,39 +278,45 @@ extension DownloadService: DownloadServicing {
     
     func cancelDownload(filename: String) { // -> Single<Void> {
         let identifier: String = "app.fwsaved.filedownload_\(filename)"
-        
-        //        return Single.create { [weak self] single -> Disposable in
-        
-        // post the cancelled download and then remove
-        // system resources related to download
-        
-        //            if let weakSelf = self,
-        if let download: FileDownload = self.fileDownloads[identifier] {
+        DispatchQueue.main.async {
             
-            //                self.fileDownloader
-            self.fileDownloader?.cancelDownload(withIdentifier: identifier)
+            //        return Single.create { [weak self] single -> Disposable in
             
-            let fileDownload: FileDownload = FileDownload(url: download.url,
-                                                          uuid: download.uuid,
-                                                          playableUuid: download.playableUuid,
-                                                          localUrl: self.saveLocationUrl(identifier: identifier, removeExistingFile: false),
-                                                          updatedAt: Date().timeIntervalSince1970,
-                                                          insertedAt: download.insertedAt,
-                                                          progress: download.progress,
-                                                          totalCount: download.totalCount,
-                                                          completedCount: download.completedCount,
-                                                          state: .cancelled)
+            // post the cancelled download and then remove
+            // system resources related to download
             
-            DispatchQueue.main.async {
+            //            if let weakSelf = self,
+            if let download: FileDownload = self.fileDownloads[identifier],
+                let stateItem: DownloadStateItem = self.fileDownloadStateItems[identifier] {
+                
+                //                self.fileDownloader
+                
+                stateItem.cancelImmediately = true
+
+                self.fileDownloader?.cancelDownload(withIdentifier: identifier)
+                
+                let fileDownload: FileDownload = FileDownload(url: download.url,
+                                                              uuid: download.uuid,
+                                                              playableUuid: download.playableUuid,
+                                                              localUrl: self.saveLocationUrl(identifier: identifier, removeExistingFile: false),
+                                                              updatedAt: Date().timeIntervalSince1970,
+                                                              insertedAt: download.insertedAt,
+                                                              progress: download.progress,
+                                                              totalCount: download.totalCount,
+                                                              completedCount: download.completedCount,
+                                                              state: .cancelled)//,
+                //                                                          userUuid: download.userUuid)
+                
                 NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
+                
+                self.removeDownloadResources(for: identifier)
+                //                single(.success(()))
+                //            } else {
+                //                single(.error(CancelDownloadError.cancelFailed("unknown")))
+                //            }
+                //            return Disposables.create { }
             }
             
-            self.removeDownloadResources(for: identifier)
-            //                single(.success(()))
-            //            } else {
-            //                single(.error(CancelDownloadError.cancelFailed("unknown")))
-            //            }
-            //            return Disposables.create { }
         }
     }
 }

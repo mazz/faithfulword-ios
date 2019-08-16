@@ -13,7 +13,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBOutlet private weak var separatorView: UIView!
     @IBOutlet private weak var playStateImageView: UIImageView!
     @IBOutlet private weak var moreButton: UIButton!
-    @IBOutlet private weak var amountDownloaded: UILabel!
+    @IBOutlet public weak var amountDownloaded: UILabel!
     @IBOutlet public weak var progressView: UIProgressView!
 
     var mediaUuid: String? = nil

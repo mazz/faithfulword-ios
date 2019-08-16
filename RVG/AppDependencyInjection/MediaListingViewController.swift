@@ -33,27 +33,48 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 if let fileDownload: FileDownload = downloadingItems[item.uuid] {
                     
                     drillInCell.progressView.isHidden = false
+                    drillInCell.amountDownloaded.isHidden = false
+                    drillInCell.amountDownloaded.text = ""
+                    
                     switch fileDownload.state {
                     case .initial:
                         drillInCell.progressView.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = true
+                        drillInCell.amountDownloaded.text = ""
                     case .initiating:
                         drillInCell.progressView.isHidden = false
                         drillInCell.progressView.progress = fileDownload.progress
+                        
+                        drillInCell.amountDownloaded.isHidden = false
+                        drillInCell.amountDownloaded.text = ""
                     case .inProgress:
                         drillInCell.progressView.progress = fileDownload.progress
+                        drillInCell.amountDownloaded.text = fileDownload.extendedDescription
                     case .cancelling:
                         drillInCell.progressView.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = true
+                        drillInCell.amountDownloaded.text = ""
                     case .cancelled:
                         drillInCell.progressView.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = true
+                        drillInCell.amountDownloaded.text = ""
                     case .complete:
                         drillInCell.progressView.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = true
+                        drillInCell.amountDownloaded.text = ""
                     case .error:
                         drillInCell.progressView.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = false
+                        drillInCell.amountDownloaded.text = fileDownload.extendedDescription
                     case .unknown:
                         drillInCell.progressView.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = true
+                        drillInCell.amountDownloaded.text = ""
                     }
                 } else {
                     drillInCell.progressView.isHidden = true
+                    drillInCell.amountDownloaded.isHidden = true
+                    drillInCell.amountDownloaded.text = ""
                 }
             }
             return drillInCell

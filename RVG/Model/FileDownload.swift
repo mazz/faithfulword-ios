@@ -7,7 +7,7 @@ public protocol FileDownloadable {
     var insertedAt: TimeInterval { get }
     var updatedAt: TimeInterval { get }
     var fileDownloadState: String { get }
-    var userUuid: String { get }
+//    var userUuid: String { get }
 }
 
 public struct FileDownload: Codable {
@@ -22,11 +22,13 @@ public struct FileDownload: Codable {
     var totalCount: Int64
     var completedCount: Int64
     var state: FileDownloadState
+//    var userUuid: String
+    var extendedDescription: String?
     
     //
     // a FileDownload is many-to-one to User
     //
-    static let downloaditemForeignKey = ForeignKey([Columns.userUuid])
+//    static let downloaditemForeignKey = ForeignKey([Columns.userUuid])
     
     init(url: URL,
          uuid: String,
@@ -37,7 +39,9 @@ public struct FileDownload: Codable {
          progress: Float,
          totalCount: Int64,
          completedCount: Int64,
-         state: FileDownloadState) {
+         state: FileDownloadState
+//         userUuid: String
+        ) {
         self.url = url
         self.uuid = uuid
         self.playableUuid = playableUuid
@@ -48,6 +52,7 @@ public struct FileDownload: Codable {
         self.totalCount = totalCount
         self.completedCount = completedCount
         self.state = state
+//        self.userUuid = userUuid
     }
     
 }
@@ -65,7 +70,8 @@ extension FileDownload {
         static let updatedAt = Column("updatedAt")
         static let insertedAt = Column("insertedAt")
         static let state = Column("state")
-        static let userUuid = Column("userUuid")
+//        static let userUuid = Column("userUuid")
+        static let extendedDescription = Column("extendedDescription")
     }
 }
 

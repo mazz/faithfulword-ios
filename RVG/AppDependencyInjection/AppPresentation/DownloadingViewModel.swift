@@ -51,7 +51,7 @@ internal final class DownloadingViewModel {
     }
     
     public func storedFileDownload(for playableUuid: String) -> Single<FileDownload?> {
-        return self.downloadService.fetchFileDownloadState(for: playableUuid)
+        return self.downloadService.fetchFileDownloadHistory(playableUuid: playableUuid)
     }
 
     private func setupBindings() {
@@ -73,10 +73,12 @@ internal final class DownloadingViewModel {
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
                     let downloadAsset: Asset = self.downloadAsset.value {
+//                    let user: User = self.accountDataService.user.uuid {
                     DDLogDebug("downloadAsset.uuid: \(downloadAsset.uuid)")
                     downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString,
                                                   filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")),
                                                   playableUuid: downloadAsset.uuid)
+                    
 //                        .asObservable()
 //                        .subscribeAndDispose(by: self.bag)
 //                        .subscribe(onSuccess: {
@@ -134,7 +136,7 @@ internal final class DownloadingViewModel {
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+            self.downloadService.updateFileDownloadHistory(fileDownload: fileDownload)
                 .asObservable()
                 .subscribeAndDispose(by: bag)
         }
@@ -153,7 +155,7 @@ internal final class DownloadingViewModel {
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+            self.downloadService.updateFileDownloadHistory(fileDownload: fileDownload)
                 .asObservable()
                 .subscribeAndDispose(by: bag)
         }
@@ -177,7 +179,7 @@ internal final class DownloadingViewModel {
         DDLogDebug("notification: \(notification)")
         
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            self.downloadService.storeFileDownload(fileDownload: fileDownload)
+            self.downloadService.updateFileDownloadHistory(fileDownload: fileDownload)
                 .asObservable()
                 .subscribeAndDispose(by: bag)
         }
@@ -196,37 +198,53 @@ internal final class DownloadingViewModel {
     @objc func handleDownloadDidErrorNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            self.downloadService.storeFileDownload(fileDownload: fileDownload)
-                .asObservable()
-                .subscribeAndDispose(by: bag)
+            self.downloadService.deleteFileDownloadHistory(playableUuid: fileDownload.playableUuid)
+                .subscribe(onSuccess: {
+                    self.downloadState.onNext(.initial)
+                }) { error in
+                    DDLogDebug("error deleting file download history: \(error)")
+                }
+                .disposed(by: bag)
         }
 
-        if let fileDownload: FileDownload = notification.object as? FileDownload,
-            let downloadAsset: Asset = self.downloadAsset.value {
-            DDLogDebug("errorNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
-                // even though it's an error, just set it back to .initial
-                // because we have no use case for an errored download at the moment
-                self.downloadState.onNext(.initial)
-            }
-        }
+//        if let fileDownload: FileDownload = notification.object as? FileDownload,
+//            let downloadAsset: Asset = self.downloadAsset.value {
+//            DDLogDebug("errorNotification filedownload: \(fileDownload)")
+//            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+//                // even though it's an error, just set it back to .initial
+//                // because we have no use case for an errored download at the moment
+//                self.downloadState.onNext(.initial)
+//            }
+//        }
     }
     
     @objc func handleDownloadDidCancelNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            self.downloadService.storeFileDownload(fileDownload: fileDownload)
-                .asObservable()
-                .subscribeAndDispose(by: bag)
+//            self.downloadService.storeFileDownload(fileDownload: fileDownload, userUuid: "DB7F19C8-1A16-4D2F-8509-EDA538A3157B")
+//                .asObservable()
+//                .subscribeAndDispose(by: bag)
+            
+//             do not delete file here because the URLSession will generate an error
+//             delete file in handleDownloadDidErrorNotification instead
+
+            self.downloadService.deleteFileDownloadHistory(playableUuid: fileDownload.playableUuid)
+                .subscribe(onSuccess: {
+                    self.downloadState.onNext(.initial)
+                }) { error in
+                    DDLogDebug("error deleting file download history: \(error)")
+            }
+            .disposed(by: bag)
+
         }
 
-        if let fileDownload: FileDownload = notification.object as? FileDownload,
-            let downloadAsset: Asset = self.downloadAsset.value {
-            DDLogDebug("cancelNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
-                self.downloadState.onNext(.initial)
-            }
-        }
+//        if let fileDownload: FileDownload = notification.object as? FileDownload,
+//            let downloadAsset: Asset = self.downloadAsset.value {
+//            DDLogDebug("cancelNotification filedownload: \(fileDownload)")
+//            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+//                self.downloadState.onNext(.initial)
+//            }
+//        }
     }
 }
 
