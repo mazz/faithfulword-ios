@@ -31,50 +31,98 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 drillInCell.set(uuid: item.uuid, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
                 
                 if let fileDownload: FileDownload = downloadingItems[item.uuid] {
-                    
+//                    let cancelString: NSAttributedString = NSAttributedString(string: DownloadStateTitleConstants.cancelChar, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont(name:"FontAwesome", size: 20)])
+//
+//                    let completedString: NSAttributedString = NSAttributedString(string: DownloadStateTitleConstants.completedChar, attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 145/255, green: 212/255, blue: 98/255, alpha: 1.0), NSAttributedString.Key.font: UIFont(name:"FontAwesome", size: 20)])
+//
+//                    let errorString: NSAttributedString = NSAttributedString(string: DownloadStateTitleConstants.errorChar, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont(name:"FontAwesome", size: 20)])
+
+
                     drillInCell.progressView.isHidden = false
                     drillInCell.amountDownloaded.isHidden = false
                     drillInCell.amountDownloaded.text = ""
-                    
+//                    drillInCell.downloadStateButton.titleLabel?.font = UIFont(name:"FontAwesome", size: 20)
+//                    drillInCell.downloadStateButton.titleLabel?.textColor = UIColor.black
+                    drillInCell.downloadStateButton.isHidden = false
+                    drillInCell.downloadStateButton.isEnabled = true
+
                     switch fileDownload.state {
                     case .initial:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = true
                         drillInCell.amountDownloaded.text = ""
+                        drillInCell.downloadStateButton.isHidden = true
+                        drillInCell.downloadStateButton.setTitle("", for: .normal)
+
                     case .initiating:
                         drillInCell.progressView.isHidden = false
                         drillInCell.progressView.progress = fileDownload.progress
-                        
                         drillInCell.amountDownloaded.isHidden = false
                         drillInCell.amountDownloaded.text = ""
                     case .inProgress:
                         drillInCell.progressView.progress = fileDownload.progress
                         drillInCell.amountDownloaded.text = fileDownload.extendedDescription
+                        drillInCell.downloadStateButton.isHidden = false
+//                        drillInCell.downloadStateButton.setAttributedTitle(cancelString, for: .normal)
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.cancelFile), for: .normal)
+//                        drillInCell.downloadStateButton.contentEdgeInsets = UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15)
+//                        drillInCell.downloadStateButton.invalidateIntrinsicContentSize()
+
                     case .cancelling:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = true
                         drillInCell.amountDownloaded.text = ""
+                        // don't hide cancel button quite yet
+                        drillInCell.downloadStateButton.isHidden = false
+                        // disable cancel button while cancelling
+                        drillInCell.downloadStateButton.isEnabled = false
+
                     case .cancelled:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = true
                         drillInCell.amountDownloaded.text = ""
+                        drillInCell.downloadStateButton.isHidden = true
                     case .complete:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = true
                         drillInCell.amountDownloaded.text = ""
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
+//                        drillInCell.downloadStateButton.setAttributedTitle(completedString, for: .normal)
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
+
+//                        drillInCell.downloadStateButton.contentEdgeInsets = UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15)
+//                        drillInCell.downloadStateButton.invalidateIntrinsicContentSize()
+
+
                     case .error:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = false
                         drillInCell.amountDownloaded.text = fileDownload.extendedDescription
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
+//                        drillInCell.downloadStateButton.setAttributedTitle(errorString, for: .normal)
+                        drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+//                        drillInCell.downloadStateButton.contentEdgeInsets = UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15)
+//                        drillInCell.downloadStateButton.invalidateIntrinsicContentSize()
+
+
                     case .unknown:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = true
                         drillInCell.amountDownloaded.text = ""
+                        drillInCell.downloadStateButton.isHidden = true
+                        drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+//                        drillInCell.downloadStateButton.contentEdgeInsets = UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15)
+//                        drillInCell.downloadStateButton.invalidateIntrinsicContentSize()
+
                     }
                 } else {
                     drillInCell.progressView.isHidden = true
                     drillInCell.amountDownloaded.isHidden = true
                     drillInCell.amountDownloaded.text = ""
+//                    drillInCell.downloadStateButton.isHidden = false
+//                    drillInCell.downloadStateButton.isEnabled = true
                 }
             }
             return drillInCell
@@ -140,8 +188,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             ])
         
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
         
+        // MediaItemCell
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+
+        // DownloadService
         notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
@@ -159,7 +211,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         let notificationCenter = NotificationCenter.default
 
         notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
-        
+        notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+
         notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
         notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
         notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
@@ -383,6 +436,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         return IndexPath(row: index, section: 0)
     }
     
+    // MARK: MediaItemCell notifications
+    
     @objc func handleUserDidTapMoreNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         
@@ -408,6 +463,14 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         //
         //        }
     }
+    
+//    handleUserDidTapCancelNotification
+    
+    @objc func handleUserDidTapCancelNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        
+    }
+    // MARK: DownloadService notifications
     
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {

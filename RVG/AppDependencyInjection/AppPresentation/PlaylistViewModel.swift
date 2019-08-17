@@ -208,9 +208,9 @@ final class PlaylistViewModel {
                     // `limit` number of items
                     // this will stop the data service from continually calling the server
                     // because of the fetchMorePlaylists() guards
-//                    if self.playlists.value.count >= limit && self.totalEntries == -1 {
-//                        self.totalEntries = self.playlists.value.count
-//                    }
+                    if self.playlists.value.count >= limit && self.totalEntries == -1 {
+                        self.totalEntries = self.playlists.value.count
+                    }
                 default:                            // any other database error
                     DDLogDebug("some db error: \(dbError)")
                 }

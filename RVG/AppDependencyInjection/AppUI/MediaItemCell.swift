@@ -1,11 +1,28 @@
 import MagazineLayout
 import UIKit
 
+public struct DownloadStateTitleConstants {
+    static let cancelFile = "cancel-ex-1" // fa-times (Aliases: fa-remove, fa-close)
+    static let completedFile = "completed-check-1" // fa-check
+    static let errorRetryFile = "retry" // fa-check
+}
+
 final class MediaItemCell: MagazineLayoutCollectionViewCell {
     static let mediaItemCellUserDidTapMoreNotification = Notification.Name("mediaItemCellUserDidTapMoreNotification")
+    static let mediaItemCellUserDidTapCancelNotification = Notification.Name("mediaItemCellUserDidTapCancelNotification")
+    static let mediaItemCellUserDidTapRetryNotification = Notification.Name("mediaItemCellUserDidTapRetryNotification")
     
     // MARK: Private
 
+    /*
+ self.downloadChar = @"\uf0ed"; // fa-cloud-download
+ self.cancelChar = @"\uf00d"; // fa-times (Aliases: fa-remove, fa-close)
+ self.pauseChar = @"\uf04c"; // fa-pause
+ self.resumeChar = @"\uf021"; // fa-refresh
+ self.completedChar = @"\uf00c"; // fa-check
+ self.errorChar = @"\uf0e7"; // fa-bolt (Aliases: fa-flash)
+ self.cancelledChar = @"\uf05e"; // fa-ban
+*/
 
     @IBOutlet private weak var artworkImageView: UIImageView!
     @IBOutlet private weak var presenterLabel: UILabel!
@@ -13,6 +30,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBOutlet private weak var separatorView: UIView!
     @IBOutlet private weak var playStateImageView: UIImageView!
     @IBOutlet private weak var moreButton: UIButton!
+    @IBOutlet public weak var downloadStateButton: UIButton!
     @IBOutlet public weak var amountDownloaded: UILabel!
     @IBOutlet public weak var progressView: UIProgressView!
 
@@ -65,7 +83,16 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBAction func handleMoreButtonTap(_ sender: Any) {
             NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: mediaUuid)
     }
-    
+
+    @IBAction func handleDownloadStateButtonTap(_ sender: Any) {
+
+        if self.downloadStateButton.image(for: .normal) == UIImage(named: DownloadStateTitleConstants.cancelFile) {
+            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: mediaUuid)
+        } else if self.downloadStateButton.image(for: .normal) == UIImage(named: DownloadStateTitleConstants.errorRetryFile) {
+            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: mediaUuid)
+        }
+    }
+
     @objc func handleCurrentAssetDidChangeNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
 //        if let fileDownload: FileDownload = notification.object as? FileDownload,
