@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
-import AlamofireImage
+//import AlamofireImage
 
 public final class DeviceNowPlayingBarView: UIView {
 
