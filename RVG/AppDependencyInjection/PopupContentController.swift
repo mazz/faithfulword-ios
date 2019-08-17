@@ -181,7 +181,10 @@ class PopupContentController: UIViewController {
 
                 self.playbackViewModel.assetPlaybackService.assetPlaybackManager.pause()
                 self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
-                self.downloadingViewModel.downloadAsset.value = self.playbackAsset
+
+                self.downloadingViewModel.downloadAssetIdentifier.value = self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))
+                self.downloadingViewModel.downloadAssetRemoteUrlString.value = self.playbackAsset.urlAsset.url.absoluteString
+
                 // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
                 // get mixed-up
                 self.userActionsViewModel.playable = selectedPlayable

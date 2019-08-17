@@ -13,7 +13,11 @@ internal final class DownloadingViewModel {
 
     // MARK: from client
     // the asset that the user intends to download
-    public var downloadAsset = Field<Asset?>(nil)
+//    public var downloadAsset = Field<Asset?>(nil)
+    //<uuid>.mp3
+    public var downloadAssetIdentifier = Field<String?>(nil)
+    //https: //remoteurl.com/full/path.mp3
+    public var downloadAssetRemoteUrlString = Field<String?>(nil)
     // the tap event initiated by the user
     public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
     // the tap event initiated by the user
@@ -59,11 +63,8 @@ internal final class DownloadingViewModel {
             .subscribe({ currentSetting in
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
-                    let downloadAsset: Asset = self.downloadAsset.value {
-//                    downloadService.removeDownload(filename: downloadAsset.uuid)
-                    downloadService.cancelDownload(filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")))
-//                        .asObservable()
-//                        .subscribeAndDispose(by: self.bag)
+                    let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value {
+                    downloadService.cancelDownload(filename: downloadAssetIdentifier)
                 }
             })
             .disposed(by: bag)
@@ -72,36 +73,18 @@ internal final class DownloadingViewModel {
             .subscribe(onNext: { currentSetting in
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
-                    let downloadAsset: Asset = self.downloadAsset.value {
-//                    let user: User = self.accountDataService.user.uuid {
-                    DDLogDebug("downloadAsset.uuid: \(downloadAsset.uuid)")
-                    downloadService.fetchDownload(url: downloadAsset.urlAsset.url.absoluteString,
-                                                  filename: downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")),
-                                                  playableUuid: downloadAsset.uuid)
+                    let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value,
+                    let downloadAssetRemoteUrlString: String = self.downloadAssetRemoteUrlString.value {
+                    if let playableUuid: String = downloadAssetIdentifier.components(separatedBy: ".").first {
+                        downloadService.fetchDownload(url: downloadAssetRemoteUrlString,
+                                                      filename: downloadAssetIdentifier,
+                                                      playableUuid: playableUuid)
+                    }
                     
-//                        .asObservable()
-//                        .subscribeAndDispose(by: self.bag)
-//                        .subscribe(onSuccess: {
-//                            DDLogDebug("started download")
-//                        }, onError: { error in
-//                            DDLogDebug("download error: \(error)")
-//                        })
+
                 }
             }, onError: { error in
                 DDLogDebug("downloadButtonTapEvent error: \(error)")
-            })
-            .disposed(by: bag)
-        
-        downloadAsset.asObservable()
-            .filterNils()
-            .subscribe(onNext: { asset in
-                if FileManager.default.fileExists(atPath: FileSystem.savedDirectory.appendingPathComponent(asset.uuid.appending(String(describing: ".\(asset.fileExtension)"))).path) {
-                    self.downloadState.onNext(.complete)
-                    //            downloadImageNameEvent.value = "share-box"
-                } else {
-                    self.downloadState.onNext(.initial)
-                    //            downloadImageNameEvent.value = "download_icon_black"
-                }
             })
             .disposed(by: bag)
         
@@ -142,9 +125,9 @@ internal final class DownloadingViewModel {
         }
 
         if let fileDownload: FileDownload = notification.object as? FileDownload,
-            let downloadAsset: Asset = self.downloadAsset.value {
+            let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value {
             DDLogDebug("initiateNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+            if fileDownload.localUrl.lastPathComponent == downloadAssetIdentifier {
                 
                 self.downloadState.onNext(.initiating)
             }
@@ -161,9 +144,9 @@ internal final class DownloadingViewModel {
         }
 
         if let fileDownload: FileDownload = notification.object as? FileDownload,
-            let downloadAsset: Asset = self.downloadAsset.value {
-            DDLogDebug("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(downloadAsset.uuid)")
-            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+            let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value {
+            DDLogDebug("downloadAssetIdentifier: \(downloadAssetIdentifier)")
+            if fileDownload.localUrl.lastPathComponent == downloadAssetIdentifier {
                 
 //                self.downloadMaxValue.value = CGFloat(fileDownload.totalCount)
 //                self.downloadValue.value = CGFloat(fileDownload.completedCount)
@@ -185,9 +168,9 @@ internal final class DownloadingViewModel {
         }
         
         if let fileDownload: FileDownload = notification.object as? FileDownload,
-            let downloadAsset: Asset = self.downloadAsset.value {
+            let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value {
             DDLogDebug("completeNotification filedownload: \(fileDownload)")
-            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+            if fileDownload.localUrl.lastPathComponent == downloadAssetIdentifier {
                 
                 self.downloadState.onNext(.complete)
 //                self.completedDownload.value = true
