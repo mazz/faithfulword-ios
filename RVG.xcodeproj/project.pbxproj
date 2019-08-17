@@ -21,7 +21,6 @@
 		4C22F5A622EA8C630057DEBE /* DownloadStateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */; };
 		4C22F5A822FF83A90057DEBE /* UserLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A722FF83A80057DEBE /* UserLoginResponse.swift */; };
 		4C22F5AA22FF84100057DEBE /* UserLoginUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A922FF84100057DEBE /* UserLoginUser.swift */; };
-		4C250392216867050069AB49 /* DownloadDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C250391216867050069AB49 /* DownloadDataService.swift */; };
 		4C250394216868120069AB49 /* String+Hashing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C250393216868120069AB49 /* String+Hashing.swift */; };
 		4C2503962168686C0069AB49 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2503952168686C0069AB49 /* Security.framework */; };
 		4C2503982168691A0069AB49 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503972168691A0069AB49 /* DownloadService.swift */; };
@@ -29,6 +28,7 @@
 		4C25039C216BE0360069AB49 /* DownloadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25039B216BE0360069AB49 /* DownloadingViewModel.swift */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */; };
+		4C2C257D230755920001225C /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C22F5AB23072ADA0057DEBE /* FontAwesome.otf */; };
 		4C381D8F200839A100FD2DEA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D8D200839A100FD2DEA /* MainViewController.swift */; };
 		4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C381D9220084A1700FD2DEA /* DeviceGroupSelectionCell.swift */; };
 		4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C3998FB20201942008E76E8 /* SideMenuViewController.swift */; };
@@ -230,7 +230,7 @@
 		4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStateItem.swift; sourceTree = "<group>"; };
 		4C22F5A722FF83A80057DEBE /* UserLoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserLoginResponse.swift; path = Model/UserLoginResponse.swift; sourceTree = "<group>"; };
 		4C22F5A922FF84100057DEBE /* UserLoginUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserLoginUser.swift; path = Model/UserLoginUser.swift; sourceTree = "<group>"; };
-		4C250391216867050069AB49 /* DownloadDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadDataService.swift; sourceTree = "<group>"; };
+		4C22F5AB23072ADA0057DEBE /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.otf; sourceTree = "<group>"; };
 		4C250393216868120069AB49 /* String+Hashing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hashing.swift"; sourceTree = "<group>"; };
 		4C2503952168686C0069AB49 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4C2503972168691A0069AB49 /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
@@ -696,7 +696,6 @@
 		4CEB302922E884FD00E039D3 /* Downloading */ = {
 			isa = PBXGroup;
 			children = (
-				4C250391216867050069AB49 /* DownloadDataService.swift */,
 				4C4A2CDB22D2E23D008BB79A /* DownloadOperation.swift */,
 				4C2503972168691A0069AB49 /* DownloadService.swift */,
 				4C22F5A322EA81FA0057DEBE /* DownloadStore.swift */,
@@ -793,6 +792,7 @@
 				68E2BE401EBC143400FCD897 /* UIView+Debug.h */,
 				68E2BE411EBC143400FCD897 /* UIView+Debug.m */,
 				68E2BE3F1EBC143300FCD897 /* RVG-Bridging-Header.h */,
+				4C22F5AB23072ADA0057DEBE /* FontAwesome.otf */,
 				70CD20681E6479A800AF619F /* Assets.xcassets */,
 				687BF6CD1EC00AE3002EDCC3 /* Localizable.strings */,
 				687BF6D81EC014B2002EDCC3 /* InfoPlist.strings */,
@@ -955,7 +955,7 @@
 				TargetAttributes = {
 					70CD205D1E6479A800AF619F = {
 						CreatedOnToolsVersion = 8.0;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -1004,6 +1004,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C2C257D230755920001225C /* FontAwesome.otf in Resources */,
 				689880551F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib in Resources */,
 				68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */,
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
@@ -1046,19 +1047,17 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-FaithfulWord/Pods-FaithfulWord-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
 				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
-				"${BUILT_PRODUCTS_DIR}/Digger/Digger.framework",
 				"${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/HWIFileDownload/HWIFileDownload.framework",
 				"${BUILT_PRODUCTS_DIR}/L10n-swift/L10n_swift.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MagazineLayout/MagazineLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
@@ -1071,19 +1070,17 @@
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaLumberjack.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Digger.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRDB.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HWIFileDownload.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/L10n_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagazineLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
@@ -1194,7 +1191,6 @@
 				4CCE8C851FF4B7C600AFBAF2 /* MainCoordinator.swift in Sources */,
 				4CCE8C8B1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift in Sources */,
 				4CCE8C981FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift in Sources */,
-				4C250392216867050069AB49 /* DownloadDataService.swift in Sources */,
 				4C7EB881228B8EA8000E8DAB /* GospelResponse.swift in Sources */,
 				4C3EA13C206B24A000310024 /* DeviceNowPlayingViewModel.swift in Sources */,
 				4C6D8E4F22AC6E010025DA28 /* Listable.swift in Sources */,
@@ -1534,7 +1530,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RVG/RVG-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1561,7 +1557,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RVG/RVG-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

@@ -45,7 +45,7 @@ private extension Formatter {
 }
 
 private extension String {
-    var digits: [Int] { return characters.flatMap{ Int(String($0)) } }
+    var digits: [Int] { return self.flatMap{ Int(String($0)) } }
 }
 
 private extension BidirectionalCollection where Iterator.Element == Int {
