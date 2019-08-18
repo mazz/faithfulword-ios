@@ -36,7 +36,7 @@ extension DownloadService: HWIFileDownloadDelegate {
             // the best policy is probably to delete the existing file at download initiation
             let fullPath: URL = self.saveLocationUrl(identifier: identifier, removeExistingFile: true)
             self.writeFileToSavedDirectory(localSourceUrl: localFileURL, localDestinationUrl: fullPath, deleteSource: true)
-            
+            self.decrementNetworkActivityIndicatorActivityCount()
             
             DispatchQueue.main.async {
                 let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
@@ -60,14 +60,6 @@ extension DownloadService: HWIFileDownloadDelegate {
         
     }
     
-    public func incrementNetworkActivityIndicatorActivityCount() {
-        
-    }
-    
-    public func decrementNetworkActivityIndicatorActivityCount() {
-        
-    }
-
     // optional
     
     
@@ -162,6 +154,7 @@ extension DownloadService: HWIFileDownloadDelegate {
 
                     NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: download)
                     weakSelf.removeDownloadResources(for: identifier)
+                    weakSelf.decrementNetworkActivityIndicatorActivityCount()
                 }
             }
             
@@ -211,6 +204,7 @@ public final class DownloadService: NSObject {
     private let downloadStore: DownloadStore
 
     var fileDownloader: HWIFileDownloader? = nil
+    var networkActivityIndicatorCount: UInt = 0
     
     init(reachability: RxClassicReachable,
          dataService: FileDownloadDataServicing) {
@@ -224,6 +218,31 @@ public final class DownloadService: NSObject {
 }
 
 extension DownloadService: DownloadServicing {
+    
+    public func incrementNetworkActivityIndicatorActivityCount() {
+        self.toggleNetworkActivityIndicatorVisible(visible: true)
+    }
+    
+    public func decrementNetworkActivityIndicatorActivityCount() {
+        self.toggleNetworkActivityIndicatorVisible(visible: false)
+    }
+    
+    func toggleNetworkActivityIndicatorVisible(visible: Bool) {
+        if (visible == true) {
+            networkActivityIndicatorCount = networkActivityIndicatorCount + 1
+        } else {
+            networkActivityIndicatorCount = networkActivityIndicatorCount - 1
+        }
+        UIApplication.shared.isNetworkActivityIndicatorVisible = (networkActivityIndicatorCount > 0)
+    }
+    
+    //    - (void)toggleNetworkActivityIndicatorVisible:(BOOL)visible
+    //    {
+    //    visible ? self.networkActivityIndicatorCount++ : self.networkActivityIndicatorCount--;
+    //    NSLog(@"INFO: NetworkActivityIndicatorCount: %@", @(self.networkActivityIndicatorCount));
+    //    [UIApplication sharedApplication].networkActivityIndicatorVisible = (self.networkActivityIndicatorCount > 0);
+    //    }
+
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
         return self.dataService.updateFileDownloadHistory(fileDownload: fileDownload)
     }
@@ -269,6 +288,8 @@ extension DownloadService: DownloadServicing {
             self.fileDownloadStateItems[identifier] = downloadItem
             self.fileDownloader?.startDownload(withIdentifier: downloadItem.downloadIdentifier,
                                                fromRemoteURL: downloadItem.remoteUrl)
+            
+            self.incrementNetworkActivityIndicatorActivityCount()
         }
     }
     
