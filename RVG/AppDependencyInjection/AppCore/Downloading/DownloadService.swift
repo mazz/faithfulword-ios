@@ -236,13 +236,6 @@ extension DownloadService: DownloadServicing {
         UIApplication.shared.isNetworkActivityIndicatorVisible = (networkActivityIndicatorCount > 0)
     }
     
-    //    - (void)toggleNetworkActivityIndicatorVisible:(BOOL)visible
-    //    {
-    //    visible ? self.networkActivityIndicatorCount++ : self.networkActivityIndicatorCount--;
-    //    NSLog(@"INFO: NetworkActivityIndicatorCount: %@", @(self.networkActivityIndicatorCount));
-    //    [UIApplication sharedApplication].networkActivityIndicatorVisible = (self.networkActivityIndicatorCount > 0);
-    //    }
-
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
         return self.dataService.updateFileDownloadHistory(fileDownload: fileDownload)
     }
