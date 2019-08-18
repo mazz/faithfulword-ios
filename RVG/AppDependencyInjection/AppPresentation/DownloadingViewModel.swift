@@ -43,6 +43,9 @@ internal final class DownloadingViewModel {
         setupBindings()
         
         let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+
         notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
@@ -51,7 +54,17 @@ internal final class DownloadingViewModel {
     }
     
     deinit {
-        
+        // Remove all KVO and notification observers.
+        let notificationCenter = NotificationCenter.default
+
+        notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+
     }
     
     public func storedFileDownload(for playableUuid: String) -> Single<FileDownload?> {
@@ -116,6 +129,18 @@ internal final class DownloadingViewModel {
 
     }
 
+    @objc func handleUserDidTapCancelNotification(notification: Notification) {
+        DDLogDebug("notification: \(notification)")
+        
+        if let uuid: String = notification.object as? String {
+            if let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value {
+                if downloadAssetIdentifier.starts(with: uuid) {
+                    downloadService.cancelDownload(filename: downloadAssetIdentifier)
+                }
+            }
+        }
+    }
+    
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let fileDownload: FileDownload = notification.object as? FileDownload {

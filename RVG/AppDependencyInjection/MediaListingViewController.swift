@@ -65,6 +65,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         drillInCell.downloadStateButton.isHidden = false
 //                        drillInCell.downloadStateButton.setAttributedTitle(cancelString, for: .normal)
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.cancelFile), for: .normal)
+//                        drillInCell.downloadStateButton.removeTarget(nil, action: nil, for: .allTouchEvents)
+//                        drillInCell.downloadStateButton.addTarget(self, action: #selector(MediaListingViewController.cancelDownload), for: .touchUpInside)
 //                        drillInCell.downloadStateButton.contentEdgeInsets = UIEdgeInsets(top: -15, left: -15, bottom: -15, right: -15)
 //                        drillInCell.downloadStateButton.invalidateIntrinsicContentSize()
 
