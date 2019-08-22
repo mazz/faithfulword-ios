@@ -31,6 +31,7 @@ internal class AppCoordinator {
     private let productService: ProductServicing
     private let languageService: LanguageServicing
     private let assetPlaybackService: AssetPlaybackServicing
+    private let downloadService: DownloadServicing
     private let reachability: RxClassicReachable
     
     internal init(uiFactory: AppUIMaking,
@@ -42,6 +43,7 @@ internal class AppCoordinator {
         productService: ProductServicing,
         languageService: LanguageServicing,
         assetPlaybackService: AssetPlaybackServicing,
+        downloadService: DownloadServicing,
         reachability: RxClassicReachable
         ) {
         self.uiFactory = uiFactory
@@ -53,6 +55,7 @@ internal class AppCoordinator {
         self.productService = productService
         self.languageService = languageService
         self.assetPlaybackService = assetPlaybackService
+        self.downloadService = downloadService
         self.reachability = reachability
         
         
@@ -65,10 +68,27 @@ internal class AppCoordinator {
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { notification in
             self.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(withName: "main", expirationHandler: nil)
         }
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(AppCoordinator.handleApplicationWillTerminate(notification:)), name: AppDelegate.applicationWillTerminate, object: nil)
+
+        
+//        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { notification in
+//
+//            DDLogDebug("try and update state of any possible downloads now, downloadService: \(self.downloadService) notification: \(notification)")
+//            self.downloadService.cancelAllDownloads()
+//            sleep(5)
+//        }
 
         reactToReachability()
     }
+
+    deinit {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.removeObserver(self, name: AppDelegate.applicationWillTerminate, object: nil)
+    }
 }
+
 
 // MARK: <NavigationCoordinating>
 extension AppCoordinator: NavigationCoordinating {
@@ -368,5 +388,11 @@ extension AppCoordinator: NavigationCoordinating {
                     DDLogDebug("AppCoordinator \(self.reachability.status.value)")
                 }
             }).disposed(by: bag)
+    }
+    
+    @objc func handleApplicationWillTerminate(notification: Notification) {
+        if self.downloadService.inProgressDownloads().count > 0 {
+            self.downloadService.cancelAllDownloads()            
+        }
     }
 }

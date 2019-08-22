@@ -67,6 +67,7 @@ public protocol DataStoring {
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
     func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
     func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void>
+    func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
@@ -1487,7 +1488,7 @@ extension DataStore: DataStoring {
         }
     }
     
-    // NARK: FileDownload
+    // MARK: FileDownload
     
     public func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
         // let update: Single<Void> =
@@ -1540,6 +1541,47 @@ extension DataStore: DataStoring {
             return Disposables.create { }
         }
     }
+    
+    public func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    // update
+//                    DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
+                    
+//                    do {
+                        try playableUuids.forEach({ uuid in
+                            if let download = try FileDownload.filter(Column("playableUuid") == playableUuids[0]).fetchOne(db) {
+                                // update existing download
+                                
+                                // db update
+                                var storeDownload: FileDownload = download
+                                //                        storeDownload.progress = fileDownload.progress
+                                //                        storeDownload.totalCount = fileDownload.totalCount
+                                //                        storeDownload.completedCount = fileDownload.completedCount
+                                storeDownload.state = state
+                                try storeDownload.update(db)
+                                //                        }
+                                
+                            }
+                        })
+//                    } catch {
+//                        DDLogDebug("error: \(error)")
+//                        single(.error(error))
+//                    }
+                    
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create { }
+        }
+    }
+    
+
     
     public func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?> {
         return Single.create { [unowned self] single in

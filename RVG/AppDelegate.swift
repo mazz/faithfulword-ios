@@ -12,6 +12,7 @@ import CocoaLumberjack
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
+    static let applicationWillTerminate = Notification.Name("applicationWillTerminate")
 
     var window: UIWindow?
     private static var lastPushNotificationCheck = "lastPushNotificationCheck"
@@ -302,6 +303,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func applicationWillTerminate(_ application: UIApplication) {
         DDLogDebug("applicationWillTerminate")
+        NotificationCenter.default.post(name: AppDelegate.applicationWillTerminate, object: application)
+        sleep(5)
+        DDLogDebug("applicationWillTerminate sleep done")
 
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }

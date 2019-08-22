@@ -17,11 +17,14 @@ protocol DownloadServicing {
     var fileDownloadStateItems: [String: DownloadStateItem] { get }
 
     func fetchDownload(url: String, filename: String, playableUuid: String) // -> Single<Void>
+    func cancelAllDownloads()
     func cancelDownload(filename: String) // -> Single<Void>
+    func inProgressDownloads() -> [String]
+    
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
     func fetchFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
     func deleteFileDownloadHistory(playableUuid: String) -> Single<Void>
-
+    func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
 }
 
 extension DownloadService: HWIFileDownloadDelegate {
@@ -51,10 +54,6 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                               state: .complete)
                 
                 NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: fileDownload)
-                
-                // pretty sure this deletes the file temp location
-                //                    finishingDownload.cancel()
-                //                }
             }
         }
         
@@ -85,10 +84,6 @@ extension DownloadService: HWIFileDownloadDelegate {
             stateItem.progress = downloadProgress
             stateItem.progress?.lastLocalizedDescription = stateItem.progress?.nativeProgress.localizedDescription
             stateItem.progress?.lastLocalizedAdditionalDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
-            
-//            DDLogDebug("downloadProgressChanged stateItem: \(String(describing: stateItem.progress))")
-//            DDLogDebug("downloadProgressChanged fileDownload: \(String(describing: fileDownload))")
-            
             // create a new FileDownload, store it/update it and post it
             
             DispatchQueue.main.async { [weak self] in
@@ -97,6 +92,10 @@ extension DownloadService: HWIFileDownloadDelegate {
                     if let weakSelf = self,
                         let hwiProgress: HWIFileDownloadProgress = stateItem.progress {
                         // we have not cancelled, so we will send a progress update
+                        // this check is necessary because there is a delay from when the
+                        // user taps cancel and when download actually stops receiving bytes
+                        // the result would be that even after the user taps cancel, the
+                        // progress UI continues, resulting in a subpar user experience
                         if stateItem.cancelImmediately == false {
                             var download: FileDownload = FileDownload(url: fileDownload.url,
                                                                       uuid: fileDownload.uuid,
@@ -107,8 +106,7 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                                       progress: hwiProgress.downloadProgress,
                                                                       totalCount: hwiProgress.expectedFileSize,
                                                                       completedCount: hwiProgress.receivedFileSize,
-                                                                      state: .inProgress)//,
-                            //                                                                  userUuid: "DB7F19C8-1A16-4D2F-8509-EDA538A3157B")
+                                                                      state: .inProgress)
                             
                             download.extendedDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
                             
@@ -129,7 +127,7 @@ extension DownloadService: HWIFileDownloadDelegate {
         if let fileDownload: FileDownload = self.fileDownloads[identifier] {
 //            let fileDownloader: HWIFileDownloader = self.fileDownloader,
 //            let downloadProgress: HWIFileDownloadProgress = fileDownloader.downloadProgress(forIdentifier: identifier) {
-            
+
             DispatchQueue.main.async { [weak self] in
                 if let weakSelf = self {
 //                    let hwiProgress: HWIFileDownloadProgress = stateItem.progress {
@@ -247,6 +245,24 @@ extension DownloadService: DownloadServicing {
     func deleteFileDownloadHistory(playableUuid: String) -> Single<Void> {
         return self.dataService.deleteLastFileDownloadHistory(playableUuid: playableUuid)
     }
+
+    func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void> {
+        return self.dataService.updateFileDownloads(playableUuids: playableUuids, to: state)
+    }
+
+    // tell the download service to stop recording inProgress state
+    // in local db to all fileDownloads. this is to fix the situation
+    // where downloads interrupted by an app termination would report
+    // an incorrect inProgress state in the sqlite db
+    
+    func cancelAllDownloads() {
+        // use .initial because .cancelled results in a bad UI state for fullDownloadProgressButton
+        updateFileDownloads(playableUuids: inProgressDownloads(), to: .initial)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+    
+
     
     func fetchDownload(url: String, filename: String, playableUuid: String) { // -> Single<Void> {
         
@@ -332,6 +348,18 @@ extension DownloadService: DownloadServicing {
             }
             
         }
+    }
+    
+    func inProgressDownloads() -> [String] {
+        var inProgressUuids: [String] = []
+
+        for (_, download) in fileDownloads {
+            if download.state == .inProgress {
+                inProgressUuids.append(download.playableUuid)
+            }
+        }
+
+        return inProgressUuids
     }
 }
 
