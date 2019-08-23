@@ -199,7 +199,6 @@ public final class DownloadService: NSObject {
     private let reachability: RxClassicReachable
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     private let dataService: FileDownloadDataServicing
-    private let downloadStore: DownloadStore
 
     var fileDownloader: HWIFileDownloader? = nil
     var networkActivityIndicatorCount: UInt = 0
@@ -208,7 +207,6 @@ public final class DownloadService: NSObject {
          dataService: FileDownloadDataServicing) {
         self.reachability = reachability
         self.dataService = dataService
-        self.downloadStore = DownloadStore()
         super.init()
         
         reactToReachability()

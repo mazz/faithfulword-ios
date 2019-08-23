@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-internal final class DownloadingViewModel {
+internal final class DownloadViewModel {
     // MARK: Fields
 
     // MARK: from client
@@ -44,13 +44,13 @@ internal final class DownloadingViewModel {
         
         let notificationCenter = NotificationCenter.default
         
-        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadViewModel.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
 
-        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(DownloadingViewModel.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadViewModel.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadViewModel.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadViewModel.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadViewModel.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadViewModel.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
     }
     
     deinit {

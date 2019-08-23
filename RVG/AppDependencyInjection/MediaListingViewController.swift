@@ -28,7 +28,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             switch enumPlayable {
                 
             case .playable(let item):
-                drillInCell.set(uuid: item.uuid, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
+                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
                 
                 if let fileDownload: FileDownload = downloadingItems[item.uuid] {
 //                    let cancelString: NSAttributedString = NSAttributedString(string: DownloadStateTitleConstants.cancelChar, attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont(name:"FontAwesome", size: 20)])
@@ -163,6 +163,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     internal var viewModel: MediaListingViewModel!
     internal var playbackViewModel: PlaybackControlsViewModel!
+    internal var downloadListingViewModel: DownloadListingViewModel!
 
     // MARK: Fields
     
@@ -442,18 +443,29 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     @objc func handleUserDidTapMoreNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
-        
-        let actionController = YoutubeActionController()
-        
-//        actionController.addAction(Action(ActionData(title: "Add to Watch Later", image: UIImage(named: "yt-add-to-watch-later-icon")!), style: .default, handler: { action in
-//        }))
-        actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-        }))
-        actionController.addAction(Action(ActionData(title: "Share...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
-        }))
-        actionController.addAction(Action(ActionData(title: "Cancel", image: UIImage(named: "yt-cancel-icon")!), style: .cancel, handler: nil))
-        
-        present(actionController, animated: true, completion: nil)
+/*
+            - some : Faithful_Word.MediaItem(contentProviderLink: nil, duration: 0.0, hashId: "gqRj", insertedAt: 1565925286.0, ipfsLink: nil, languageId: "en", largeThumbnailPath: nil, localizedname: "Matthew 1", medThumbnailPath: nil, mediaCategory: "bible", medium: "audio", ordinal: Optional(1), path: Optional("bible/en/0040-0001-Matthew-en.mp3"), playlistUuid: "8e06e658-9cdf-4ca0-8aa5-a3e958e6b035", presentedAt: nil, presenterName: Optional("Eli Lambert"), publishedAt: nil, smallThumbnailPath: nil, sourceMaterial: Optional("King James Bible (KJV)"), tags: [], trackNumber: Optional(1), updatedAt: Optional(1565925318.0), uuid: "39be7a9d-fbe8-49a3-a5d4-16c3e10b0c2d")
+*/
+        if let mediaItem: MediaItem = notification.object as? MediaItem,
+            let path: String = mediaItem.path,
+            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
+            let actionController = YoutubeActionController()
+            
+            
+            let fileIdentifier: String = mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
+            //        actionController.addAction(Action(ActionData(title: "Add to Watch Later", image: UIImage(named: "yt-add-to-watch-later-icon")!), style: .default, handler: { action in
+            //        }))
+            actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+//                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
+                self.downloadListingViewModel.fetchDownload(for: mediaItem)
+                
+            }))
+            actionController.addAction(Action(ActionData(title: "Share...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
+            }))
+            actionController.addAction(Action(ActionData(title: "Cancel", image: UIImage(named: "yt-cancel-icon")!), style: .cancel, handler: nil))
+            
+            present(actionController, animated: true, completion: nil)
+        }
 
         //        if let fileDownload: FileDownload = notification.object as? FileDownload,
         //            let downloadAsset: Asset = self.downloadAsset.value {

@@ -11,13 +11,13 @@
 		4C0F4871202542FA00A8904F /* CategoryListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */; };
 		4C0F48732025709F00A8904F /* CategoryListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F48722025709F00A8904F /* CategoryListingViewController.swift */; };
 		4C10EAEA209164B7008A8B00 /* PlaybackControlsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C10EAE9209164B7008A8B00 /* PlaybackControlsViewModel.swift */; };
+		4C171D9F230F483D00B57B1A /* DownloadListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C171D9E230F483D00B57B1A /* DownloadListingViewModel.swift */; };
 		4C1F000B209FB95E00938C30 /* AssetPlaybackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */; };
 		4C1F001420A3668400938C30 /* AVURLAsset+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F001320A3668400938C30 /* AVURLAsset+Rx.swift */; };
 		4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A723201591E0000F02CE /* UIBarButtonItem+BaseMaking.swift */; };
 		4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A729201843DC000F02CE /* SlideAnimationController.swift */; };
 		4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */; };
 		4C21A72E20201148000F02CE /* SideMenu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C21A72D20201148000F02CE /* SideMenu.storyboard */; };
-		4C22F5A422EA81FA0057DEBE /* DownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A322EA81FA0057DEBE /* DownloadStore.swift */; };
 		4C22F5A622EA8C630057DEBE /* DownloadStateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */; };
 		4C22F5A822FF83A90057DEBE /* UserLoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A722FF83A80057DEBE /* UserLoginResponse.swift */; };
 		4C22F5AA22FF84100057DEBE /* UserLoginUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C22F5A922FF84100057DEBE /* UserLoginUser.swift */; };
@@ -25,7 +25,7 @@
 		4C2503962168686C0069AB49 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C2503952168686C0069AB49 /* Security.framework */; };
 		4C2503982168691A0069AB49 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503972168691A0069AB49 /* DownloadService.swift */; };
 		4C25039A2169A1760069AB49 /* AnyObserverMaking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2503992169A1760069AB49 /* AnyObserverMaking.swift */; };
-		4C25039C216BE0360069AB49 /* DownloadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25039B216BE0360069AB49 /* DownloadingViewModel.swift */; };
+		4C25039C216BE0360069AB49 /* DownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25039B216BE0360069AB49 /* DownloadViewModel.swift */; };
 		4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */; };
 		4C281F4F2094D031000A2910 /* PlaybackCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */; };
 		4C2C257D230755920001225C /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4C22F5AB23072ADA0057DEBE /* FontAwesome.otf */; };
@@ -218,6 +218,7 @@
 		4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4C0F48722025709F00A8904F /* CategoryListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingViewController.swift; sourceTree = "<group>"; };
 		4C10EAE9209164B7008A8B00 /* PlaybackControlsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsViewModel.swift; sourceTree = "<group>"; };
+		4C171D9E230F483D00B57B1A /* DownloadListingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadListingViewModel.swift; sourceTree = "<group>"; };
 		4C1F0003209D6EDC00938C30 /* AssetPlaybackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetPlaybackManager.swift; sourceTree = "<group>"; };
 		4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteCommandManager.swift; sourceTree = "<group>"; };
 		4C1F000A209FB95E00938C30 /* AssetPlaybackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPlaybackService.swift; sourceTree = "<group>"; };
@@ -226,7 +227,6 @@
 		4C21A729201843DC000F02CE /* SlideAnimationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlideAnimationController.swift; sourceTree = "<group>"; };
 		4C21A72B20200ED3000F02CE /* SideMenuCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuCoordinator.swift; sourceTree = "<group>"; };
 		4C21A72D20201148000F02CE /* SideMenu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SideMenu.storyboard; sourceTree = "<group>"; };
-		4C22F5A322EA81FA0057DEBE /* DownloadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStore.swift; sourceTree = "<group>"; };
 		4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadStateItem.swift; sourceTree = "<group>"; };
 		4C22F5A722FF83A80057DEBE /* UserLoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserLoginResponse.swift; path = Model/UserLoginResponse.swift; sourceTree = "<group>"; };
 		4C22F5A922FF84100057DEBE /* UserLoginUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserLoginUser.swift; path = Model/UserLoginUser.swift; sourceTree = "<group>"; };
@@ -235,7 +235,7 @@
 		4C2503952168686C0069AB49 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4C2503972168691A0069AB49 /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
 		4C2503992169A1760069AB49 /* AnyObserverMaking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyObserverMaking.swift; sourceTree = "<group>"; };
-		4C25039B216BE0360069AB49 /* DownloadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadingViewModel.swift; sourceTree = "<group>"; };
+		4C25039B216BE0360069AB49 /* DownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadViewModel.swift; sourceTree = "<group>"; };
 		4C2767C420071E1900783371 /* UICollectionView+ViewManaging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+ViewManaging.swift"; sourceTree = "<group>"; };
 		4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackCoordinator.swift; sourceTree = "<group>"; };
 		4C381D8D200839A100FD2DEA /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -524,7 +524,8 @@
 				4C437ABA223356C600083197 /* UserActionsViewModel.swift */,
 				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
 				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
-				4C25039B216BE0360069AB49 /* DownloadingViewModel.swift */,
+				4C25039B216BE0360069AB49 /* DownloadViewModel.swift */,
+				4C171D9E230F483D00B57B1A /* DownloadListingViewModel.swift */,
 				4C5FAD6E20369A5500397BFF /* RadioListSectionViewModel.swift */,
 				4C5FAD6F20369A5500397BFF /* RadioListViewModeling.swift */,
 				4C39990120229E02008E76E8 /* SideMenuSectionViewModel.swift */,
@@ -698,7 +699,6 @@
 			children = (
 				4C4A2CDB22D2E23D008BB79A /* DownloadOperation.swift */,
 				4C2503972168691A0069AB49 /* DownloadService.swift */,
-				4C22F5A322EA81FA0057DEBE /* DownloadStore.swift */,
 				4C22F5A522EA8C630057DEBE /* DownloadStateItem.swift */,
 			);
 			path = Downloading;
@@ -1261,8 +1261,9 @@
 				4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */,
 				4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */,
 				4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */,
-				4C25039C216BE0360069AB49 /* DownloadingViewModel.swift in Sources */,
+				4C25039C216BE0360069AB49 /* DownloadViewModel.swift in Sources */,
 				4C1F000B209FB95E00938C30 /* AssetPlaybackService.swift in Sources */,
+				4C171D9F230F483D00B57B1A /* DownloadListingViewModel.swift in Sources */,
 				68121CB21ED7D12800273342 /* ChapterTableViewCell.swift in Sources */,
 				4C5FAD7020369A5600397BFF /* RadioListSectionViewModel.swift in Sources */,
 				4C78CEC6227F6DC8006FB8CB /* ExtentionsAll.swift in Sources */,
@@ -1323,7 +1324,6 @@
 				4C7EB884228B8EA8000E8DAB /* UserActionPlayable.swift in Sources */,
 				4C7EB87C228B8EA8000E8DAB /* EnvironmentUrlItemKey.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
-				4C22F5A422EA81FA0057DEBE /* DownloadStore.swift in Sources */,
 				4C7EB895228B8EA8000E8DAB /* LanguagesSupportedResponse.swift in Sources */,
 				4C4A2CDC22D2E23E008BB79A /* DownloadOperation.swift in Sources */,
 				4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */,

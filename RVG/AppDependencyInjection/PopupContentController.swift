@@ -55,7 +55,7 @@ class PopupContentController: UIViewController {
     var playingWhileScrubbing: Bool = false
     
     public var playbackViewModel: PlaybackControlsViewModel!
-    public var downloadingViewModel: DownloadingViewModel!
+    public var downloadingViewModel: DownloadViewModel!
     public var userActionsViewModel: UserActionsViewModel!
     
     private let sliderInUse = Variable<Bool>(false)

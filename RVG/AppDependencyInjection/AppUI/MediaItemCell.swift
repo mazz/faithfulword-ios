@@ -34,7 +34,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBOutlet public weak var amountDownloaded: UILabel!
     @IBOutlet public weak var progressView: UIProgressView!
 
-    var mediaUuid: String? = nil
+    var playable: Playable? = nil
     
     // MARK: Lifecycle
     
@@ -61,9 +61,9 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     }
     
 //    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool) {
-    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool, showAmountDownloaded: Bool) {
+    func set(playable: Playable, title: String, presenter: String, showBottomSeparator: Bool, showAmountDownloaded: Bool) {
 //        titleLabel.text = text
-        mediaUuid = uuid
+        self.playable = playable
         
         presenterLabel.text = presenter
         titleLabel.text = title
@@ -81,15 +81,15 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     
 
     @IBAction func handleMoreButtonTap(_ sender: Any) {
-            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: mediaUuid)
+            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: playable)
     }
 
     @IBAction func handleDownloadStateButtonTap(_ sender: Any) {
 
         if self.downloadStateButton.image(for: .normal) == UIImage(named: DownloadStateTitleConstants.cancelFile) {
-            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: mediaUuid)
+            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: playable)
         } else if self.downloadStateButton.image(for: .normal) == UIImage(named: DownloadStateTitleConstants.errorRetryFile) {
-            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: mediaUuid)
+            NotificationCenter.default.post(name: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: playable)
         }
     }
 
