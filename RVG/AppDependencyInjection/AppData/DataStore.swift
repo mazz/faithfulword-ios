@@ -69,6 +69,9 @@ public protocol DataStoring {
     func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void>
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     
+    // MARK: FileDownload list
+    func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
 
@@ -401,6 +404,7 @@ public final class DataStore {
                     downloadsTable.column("state", .integer)
 //                    downloadsTable.column("userUuid", .text).references("user", onDelete: .cascade)
                     downloadsTable.column("extendedDescription", .text)
+                    downloadsTable.column("playlistUuid", .text)
                 }
             }
             catch {
@@ -1491,7 +1495,6 @@ extension DataStore: DataStoring {
     // MARK: FileDownload
     
     public func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
-        // let update: Single<Void> =
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
@@ -1499,21 +1502,20 @@ extension DataStore: DataStoring {
                     DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
                     if let download = try FileDownload.filter(Column("playableUuid") == fileDownload.playableUuid).fetchOne(db) {
                         // update existing download
-                        
-                        
-                        // db update
                         var storeDownload: FileDownload = download
                         storeDownload.progress = fileDownload.progress
                         storeDownload.totalCount = fileDownload.totalCount
                         storeDownload.completedCount = fileDownload.completedCount
                         storeDownload.state = fileDownload.state
+                        storeDownload.extendedDescription = fileDownload.extendedDescription
+                        storeDownload.playlistUuid = fileDownload.playlistUuid
                         try storeDownload.update(db)
                         //                        }
                         
                     } else {
                         // insert new action
                         DDLogDebug("fileDownload not found, fileDownload.playableUuid: \(fileDownload.playableUuid)")
-                        let newFileDownload: FileDownload =
+                        var newFileDownload: FileDownload =
                             FileDownload(url: fileDownload.url,
                                          uuid: fileDownload.uuid,
                                          playableUuid: fileDownload.playableUuid,
@@ -1523,10 +1525,10 @@ extension DataStore: DataStoring {
                                          progress: fileDownload.progress,
                                          totalCount: fileDownload.totalCount,
                                          completedCount: fileDownload.completedCount,
-                                         state: fileDownload.state)//,
-//                                         userUuid: userUuid)
-//                                         userUuid: NSUUID().uuidString) // TODO: pass in userUuid
-                        
+                                         state: fileDownload.state)
+                        newFileDownload.extendedDescription = fileDownload.extendedDescription
+                        newFileDownload.playlistUuid = fileDownload.playlistUuid
+
                         try newFileDownload.insert(db)
                         //                        }
                         
@@ -1616,6 +1618,22 @@ extension DataStore: DataStoring {
             return Disposables.create()
         }
         //        return Single.just(())
+    }
+    
+    public func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchFileDownloads: [FileDownload] = []
+                try self.dbPool.read { db in
+                    fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
+                }
+                single(.success(fetchFileDownloads))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
     }
 
     public func fetchPlayables(for categoryUuid: String) -> Single<[Playable]> {

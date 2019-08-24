@@ -16,15 +16,17 @@ protocol DownloadServicing {
     var fileDownloads: [String: FileDownload] { get }
     var fileDownloadStateItems: [String: DownloadStateItem] { get }
 
-    func fetchDownload(url: String, filename: String, playableUuid: String) // -> Single<Void>
+    func fetchDownload(url: String, filename: String, playableUuid: String, playlistUuid: String?) // -> Single<Void>
     func cancelAllDownloads()
-    func cancelDownload(filename: String) // -> Single<Void>
+    func cancelDownload(filename: String, playlistUuid: String?) // -> Single<Void>
     func inProgressDownloads() -> [String]
     
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
     func fetchFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
     func deleteFileDownloadHistory(playableUuid: String) -> Single<Void>
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
+    
+    func fetchStoredFileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
 }
 
 extension DownloadService: HWIFileDownloadDelegate {
@@ -42,7 +44,7 @@ extension DownloadService: HWIFileDownloadDelegate {
             self.decrementNetworkActivityIndicatorActivityCount()
             
             DispatchQueue.main.async {
-                let fileDownload: FileDownload = FileDownload(url: fileDownload.url,
+                var download: FileDownload = FileDownload(url: fileDownload.url,
                                                               uuid: fileDownload.uuid,
                                                               playableUuid: fileDownload.playableUuid,
                                                               localUrl: fileDownload.localUrl,
@@ -53,7 +55,9 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                               completedCount: fileDownload.completedCount,
                                                               state: .complete)
                 
-                NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: fileDownload)
+                download.playlistUuid = fileDownload.playlistUuid
+                
+                NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: download)
             }
         }
         
@@ -109,6 +113,7 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                                       state: .inProgress)
                             
                             download.extendedDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
+                            download.playlistUuid = fileDownload.playlistUuid
                             
                             weakSelf.fileDownloads[identifier] = download
                             NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: download)
@@ -136,7 +141,7 @@ extension DownloadService: HWIFileDownloadDelegate {
 //                    stateItem.progress?.lastLocalizedDescription = stateItem.progress?.nativeProgress.localizedDescription
 //                    stateItem.progress?.lastLocalizedAdditionalDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
 
-                    let download: FileDownload = FileDownload(url: fileDownload.url,
+                    var download: FileDownload = FileDownload(url: fileDownload.url,
                                                               uuid: fileDownload.uuid,
                                                               playableUuid: fileDownload.playableUuid,
                                                               localUrl: fileDownload.localUrl,
@@ -147,7 +152,7 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                               completedCount: fileDownload.completedCount,
                                                               state: .error)//,
 //                                                              userUuid: "DB7F19C8-1A16-4D2F-8509-EDA538A3157B")
-                    
+                    download.playlistUuid = fileDownload.playlistUuid
 //                    download.extendedDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
 
                     NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: download)
@@ -232,6 +237,8 @@ extension DownloadService: DownloadServicing {
         UIApplication.shared.isNetworkActivityIndicatorVisible = (networkActivityIndicatorCount > 0)
     }
     
+    // MARK: download service
+    
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
         return self.dataService.updateFileDownloadHistory(fileDownload: fileDownload)
     }
@@ -248,6 +255,13 @@ extension DownloadService: DownloadServicing {
         return self.dataService.updateFileDownloads(playableUuids: playableUuids, to: state)
     }
 
+    // MARK: download list service
+    
+    func fetchStoredFileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
+        return self.dataService.fileDownloads(for: playlistUuid)
+    }
+    
+    
     // tell the download service to stop recording inProgress state
     // in local db to all fileDownloads. this is to fix the situation
     // where downloads interrupted by an app termination would report
@@ -262,7 +276,7 @@ extension DownloadService: DownloadServicing {
     
 
     
-    func fetchDownload(url: String, filename: String, playableUuid: String) { // -> Single<Void> {
+    func fetchDownload(url: String, filename: String, playableUuid: String, playlistUuid: String? = nil) { // -> Single<Void> {
         
         if self.fileDownloader == nil {
             self.fileDownloader = HWIFileDownloader(delegate: self, maxConcurrentDownloads: 3)
@@ -271,7 +285,7 @@ extension DownloadService: DownloadServicing {
         let identifier: String = "app.fwsaved.filedownload_\(filename)"
 
         if let remoteUrl = URL(string: url) {
-            let fileDownload: FileDownload = FileDownload(url: remoteUrl,
+            var fileDownload: FileDownload = FileDownload(url: remoteUrl,
                                                           uuid: NSUUID().uuidString,
                                                           playableUuid: playableUuid,
                                                           localUrl: saveLocationUrl(identifier: identifier, removeExistingFile: false),
@@ -282,6 +296,7 @@ extension DownloadService: DownloadServicing {
                                                           completedCount: 0,
                                                           state: .initiating)//,
 //                                                          userUuid: userUuid)
+            fileDownload.playlistUuid = playlistUuid
             fileDownloads[identifier] = fileDownload
             
             DispatchQueue.main.async {
@@ -304,7 +319,7 @@ extension DownloadService: DownloadServicing {
     // the partial file and remove the filedownload from the map
     // and remove the download operation
     
-    func cancelDownload(filename: String) { // -> Single<Void> {
+    func cancelDownload(filename: String, playlistUuid: String?) { // -> Single<Void> {
         let identifier: String = "app.fwsaved.filedownload_\(filename)"
         DispatchQueue.main.async {
             
@@ -323,7 +338,7 @@ extension DownloadService: DownloadServicing {
 
                 self.fileDownloader?.cancelDownload(withIdentifier: identifier)
                 
-                let fileDownload: FileDownload = FileDownload(url: download.url,
+                var fileDownload: FileDownload = FileDownload(url: download.url,
                                                               uuid: download.uuid,
                                                               playableUuid: download.playableUuid,
                                                               localUrl: self.saveLocationUrl(identifier: identifier, removeExistingFile: false),
@@ -335,6 +350,8 @@ extension DownloadService: DownloadServicing {
                                                               state: .cancelled)//,
                 //                                                          userUuid: download.userUuid)
                 
+                fileDownload.playlistUuid = playlistUuid
+
                 NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
                 
                 self.removeDownloadResources(for: identifier)

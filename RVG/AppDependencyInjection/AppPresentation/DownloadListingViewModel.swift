@@ -72,14 +72,26 @@ internal final class DownloadListingViewModel {
         return self.downloadService.fetchFileDownloadHistory(playableUuid: playableUuid)
     }
     
-    func fetchDownload(for playable: Playable) {
+    public func storedFileDownloads(for playableUuid: String) -> Single<[FileDownload]> {
+        return self.downloadService.fetchStoredFileDownloads(for: playableUuid)
+    }
+    
+    public func updateFileDownloadHistory(for fileDownload: FileDownload) {
+        self.downloadService.updateFileDownloadHistory(fileDownload: fileDownload)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+//    updateFileDownloadHistory
+
+    func fetchDownload(for playable: Playable, playlistUuid: String) {
         if let path: String = playable.path,
             let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
             let fileIdentifier: String = playable.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
             
             downloadService.fetchDownload(url: remoteUrl.absoluteString,
                                           filename: fileIdentifier,
-                                          playableUuid: playable.uuid)
+                                          playableUuid: playable.uuid,
+                                          playlistUuid: playlistUuid)
         }
         
         

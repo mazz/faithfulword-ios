@@ -24,7 +24,8 @@ public struct FileDownload: Codable {
     var state: FileDownloadState
 //    var userUuid: String
     var extendedDescription: String?
-    
+    var playlistUuid: String?
+
     //
     // a FileDownload is many-to-one to User
     //
@@ -72,6 +73,8 @@ extension FileDownload {
         static let state = Column("state")
 //        static let userUuid = Column("userUuid")
         static let extendedDescription = Column("extendedDescription")
+        static let playlistUuid = Column("playlistUuid")
+        
     }
 }
 

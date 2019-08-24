@@ -18,6 +18,8 @@ internal final class DownloadViewModel {
     public var downloadAssetIdentifier = Field<String?>(nil)
     //https: //remoteurl.com/full/path.mp3
     public var downloadAssetRemoteUrlString = Field<String?>(nil)
+    
+    public var downloadAssetPlaylistUuid = Field<String?>(nil)
     // the tap event initiated by the user
     public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
     // the tap event initiated by the user
@@ -76,8 +78,9 @@ internal final class DownloadViewModel {
             .subscribe({ currentSetting in
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
-                    let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value {
-                    downloadService.cancelDownload(filename: downloadAssetIdentifier)
+                    let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value,
+                    let downloadAssetPlaylistUuidString: String = self.downloadAssetPlaylistUuid.value {
+                    downloadService.cancelDownload(filename: downloadAssetIdentifier, playlistUuid: downloadAssetPlaylistUuidString)
                 }
             })
             .disposed(by: bag)
@@ -87,11 +90,13 @@ internal final class DownloadViewModel {
                 DDLogDebug("currentSetting: \(currentSetting)")
                 if let downloadService = self.downloadService,
                     let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value,
-                    let downloadAssetRemoteUrlString: String = self.downloadAssetRemoteUrlString.value {
+                    let downloadAssetRemoteUrlString: String = self.downloadAssetRemoteUrlString.value,
+                    let downloadAssetPlaylistUuidString: String = self.downloadAssetPlaylistUuid.value {
                     if let playableUuid: String = downloadAssetIdentifier.components(separatedBy: ".").first {
                         downloadService.fetchDownload(url: downloadAssetRemoteUrlString,
                                                       filename: downloadAssetIdentifier,
-                                                      playableUuid: playableUuid)
+                                                      playableUuid: playableUuid,
+                                                      playlistUuid: downloadAssetPlaylistUuidString)
                     }
                     
 
@@ -133,9 +138,10 @@ internal final class DownloadViewModel {
         DDLogDebug("notification: \(notification)")
         
         if let uuid: String = notification.object as? String {
-            if let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value {
+            if let downloadAssetIdentifier: String = self.downloadAssetIdentifier.value,
+                let downloadAssetPlaylistUuidString: String = self.downloadAssetPlaylistUuid.value {
                 if downloadAssetIdentifier.starts(with: uuid) {
-                    downloadService.cancelDownload(filename: downloadAssetIdentifier)
+                    downloadService.cancelDownload(filename: downloadAssetIdentifier, playlistUuid: downloadAssetPlaylistUuidString)
                 }
             }
         }

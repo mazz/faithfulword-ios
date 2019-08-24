@@ -184,6 +184,12 @@ class PopupContentController: UIViewController {
 
                 self.downloadingViewModel.downloadAssetIdentifier.value = self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))
                 self.downloadingViewModel.downloadAssetRemoteUrlString.value = self.playbackAsset.urlAsset.url.absoluteString
+                
+                // pretty sure we can depend on selectedPlayable to be ready
+                
+                if let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value {
+                    self.downloadingViewModel.downloadAssetPlaylistUuid.value = selectedPlayable.playlistUuid
+                }
 
                 // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
                 // get mixed-up

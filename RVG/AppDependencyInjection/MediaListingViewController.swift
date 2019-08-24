@@ -126,6 +126,19 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
 //                    drillInCell.downloadStateButton.isHidden = false
 //                    drillInCell.downloadStateButton.isEnabled = true
                 }
+                
+                // update UI with downloaded items
+                
+                if let fileDownload: FileDownload = downloadedItems[item.uuid] {
+                    drillInCell.progressView.isHidden = true
+                    drillInCell.amountDownloaded.isHidden = false
+                    
+                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) : String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount))) / \(fileSizeFormattedString(for: fileDownload.totalCount)))")
+                    drillInCell.downloadStateButton.isHidden = false
+                    drillInCell.downloadStateButton.isEnabled = false
+                    //                        drillInCell.downloadStateButton.setAttributedTitle(completedString, for: .normal)
+                    drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
+                }
             }
             return drillInCell
         }
@@ -169,7 +182,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     private var viewModelSections: [MediaListingSectionViewModel] = []
     private var downloadingItems:[String: FileDownload] = [:]
-    
+    private var downloadedItems:[String: FileDownload] = [:]
+
     private var lastProgressChangedUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private var lastDownloadCompleteUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private let bag = DisposeBag()
@@ -207,6 +221,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
 //        bindToViewModel()
         reactToViewModel()
         bindPlaybackViewModel()
+        bindDownloadListingViewModel()
 
     }
     deinit {
@@ -389,6 +404,20 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .disposed(by: bag)
 
     }
+    
+    private func bindDownloadListingViewModel() {
+        downloadListingViewModel.storedFileDownloads(for: viewModel.playlistUuid)
+            .asObservable()
+            .subscribe(onNext: { fileDownloads in
+                
+                fileDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadedItems[fileDownload.playableUuid] = fileDownload
+                })
+                
+                DDLogDebug("viewModel.playlistUuid: \(self.viewModel.playlistUuid) fileDownloads: \(fileDownloads)")
+            })
+            .disposed(by: bag)
+    }
 //    private func reactToContentSizeChange() {
 //        // Only dynamically change in iOS 11+. With iOS 10, user must re-launch app
 //        if #available(iOS 11, *) {
@@ -457,7 +486,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             //        }))
             actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
 //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
-                self.downloadListingViewModel.fetchDownload(for: mediaItem)
+                self.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
                 
             }))
             actionController.addAction(Action(ActionData(title: "Share...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
@@ -492,6 +521,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
             
             // try to find the indexPath of the media item and update
             // the progressevent with the indexPath so we can reload
@@ -533,6 +564,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
+            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+
             let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
             if indexPath.row != -1 {
                 lastProgressChangedUpdate.onNext(indexPath)
@@ -548,6 +581,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            // store download as `downloaded`
+            downloadedItems[fileDownload.playableUuid] = fileDownload
+            
+            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+
 //            lastProgressChangedUpdate.onNext(Date())
 //            lastDownloadCompleteUpdate.onNext(Date())
             let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
@@ -565,6 +604,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
+            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+            
 //            lastProgressChangedUpdate.onNext(Date())
             let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
             if indexPath.row != -1 {
@@ -581,6 +622,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
+            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+
 //            lastProgressChangedUpdate.onNext(Date())
             let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
             if indexPath.row != -1 {
@@ -645,3 +688,25 @@ extension MediaListingViewController: UICollectionViewDelegateMagazineLayout {
     }
 }
 
+// https://stackoverflow.com/a/49343299
+extension MediaListingViewController {
+    func fileSizeFormattedString(for fileSize: Int64) -> String {
+        // bytes
+        if fileSize < 1023 {
+            return String(format: "%lu bytes", CUnsignedLong(fileSize))
+        }
+        // KB
+        var floatSize = Float(fileSize / 1024)
+        if floatSize < 1023 {
+            return String(format: "%.1f KB", floatSize)
+        }
+        // MB
+        floatSize = floatSize / 1024
+        if floatSize < 1023 {
+            return String(format: "%.1f MB", floatSize)
+        }
+        // GB
+        floatSize = floatSize / 1024
+        return String(format: "%.1f GB", floatSize)
+    }
+}
