@@ -18,7 +18,7 @@ internal final class DownloadListingViewModel {
     //<uuid>.mp3
 //    public var downloadAssetIdentifier = Field<String?>(nil)
 //    //https: //remoteurl.com/full/path.mp3
-//    public var downloadAssetRemoteUrlString = Field<String?>(nil)
+    public var fileDownloadDeleted = Field<String?>(nil)
 //    // the tap event initiated by the user
 //    public var downloadButtonTapEvent = PublishSubject<FileDownloadState>()
 //    // the tap event initiated by the user
@@ -81,8 +81,16 @@ internal final class DownloadListingViewModel {
             .asObservable()
             .subscribeAndDispose(by: bag)
     }
-//    updateFileDownloadHistory
 
+    func deleteFileDownload(for playableUuid: String, pathExtension: String) {
+        Observable.combineLatest(self.downloadService.deleteFileDownloadFile(playableUuid: playableUuid, pathExtension: pathExtension).asObservable(), self.downloadService.deleteFileDownloadHistory(playableUuid: playableUuid).asObservable())
+            .next({ _ in
+                DDLogDebug("deleteFileDownload deleted playableUuid: \(playableUuid)")
+                self.fileDownloadDeleted.value = playableUuid
+            })
+            .disposed(by: bag)
+    }
+    
     func fetchDownload(for playable: Playable, playlistUuid: String) {
         if let path: String = playable.path,
             let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
@@ -93,8 +101,6 @@ internal final class DownloadListingViewModel {
                                           playableUuid: playable.uuid,
                                           playlistUuid: playlistUuid)
         }
-        
-        
     }
     
     private func setupBindings() {

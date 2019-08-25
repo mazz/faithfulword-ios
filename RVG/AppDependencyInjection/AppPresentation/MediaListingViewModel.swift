@@ -80,7 +80,7 @@ internal final class MediaListingViewModel {
     }
 
     // MARK: Dependencies
-    private let playlistUuid: String!
+    public let playlistUuid: String!
     private let mediaType: MediaType!
     private let productService: ProductServicing!
     private let assetPlaybackService: AssetPlaybackServicing!
@@ -232,9 +232,9 @@ internal final class MediaListingViewModel {
                     // `limit` number of items
                     // this will stop the data service from continually calling the server
                     // because of the fetchMoreMedia() guards
-//                    if self.media.value.count >= limit && self.totalEntries == -1 {
-//                        self.totalEntries = self.media.value.count
-//                    }
+                    if self.media.value.count >= limit && self.totalEntries == -1 {
+                        self.totalEntries = self.media.value.count
+                    }
                 default:                            // any other database error
                     DDLogDebug("some db error: \(dbError)")
                 }

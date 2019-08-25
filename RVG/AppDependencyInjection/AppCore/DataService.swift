@@ -38,6 +38,8 @@ protocol FileDownloadDataServicing {
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
     func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
     func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void>
+    func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void>
+    
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     // list
     func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
@@ -225,6 +227,11 @@ extension DataService: FileDownloadDataServicing {
     public func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void> {
         return dataStore.deleteLastFileDownloadHistory(playableUuid: playableUuid)
     }
+    
+    func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void> {
+        return dataStore.deleteFileDownloadFile(playableUuid: playableUuid, pathExtension: pathExtension)
+    }
+
 
     public func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void> {
         return dataStore.updateFileDownloads(playableUuids: playableUuids, to: state)

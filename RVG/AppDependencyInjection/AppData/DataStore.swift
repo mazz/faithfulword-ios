@@ -67,6 +67,8 @@ public protocol DataStoring {
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
     func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
     func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void>
+    func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void>
+    
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     
     // MARK: FileDownload list
@@ -1618,6 +1620,26 @@ extension DataStore: DataStoring {
             return Disposables.create()
         }
         //        return Single.just(())
+    }
+    
+    public func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playableUuid.appending(String(describing: ".\(pathExtension)"))).path)
+                let fileManager = FileManager.default
+                    do {
+                        try fileManager.removeItem(atPath: url.path)
+                    }
+                    catch let error {
+                        print("Ooops! Something went wrong removing file: \(error)")
+                        throw error
+                    }
+                single(.success(()))
+            } catch {
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
     }
     
     public func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
