@@ -121,38 +121,51 @@ extension AppCoordinator: NavigationCoordinating {
             // Event only fire on main thread
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] authState in
-                if authState == .authenticated || authState == .emailUnconfirmed || authState == .unauthenticated {
-                    DDLogDebug("authState: \(authState)")
-                    
-                    // we must fetch and set the user language before we do
-                    // anything, really
-                    self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
+                DDLogDebug("authState: \(authState)")
+
+                // we must fetch and set the user language before we do
+                // anything, really
+                self.languageService.fetchUserLanguage()
+                    .subscribe(onSuccess: { userLanguage in
                         DDLogDebug("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
                         L10n.shared.language = (userLanguage == "") ? "en" : userLanguage
-                        
-                        //            self.swapInMainFlow()
-                        
-                        switch self.networkStatus.value {
-                        case .notReachable:
-                            self.loadDefaultOrg()
 
-                        case .reachable(_):
-                            self.loadDefaultOrg()
+                        if authState == .unauthenticated {
+                            // load default org if unauthenticated
+                            
+                            switch self.networkStatus.value {
+                            case .notReachable:
+                                self.loadDefaultOrg()
+                                
+                            case .reachable(_):
+                                self.loadDefaultOrg()
+                                
+                            case .unknown:
+                                self.loadDefaultOrg()
+                            }
 
-                        case .unknown:
-                            self.loadDefaultOrg()
+                        } else if authState == .authenticated || authState == .emailUnconfirmed {
+                            DDLogDebug("authState: \(authState)")
+                            
+                            // TODO:
+                            // unload currently loaded org and then
+                            // load unique org that is associated with UserAppUser
+                            // if authenticated or emailUnconfirmed
+                            
+//                            switch self.networkStatus.value {
+//                            case .notReachable:
+//                                self.loadDefaultOrg()
+//
+//                            case .reachable(_):
+//                                self.loadDefaultOrg()
+//
+//                            case .unknown:
+//                                self.loadDefaultOrg()
+//                            }
                         }
                     }, onError: { error in
                         DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
                     }).disposed(by: self.bag)
-
-                    
-                    
-                }
-//                else if authState == .unauthenticated {
-//                    self.swapInInitialFlow()
-//                    DDLogDebug("unauthenticated")
-//                }
             })
             .disposed(by: bag)
     }
