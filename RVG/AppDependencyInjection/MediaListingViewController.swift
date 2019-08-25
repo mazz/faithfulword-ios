@@ -67,9 +67,15 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         
                     case .cancelled:
                         drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = true
-                        drillInCell.amountDownloaded.text = ""
-                        drillInCell.downloadStateButton.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = false
+                        drillInCell.amountDownloaded.text = fileDownload.extendedDescription
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
+                        drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+                        
+                        // remove it from downloadingItems
+                        self.downloadingItems[item.uuid] = nil
+
                     case .complete:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = true
@@ -88,6 +94,9 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         drillInCell.downloadStateButton.isHidden = false
                         drillInCell.downloadStateButton.isEnabled = false
                         drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+                        
+                        // remove it from downloadingItems
+                        self.downloadingItems[item.uuid] = nil
                         
                     case .unknown:
                         drillInCell.progressView.isHidden = true
@@ -504,12 +513,14 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             
             if let fileDownload: FileDownload = downloadedItems[mediaItem.uuid] {
                 actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                    //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
                     self.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
-                    
-                    
                 }))
-            } else {
+            } else if let downloading: FileDownload = downloadingItems[mediaItem.uuid] {
+                actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                    self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                }))
+            }
+            else {
                 actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                     //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
                     self.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
@@ -546,6 +557,10 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     @objc func handleUserDidTapCancelNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
+        if let mediaItem: MediaItem = notification.object as? MediaItem {
+            self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+        }
+        
         
     }
     // MARK: DownloadService notifications

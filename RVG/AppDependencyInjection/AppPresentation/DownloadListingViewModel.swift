@@ -102,6 +102,15 @@ internal final class DownloadListingViewModel {
                                           playlistUuid: playlistUuid)
         }
     }
+
+    func cancelDownload(for playable: Playable, playlistUuid: String) {
+        if let path: String = playable.path,
+            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
+            let fileIdentifier: String = playable.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
+            
+            downloadService.cancelDownload(filename: fileIdentifier, playlistUuid: playlistUuid)
+        }
+    }
     
     private func setupBindings() {
 //        cancelDownloadButtonTapEvent.asObservable()
