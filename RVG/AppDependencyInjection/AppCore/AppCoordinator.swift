@@ -356,8 +356,9 @@ extension AppCoordinator: NavigationCoordinating {
                 // bootstrap login/fetching of session HERE because we have no login UI
                 self.accountService.startLoginFlow(email: "joseph@faithfulword.app", password: "password")
                     .subscribe(onSuccess: { [unowned self] userLoginResponse in
-                        let user: UserAppUser = UserAppUser(userId: 0,
+                        let user: UserAppUser = UserAppUser(userId: userLoginResponse.user.id,
                                               uuid: NSUUID().uuidString,
+                                              orgId: userLoginResponse.user.org_id,
                                               name: userLoginResponse.user.name ?? "unknown",
                                               email: userLoginResponse.user.email,
                                               session: userLoginResponse.token,

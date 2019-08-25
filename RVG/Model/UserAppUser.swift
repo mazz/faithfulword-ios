@@ -2,14 +2,16 @@ import Foundation
 import GRDB
 
 public struct UserAppUser: Codable {
-    var userId: Int
+    public var userId: Int
     public var uuid: String
+    public var orgId: Int
     public var name: String
     public var email: String
     public var session: String
     public var pushNotifications: Bool
     public var language: String
     public var userLoginUserUuid: String?
+
 
     //
     // a UserAppUser is one-to-one to UserLoginUser
@@ -51,7 +53,9 @@ public struct UserAppUser: Codable {
 // Define colums so that we can build GRDB requests
 extension UserAppUser {
     enum Columns {
+        static let userId = Column("userId")
         static let uuid = Column("uuid")
+        static let orgId = Column("orgId")
         static let name = Column("name")
         static let email = Column("email")
         static let session = Column("session")

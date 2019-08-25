@@ -7,6 +7,7 @@ public struct UserLoginUser: Codable {
     public var email_confirmed: Bool
     public var fb_user_id: Int?
     public var id: Int
+    public var org_id: Int
     public var is_publisher: Bool
     public var locale: String
     public var mini_picture_url: String?
@@ -85,6 +86,7 @@ extension UserLoginUser {
         static let email_confirmed = Column("email_confirmed")
         static let fb_user_id = Column("fb_user_id")
         static let id = Column("id")
+        static let org_id = Column("org_id")
         static let is_publisher = Column("is_publisher")
         static let locale = Column("locale")
         static let mini_picture_url = Column("mini_picture_url")

@@ -79,6 +79,7 @@ extension AccountService: AccountServicing {
                     let uuid: String = NSUUID().uuidString
                     let appUser: UserAppUser = UserAppUser(userId: loginUser.id,
                                                    uuid: uuid,
+                                                   orgId: loginUser.org_id,
                                                    name: loginUser.name,
                                                    email: loginUser.email,
                                                    session: sessionToken,
