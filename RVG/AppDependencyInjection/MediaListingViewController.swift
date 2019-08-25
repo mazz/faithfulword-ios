@@ -14,6 +14,26 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         return viewModelSections[section].items.count
     }
     
+//    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//        let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
+//
+//        switch item {
+//        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
+//            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
+//            switch enumPlayable {
+//
+//            case .playable(let item):
+//                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
+//
+//                if let _: FileDownload = downloadedItems[item.uuid] {
+//
+//                    drillInCell.playStateImageView.stopAnimating()
+//                    drillInCell.playStateImageView.layer.removeAllAnimations()
+//                }
+//            }
+//        }
+//    }
+//
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
         
@@ -29,6 +49,42 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 
             case .playable(let item):
                 drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
+                
+                // show play icon or animating wave icon
+                if let selectedPlayable: Playable = selectedPlayable.value {
+                    if item.uuid == selectedPlayable.uuid {
+                        
+                        // show the animation unless the AssetPlaybackManager is not actually playing
+                        if playbackState.value != .playing {
+                            drillInCell.playStateImageView.stopAnimating()
+                            drillInCell.playStateImageView.layer.removeAllAnimations()
+                            if let playImage: UIImage = UIImage(named: "play") {
+                                drillInCell.playStateImageView.image = playImage
+                            }
+                        } else {
+                            if let waveImageFrame1: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame1),
+                                let waveImageFrame2: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame2),
+                                let waveImageFrame3: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame3),
+                                let waveImageFrame4: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame4),
+                                let waveImageFrame5: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame5)
+                            {
+                                let animations: [UIImage] = [waveImageFrame1, waveImageFrame2, waveImageFrame3, waveImageFrame4, waveImageFrame5]
+                                drillInCell.playStateImageView.animationImages = animations
+                                drillInCell.playStateImageView.animationDuration = 1.0
+                                drillInCell.playStateImageView.startAnimating()
+                                
+                                drillInCell.playStateImageView.image = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame1)
+                            }
+                        }
+                        
+                    } else {
+                        drillInCell.playStateImageView.stopAnimating()
+                        drillInCell.playStateImageView.layer.removeAllAnimations()
+                        if let playImage: UIImage = UIImage(named: "play") {
+                            drillInCell.playStateImageView.image = playImage
+                        }
+                    }
+                }
                 
                 if let fileDownload: FileDownload = downloadingItems[item.uuid] {
                     
@@ -179,9 +235,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     // MARK: Fields
     
     private var viewModelSections: [MediaListingSectionViewModel] = []
-    private var downloadingItems:[String: FileDownload] = [:]
-    private var downloadedItems:[String: FileDownload] = [:]
-    
+    private var downloadingItems: [String: FileDownload] = [:]
+    private var downloadedItems: [String: FileDownload] = [:]
+    private var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
+    private var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
+
+
     private var lastProgressChangedUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private var lastDownloadCompleteUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private let bag = DisposeBag()
@@ -310,6 +369,11 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .asObservable()
             .observeOn(MainScheduler.instance)
             .next { [unowned self] playbackState in
+                self.playbackState.value = playbackState
+                UIView.performWithoutAnimation {
+                    self.collectionView.reloadData()
+                }
+
                 //                guard let pauseImage: UIImage = UIImage(named: "pause"),
                 //                    let playImage: UIImage = UIImage(named: "play"),
                 //                    let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
@@ -317,38 +381,38 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 //
                 //                let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
                 //                let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
-                switch playbackState {
-                    
-                case .initial:
-                    DDLogDebug("MediaListingViewController: .initial")
-                    //                    self.playPauseButton.image = playImage
-                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
-                    //
-                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-                case .playing:
-                    DDLogDebug("MediaListingViewController: .playing")
-                    //                    self.playPauseButton.image = pauseImage
-                    //                    self.playPauseButton.accessibilityLabel = accessibilityPause
-                    //
-                    //                    self.fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
-                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPause
-                case .paused:
-                    
-                    DDLogDebug("MediaListingViewController: .paused")
-                    //                    self.playPauseButton.image = playImage
-                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
-                    //
-                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-                case .interrupted:
-                    DDLogDebug("MediaListingViewController: .interrupted")
-                    //                    self.playPauseButton.image = playImage
-                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
-                    //
-                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-                    //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-                }
+//                switch playbackState {
+//
+//                case .initial:
+//                    DDLogDebug("MediaListingViewController: .initial")
+//                    //                    self.playPauseButton.image = playImage
+//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+//                    //
+//                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+//                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+//                case .playing:
+//                    DDLogDebug("MediaListingViewController: .playing")
+//                    //                    self.playPauseButton.image = pauseImage
+//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPause
+//                    //
+//                    //                    self.fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
+//                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPause
+//                case .paused:
+//
+//                    DDLogDebug("MediaListingViewController: .paused")
+//                    //                    self.playPauseButton.image = playImage
+//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+//                    //
+//                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+//                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+//                case .interrupted:
+//                    DDLogDebug("MediaListingViewController: .interrupted")
+//                    //                    self.playPauseButton.image = playImage
+//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
+//                    //
+//                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
+//                    //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
+//                }
             }
             .disposed(by: bag)
         
@@ -360,12 +424,13 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .observeOn(MainScheduler.instance)
             .filterNils()
             .next { [unowned self] playable in
-                guard let path: String = playable.path,
-                    let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value,
-                    let localizedName: String = playable.localizedname,
-                    let presenterName: String = playable.presenterName ?? "Unknown",
-                    let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
+                guard let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value else { return }
                 
+                self.selectedPlayable.value = selectedPlayable
+                UIView.performWithoutAnimation {
+                    self.collectionView.reloadData()
+                }
+
                 //                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(selectedPlayable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
                 //
                 //                var playbackPosition: Double = 0

@@ -7,6 +7,14 @@ public struct DownloadStateTitleConstants {
     static let errorRetryFile = "retry" // fa-check
 }
 
+public struct AnimationImageTitleConstants {
+    static let waveAnimationFrame1 = "wave-anim-frame-1"
+    static let waveAnimationFrame2 = "wave-anim-frame-2"
+    static let waveAnimationFrame3 = "wave-anim-frame-3"
+    static let waveAnimationFrame4 = "wave-anim-frame-4"
+    static let waveAnimationFrame5 = "wave-anim-frame-5"
+}
+
 final class MediaItemCell: MagazineLayoutCollectionViewCell {
     static let mediaItemCellUserDidTapMoreNotification = Notification.Name("mediaItemCellUserDidTapMoreNotification")
     static let mediaItemCellUserDidTapCancelNotification = Notification.Name("mediaItemCellUserDidTapCancelNotification")
@@ -28,8 +36,8 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBOutlet private weak var presenterLabel: UILabel!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var separatorView: UIView!
-    @IBOutlet private weak var playStateImageView: UIImageView!
     @IBOutlet private weak var moreButton: UIButton!
+    @IBOutlet public weak var playStateImageView: UIImageView!
     @IBOutlet public weak var downloadStateButton: UIButton!
     @IBOutlet public weak var amountDownloaded: UILabel!
     @IBOutlet public weak var progressView: UIProgressView!
