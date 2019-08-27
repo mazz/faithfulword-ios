@@ -238,6 +238,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     private var downloadingItems: [String: FileDownload] = [:]
     private var downloadedItems: [String: FileDownload] = [:]
     private var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
+    private var previousSelectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     private var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
 
 
@@ -370,49 +371,13 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .observeOn(MainScheduler.instance)
             .next { [unowned self] playbackState in
                 self.playbackState.value = playbackState
-                UIView.performWithoutAnimation {
-                    self.collectionView.reloadData()
+                
+                if let previousSelectedPlayable: Playable = self.previousSelectedPlayable.value,
+                    let indexPath: IndexPath = self.indexOfPlayableInViewModel(playable: previousSelectedPlayable) {
+                    UIView.performWithoutAnimation {
+                        self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                    }
                 }
-
-                //                guard let pauseImage: UIImage = UIImage(named: "pause"),
-                //                    let playImage: UIImage = UIImage(named: "play"),
-                //                    let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
-                //                    let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause") else { return }
-                //
-                //                let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
-                //                let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
-//                switch playbackState {
-//
-//                case .initial:
-//                    DDLogDebug("MediaListingViewController: .initial")
-//                    //                    self.playPauseButton.image = playImage
-//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
-//                    //
-//                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-//                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-//                case .playing:
-//                    DDLogDebug("MediaListingViewController: .playing")
-//                    //                    self.playPauseButton.image = pauseImage
-//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPause
-//                    //
-//                    //                    self.fullPlayPauseButton.setImage(fullPauseImage, for: .normal)
-//                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPause
-//                case .paused:
-//
-//                    DDLogDebug("MediaListingViewController: .paused")
-//                    //                    self.playPauseButton.image = playImage
-//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
-//                    //
-//                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-//                //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-//                case .interrupted:
-//                    DDLogDebug("MediaListingViewController: .interrupted")
-//                    //                    self.playPauseButton.image = playImage
-//                    //                    self.playPauseButton.accessibilityLabel = accessibilityPlay
-//                    //
-//                    //                    self.fullPlayPauseButton.setImage(fullPlayImage, for: .normal)
-//                    //                    self.fullPlayPauseButton.accessibilityLabel = accessibilityPlay
-//                }
             }
             .disposed(by: bag)
         
@@ -426,43 +391,15 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .next { [unowned self] playable in
                 guard let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value else { return }
                 
+                self.previousSelectedPlayable.value = self.selectedPlayable.value
                 self.selectedPlayable.value = selectedPlayable
-                UIView.performWithoutAnimation {
-                    self.collectionView.reloadData()
-                }
-
-                //                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(selectedPlayable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
-                //
-                //                var playbackPosition: Double = 0
-                //                var playableUuid: String = playable.uuid
-                //                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable {
-                //                    //                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
-                //                    //                    historyPlayable.mediaCategory == "preaching" {
-                //                    playbackPosition = historyPlayable.playbackPosition
-                //                    playableUuid = historyPlayable.playableUuid
-                //                }
-                //
-                //                var playbackRate: Float = 1.0
-                //                if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
-                //                    playbackRate = playbackSpeed
-                //                }
-                //
-                //                DDLogDebug("Asset playableUuid: \(playableUuid)")
-                //
-                //                self.playbackAsset = Asset(name: localizedName,
-                //                                           artist: presenterName,
-                //                                           uuid: playableUuid,
-                //                                           fileExtension: prodUrl.pathExtension,
-                //                                           playbackPosition: playbackPosition,
-                //                                           playbackRate: playbackRate,
-                //                                           urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
-                //
-                //                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.pause()
-                //                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
-                //                self.downloadingViewModel.downloadAsset.value = self.playbackAsset
-                //                // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
-                //                // get mixed-up
-                //                self.userActionsViewModel.playable = selectedPlayable
+                
+                if let selected: Playable = self.selectedPlayable.value,
+                    let indexPath: IndexPath = self.indexOfPlayableInViewModel(playable: selected) {
+                        UIView.performWithoutAnimation {
+                            self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                        }
+                    }
             }
             .disposed(by: bag)
         
@@ -547,7 +484,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         let items: [MediaListingItemType] = viewModelSections[0].items
         let index: Int = items.firstIndex(where: { item in
             switch item {
-            case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
+            case let .drillIn(enumPlayable, _, _, _, _, _):
                 switch enumPlayable {
                     
                 case .playable(let item):
@@ -558,7 +495,29 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         }) ?? -1
         return IndexPath(row: index, section: 0)
     }
-    
+
+    // returns -1 on not found
+    private func indexOfPlayableInViewModel(playable: Playable) -> IndexPath {
+        // try to find the indexPath of the media item and update
+        // the progressevent with the indexPath so we can reload
+        // a single row in the collectionView and avoid scrolling issues
+        
+        // assume section 0
+        let items: [MediaListingItemType] = viewModelSections[0].items
+        let index: Int = items.firstIndex(where: { item in
+            switch item {
+            case let .drillIn(enumPlayable, _, _, _, _, _):
+                switch enumPlayable {
+                    
+                case .playable(let item):
+                    return item.uuid == playable.uuid
+                }
+            }
+            
+        }) ?? -1
+        return IndexPath(row: index, section: 0)
+    }
+
     // MARK: MediaItemCell notifications
     
     @objc func handleUserDidTapMoreNotification(notification: Notification) {
