@@ -119,6 +119,7 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService: resolver.resolve(LanguageServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                downloadService: resolver.resolve(DownloadServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
         }
@@ -276,8 +277,12 @@ internal final class AppDependencyModule {
             )
         }.inObjectScope(.transient)
 
-        container.register(DownloadingViewModel.self) { resolver in
-            DownloadingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
+        container.register(DownloadViewModel.self) { resolver in
+            DownloadViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
+            }.inObjectScope(.transient)
+
+        container.register(DownloadListingViewModel.self) { resolver in
+            DownloadListingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
             }.inObjectScope(.transient)
 
     }

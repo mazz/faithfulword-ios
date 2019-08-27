@@ -30,7 +30,7 @@ internal final class MediaListingViewModel {
                 let section = self?.sections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
                 DDLogDebug("item: \(String(describing: item))")
-                if case .drillIn(let type, _, _, _, _)? = item {
+                if case .drillIn(let type, _, _, _, _, _)? = item {
                     switch type {
                     case .playable(let item):
                         DDLogDebug("item: \(item)")
@@ -43,7 +43,7 @@ internal final class MediaListingViewModel {
                 let section = self?.sections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
             // Don't emit an event for anything that is not a 'drillIn'
-                if case .drillIn(let type, _, _, _, _)? = item {
+                if case .drillIn(let type, _, _, _, _, _)? = item {
                 return type
             }
             return nil
@@ -80,7 +80,7 @@ internal final class MediaListingViewModel {
     }
 
     // MARK: Dependencies
-    private let playlistUuid: String!
+    public let playlistUuid: String!
     private let mediaType: MediaType!
     private let productService: ProductServicing!
     private let assetPlaybackService: AssetPlaybackServicing!
@@ -169,7 +169,7 @@ internal final class MediaListingViewModel {
                     presenter = presenterName
                 }
                 
-                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true) }
+                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true, showAmountDownloaded: false) }
             }
             .next { [unowned self] names in
                 self.sections.value = [
@@ -232,9 +232,9 @@ internal final class MediaListingViewModel {
                     // `limit` number of items
                     // this will stop the data service from continually calling the server
                     // because of the fetchMoreMedia() guards
-//                    if self.media.value.count >= limit && self.totalEntries == -1 {
-//                        self.totalEntries = self.media.value.count
-//                    }
+                    if self.media.value.count >= limit && self.totalEntries == -1 {
+                        self.totalEntries = self.media.value.count
+                    }
                 default:                            // any other database error
                     DDLogDebug("some db error: \(dbError)")
                 }

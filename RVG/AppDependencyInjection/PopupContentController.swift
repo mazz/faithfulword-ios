@@ -34,7 +34,7 @@ class PopupContentController: UIViewController {
     @IBOutlet weak var fullRepeatButton: UIButton!
     @IBOutlet weak var fullDownloadButton: UIButton!
     @IBOutlet weak var fullToggleSpeedButton: UIButton!
-    @IBOutlet weak var fullDownloadProgress: UICircularProgressRing!
+    @IBOutlet weak var fullDownloadProgress: RPCircularProgress!
     @IBOutlet weak var fullProgressDownloadButton: UIButton!
     @IBOutlet weak var fullProgressShareButton: UIButton!
     
@@ -55,7 +55,7 @@ class PopupContentController: UIViewController {
     var playingWhileScrubbing: Bool = false
     
     public var playbackViewModel: PlaybackControlsViewModel!
-    public var downloadingViewModel: DownloadingViewModel!
+    public var downloadingViewModel: DownloadViewModel!
     public var userActionsViewModel: UserActionsViewModel!
     
     private let sliderInUse = Variable<Bool>(false)
@@ -181,7 +181,16 @@ class PopupContentController: UIViewController {
 
                 self.playbackViewModel.assetPlaybackService.assetPlaybackManager.pause()
                 self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
-                self.downloadingViewModel.downloadAsset.value = self.playbackAsset
+
+                self.downloadingViewModel.downloadAssetIdentifier.value = self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))
+                self.downloadingViewModel.downloadAssetRemoteUrlString.value = self.playbackAsset.urlAsset.url.absoluteString
+                
+                // pretty sure we can depend on selectedPlayable to be ready
+                
+                if let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value {
+                    self.downloadingViewModel.downloadAssetPlaylistUuid.value = selectedPlayable.playlistUuid
+                }
+
                 // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
                 // get mixed-up
                 self.userActionsViewModel.playable = selectedPlayable
@@ -324,6 +333,10 @@ class PopupContentController: UIViewController {
                         weakSelf.fullProgressDownloadButton.isHidden = true
                         weakSelf.fullDownloadButton.isHidden = false
                         weakSelf.fullProgressShareButton.isHidden = true
+                        
+//                        weakSelf.fullDownloadProgress.indeterminateProgress = 0.5
+//                        weakSelf.fullDownloadProgress.enableIndeterminate() //value = CGFloat(100)
+
 
                         //                        weakSelf.fullDownloadProgress.value = CGFloat(100)
 //                        weakSelf.fullDownloadProgress.style = .ontop
@@ -339,8 +352,9 @@ class PopupContentController: UIViewController {
                     // user tapped, download beginning
                     if downloadStarting == true {
                         weakSelf.fullDownloadProgress.isHidden = false
-                        weakSelf.fullDownloadProgress.value = CGFloat(100)
-                        weakSelf.fullDownloadProgress.style = .dotted
+                        weakSelf.fullDownloadProgress.indeterminateProgress = 0.5
+                        weakSelf.fullDownloadProgress.enableIndeterminate() //value = CGFloat(100)
+//                        weakSelf.fullDownloadProgress.style = .dotted
                         
                         weakSelf.fullProgressDownloadButton.isHidden = false
                         weakSelf.fullDownloadButton.isHidden = true
@@ -363,7 +377,7 @@ class PopupContentController: UIViewController {
                         weakSelf.fullProgressShareButton.isHidden = true
 
 //                        weakSelf.fullDownloadProgress.value = CGFloat(100)
-                        weakSelf.fullDownloadProgress.style = .ontop
+                        weakSelf.fullDownloadProgress.enableIndeterminate(false, completion: nil)
                     }
                 }
             }
@@ -381,7 +395,7 @@ class PopupContentController: UIViewController {
                         weakSelf.fullProgressShareButton.isHidden = false
                         
                         //                        weakSelf.fullDownloadProgress.value = CGFloat(100)
-                        weakSelf.fullDownloadProgress.style = .ontop
+//                        weakSelf.fullDownloadProgress.ena
                     }
                 }
             }
@@ -572,12 +586,17 @@ class PopupContentController: UIViewController {
         fullAlbumArtImageView.layer.shadowRadius = 4.0
         fullAlbumArtImageView.image = popupItem.image
         
-        fullDownloadProgress.value = CGFloat(0)
-        fullDownloadProgress.style = .ontop
-        fullDownloadProgress.innerRingColor = UIColor(red: 21.0/255.0, green: 126.0/255.0, blue: 251.0/255.0, alpha: 1.0)
-        fullDownloadProgress.outerRingColor = UIColor(white: 0.8, alpha: 1.0)
-        fullDownloadProgress.outerRingWidth = 3.0
-        fullDownloadProgress.innerRingWidth = 3.0
+        fullDownloadProgress.updateProgress(0.0)
+        fullDownloadProgress.trackTintColor = UIColor.init(red: 74 / 255, green: 144 / 255, blue: 226 / 255, alpha: 0.3)
+        fullDownloadProgress.progressTintColor = UIColor.init(red: 74 / 255, green: 144 / 255, blue: 226 / 255, alpha: 1)
+        fullDownloadProgress.roundedCorners = false
+        fullDownloadProgress.thicknessRatio = 0.2
+
+//        fullDownloadProgress.style = .ontop
+//        fullDownloadProgress.innerRingColor = UIColor(red: 21.0/255.0, green: 126.0/255.0, blue: 251.0/255.0, alpha: 1.0)
+//        fullDownloadProgress.outerRingColor = UIColor(white: 0.8, alpha: 1.0)
+//        fullDownloadProgress.outerRingWidth = 3.0
+//        fullDownloadProgress.innerRingWidth = 3.0
         
         if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
             
@@ -819,8 +838,13 @@ class PopupContentController: UIViewController {
             {
                 print("lastPathComponent: \(fileDownload.localUrl.lastPathComponent) uuid: \(playbackAsset.uuid)")
                 if fileDownload.localUrl.lastPathComponent == playbackAsset.uuid.appending(String(describing: ".\(playbackAsset.fileExtension)")) {
-                    self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
-                    self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
+//                    self.fullDownloadProgress.maxValue =  CGFloat(fileDownload.totalCount)
+//                    self.fullDownloadProgress.value = CGFloat(fileDownload.completedCount)
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
+                        self.fullDownloadProgress.updateProgress(CGFloat(fileDownload.completedCount)/CGFloat(fileDownload.totalCount), completion: {
+                            self.fullDownloadProgress.enableIndeterminate(false)
+                        })
+                    }
                     
                     print("fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
                 }

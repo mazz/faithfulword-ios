@@ -202,7 +202,7 @@ public final class PlaybackControlsViewModel {
         let playables: [Playable] = assetPlaybackService.playables.value
         
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
-        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
+        guard let assetIndex = playables.firstIndex(where: { $0.uuid == assetUuid }) else { return }
 
         
 //        if let assetIndex = playables.index(where: { $0.uuid == assetUuid }) {
@@ -224,7 +224,7 @@ public final class PlaybackControlsViewModel {
         let playables: [Playable] = assetPlaybackService.playables.value
         
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
-        guard let assetIndex = playables.index(where: { $0.uuid == assetUuid }) else { return }
+        guard let assetIndex = playables.firstIndex(where: { $0.uuid == assetUuid }) else { return }
         
 //        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }
         if assetIndex > 0 {

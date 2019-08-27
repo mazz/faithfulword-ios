@@ -6,6 +6,7 @@ public enum AuthStatus {
     case initialState
     case authenticated
     case unauthenticated
+    case emailUnconfirmed
 //    case accountInfoRetrieved
 }
 
@@ -17,14 +18,14 @@ public protocol AccountServicing {
     // Current authentication state
     var authState: Observable<AuthStatus> { get }
     // Current user
-    var currentUser: ApplicationUser? { get }
+    var currentUser: UserAppUser? { get }
     // Current user's music service accounts
 //    var musicServiceAccounts: Observable<[MusicServiceAccount]> { get }
     
     func start()
     func logout()
     
-    func startLoginFlow() -> Single<Void>
+    func startLoginFlow(email: String, password: String) -> Single<UserLoginResponse>
 //    func startLoginFlow(over viewController: UIViewController) -> Single<Void>
 //    func startRegistrationFlow(over viewController: UIViewController) -> Single<Void>
 //    func startUpdateFlow(over viewController: UIViewController)
@@ -42,7 +43,7 @@ public final class AccountService {
     }
     private let authStateBehaviorSubject = BehaviorSubject<AuthStatus>(value: .initialState)
     
-    public var currentUser: ApplicationUser?
+    public var currentUser: UserAppUser?
     private let bag = DisposeBag()
     
     // MARK: Dependencies
@@ -70,24 +71,67 @@ extension AccountService: AccountServicing {
 //    public var musicServiceAccounts: Observable<[MusicServiceAccount]> { return dataService.musicServiceAccounts }
     
     public func start() {
-        loginSequencer.session.subscribe(onNext: { [unowned self] session in
-            if let session = session {
-                self.currentUser = ApplicationUser(userSession: session)
-                self.authStateBehaviorSubject.onNext(.authenticated)
-//                self.fetchAccountInfo()
-            } else {
-                self.currentUser = nil
-                self.authStateBehaviorSubject.onNext(.unauthenticated)
-            }
-        }).disposed(by: bag)
+        
+        Observable.combineLatest(loginSequencer.sessionToken, loginSequencer.loginUser)
+            .subscribe(onNext: { sessionToken, loginUser in
+                if let sessionToken = sessionToken,
+                    let loginUser = loginUser {
+                    let uuid: String = NSUUID().uuidString
+                    let appUser: UserAppUser = UserAppUser(userId: loginUser.id,
+                                                   uuid: uuid,
+                                                   orgId: loginUser.org_id,
+                                                   name: loginUser.name,
+                                                   email: loginUser.email,
+                                                   session: sessionToken,
+                                                   pushNotifications: false,
+                                                   language: "en",
+                                                   userLoginUserUuid: loginUser.uuid)
+                    
+                    self.currentUser = appUser
+
+                    self.dataService.appendPersistedLoginUser(user: loginUser)
+                        .asObservable()
+                        .subscribe(onNext: { userLoginUser in
+                            
+                            self.dataService.addUser(user: appUser)
+                                .asObservable()
+                                .subscribeAndDispose(by: self.bag)
+                            
+                        })
+                        .disposed(by: self.bag)
+                    
+                    
+                    
+                    if loginUser.email_confirmed == false {
+                        self.authStateBehaviorSubject.onNext(.emailUnconfirmed)
+                    } else {
+                        self.authStateBehaviorSubject.onNext(.authenticated)
+                    }
+                } else {
+                    self.currentUser = nil
+                    self.authStateBehaviorSubject.onNext(.unauthenticated)
+                }
+            })
+            .disposed(by: self.bag)
+        
+//        loginSequencer.sessionToken.subscribe(onNext: { [unowned self] session in
+//            if let session = session {
+////                self.currentUser = ApplicationUser(userSession: session)
+//                self.authStateBehaviorSubject.onNext(.authenticated)
+////                self.fetchAccountInfo()
+//            } else {
+//                self.currentUser = nil
+//                self.authStateBehaviorSubject.onNext(.unauthenticated)
+//            }
+//        }).disposed(by: bag)
     }
     
     public func logout() {
         loginSequencer.logout()
     }
 
-    public func startLoginFlow() -> Single<Void> {
-        return loginSequencer.startLoginFlow()
+    public func startLoginFlow(email: String, password: String) -> Single<UserLoginResponse> {
+        return loginSequencer.login(email: email, password: password)
     }
 
 //    public func startLoginFlow(over viewController: UIViewController) -> Single<Void> {

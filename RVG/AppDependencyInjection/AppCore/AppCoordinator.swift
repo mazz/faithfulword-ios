@@ -31,6 +31,7 @@ internal class AppCoordinator {
     private let productService: ProductServicing
     private let languageService: LanguageServicing
     private let assetPlaybackService: AssetPlaybackServicing
+    private let downloadService: DownloadServicing
     private let reachability: RxClassicReachable
     
     internal init(uiFactory: AppUIMaking,
@@ -42,6 +43,7 @@ internal class AppCoordinator {
         productService: ProductServicing,
         languageService: LanguageServicing,
         assetPlaybackService: AssetPlaybackServicing,
+        downloadService: DownloadServicing,
         reachability: RxClassicReachable
         ) {
         self.uiFactory = uiFactory
@@ -53,6 +55,7 @@ internal class AppCoordinator {
         self.productService = productService
         self.languageService = languageService
         self.assetPlaybackService = assetPlaybackService
+        self.downloadService = downloadService
         self.reachability = reachability
         
         
@@ -65,10 +68,27 @@ internal class AppCoordinator {
         NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { notification in
             self.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(withName: "main", expirationHandler: nil)
         }
+        
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(AppCoordinator.handleApplicationWillTerminate(notification:)), name: AppDelegate.applicationWillTerminate, object: nil)
+
+        
+//        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { notification in
+//
+//            DDLogDebug("try and update state of any possible downloads now, downloadService: \(self.downloadService) notification: \(notification)")
+//            self.downloadService.cancelAllDownloads()
+//            sleep(5)
+//        }
 
         reactToReachability()
     }
+
+    deinit {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.removeObserver(self, name: AppDelegate.applicationWillTerminate, object: nil)
+    }
 }
+
 
 // MARK: <NavigationCoordinating>
 extension AppCoordinator: NavigationCoordinating {
@@ -101,37 +121,51 @@ extension AppCoordinator: NavigationCoordinating {
             // Event only fire on main thread
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] authState in
-                if authState == .authenticated {
-                    DDLogDebug("authenticated")
-                    
-                    // we must fetch and set the user language before we do
-                    // anything, really
-                    self.languageService.fetchUserLanguage().subscribe(onSuccess: { userLanguage in
+                DDLogDebug("authState: \(authState)")
+
+                // we must fetch and set the user language before we do
+                // anything, really
+                self.languageService.fetchUserLanguage()
+                    .subscribe(onSuccess: { userLanguage in
                         DDLogDebug("self.languageService.userLanguage.value: \(self.languageService.userLanguage.value) == \(userLanguage)")
-                        L10n.shared.language = userLanguage
-                        
-                        //            self.swapInMainFlow()
-                        
-                        switch self.networkStatus.value {
-                        case .notReachable:
-                            self.loadDefaultOrg()
+                        L10n.shared.language = (userLanguage == "") ? "en" : userLanguage
 
-                        case .reachable(_):
-                            self.loadDefaultOrg()
+                        if authState == .unauthenticated {
+                            // load default org if unauthenticated
+                            
+                            switch self.networkStatus.value {
+                            case .notReachable:
+                                self.loadDefaultOrg()
+                                
+                            case .reachable(_):
+                                self.loadDefaultOrg()
+                                
+                            case .unknown:
+                                self.loadDefaultOrg()
+                            }
 
-                        case .unknown:
-                            self.loadDefaultOrg()
+                        } else if authState == .authenticated || authState == .emailUnconfirmed {
+                            DDLogDebug("authState: \(authState)")
+                            
+                            // TODO:
+                            // unload currently loaded org and then
+                            // load unique org that is associated with UserAppUser
+                            // if authenticated or emailUnconfirmed
+                            
+//                            switch self.networkStatus.value {
+//                            case .notReachable:
+//                                self.loadDefaultOrg()
+//
+//                            case .reachable(_):
+//                                self.loadDefaultOrg()
+//
+//                            case .unknown:
+//                                self.loadDefaultOrg()
+//                            }
                         }
                     }, onError: { error in
                         DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
                     }).disposed(by: self.bag)
-
-                    
-                    
-                } else if authState == .unauthenticated {
-                    self.swapInInitialFlow()
-                    DDLogDebug("unauthenticated")
-                }
             })
             .disposed(by: bag)
     }
@@ -305,10 +339,42 @@ extension AppCoordinator: NavigationCoordinating {
                 self.startHandlingAuthEvents()
                 self.accountService.start()
                 
+                // create a default user once and once-only
+                // because we don't have a login UI or a
+                // way to add a new user
+//                let userUuid: String = NSUUID().uuidString
+//                
+//                let user: UserAppUser = UserAppUser(userId: 0,
+//                                      uuid: userUuid,
+//                                      name: userUuid,
+//                                      email: String(describing: "\(userUuid)@\(userUuid)"),
+//                                      session: userUuid,
+//                                      pushNotifications: false,
+//                                      language: "en")
+                
+                
                 // bootstrap login/fetching of session HERE because we have no login UI
-                self.accountService.startLoginFlow()
-                    .asObservable()
-                    .subscribeAndDispose(by: self.bag)
+                self.accountService.startLoginFlow(email: "joseph@faithfulword.app", password: "password")
+                    .subscribe(onSuccess: { [unowned self] userLoginResponse in
+                        let user: UserAppUser = UserAppUser(userId: userLoginResponse.user.id,
+                                              uuid: NSUUID().uuidString,
+                                              orgId: userLoginResponse.user.org_id,
+                                              name: userLoginResponse.user.name ?? "unknown",
+                                              email: userLoginResponse.user.email,
+                                              session: userLoginResponse.token,
+                                              pushNotifications: false,
+                                              language: "en",
+                                              userLoginUserUuid: userLoginResponse.user.uuid)
+                        
+                        
+                    }, onError: { error in
+                        DDLogDebug("⚠️ login error! \(error)")
+                    })
+                .disposed(by: self.bag)
+//                    .asObservable()
+                
+                    
+//                    .subscribeAndDispose(by: self.bag)
                 
             }, context: .other)
     }
@@ -336,5 +402,11 @@ extension AppCoordinator: NavigationCoordinating {
                     DDLogDebug("AppCoordinator \(self.reachability.status.value)")
                 }
             }).disposed(by: bag)
+    }
+    
+    @objc func handleApplicationWillTerminate(notification: Notification) {
+        if self.downloadService.inProgressDownloads().count > 0 {
+            self.downloadService.cancelAllDownloads()            
+        }
     }
 }

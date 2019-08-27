@@ -7,3 +7,8 @@
 #import <MBProgressHUD/MBProgressHUD.h>
 #import <CommonCrypto/CommonCrypto.h>
 #import <CocoaLumberjack/CocoaLumberjack.h>
+#import "HWIBackgroundSessionCompletionHandlerBlock.h"
+#import "HWIFileDownloadDelegate.h"
+#import "HWIFileDownloader.h"
+#import "HWIFileDownloadItem.h"
+#import "HWIFileDownloadProgress.h"

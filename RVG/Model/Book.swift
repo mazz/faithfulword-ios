@@ -2,7 +2,7 @@ import Foundation
 import GRDB
 
 public struct Book: Codable {
-    var userId: Int64?
+    var userId: Int
     public var categoryUuid: String
     public var title: String
     public var languageId: String
@@ -28,7 +28,7 @@ public struct Book: Codable {
     public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
 
-        self.userId = try? values.decode(Int64.self, forKey: .userId)
+        self.userId = try values.decode(Int.self, forKey: .userId)
         // take categoryUuid, if not exist then take uuid (at least one of them must present)
         self.categoryUuid = try values.decodeIfPresent(String.self, forKey: .categoryUuid)
             ?? (try values.decode(String.self, forKey: .uuid))

@@ -47,7 +47,7 @@ extension UIFactory: AppUIMaking {
     func makePopupPlayer() -> PopupContentController {
         let popupContentController = PopupContentController.make(storyboardName: StoryboardName.popupPlayer)
         popupContentController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
-        popupContentController.downloadingViewModel = resolver.resolve(DownloadingViewModel.self)
+        popupContentController.downloadingViewModel = resolver.resolve(DownloadViewModel.self)
         popupContentController.userActionsViewModel = resolver.resolve(UserActionsViewModel.self)
 
 //        demoMusicPlayerController.assetPlaybackManager = resolver.resolve(AssetPlaybackManager.self)
@@ -76,6 +76,10 @@ extension UIFactory: AppUIMaking {
     func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController {
         let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaListing)
         mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaType)
+        mediaListingViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
+//        mediaListingViewController.downloadingService = resolver.resolve(DownloadService.self)
+        mediaListingViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
+
         //        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
         return mediaListingViewController
     }

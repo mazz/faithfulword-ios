@@ -2,9 +2,10 @@ import Foundation
 import RxSwift
 
 public protocol LoginSequencing {
-    var session: Observable<String?> { get } // a session is a simple String for now
-    
-    func startLoginFlow() -> Single<Void>
+    var sessionToken: Observable<String?> { get } // a JWT
+    var loginUser: Observable<UserLoginUser?> { get }
+
+    func login(email: String, password: String) -> Single<UserLoginResponse>
 //    func startRegistrationFlow(over viewController: UIViewController) -> Single<Void>
 //    func startUpdateFlow(over viewController: UIViewController)
     func logout()
@@ -18,43 +19,52 @@ public final class LoginSequencer {
     
     // MARK: Dependencies
     
-//    private let gigyaManaging: GigyaManaging
+//    private let didyaManaging: DidyaManaging
     private let dataService: AccountDataServicing
     
     public init(
-//        gigyaManaging: GigyaManaging,
+//        didyaManaging: DidyaManaging,
         dataService: AccountDataServicing) {
-//        self.gigyaManaging = gigyaManaging
+//        self.didyaManaging = didyaManaging
         self.dataService = dataService
     }
-    
-    // MARK: Helpers
-    
-    // TODO: should eventually pass a JWT in here
-    private func fetchSession() -> Single<Void> {
-        return dataService.fetchSession().map { _ in () }
-    }    
 }
 
 extension LoginSequencer: LoginSequencing {
-    public var session: Observable<String?> {
-        return dataService.session.do(onNext: { session in // currently just a simple string
+    public var sessionToken: Observable<String?> {
+        return dataService.token.do(onNext: { session in
             DDLogDebug("got session: \(String(describing: session))")
         })
     }
-    
+
+    public var loginUser: Observable<UserLoginUser?> {
+        return dataService.loginUser.do(onNext: { user in
+            DDLogDebug("got loginUser: \(String(describing: user))")
+        })
+    }
+
     // TODO: just fetches a fake session for now
-    public func startLoginFlow() -> Single<Void> {
-        return self.fetchSession()
+    public func login(email: String, password: String) -> Single<UserLoginResponse> {
+//        let userLoginResponse: Single<UserLoginResponse> = self.dataService.loginUser(email: email, password: password)
+        return self.dataService.loginUser(email: email, password: password)
+//            .flatMap({ loginResponse -> Single<UserLoginUser> in
+//                Single.just(loginResponse.user)
+//            })
+
+//        userLoginResponse.flatMap { userLoginResponse -> Single<UserLoginUser> in
+//            return userLoginResponse.user
+//        }
+        
+//        return self.fetchSession()
     }
 //
 //    public func startRegistrationFlow(over viewController: UIViewController) -> Single<Void> {
-//        return gigyaManaging.startRegistrationFlow(over: viewController)
+//        return didyaManaging.startRegistrationFlow(over: viewController)
 //            .flatMap { [unowned self] in self.fetchSession(for: $0) }
 //    }
 //    
 //    public func startUpdateFlow(over viewController: UIViewController) {
-//        gigyaManaging.startUpdateFlow(over: viewController)
+//        didyaManaging.startUpdateFlow(over: viewController)
 //    }
     
     public func logout() {

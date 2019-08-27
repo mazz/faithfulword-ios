@@ -22,7 +22,11 @@ public protocol DataStoring {
     func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]>
     func deleteMediaItems() -> Single<Void>
 
-    func addUser(session: String) -> Single<String>
+    func addUser(addingUser: UserAppUser) -> Single<UserAppUser>
+    func fetchUser() -> Single<UserAppUser>
+    func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser>
+    
+//    func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
     func fetchUserLanguage() -> Single<String>
@@ -61,7 +65,15 @@ public protocol DataStoring {
     // MARK: FileDownload
     
     func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void>
-    func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?>
+    func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?>
+    func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void>
+    func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void>
+    
+    func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
+    
+    // MARK: FileDownload list
+    func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
 
@@ -188,16 +200,43 @@ public final class DataStore {
             catch {
                 DDLogDebug("error making mediaitem table: \(error)")
             }
+            
             do {
-                try db.create(table: "user") { userTable in
+                try db.create(table: "userloginuser") { loginUserTable in
+                    DDLogDebug("created: \(loginUserTable)")
+                    loginUserTable.column("achievements", .text)
+                    loginUserTable.column("email", .text)
+                    loginUserTable.column("email_confirmed", .boolean)
+                    loginUserTable.column("fb_user_id", .integer)
+                    loginUserTable.column("id", .integer)
+                    loginUserTable.column("org_id", .integer)
+                    loginUserTable.column("is_publisher", .boolean)
+                    loginUserTable.column("locale", .text)
+                    loginUserTable.column("mini_picture_url", .text)
+                    loginUserTable.column("name", .text)
+                    loginUserTable.column("picture_url", .text)
+                    loginUserTable.column("registered_at", .double)
+                    loginUserTable.column("reputation", .integer)
+                    loginUserTable.column("username", .text)
+                    loginUserTable.column("uuid", .text).primaryKey()
+                }
+            }
+            catch {
+                DDLogDebug("error making userloginuser table: \(error)")
+            }
+
+            do {
+                try db.create(table: "userappuser") { userTable in
                     DDLogDebug("created: \(userTable)")
                     userTable.column("uuid", .text).primaryKey()
                     userTable.column("userId", .integer)
+                    userTable.column("orgId", .integer)
                     userTable.column("name", .text)
                     userTable.column("email", .text)
                     userTable.column("session", .text)
                     userTable.column("pushNotifications", .boolean)
                     userTable.column("language", .text)
+                    userTable.column("userLoginUserUuid", .text).references("userloginuser", onDelete: .cascade)
                 }
             }
             catch {
@@ -211,7 +250,7 @@ public final class DataStore {
                     bookTable.column("title", .text)
                     bookTable.column("languageId", .text)
                     bookTable.column("localizedTitle", .text)
-                    bookTable.column("uuid", .text).references("user", onDelete: .cascade)
+//                    bookTable.column("uuid", .text).references("user", onDelete: .cascade)
                 }
             }
             catch {
@@ -247,7 +286,7 @@ public final class DataStore {
                     gospelTable.column("title", .text)
                     gospelTable.column("languageId", .text)
                     gospelTable.column("localizedTitle", .text)
-                    gospelTable.column("uuid", .text).references("user", onDelete: .cascade)
+//                    gospelTable.column("uuid", .text).references("user", onDelete: .cascade)
                 }
             }
             catch {
@@ -283,7 +322,7 @@ public final class DataStore {
                     musicTable.column("title", .text)
                     musicTable.column("languageId", .text)
                     musicTable.column("localizedTitle", .text)
-                    musicTable.column("uuid", .text).references("user", onDelete: .cascade)
+//                    musicTable.column("uuid", .text).references("user", onDelete: .cascade)
                 }
             }
             catch {
@@ -355,7 +394,7 @@ public final class DataStore {
                 DDLogDebug("error making useractionplayable table: \(error)")
             }
             do {
-                try db.create(table: "fileDownload") { downloadsTable in
+                try db.create(table: "filedownload") { downloadsTable in
                     DDLogDebug("created: \(downloadsTable)")
                     downloadsTable.column("uuid", .text).primaryKey()
                     downloadsTable.column("playableUuid", .text)
@@ -367,7 +406,9 @@ public final class DataStore {
                     downloadsTable.column("updatedAt", .double)
                     downloadsTable.column("insertedAt", .double)
                     downloadsTable.column("state", .integer)
-                    downloadsTable.column("userUuid", .text).references("user", onDelete: .cascade)
+//                    downloadsTable.column("userUuid", .text).references("user", onDelete: .cascade)
+                    downloadsTable.column("extendedDescription", .text)
+                    downloadsTable.column("playlistUuid", .text)
                 }
             }
             catch {
@@ -640,26 +681,28 @@ extension DataStore: DataStoring {
 
     //MARK: User
     
-    public func addUser(session: String) -> Single<String> {
+    // will error if there is already one user because for now
+    // this is a single-user app
+    public func addUser(addingUser: UserAppUser) -> Single<UserAppUser> {
         return Single.create { [unowned self] single in
-            var resultSession: String = session
+            var resultUser: UserAppUser = addingUser
             do {
                 try self.dbPool.writeInTransaction { db in
-                    if try User.fetchCount(db) == 0 {
+                    if try UserAppUser.fetchCount(db) == 0 {
                         
-                        var user = User(userId: nil,
-                                        uuid: NSUUID().uuidString,
-                                        name: "name",
-                                        email: "test@test",
-                                        session: session,
-                                        pushNotifications:false,
-                                        language: L10n.shared.language) //(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
-                        try user.insert(db)
-                        resultSession = user.session
+//                        var user = User(userId: nil,
+//                                        uuid: NSUUID().uuidString,
+//                                        name: "name",
+//                                        email: "test@test",
+//                                        session: session,
+//                                        pushNotifications:false,
+//                                        language: L10n.shared.language) //(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
+                        try resultUser.insert(db)
+//                        resultUser = user.session
                     }
                     return .commit
                 }
-                single(.success(resultSession))
+                single(.success(resultUser))
             } catch {
                 DDLogDebug("error: \(error)")
                 single(.error(error))
@@ -668,15 +711,82 @@ extension DataStore: DataStoring {
         }
         //        return Single.just("")
     }
+
+    public func fetchUser() -> Single<UserAppUser> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchUser: UserAppUser!
+                try self.dbPool.read { db in
+                    if let user = try UserAppUser.fetchOne(db) {
+                        fetchUser = user
+                    }
+                }
+                single(.success(fetchUser))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser> {
+        return Single.create { [unowned self] single in
+            var resultUser: UserLoginUser = addingUser
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try resultUser.insert(db)
+                    //                        resultUser = user.session
+                    //                    }
+                    return .commit
+                }
+                single(.success(resultUser))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    
+//    public func addUser(session: String) -> Single<String> {
+//        return Single.create { [unowned self] single in
+//            var resultSession: String = session
+//            do {
+//                try self.dbPool.writeInTransaction { db in
+//                    if try UserAppUser.fetchCount(db) == 0 {
+//
+//                        var user = UserAppUser(userId: nil,
+//                                        uuid: NSUUID().uuidString,
+//                                        name: "name",
+//                                        email: "test@test",
+//                                        session: session,
+//                                        pushNotifications:false,
+//                                        language: L10n.shared.language) //(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
+//                        try user.insert(db)
+//                        resultSession = user.session
+//                    }
+//                    return .commit
+//                }
+//                single(.success(resultSession))
+//            } catch {
+//                DDLogDebug("error: \(error)")
+//                single(.error(error))
+//            }
+//            return Disposables.create {}
+//        }
+//        //        return Single.just("")
+//    }
     
     // MARK: User Update
     
-    public func updateUser(updatingUser: User) -> Single<User> {
+    public func updateUser(updatingUser: UserAppUser) -> Single<UserAppUser> {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-                    if let user = try User.filter(Column("uuid") == updatingUser.uuid).fetchOne(db) {
-                        var storeUser: User = user
+                    if let user = try UserAppUser.filter(Column("uuid") == updatingUser.uuid).fetchOne(db) {
+                        var storeUser: UserAppUser = user
                         storeUser.name = updatingUser.name
                         storeUser.session = updatingUser.session
                         storeUser.pushNotifications = updatingUser.pushNotifications
@@ -693,7 +803,6 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
-
     
 //    public func updateUser(updatingUser: User) -> Single<Void> {
 //        return Single.create { [unowned self] single in
@@ -740,8 +849,8 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-                    if let user = try User.fetchOne(db) {
-                        var storeUser: User = user
+                    if let user = try UserAppUser.fetchOne(db) {
+                        var storeUser: UserAppUser = user
                         storeUser.language = identifier
                         try storeUser.update(db)
                     }
@@ -761,7 +870,7 @@ extension DataStore: DataStoring {
             do {
                 var language: String = ""
                 try self.dbPool.read { db in
-                    if let user = try User.fetchOne(db) {
+                    if let user = try UserAppUser.fetchOne(db) {
                         language = user.language
                     }
                 }
@@ -781,7 +890,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-                    if let user = try User.fetchOne(db) {
+                    if let user = try UserAppUser.fetchOne(db) {
                         for category in categoryList {
                             DDLogDebug("category: \(category)")
                             switch categoryListType {
@@ -1182,7 +1291,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
-                    if let user = try User.fetchOne(db) {
+                    if let user = try UserAppUser.fetchOne(db) {
                         for book in books {
                             DDLogDebug("book: \(book)")
                             //            try! self.dbQueue.inDatabase { db in
@@ -1387,10 +1496,9 @@ extension DataStore: DataStoring {
         }
     }
     
-    // NARK: FileDownload
+    // MARK: FileDownload
     
     public func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
-        // let update: Single<Void> =
         return Single.create { [unowned self] single in
             do {
                 try self.dbPool.writeInTransaction { db in
@@ -1398,21 +1506,20 @@ extension DataStore: DataStoring {
                     DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
                     if let download = try FileDownload.filter(Column("playableUuid") == fileDownload.playableUuid).fetchOne(db) {
                         // update existing download
-                        
-                        
-                        // db update
                         var storeDownload: FileDownload = download
                         storeDownload.progress = fileDownload.progress
                         storeDownload.totalCount = fileDownload.totalCount
                         storeDownload.completedCount = fileDownload.completedCount
                         storeDownload.state = fileDownload.state
+                        storeDownload.extendedDescription = fileDownload.extendedDescription
+                        storeDownload.playlistUuid = fileDownload.playlistUuid
                         try storeDownload.update(db)
                         //                        }
                         
                     } else {
                         // insert new action
                         DDLogDebug("fileDownload not found, fileDownload.playableUuid: \(fileDownload.playableUuid)")
-                        let newFileDownload: FileDownload =
+                        var newFileDownload: FileDownload =
                             FileDownload(url: fileDownload.url,
                                          uuid: fileDownload.uuid,
                                          playableUuid: fileDownload.playableUuid,
@@ -1423,7 +1530,9 @@ extension DataStore: DataStoring {
                                          totalCount: fileDownload.totalCount,
                                          completedCount: fileDownload.completedCount,
                                          state: fileDownload.state)
-                        
+                        newFileDownload.extendedDescription = fileDownload.extendedDescription
+                        newFileDownload.playlistUuid = fileDownload.playlistUuid
+
                         try newFileDownload.insert(db)
                         //                        }
                         
@@ -1439,7 +1548,48 @@ extension DataStore: DataStoring {
         }
     }
     
-    public func fetchLastFileDownloadState(playableUuid: String) -> Single<FileDownload?> {
+    public func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    // update
+//                    DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
+                    
+//                    do {
+                        try playableUuids.forEach({ uuid in
+                            if let download = try FileDownload.filter(Column("playableUuid") == playableUuids[0]).fetchOne(db) {
+                                // update existing download
+                                
+                                // db update
+                                var storeDownload: FileDownload = download
+                                //                        storeDownload.progress = fileDownload.progress
+                                //                        storeDownload.totalCount = fileDownload.totalCount
+                                //                        storeDownload.completedCount = fileDownload.completedCount
+                                storeDownload.state = state
+                                try storeDownload.update(db)
+                                //                        }
+                                
+                            }
+                        })
+//                    } catch {
+//                        DDLogDebug("error: \(error)")
+//                        single(.error(error))
+//                    }
+                    
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create { }
+        }
+    }
+    
+
+    
+    public func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?> {
         return Single.create { [unowned self] single in
             do {
                 var playable: FileDownload!
@@ -1455,7 +1605,60 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
+
+    public func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
+                    try FileDownload.filter(Column("playableUuid") == playableUuid).deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+        //        return Single.just(())
+    }
     
+    public func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playableUuid.appending(String(describing: ".\(pathExtension)"))).path)
+                let fileManager = FileManager.default
+                    do {
+                        try fileManager.removeItem(atPath: url.path)
+                    }
+                    catch let error {
+                        print("Ooops! Something went wrong removing file: \(error)")
+                        throw error
+                    }
+                single(.success(()))
+            } catch {
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+    
+    public func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchFileDownloads: [FileDownload] = []
+                try self.dbPool.read { db in
+                    fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
+                }
+                single(.success(fetchFileDownloads))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
 
     public func fetchPlayables(for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
