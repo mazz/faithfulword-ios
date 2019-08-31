@@ -30,6 +30,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     // MARK: Dependencies
     
     internal var viewModel: MediaListingViewModel!
+    internal var searchViewModel: MediaSearchViewModel!
     internal var playbackViewModel: PlaybackControlsViewModel!
     internal var downloadListingViewModel: DownloadListingViewModel!
     
@@ -377,11 +378,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     //                .disposed(by: bag)
     //        }
     //    }
-    
-    private func registerReusableViews() {
-        collectionView.register(cellType: DeviceGroupSelectionCell.self)
-    }
-    
+        
     // returns -1 on not found
     private func indexOfFileDownloadInViewModel(fileDownload: FileDownload) -> IndexPath {
         // try to find the indexPath of the media item and update

@@ -18,7 +18,7 @@ internal protocol AppUIMaking {
     func makeSideMenu() -> SideMenuViewController
 //    func makeBibleLanguagePage() -> BibleLanguageViewController
     func makeBibleLanguagePage() -> RadioListViewController
-    func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
+    func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController
     func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController
     func makeSplashScreen() -> SplashScreenViewController
 
@@ -73,9 +73,10 @@ extension UIFactory: AppUIMaking {
         return bibleLanguageViewController
     }
 
-    func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController {
+    func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController {
         let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaListing)
-        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaType)
+        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaCategory)
+        mediaListingViewController.searchViewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
         mediaListingViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
 //        mediaListingViewController.downloadingService = resolver.resolve(DownloadService.self)
         mediaListingViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)

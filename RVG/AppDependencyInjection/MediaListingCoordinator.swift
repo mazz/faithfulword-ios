@@ -8,7 +8,7 @@ public final class MediaListingCoordinator {
     
     // MARK: Fields
     internal var playlistId: String?
-    internal var mediaType: MediaType?
+    internal var mediaCategory: MediaCategory?
     internal var navigationController: UINavigationController?
     internal var mediaListingViewController: MediaListingViewController?
 
@@ -34,8 +34,8 @@ extension MediaListingCoordinator: NavigationCoordinating {
         // 1. Hang on to the completion block for when the user if done with now-playing.
         mediaListingFlowCompletion = completion
         
-        if let playlistId = playlistId, let mediaType = mediaType {
-            self.mediaListingViewController = self.uiFactory.makeMediaListing(playlistId: playlistId, mediaType: mediaType)
+        if let playlistId = playlistId, let mediaCategory = mediaCategory {
+            self.mediaListingViewController = self.uiFactory.makeMediaListing(playlistId: playlistId, mediaCategory: mediaCategory)
             if let mediaListingViewController = self.mediaListingViewController {
                 setup(mediaListingViewController)
                 self.navigationController = mediaListingViewController.navigationController

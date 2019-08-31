@@ -163,7 +163,7 @@ extension MainCoordinator: NavigationCoordinating {
         //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
         
         self.resettableMediaListingCoordinator.value.playlistId = playlistUuid
-        self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
+        self.resettableMediaListingCoordinator.value.mediaCategory = .bible
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
             
             self.mainNavigationController.pushViewController(
@@ -184,7 +184,7 @@ extension MainCoordinator: NavigationCoordinating {
         //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
 
         self.resettableMediaListingCoordinator.value.playlistId = bookUuid
-        self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
+        self.resettableMediaListingCoordinator.value.mediaCategory = .bible
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
 
             self.mainNavigationController.pushViewController(

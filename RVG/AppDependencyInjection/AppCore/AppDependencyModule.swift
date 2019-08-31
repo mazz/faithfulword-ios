@@ -246,10 +246,10 @@ internal final class AppDependencyModule {
             )
         }.inObjectScope(.transient)
 
-        container.register(MediaListingViewModel.self) { resolver, playlistId, mediaType in
+        container.register(MediaListingViewModel.self) { resolver, playlistId, mediaCategory in
             MediaListingViewModel(
                 playlistUuid: playlistId,
-                mediaType: mediaType,
+                mediaCategory: mediaCategory,
                 productService: resolver.resolve(ProductServicing.self)!,
                 searchService: resolver.resolve(SearchServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
@@ -258,7 +258,18 @@ internal final class AppDependencyModule {
 //                remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!
             )
             }.inObjectScope(.transient)
-        
+
+        container.register(MediaSearchViewModel.self) { resolver, playlistId, mediaCategory in
+            MediaSearchViewModel(
+                playlistUuid: playlistId,
+                mediaCategory: mediaCategory,
+//                productService: resolver.resolve(ProductServicing.self)!,
+                searchService: resolver.resolve(SearchServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
+            )
+            }.inObjectScope(.transient)
+
         container.register(CategoryListingViewModel.self) { resolver, categoryType in
             CategoryListingViewModel(
                 categoryType: categoryType,
