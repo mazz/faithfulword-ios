@@ -26,12 +26,12 @@ public enum FwbcApiService {
     
     // v1.3/search
     case search(query: String,
-        mediaCategory: String,
-        playlistUuid: String,
-        channelUuid: String,
-        publishedAfter: TimeInterval,
-        updatedAfter: TimeInterval,
-        presentedAfter: TimeInterval,
+        mediaCategory: String?,
+        playlistUuid: String?,
+        channelUuid: String?,
+        publishedAfter: TimeInterval?,
+        updatedAfter: TimeInterval?,
+        presentedAfter: TimeInterval?,
         offset: Int,
         limit: Int)
 
@@ -70,10 +70,8 @@ public enum FwbcApiService {
 // MARK: - TargetType Protocol Implementation
 extension FwbcApiService: TargetType {
     
-//        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v2.0")! }
-    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)")! }
-//    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)/v1.3")! }
-//        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)")! }
+//    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)")! }
+        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)")! }
     public var path: String {
         switch self {
         case .pushTokenUpdate(_, _, _, _, _, _):

@@ -6,206 +6,7 @@ import XLActionController
 import MagazineLayout
 
 /// Add service screen
-public final class MediaListingViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if viewModelSections.count == 0 {
-            return 0
-        }
-        return viewModelSections[section].items.count
-    }
-    
-//    public func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
-//
-//        switch item {
-//        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
-//            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
-//            switch enumPlayable {
-//
-//            case .playable(let item):
-//                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
-//
-//                if let _: FileDownload = downloadedItems[item.uuid] {
-//
-//                    drillInCell.playStateImageView.stopAnimating()
-//                    drillInCell.playStateImageView.layer.removeAllAnimations()
-//                }
-//            }
-//        }
-//    }
-//
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
-    {
-        
-        //        if viewModelSections[0].items.count > 0 {
-        //        DDLogDebug("viewModelSections[indexPath.section].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
-        //        }
-        let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
-        
-        switch item {
-        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
-            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
-            switch enumPlayable {
-                
-            case .playable(let item):
-                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
-                
-                // show play icon or animating wave icon
-                if let selectedPlayable: Playable = selectedPlayable.value {
-                    if item.uuid == selectedPlayable.uuid {
-                        
-                        // show the animation unless the AssetPlaybackManager is not actually playing
-                        if playbackState.value != .playing {
-                            drillInCell.playStateImageView.stopAnimating()
-                            drillInCell.playStateImageView.layer.removeAllAnimations()
-                            if let playImage: UIImage = UIImage(named: "play") {
-                                drillInCell.playStateImageView.image = playImage
-                            }
-                        } else {
-                            if let waveImageFrame1: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame1),
-                                let waveImageFrame2: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame2),
-                                let waveImageFrame3: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame3),
-                                let waveImageFrame4: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame4),
-                                let waveImageFrame5: UIImage = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame5)
-                            {
-                                let animations: [UIImage] = [waveImageFrame1, waveImageFrame2, waveImageFrame3, waveImageFrame4, waveImageFrame5]
-                                drillInCell.playStateImageView.animationImages = animations
-                                drillInCell.playStateImageView.animationDuration = 1.0
-                                drillInCell.playStateImageView.startAnimating()
-                                
-                                drillInCell.playStateImageView.image = UIImage(named: AnimationImageTitleConstants.waveAnimationFrame1)
-                            }
-                        }
-                        
-                    } else {
-                        drillInCell.playStateImageView.stopAnimating()
-                        drillInCell.playStateImageView.layer.removeAllAnimations()
-                        if let playImage: UIImage = UIImage(named: "play") {
-                            drillInCell.playStateImageView.image = playImage
-                        }
-                    }
-                }
-                
-                if let fileDownload: FileDownload = downloadingItems[item.uuid] {
-                    
-                    drillInCell.progressView.isHidden = false
-                    drillInCell.amountDownloaded.isHidden = false
-                    drillInCell.amountDownloaded.text = ""
-                    drillInCell.downloadStateButton.isHidden = false
-                    drillInCell.downloadStateButton.isEnabled = true
-                    
-                    switch fileDownload.state {
-                    case .initial:
-                        drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = true
-                        drillInCell.amountDownloaded.text = ""
-                        drillInCell.downloadStateButton.isHidden = true
-                        drillInCell.downloadStateButton.setTitle("", for: .normal)
-                        
-                    case .initiating:
-                        drillInCell.progressView.isHidden = false
-                        drillInCell.progressView.progress = fileDownload.progress
-                        drillInCell.amountDownloaded.isHidden = false
-                        drillInCell.amountDownloaded.text = ""
-                    case .inProgress:
-                        drillInCell.progressView.progress = fileDownload.progress
-                        drillInCell.amountDownloaded.text = fileDownload.extendedDescription
-                        drillInCell.downloadStateButton.isHidden = false
-                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.cancelFile), for: .normal)
-                    case .cancelling:
-                        drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = true
-                        drillInCell.amountDownloaded.text = ""
-                        // don't hide cancel button quite yet
-                        drillInCell.downloadStateButton.isHidden = false
-                        // disable cancel button while cancelling
-                        drillInCell.downloadStateButton.isEnabled = false
-                        
-                    case .cancelled:
-                        drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = false
-                        drillInCell.amountDownloaded.text = fileDownload.extendedDescription
-                        drillInCell.downloadStateButton.isHidden = false
-                        drillInCell.downloadStateButton.isEnabled = false
-                        drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
-                        
-                        // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
-
-                    case .complete:
-                        drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = true
-                        drillInCell.amountDownloaded.text = ""
-                        drillInCell.downloadStateButton.isHidden = false
-                        drillInCell.downloadStateButton.isEnabled = false
-                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
-                        
-                        // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
-                        
-                    case .error:
-                        drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = false
-                        drillInCell.amountDownloaded.text = fileDownload.extendedDescription
-                        drillInCell.downloadStateButton.isHidden = false
-                        drillInCell.downloadStateButton.isEnabled = false
-                        drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
-                        
-                        // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
-                        
-                    case .unknown:
-                        drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = true
-                        drillInCell.amountDownloaded.text = ""
-                        drillInCell.downloadStateButton.isHidden = true
-                        drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
-                    }
-                } else {
-                    drillInCell.progressView.isHidden = true
-                    drillInCell.amountDownloaded.isHidden = true
-                    drillInCell.amountDownloaded.text = ""
-                }
-                
-                // update UI with downloaded items
-                
-                if let fileDownload: FileDownload = downloadedItems[item.uuid] {
-                    drillInCell.progressView.isHidden = true
-                    drillInCell.amountDownloaded.isHidden = false
-                    
-                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) : String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount))) / \(fileSizeFormattedString(for: fileDownload.totalCount)))")
-                    drillInCell.downloadStateButton.isHidden = false
-                    drillInCell.downloadStateButton.isEnabled = false
-                    drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
-                } else {
-                    // if we just deleted the file, update the UI
-                    
-                    // make sure that it is not in the downloading items
-                    if let _: FileDownload = downloadingItems[item.uuid] {
-                        // do nothing because we want to show progress in UI
-                        // if it is downloading
-                    } else {
-                        drillInCell.progressView.isHidden = true
-                        drillInCell.amountDownloaded.isHidden = true
-                        drillInCell.amountDownloaded.text = ""
-                        //                        drillInCell.downloadStateButton.isHidden = true
-                        drillInCell.downloadStateButton.setImage(nil, for: .normal)
-                        
-                    }
-                }
-            }
-            return drillInCell
-        }
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel.selectItemEvent.onNext(indexPath)
-    }
-    
-    // MARK: View
-    
-    //    @IBOutlet weak var collectionView: UICollectionView!
-    
+public final class MediaListingViewController: UIViewController, UICollectionViewDataSource /*,  UICollectionViewDelegate */ {
     // MARK: Private
     
     private lazy var collectionView: UICollectionView = {
@@ -234,13 +35,39 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     // MARK: Fields
     
-    private var viewModelSections: [MediaListingSectionViewModel] = []
-    private var downloadingItems: [String: FileDownload] = [:]
-    private var downloadedItems: [String: FileDownload] = [:]
-    private var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
-    private var previousSelectedPlayable: Field<Playable?> = Field<Playable?>(nil)
-    private var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
+    internal var viewModelSections: [MediaListingSectionViewModel] = []
+    internal var downloadingItems: [String: FileDownload] = [:]
+    internal var downloadedItems: [String: FileDownload] = [:]
+    internal var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
+    internal var previousSelectedPlayable: Field<Playable?> = Field<Playable?>(nil)
+    internal var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
+    
+    /// MARK: Search
 
+    internal var viewModelSearchSections: [MediaListingSectionViewModel] = []
+    var products = [Product]() // for testing of search only, remove once navigation is working
+
+    /// State restoration values.
+    private enum RestorationKeys: String {
+        case viewControllerTitle
+        case searchControllerIsActive
+        case searchBarText
+        case searchBarIsFirstResponder
+    }
+    
+    private struct SearchControllerRestorableState {
+        var wasActive = false
+        var wasFirstResponder = false
+    }
+    
+    private var searchController: UISearchController = UISearchController(searchResultsController: nil)
+    /// Secondary search results table view.
+    internal var resultsTableController: ResultsTableController!
+    /// Restoration state for UISearchController
+    private var restoredState = SearchControllerRestorableState()
+
+    /// UISearchBar
+    private var filterText: String? = nil
 
     private var lastProgressChangedUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private var lastDownloadCompleteUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
@@ -275,13 +102,100 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
         
-        //        registerReusableViews()
-        //        bindToViewModel()
+        /// SEARCH
+        
+        resultsTableController = ResultsTableController()
+        resultsTableController.tableView.delegate = self
+        searchController = UISearchController(searchResultsController: resultsTableController)
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self // Monitor when the search button is tapped.
+        searchController.searchBar.autocapitalizationType = .none
+        //        searchController.dimsBackgroundDuringPresentation = true // The default is true.
+        searchController.delegate = self
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
+        // have view model capture uisearchbar keyboard events
+        // for filter use case
+        searchController.searchBar.rx.text
+            .orEmpty
+            .distinctUntilChanged()
+            .debug()
+            .bind(to: viewModel.filterText)
+            .disposed(by: bag)
+        
+        // capture back the filterText to view controller
+        // (may not need this)
+        viewModel.filterText
+            .observeOn(MainScheduler.instance)
+            .subscribe { [unowned self] filterText in
+                DDLogDebug("filterText: \(filterText)")
+                if let text: String = filterText.element {
+                    self.filterText = text
+                }
+            }
+            .disposed(by: bag)
+        
+        // capture search button tap event
+        searchController.searchBar.rx
+            .searchButtonClicked
+            .debug()
+            .subscribe(onNext: { [unowned self] _ in
+                if let searchText: String = self.searchController.searchBar.text {
+                    self.viewModel.searchText.value = searchText
+                }
+            })
+            .disposed(by: bag)
+        
+        // observe changes on the searchedSections and refresh
+        // search results if there are
+        viewModel.searchedSections
+            .asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] sections in
+                self.viewModelSearchSections = sections
+                self.resultsTableController.viewModelSearchSections = sections
+                self.resultsTableController.tableView.reloadData()
+            }.disposed(by: bag)
+        
+        
         reactToViewModel()
         bindPlaybackViewModel()
         bindDownloadListingViewModel()
         
     }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        // https://stackoverflow.com/a/49033096
+        
+        /** Search presents a view controller by applying normal view controller presentation semantics.
+         This means that the presentation moves up the view controller hierarchy until it finds the root
+         view controller or one that defines a presentation context.
+         */
+        
+        /** Specify that this view controller determines how the search controller is presented.
+         The search controller should be presented modally and match the physical size of this view controller.
+         */
+        definesPresentationContext = true
+
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Restore the searchController's active state.
+        if restoredState.wasActive {
+            searchController.isActive = restoredState.wasActive
+            restoredState.wasActive = false
+            
+            if restoredState.wasFirstResponder {
+                searchController.searchBar.becomeFirstResponder()
+                restoredState.wasFirstResponder = false
+            }
+        }
+    }
+
+    
     deinit {
         // Remove all KVO and notification observers.
         let notificationCenter = NotificationCenter.default
@@ -374,8 +288,10 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 
                 if let previousSelectedPlayable: Playable = self.previousSelectedPlayable.value,
                     let indexPath: IndexPath = self.indexOfPlayableInViewModel(playable: previousSelectedPlayable) {
-                    UIView.performWithoutAnimation {
-                        self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                    if indexPath.row >= 0 {
+                        UIView.performWithoutAnimation {
+                            self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                        }
                     }
                 }
             }
@@ -396,10 +312,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 
                 if let selected: Playable = self.selectedPlayable.value,
                     let indexPath: IndexPath = self.indexOfPlayableInViewModel(playable: selected) {
+                    if indexPath.row >= 0 {
                         UIView.performWithoutAnimation {
                             self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
                         }
                     }
+                }
             }
             .disposed(by: bag)
         
@@ -437,10 +355,11 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     // remove it from downloadedItems
                     self.downloadedItems[uuid] = nil
                     
-                    UIView.performWithoutAnimation {
-                        self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                    if indexPath.row >= 0 {
+                        UIView.performWithoutAnimation {
+                            self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                        }
                     }
-                    
                 }
             }
             .disposed(by: bag)
@@ -463,37 +382,36 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         collectionView.register(cellType: DeviceGroupSelectionCell.self)
     }
     
-    //    private func bindToViewModel() {
-    //        collectionView.rx.setDelegate(self).disposed(by: bag)
-    //        viewModel.sections.asObservable()
-    //            .bind(to: collectionView.rx.items(dataSource: rxDataSource()))
-    //            .disposed(by: bag)
-    //
-    //        collectionView.rx.itemSelected.asObservable()
-    //            .subscribe(viewModel.selectItemEvent.asObserver())
-    //            .disposed(by: bag)
-    //    }
-    
     // returns -1 on not found
     private func indexOfFileDownloadInViewModel(fileDownload: FileDownload) -> IndexPath {
         // try to find the indexPath of the media item and update
         // the progressevent with the indexPath so we can reload
         // a single row in the collectionView and avoid scrolling issues
         
+        var index: Int = -1
+        var indexPath: IndexPath = IndexPath(row: index, section: 0)
+        
         // assume section 0
-        let items: [MediaListingItemType] = viewModelSections[0].items
-        let index: Int = items.firstIndex(where: { item in
-            switch item {
-            case let .drillIn(enumPlayable, _, _, _, _, _):
-                switch enumPlayable {
+        
+        if viewModelSections.count > 0 {
+            let items: [MediaListingItemType] = viewModelSections[0].items
+            if items.count > 0 {
+                index = items.firstIndex(where: { item in
+                    switch item {
+                    case let .drillIn(enumPlayable, _, _, _, _, _):
+                        switch enumPlayable {
+                            
+                        case .playable(let item):
+                            return item.uuid == fileDownload.playableUuid
+                        }
+                    }
                     
-                case .playable(let item):
-                    return item.uuid == fileDownload.playableUuid
-                }
+                }) ?? -1
             }
-            
-        }) ?? -1
-        return IndexPath(row: index, section: 0)
+        }
+        
+        indexPath = IndexPath(row: index, section: 0)
+        return indexPath
     }
 
     // returns -1 on not found
@@ -502,20 +420,29 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         // the progressevent with the indexPath so we can reload
         // a single row in the collectionView and avoid scrolling issues
         
+        var index: Int = -1
+        var indexPath: IndexPath = IndexPath(row: index, section: 0)
+        
         // assume section 0
-        let items: [MediaListingItemType] = viewModelSections[0].items
-        let index: Int = items.firstIndex(where: { item in
-            switch item {
-            case let .drillIn(enumPlayable, _, _, _, _, _):
-                switch enumPlayable {
+        
+        if viewModelSections.count > 0 {
+            let items: [MediaListingItemType] = viewModelSections[0].items
+            if items.count > 0 {
+                index = items.firstIndex(where: { item in
+                    switch item {
+                    case let .drillIn(enumPlayable, _, _, _, _, _):
+                        switch enumPlayable {
+                            
+                        case .playable(let item):
+                            return item.uuid == playable.uuid
+                        }
+                    }
                     
-                case .playable(let item):
-                    return item.uuid == playable.uuid
-                }
+                }) ?? -1
             }
-            
-        }) ?? -1
-        return IndexPath(row: index, section: 0)
+        }
+        indexPath = IndexPath(row: index, section: 0)
+        return indexPath
     }
 
     // MARK: MediaItemCell notifications
@@ -712,14 +639,16 @@ extension MediaListingViewController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         //        DDLogDebug("scrollViewDidEndDecelerating scrollView: \(scrollView)")
         
-        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-        //        DDLogDebug("offset diff: \(offsetDiff)")
-        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
-        //        if scrollView.contentSize.height - scrollView.contentOffset.y <
-        
-        if offsetDiff - collectionView.frame.size.height <= 20.0 {
-            DDLogDebug("fetch!")
-            viewModel.fetchMoreMedia()
+        if collectionView == scrollView {
+            let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+            //        DDLogDebug("offset diff: \(offsetDiff)")
+            DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+            //        if scrollView.contentSize.height - scrollView.contentOffset.y <
+            
+            if offsetDiff - collectionView.frame.size.height <= 20.0 {
+                DDLogDebug("fetch!")
+                viewModel.fetchMoreMedia()
+            }
         }
     }
 }
@@ -861,4 +790,104 @@ extension MediaListingViewController {
         
 
     }
+}
+
+extension MediaListingViewController: UISearchControllerDelegate {
+    public func willPresentSearchController(_ searchController: UISearchController) {
+        DDLogDebug("searchController: \(String(describing: searchController))")
+    }
+
+    public func didPresentSearchController(_ searchController: UISearchController) {
+        DispatchQueue.main.async {
+            searchController.searchBar.becomeFirstResponder()
+        }
+    }
+}
+
+extension MediaListingViewController: UISearchBarDelegate {
+    
+    public override func resignFirstResponder() -> Bool {
+        return true
+    }
+    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        DDLogDebug("searchBar: \(String(describing: searchBar.text))")
+        searchBar.resignFirstResponder()
+    }
+    
+    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(true, animated: true)
+        
+        return true
+    }
+    
+    public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        
+        searchBar.setShowsCancelButton(false, animated: true)
+        return true
+//        var textHasChars: Bool = false
+//
+//        if let filterText: String = self.filterText {
+//            textHasChars = (filterText.count) > 0
+//        }
+//        return !textHasChars
+    }
+    
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        
+    }
+}
+
+extension MediaListingViewController: UISearchResultsUpdating {
+    public func updateSearchResults(for searchController: UISearchController) {
+        DDLogDebug("searchController: \(String(describing: searchController))")
+    }
+}
+
+// MARK: - UIStateRestoration
+
+extension MediaListingViewController {
+    override public func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        
+        // Encode the view state so it can be restored later.
+        
+        // Encode the title.
+        coder.encode(navigationItem.title!, forKey: RestorationKeys.viewControllerTitle.rawValue)
+        
+        // Encode the search controller's active state.
+        coder.encode(searchController.isActive, forKey: RestorationKeys.searchControllerIsActive.rawValue)
+        
+        // Encode the first responser status.
+        coder.encode(searchController.searchBar.isFirstResponder, forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
+        
+        // Encode the search bar text.
+        coder.encode(searchController.searchBar.text, forKey: RestorationKeys.searchBarText.rawValue)
+    }
+    
+    override public func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        
+        // Restore the title.
+        guard let decodedTitle = coder.decodeObject(forKey: RestorationKeys.viewControllerTitle.rawValue) as? String else {
+            fatalError("A title did not exist. In your app, handle this gracefully.")
+        }
+        navigationItem.title! = decodedTitle
+        
+        /** Restore the active state:
+         We can't make the searchController active here since it's not part of the view
+         hierarchy yet, instead we do it in viewWillAppear.
+         */
+        restoredState.wasActive = coder.decodeBool(forKey: RestorationKeys.searchControllerIsActive.rawValue)
+        
+        /** Restore the first responder status:
+         Like above, we can't make the searchController first responder here since it's not part of the view
+         hierarchy yet, instead we do it in viewWillAppear.
+         */
+        restoredState.wasFirstResponder = coder.decodeBool(forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
+        
+        // Restore the text in the search field.
+        searchController.searchBar.text = coder.decodeObject(forKey: RestorationKeys.searchBarText.rawValue) as? String
+    }
+    
 }

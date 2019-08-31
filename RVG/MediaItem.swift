@@ -18,6 +18,7 @@ public struct MediaItem: Codable, Playable {
     public var medThumbnailPath: String?
     public var mediaCategory: String
     public var medium: String
+    public var multilanguage: Bool
     public var ordinal: Int?
     public var path: String?
     public var playlistUuid: String
@@ -180,6 +181,7 @@ extension MediaItem {
         static let mediaCategory = Column("mediaCategory")
         static let medium = Column("medium")
         static let medThumbnailPath = Column("medThumbnailPath")
+        static let multilanguage = Column("multilanguage")
         static let ordinal = Column("ordinal")
         static let path = Column("path")
         static let playlistUuid = Column("playlistUuid")

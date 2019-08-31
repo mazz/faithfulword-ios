@@ -43,6 +43,10 @@ internal final class AppDependencyModule {
             return ProductService(dataService: resolver.resolve(DataService.self)!)
             }.inObjectScope(.container)
 
+        container.register(SearchServicing.self) { resolver in
+            return SearchService(dataService: resolver.resolve(DataService.self)!)
+            }.inObjectScope(.container)
+
         container.register(LanguageServicing.self) { resolver in
             return LanguageService(dataService: resolver.resolve(DataService.self)!)
             }.inObjectScope(.container)
@@ -247,6 +251,7 @@ internal final class AppDependencyModule {
                 playlistUuid: playlistId,
                 mediaType: mediaType,
                 productService: resolver.resolve(ProductServicing.self)!,
+                searchService: resolver.resolve(SearchServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
 //                assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!,

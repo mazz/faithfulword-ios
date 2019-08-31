@@ -8,6 +8,7 @@ public protocol Playable {
     var largeThumbnailPath : String? { get set }
     var mediaCategory: String { get set }
     var medThumbnailPath : String? { get set }
+    var multilanguage: Bool { get set }
     var path: String? { get set }
     var presenterName: String? { get set }
     var playlistUuid: String { get set }

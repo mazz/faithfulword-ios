@@ -182,6 +182,7 @@ public final class DataStore {
                     mediaItemTable.column("mediaCategory", .text)
                     mediaItemTable.column("medium", .text)
                     mediaItemTable.column("medThumbnailPath", .text)
+                    mediaItemTable.column("multilanguage", .boolean)
                     mediaItemTable.column("ordinal", .integer)
                     mediaItemTable.column("path", .text)
                     mediaItemTable.column("playlistUuid", .text).references("playlist", onDelete: .cascade)
@@ -272,6 +273,7 @@ public final class DataStore {
                     chapterTable.column("updatedAt", .double)
                     chapterTable.column("largeThumbnailPath", .text)
                     chapterTable.column("smallThumbnailPath", .text)
+                    chapterTable.column("multilanguage", .boolean)
                     chapterTable.column("categoryUuid", .text).references("book", onDelete: .cascade)
                 }
             }
@@ -308,6 +310,7 @@ public final class DataStore {
                     gospelTable.column("updatedAt", .double)
                     gospelTable.column("largeThumbnailPath", .text)
                     gospelTable.column("smallThumbnailPath", .text)
+                    gospelTable.column("multilanguage", .boolean)
                     gospelTable.column("categoryUuid", .text).references("gospel", onDelete: .cascade)
                 }
             }
@@ -344,6 +347,7 @@ public final class DataStore {
                     musicTable.column("updatedAt", .double)
                     musicTable.column("largeThumbnailPath", .text)
                     musicTable.column("smallThumbnailPath", .text)
+                    musicTable.column("multilanguage", .boolean)
                     musicTable.column("categoryUuid", .text).references("music", onDelete: .cascade)
                 }
             }
@@ -382,6 +386,7 @@ public final class DataStore {
                     userActionPlayableTable.column("localizedname", .text)
                     userActionPlayableTable.column("mediaCategory", .text)
                     userActionPlayableTable.column("medThumbnailPath", .text)
+                    userActionPlayableTable.column("multilanguage", .boolean)
                     userActionPlayableTable.column("path", .text)
                     userActionPlayableTable.column("playlistUuid", .text)
                     userActionPlayableTable.column("presenterName", .text)
@@ -1439,6 +1444,7 @@ extension DataStore: DataStoring {
                                                    largeThumbnailPath: playable.largeThumbnailPath ?? nil,
                                                    localizedname: playable.localizedname,
                                                    mediaCategory: playable.mediaCategory,
+                                                   multilanguage: playable.multilanguage,
                                                    path: playablePath,
                                                    playlistUuid: playable.playlistUuid,
                                                    presenterName: playable.presenterName ?? nil,

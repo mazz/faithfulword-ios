@@ -17,6 +17,25 @@ internal final class MediaListingViewModel {
         return section(at: indexPath.section).items[indexPath.item]
     }
 
+    public var filterText: PublishSubject<String> = PublishSubject<String>()
+    public var filterTextObservable: Observable<String> {
+        return filterText.asObservable()
+    }
+    
+    public var searchText: Field<String> = Field<String>("")
+
+//    public var searchValue: Field<String> = Field<String>("")
+//    var searchValueObservable: Observable<String> {
+//        return searchValue.asObservable()
+//    }
+
+    // media filtered by search bar
+    
+    // media loaded on search fetch
+    public private(set) var searchedMedia = Field<[Playable]>([])
+    public private(set) var searchedSections = Field<[MediaListingSectionViewModel]>([])
+
+    // media loaded on initial fetch
     public private(set) var media = Field<[Playable]>([])
     public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
@@ -83,6 +102,7 @@ internal final class MediaListingViewModel {
     public let playlistUuid: String!
     private let mediaType: MediaType!
     private let productService: ProductServicing!
+    private let searchService: SearchServicing!
     private let assetPlaybackService: AssetPlaybackServicing!
     private let reachability: RxClassicReachable!
 
@@ -104,6 +124,7 @@ internal final class MediaListingViewModel {
     internal init(playlistUuid: String,
                   mediaType: MediaType,
                   productService: ProductServicing,
+                  searchService: SearchServicing,
                   assetPlaybackService: AssetPlaybackServicing,
                   reachability: RxClassicReachable)
 //        assetPlaybackManager: AssetPlaybackManager,
@@ -112,6 +133,7 @@ internal final class MediaListingViewModel {
         self.playlistUuid = playlistUuid
         self.mediaType = mediaType
         self.productService = productService
+        self.searchService = searchService
         self.reachability = reachability
         self.assetPlaybackService = assetPlaybackService
         
@@ -119,11 +141,37 @@ internal final class MediaListingViewModel {
 //        self.remoteCommandManager = remoteCommandManager
 
         setupDatasource()
+        
+        // detect when user does a search and taps the search button
+        searchText.asObservable()
+            .filter({ $0.count > 0 })
+            .subscribe(onNext: { [unowned self] searchText in
+                DDLogDebug("searchText: \(searchText)")
+                self.searchService.searchMediaItems(query: searchText,
+                                                    mediaCategory: nil,
+                                                    playlistUuid: self.playlistUuid,
+                                                    channelUuid: nil,
+                                                    publishedAfter: nil,
+                                                    updatedAfter: nil,
+                                                    presentedAfter: nil,
+                                                    offset: 1,
+                                                    limit: 10000000000000,
+                                                    cacheDirective: .fetchAndAppend)
+                    .subscribe(onSuccess: { mediaItemResponse, mediaItems in
+                        DDLogDebug("search media items: \(mediaItems)")
+                        self.searchedMedia.value = mediaItems
+                    }, onError: { error in
+                        DDLogError("search media items error: \(error)")
+                    })
+                    .disposed(by: self.bag)
+            })
+            .disposed(by: bag)
     }
 
     private func setupDatasource() {
         reactToReachability()
         
+        // do fetch when network reachability is detected
         networkStatus.asObservable()
 //            .observeOn(MainScheduler.instance)
             .map({ status -> String in
@@ -147,6 +195,38 @@ internal final class MediaListingViewModel {
                 self.initialFetch()
         }.disposed(by: self.bag)
 
+        // setup searchedMedia sections
+        self.searchedMedia.asObservable()
+            .map { $0.map {
+                let icon: String!
+                
+                switch self.mediaType {
+                case .audioChapter?:
+                    icon = "chapter"
+                    //                case .audioSermon?:
+                //                    icon = "feet"
+                case .audioGospel?:
+                    icon = "double_feetprint_icon_white"
+                case .audioMusic?:
+                    icon = "disc_icon_white"
+                default:
+                    icon = "feet"
+                }
+                
+                var presenter: String = "Unknown Presenter"
+                if let presenterName: String = $0.presenterName {
+                    presenter = presenterName
+                }
+                
+                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true, showAmountDownloaded: false) }
+            }
+            .next { [unowned self] names in
+                self.searchedSections.value = [
+                    MediaListingSectionViewModel(type: .media, items: names)
+                ]
+            }.disposed(by: bag)
+        
+        // setup media sections
         self.media.asObservable()
             .map { $0.map {
                 let icon: String!

@@ -32,6 +32,7 @@ public struct MediaChapter: Codable, Playable {
     public var medThumbnailPath: String?
     public var mediaCategory: String
     public var medium: String
+    public var multilanguage: Bool
     public var ordinal: Int?
     public var path: String?
     public var playlistUuid: String
@@ -63,6 +64,7 @@ extension MediaChapter {
         static let updatedAt = Column("updatedAt")
         static let largeThumbnailPath = Column("largeThumbnailPath")
         static let smallThumbnailPath = Column("smallThumbnailPath")
+        static let multilanguage = Column("multilanguage")
     }
 }
 
