@@ -33,7 +33,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     internal var searchViewModel: MediaSearchViewModel!
     internal var playbackViewModel: PlaybackControlsViewModel!
     internal var downloadListingViewModel: DownloadListingViewModel!
-    
+    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
+
     // MARK: Fields
     
     internal var viewModelSections: [MediaListingSectionViewModel] = []
@@ -64,6 +65,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     private var searchController: UISearchController = UISearchController(searchResultsController: nil)
     /// Secondary search results table view.
     internal var resultsTableController: ResultsTableController!
+//    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
     /// Restoration state for UISearchController
     private var restoredState = SearchControllerRestorableState()
 
@@ -106,8 +108,18 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         /// SEARCH
         
         resultsTableController = ResultsTableController()
-        resultsTableController.tableView.delegate = self
-        searchController = UISearchController(searchResultsController: resultsTableController)
+        
+//        let dependencyModule = AppDependencyModule()
+//
+//        let uiFactory = dependencyModule.resolver.resolve(UIFactory.self)!
+//        let mediaSearchResultsViewController: MediaSearchResultsViewController = uiFactory.makeMediaSearching(playlistId: viewModel.playlistUuid, mediaCategory: viewModel.mediaCategory)
+
+        
+        
+//        resultsTableController.tableView.delegate = self
+//        searchController = UISearchController(searchResultsController: resultsTableController)
+        
+        searchController = UISearchController(searchResultsController: mediaSearchResultsViewController)
         searchController.searchResultsUpdater = self
         searchController.searchBar.delegate = self // Monitor when the search button is tapped.
         searchController.searchBar.autocapitalizationType = .none
@@ -119,24 +131,24 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         
         // have view model capture uisearchbar keyboard events
         // for filter use case
-        searchController.searchBar.rx.text
-            .orEmpty
-            .distinctUntilChanged()
-            .debug()
-            .bind(to: viewModel.filterText)
-            .disposed(by: bag)
+//        searchController.searchBar.rx.text
+//            .orEmpty
+//            .distinctUntilChanged()
+//            .debug()
+//            .bind(to: viewModel.filterText)
+//            .disposed(by: bag)
         
         // capture back the filterText to view controller
         // (may not need this)
-        viewModel.filterText
-            .observeOn(MainScheduler.instance)
-            .subscribe { [unowned self] filterText in
-                DDLogDebug("filterText: \(filterText)")
-                if let text: String = filterText.element {
-                    self.filterText = text
-                }
-            }
-            .disposed(by: bag)
+//        viewModel.filterText
+//            .observeOn(MainScheduler.instance)
+//            .subscribe { [unowned self] filterText in
+//                DDLogDebug("filterText: \(filterText)")
+//                if let text: String = filterText.element {
+//                    self.filterText = text
+//                }
+//            }
+//            .disposed(by: bag)
         
         // capture search button tap event
         searchController.searchBar.rx
@@ -144,22 +156,32 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .debug()
             .subscribe(onNext: { [unowned self] _ in
                 if let searchText: String = self.searchController.searchBar.text {
-                    self.viewModel.searchText.value = searchText
+//                    self.viewModel.searchText.value = searchText
+                    self.mediaSearchResultsViewController.viewModel.searchText.value = searchText
                 }
             })
             .disposed(by: bag)
         
         // observe changes on the searchedSections and refresh
         // search results if there are
-        viewModel.searchedSections
-            .asObservable()
-            .observeOn(MainScheduler.instance)
-            .next { [unowned self] sections in
-                self.viewModelSearchSections = sections
-                self.resultsTableController.viewModelSearchSections = sections
-                self.resultsTableController.tableView.reloadData()
-            }.disposed(by: bag)
-        
+//        viewModel.searchedSections
+//            .asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .next { [unowned self] sections in
+//                self.viewModelSearchSections = sections
+//                self.resultsTableController.viewModelSearchSections = sections
+//                self.resultsTableController.tableView.reloadData()
+//            }.disposed(by: bag)
+
+//        mediaSearchResultsViewController.viewModel.sections
+//            .asObservable()
+//            .observeOn(MainScheduler.instance)
+//            .next { [unowned self] sections in
+////                self.viewModelSearchSections = sections
+//                self.mediaSearchResultsViewController.viewModelSections = sections
+////                self.mediaSearchResultsViewController.collectionView.reloadData()
+//            }.disposed(by: bag)
+
         
         reactToViewModel()
         bindPlaybackViewModel()

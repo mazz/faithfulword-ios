@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="u2c-Xc-3MG" customClass="MediaItemSearchResultsCell" customModule="Faithful_Word" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tLc-fm-MH0">
+                        <rect key="frame" x="15" y="15" width="266" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QMh-UH-Wga">
+                        <rect key="frame" x="15" y="35" width="266" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gaW-av-pK1" userLabel="Separator View">
+                        <rect key="frame" x="0.0" y="65" width="320" height="1"/>
+                        <color key="backgroundColor" red="0.89411764709999997" green="0.89411764709999997" blue="0.89411764709999997" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="WVT-SC-chK"/>
+                        </constraints>
+                    </view>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icRightChevron" translatesAutoresizingMaskIntoConstraints="NO" id="DgK-e7-uJJ" userLabel="rightChevron">
+                        <rect key="frame" x="289" y="24.5" width="11" height="17"/>
+                        <accessibility key="accessibilityConfiguration" identifier="rightChevron">
+                            <accessibilityTraits key="traits" link="YES" image="YES"/>
+                            <bool key="isElement" value="YES"/>
+                        </accessibility>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="17" id="VdX-dk-OQt"/>
+                            <constraint firstAttribute="width" constant="11" id="l8S-lf-3Rz"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="tLc-fm-MH0" firstAttribute="top" secondItem="u2c-Xc-3MG" secondAttribute="top" constant="15" id="0wh-uF-OXd"/>
+                <constraint firstItem="gaW-av-pK1" firstAttribute="top" secondItem="QMh-UH-Wga" secondAttribute="bottom" constant="14" id="3qU-5t-SwG"/>
+                <constraint firstItem="gaW-av-pK1" firstAttribute="leading" secondItem="u2c-Xc-3MG" secondAttribute="leading" id="9k1-nk-5ed"/>
+                <constraint firstItem="DgK-e7-uJJ" firstAttribute="centerY" secondItem="u2c-Xc-3MG" secondAttribute="centerY" id="BCG-Rl-pJm"/>
+                <constraint firstItem="DgK-e7-uJJ" firstAttribute="leading" secondItem="tLc-fm-MH0" secondAttribute="trailing" constant="8" id="Gcd-XC-iT2"/>
+                <constraint firstAttribute="bottom" secondItem="gaW-av-pK1" secondAttribute="bottom" id="Gor-l9-hu0"/>
+                <constraint firstItem="QMh-UH-Wga" firstAttribute="top" secondItem="tLc-fm-MH0" secondAttribute="bottom" constant="2" id="Raa-GY-Icm"/>
+                <constraint firstItem="QMh-UH-Wga" firstAttribute="leading" secondItem="8v1-9b-j1S" secondAttribute="leading" constant="15" id="Xfx-Lh-Oks"/>
+                <constraint firstItem="tLc-fm-MH0" firstAttribute="leading" secondItem="8v1-9b-j1S" secondAttribute="leading" constant="15" id="baf-5X-Igf"/>
+                <constraint firstItem="DgK-e7-uJJ" firstAttribute="leading" secondItem="QMh-UH-Wga" secondAttribute="trailing" constant="8" id="stI-k2-E68"/>
+                <constraint firstAttribute="trailing" secondItem="gaW-av-pK1" secondAttribute="trailing" id="uUx-WT-1xy"/>
+                <constraint firstAttribute="trailing" secondItem="DgK-e7-uJJ" secondAttribute="trailing" constant="20" id="yo0-tZ-vmT"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="8v1-9b-j1S"/>
+            <size key="customSize" width="240" height="32"/>
+            <connections>
+                <outlet property="presenterLabel" destination="QMh-UH-Wga" id="k4p-eb-PFH"/>
+                <outlet property="separatorView" destination="gaW-av-pK1" id="7rg-Zv-OX1"/>
+                <outlet property="titleLabel" destination="tLc-fm-MH0" id="vfb-cN-asp"/>
+            </connections>
+            <point key="canvasLocation" x="100.00000000000001" y="217.29910714285714"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="icRightChevron" width="11" height="17"/>
+    </resources>
+</document>

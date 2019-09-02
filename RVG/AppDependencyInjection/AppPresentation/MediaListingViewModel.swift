@@ -100,7 +100,7 @@ internal final class MediaListingViewModel {
 
     // MARK: Dependencies
     public let playlistUuid: String!
-    private let mediaCategory: MediaCategory!
+    public let mediaCategory: MediaCategory!
     private let productService: ProductServicing!
     private let searchService: SearchServicing!
     private let assetPlaybackService: AssetPlaybackServicing!

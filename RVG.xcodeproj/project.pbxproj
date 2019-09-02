@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C01A261231CAD7000617FEC /* MediaItemSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C01A25F231CAD6E00617FEC /* MediaItemSearchResults.swift */; };
+		4C01A262231CAD7000617FEC /* MediaItemSearchResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */; };
 		4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */; };
 		4C0F4871202542FA00A8904F /* CategoryListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */; };
 		4C0F48732025709F00A8904F /* CategoryListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F48722025709F00A8904F /* CategoryListingViewController.swift */; };
@@ -229,6 +231,8 @@
 		0B104C10C7CBFD5DB559A79C /* Pods_FWBC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWBC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31FBCBA5FBCC8AC60858E650 /* Pods-FWBC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWBC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FWBC/Pods-FWBC.debug.xcconfig"; sourceTree = "<group>"; };
 		3ABF96665E8996F5FF3CADC0 /* Pods_RVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C01A25F231CAD6E00617FEC /* MediaItemSearchResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaItemSearchResults.swift; sourceTree = "<group>"; };
+		4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaItemSearchResultsCell.xib; sourceTree = "<group>"; };
 		4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingCoordinator.swift; sourceTree = "<group>"; };
 		4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4C0F48722025709F00A8904F /* CategoryListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingViewController.swift; sourceTree = "<group>"; };
@@ -656,6 +660,8 @@
 				4C3EA134206A716400310024 /* Playback */,
 				4C78CECF22876D22006FB8CB /* MediaItemCell.xib */,
 				4C78CED122876D5F006FB8CB /* MediaItemCell.swift */,
+				4C01A25F231CAD6E00617FEC /* MediaItemSearchResults.swift */,
+				4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */,
 				4C596251229E1E5E00947F73 /* PlaylistCollectionViewCell.swift */,
 				4C596252229E1E5E00947F73 /* PlaylistCollectionViewCell.xib */,
 			);
@@ -1088,6 +1094,7 @@
 				4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */,
 				70CD20691E6479A800AF619F /* Assets.xcassets in Resources */,
 				70CD20671E6479A800AF619F /* Main.storyboard in Resources */,
+				4C01A262231CAD7000617FEC /* MediaItemSearchResultsCell.xib in Resources */,
 				4C5D60F720A51A5E00ED9958 /* 1sec.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1399,6 +1406,7 @@
 				4C999C33215F160E002EF2F4 /* AssetPlaybackManager.swift in Sources */,
 				4CE05604231ABE3C0057BB2F /* MediaSearchViewModel.swift in Sources */,
 				4C78CEC4227F6771006FB8CB /* FwbcApiService.swift in Sources */,
+				4C01A261231CAD7000617FEC /* MediaItemSearchResults.swift in Sources */,
 				4CE056002319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

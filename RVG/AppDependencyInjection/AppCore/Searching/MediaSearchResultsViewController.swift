@@ -18,7 +18,7 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
         let layout = MagazineLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
 //        collectionView.register(UINib(nibName: "SearchResultsCell", bundle: nil), forCellWithReuseIdentifier: SearchResultsCell.description())
-        collectionView.register(UINib(nibName: "MediaItemCell", bundle: nil), forCellWithReuseIdentifier: MediaItemCell.description())
+        collectionView.register(UINib(nibName: "MediaItemSearchResultsCell", bundle: nil), forCellWithReuseIdentifier: MediaItemSearchResultsCell.description())
 
         collectionView.isPrefetchingEnabled = false
         collectionView.dataSource = self
@@ -39,6 +39,8 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
     internal var viewModelSections: [MediaListingSectionViewModel] = []
 
 //    internal var searchViewModel: MediaSearchViewModel!
+
+    private let bag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,8 +63,45 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
 //        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
+        
+        reactToViewModel()
     }
 
+    
+    // MARK: Private helpers
+    
+    private func reactToViewModel() {
+        viewModel.searchedSections.asObservable()
+            .observeOn(MainScheduler.instance)
+//            .filter{ $0[0].items.count > 0 }
+            .next { [unowned self] sections in
+                // first time loading sections
+//                if self.itemsUpdatedAtLeastOnce == false {
+                    self.viewModelSections = sections
+                    self.collectionView.reloadData()
+//                    self.itemsUpdatedAtLeastOnce = true
+//                }
+//                else {
+//                    let currentItemsCount: Int = self.viewModelSections[0].items.count
+//                    let appendCount: Int = sections[0].items.count - currentItemsCount
+//                    let newItems = Array(sections[0].items.suffix(appendCount))
+//                    DDLogDebug("newItems.count: \(newItems.count)")
+//
+//                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
+//                    DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
+//                    self.viewModelSections = sections
+//
+//                    DispatchQueue.main.async {
+//                        self.collectionView.performBatchUpdates({
+//                            self.collectionView.insertItems(at: insertIndexPaths)
+//                        }, completion: { result in
+//                            self.collectionView.reloadData()
+//                        })
+//                    }
+//                }
+            }.disposed(by: bag)
+        
+    }
     /*
     // MARK: - Navigation
 
@@ -178,7 +217,7 @@ extension MediaSearchResultsViewController: UICollectionViewDelegate {
     //
     //        switch item {
     //        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
-    //            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
+    //            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemSearchResultsCell.description(), for: indexPath) as! MediaItemSearchResultsCell
     //            switch enumPlayable {
     //
     //            case .playable(let item):
@@ -203,7 +242,7 @@ extension MediaSearchResultsViewController: UICollectionViewDelegate {
         
         switch item {
         case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
-            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
+            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemSearchResultsCell.description(), for: indexPath) as! MediaItemSearchResultsCell
             switch enumPlayable {
                 
             case .playable(let item):

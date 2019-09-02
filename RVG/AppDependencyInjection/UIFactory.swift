@@ -25,12 +25,7 @@ internal protocol AppUIMaking {
     func makePopupPlayer() -> PopupContentController
 }
 
-/// Protocol facade for factory making all settings related UI.
-internal protocol SettingsUIMaking {
-    //    func makeSettings() -> SettingsViewController
-}
-
-/// The king of UI creation in GoseMobileSample app.
+/// The king of UI creation in the app.
 /// Having a single factory fronted by facades avoids circular-dependency problems that often arise with multiple
 /// factories.  This is because the nature of interactions between screens are not hierarchical in general, and
 /// sometimes inverts at different points in the app.
@@ -80,6 +75,12 @@ extension UIFactory: AppUIMaking {
         mediaListingViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
 //        mediaListingViewController.downloadingService = resolver.resolve(DownloadService.self)
         mediaListingViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
+
+        
+        let mediaSearchResultsViewController = MediaSearchResultsViewController.make(storyboardName: StoryboardName.mediaSearching)
+        mediaSearchResultsViewController.viewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
+        
+        mediaListingViewController.mediaSearchResultsViewController = mediaSearchResultsViewController
 
         //        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
         return mediaListingViewController
@@ -158,15 +159,3 @@ extension UIFactory: AppUIMaking {
             .make(storyboardName: StoryboardName.splashScreen)
     }
 }
-
-// MARK: <SettingsUIMaking>
-//extension UIFactory: SettingsUIMaking {
-//    internal func makeSettings() -> SettingsViewController {
-//        let controller =  SettingsViewController
-//            .make(storyboardName: StoryboardName.settings)
-//        controller.viewModel = resolver
-//            .resolve(SettingsViewModel.self)
-//        return controller
-//    }
-//}
-

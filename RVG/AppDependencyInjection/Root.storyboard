@@ -247,7 +247,7 @@
         <!--Media Search Results View Controller-->
         <scene sceneID="8Kd-OH-5GB">
             <objects>
-                <viewController id="Ici-R1-t8f" customClass="MediaSearchResultsViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MediaSearchResultsViewController" id="Ici-R1-t8f" customClass="MediaSearchResultsViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EuN-xO-m0K">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

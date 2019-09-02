@@ -7,6 +7,7 @@ struct StoryboardName {
     static let sideMenu = "SideMenu"
     static let bibleLanguage = "SideMenu"
     static let mediaListing = "Root"
+    static let mediaSearching = "Root"
     static let categoryListing = "Root"
     static let playback = "Playback"
     static let popupPlayer = "Playback"
