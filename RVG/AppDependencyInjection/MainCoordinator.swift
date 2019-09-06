@@ -403,8 +403,8 @@ extension MainCoordinator {
                     self.goToExternalWebBrowser(url: NSURL(
                         string: "https://www.faithfulwordapp.com/")!
                         as URL)
-                case .share:
-                    DDLogDebug(".share")
+                case .history:
+                    DDLogDebug(".history")
                 case .setBibleLanguage:
                     DDLogDebug(".setBibleLanguage")
                     self.goToBibleLanguageFlow()

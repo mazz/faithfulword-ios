@@ -71,13 +71,13 @@ class OriginViewController: UIViewController, MFMailComposeViewControllerDelegat
             // if we never checked for push notifications opt-in yet, OR it's been at least a week since we last checked AND today is Saturday
             if lastPushNotificationCheck == nil || ((Date().timeIntervalSince1970 - (lastPushNotificationCheck?.timeIntervalSince1970)!) >  OriginViewController.secondsInAWeek && dayNumberOfWeek == OriginViewController.saturday) {
                 if !isRegisteredForRemoteNotifications {
-                    let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),
-                                                  message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: ""),
+                    let alert = UIAlertController(title: NSLocalizedString("Notifications", comment: ""),.l10n()
+                                                  message: NSLocalizedString("Keep up with new sermons and content regularly!", comment: "").l10n(),
                                                   preferredStyle: .alert)
-                    let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: ""), style: .cancel, handler: { (action) -> Void in
+                    let laterAction = UIAlertAction(title: NSLocalizedString("Later", comment: "").l10n(), style: .cancel, handler: { (action) -> Void in
                         UserDefaults.standard.set(Date(), forKey: OriginViewController.lastPushNotificationCheck)
                     })
-                    let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: ""), style: .default, handler: { (action) -> Void in
+                    let getNotifications = UIAlertAction(title: NSLocalizedString("Get Notifications", comment: "").l10n(), style: .default, handler: { (action) -> Void in
 //                        self.optInForPushNotifications(application: UIApplication.shared)
                     })
                     
@@ -227,7 +227,7 @@ class OriginViewController: UIViewController, MFMailComposeViewControllerDelegat
     func shareTextButton() {
         
         // text to share
-        let faithfulWord = NSLocalizedString("Faithful Word", comment: "")
+        let faithfulWord = NSLocalizedString("Faithful Word", comment: "").l10n()
         
         let text = NSLocalizedString("\(faithfulWord): https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8", comment: "").l10n()
         
@@ -313,14 +313,14 @@ class OriginViewController: UIViewController, MFMailComposeViewControllerDelegat
                         DDLogDebug("amICurrent: \(amICurrent)")
                         
                         if amICurrent == false {
-                            let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: ""),
-                                                          message: NSLocalizedString("There is a new version available", comment: ""),
+                            let alert = UIAlertController(title: NSLocalizedString("Upgrade to New Version", comment: "").l10n(),
+                                                          message: NSLocalizedString("There is a new version available", comment: "").l10n(),
                                                           preferredStyle: .alert)
-                            let laterAction = UIAlertAction(title: NSLocalizedString("Upgrade Later", comment: ""), style: .cancel, handler: { (action) -> Void in
+                            let laterAction = UIAlertAction(title: NSLocalizedString("Upgrade Later", comment: "").l10n(), style: .cancel, handler: { (action) -> Void in
                                 self.didVersionCheck.onNext(true)
                             })
                             
-                            let appStore = UIAlertAction(title: NSLocalizedString("Go To App Store", comment: ""), style: .default, handler: { (action) -> Void in
+                            let appStore = UIAlertAction(title: NSLocalizedString("Go To App Store", comment: "").l10n(), style: .default, handler: { (action) -> Void in
                                 UIApplication.shared.open(URL(string: "https://itunes.apple.com/us/app/kjvrvg/id1234062829?ls=1&mt=8")!, options: [:], completionHandler: nil)
                             })
                             if amISupported == true {

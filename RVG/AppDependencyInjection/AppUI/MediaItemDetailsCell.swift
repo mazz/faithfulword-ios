@@ -86,7 +86,7 @@ final class MediaItemDetailsCell: MagazineLayoutCollectionViewCell {
             
             presentedAtLabel.text = dateFormat.string(from: presentedDate)
         } else {
-            presentedAtLabel.text = NSLocalizedString("Unknown presentation date", comment: "")
+            presentedAtLabel.text = NSLocalizedString("Unknown presentation date", comment: "").l10n()
         }
         separatorView.isHidden = !showBottomSeparator
         

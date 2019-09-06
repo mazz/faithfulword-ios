@@ -79,9 +79,9 @@ class PopupContentController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         playPauseButton = UIBarButtonItem(image: UIImage(named: "play"), style: .plain, target: self, action: #selector(PopupContentController.doPlayPause))
-        playPauseButton.accessibilityLabel = NSLocalizedString("Play", comment: "")
+        playPauseButton.accessibilityLabel = NSLocalizedString("Play", comment: "").l10n()
         nextButton = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: self, action: #selector(PopupContentController.handleUserDidPressForwardButton))
-        nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
+        nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "").l10n()
         
         popupItem.rightBarButtonItems = [ playPauseButton, nextButton ]
         
@@ -107,8 +107,8 @@ class PopupContentController: UIViewController {
                     let fullPlayImage: UIImage = UIImage(named: "nowPlaying_play"),
                     let fullPauseImage: UIImage = UIImage(named: "nowPlaying_pause") else { return }
 
-                let accessibilityPlay: String = NSLocalizedString("Play", comment: "")
-                let accessibilityPause: String = NSLocalizedString("Pause", comment: "")
+                let accessibilityPlay: String = NSLocalizedString("Play", comment: "").l10n()
+                let accessibilityPause: String = NSLocalizedString("Pause", comment: "").l10n()
                 switch playbackState {
                     
                 case .initial:
@@ -234,7 +234,7 @@ class PopupContentController: UIViewController {
             .asObservable()
             .do(onNext: { [unowned self] albumArtImage in
                 self.popupItem.image = albumArtImage
-                self.popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "")
+                self.popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "").l10n()
             })
             .filterNils()
             .bind(to: fullAlbumArtImageView.rx.image)

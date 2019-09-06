@@ -98,10 +98,10 @@ extension MediaListingCoordinator: NavigationCoordinating {
                 popupController.popupItem.image = thumbImage
                 //                popupController.albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
 //                popupController.fullAlbumArtImageView.image = thumbImage
-                popupController.popupItem.accessibilityHint = NSLocalizedString("Tap to Expand the Mini Player", comment: "")
+                popupController.popupItem.accessibilityHint = NSLocalizedString("Tap to Expand the Mini Player", comment: "").l10n()
 
                 if let navigationController = self.navigationController {
-                    navigationController.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
+                    navigationController.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "").l10n()
                     navigationController.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
                     navigationController.popupBar.imageView.layer.cornerRadius = 5
                     navigationController.presentPopupBar(withContentViewController: popupController, animated: true, completion: nil)

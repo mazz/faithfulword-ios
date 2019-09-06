@@ -695,7 +695,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
 //            case .playable(let item):
                 let detailCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemDetailsCell.description(), for: indexPath) as! MediaItemDetailsCell
                 
-                detailCell.set(playable: playable, title: playable.localizedname, presenter: playable.presenterName ?? NSLocalizedString("Unknown Presenter", comment: ""), showBottomSeparator: showBottomSeparator, showTitle: false)
+                detailCell.set(playable: playable, title: playable.localizedname, presenter: playable.presenterName ?? NSLocalizedString("Unknown Presenter", comment: "").l10n(), showBottomSeparator: showBottomSeparator, showTitle: false)
                 return detailCell
 //            }
         }
