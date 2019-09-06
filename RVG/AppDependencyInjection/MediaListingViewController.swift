@@ -64,7 +64,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     private var searchController: UISearchController = UISearchController(searchResultsController: nil)
     /// Secondary search results table view.
-    internal var resultsTableController: ResultsTableController!
+//    internal var resultsTableController: ResultsTableController!
 //    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
     /// Restoration state for UISearchController
     private var restoredState = SearchControllerRestorableState()
@@ -107,7 +107,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         
         /// SEARCH
         
-        resultsTableController = ResultsTableController()
+//        resultsTableController = ResultsTableController()
         
 //        let dependencyModule = AppDependencyModule()
 //
