@@ -259,7 +259,7 @@ internal final class AppDependencyModule {
                 playlistUuid: playlistId,
                 mediaCategory: mediaCategory,
                 productService: resolver.resolve(ProductServicing.self)!,
-                searchService: resolver.resolve(SearchServicing.self)!,
+//                searchService: resolver.resolve(SearchServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )

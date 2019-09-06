@@ -30,7 +30,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     // MARK: Dependencies
     
     internal var viewModel: MediaListingViewModel!
-    internal var searchViewModel: MediaSearchViewModel!
+//    internal var searchViewModel: MediaSearchViewModel!
     internal var playbackViewModel: PlaybackControlsViewModel!
     internal var downloadListingViewModel: DownloadListingViewModel!
     internal var mediaSearchResultsViewController: MediaSearchResultsViewController!

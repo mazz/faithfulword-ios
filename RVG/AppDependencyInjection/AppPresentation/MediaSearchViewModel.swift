@@ -369,7 +369,7 @@ internal final class MediaSearchViewModel {
                 self.networkStatus.value = networkStatus
                 switch networkStatus {
                 case .unknown:
-                    DDLogDebug("MediaListingViewModel \(self.reachability.status.value)")
+                    DDLogDebug("MediaSearchViewModel \(self.reachability.status.value)")
                 case .notReachable:
                     DDLogDebug("MediaSearchViewModel \(self.reachability.status.value)")
                 case .reachable(_):

@@ -22,7 +22,7 @@ internal final class MediaListingViewModel {
         return filterText.asObservable()
     }
     
-    public var searchText: Field<String> = Field<String>("")
+//    public var searchText: Field<String> = Field<String>("")
 
 //    public var searchValue: Field<String> = Field<String>("")
 //    var searchValueObservable: Observable<String> {
@@ -32,8 +32,8 @@ internal final class MediaListingViewModel {
     // media filtered by search bar
     
     // media loaded on search fetch
-    public private(set) var searchedMedia = Field<[Playable]>([])
-    public private(set) var searchedSections = Field<[MediaListingSectionViewModel]>([])
+//    public private(set) var searchedMedia = Field<[Playable]>([])
+//    public private(set) var searchedSections = Field<[MediaListingSectionViewModel]>([])
 
     // media loaded on initial fetch
     public private(set) var media = Field<[Playable]>([])
@@ -102,7 +102,7 @@ internal final class MediaListingViewModel {
     public let playlistUuid: String!
     public var mediaCategory: MediaCategory!
     private let productService: ProductServicing!
-    private let searchService: SearchServicing!
+//    private let searchService: SearchServicing!
     private let assetPlaybackService: AssetPlaybackServicing!
     private let reachability: RxClassicReachable!
 
@@ -124,7 +124,7 @@ internal final class MediaListingViewModel {
     internal init(playlistUuid: String,
                   mediaCategory: MediaCategory,
                   productService: ProductServicing,
-                  searchService: SearchServicing,
+//                  searchService: SearchServicing,
                   assetPlaybackService: AssetPlaybackServicing,
                   reachability: RxClassicReachable)
 //        assetPlaybackManager: AssetPlaybackManager,
@@ -133,7 +133,7 @@ internal final class MediaListingViewModel {
         self.playlistUuid = playlistUuid
         self.mediaCategory = mediaCategory
         self.productService = productService
-        self.searchService = searchService
+//        self.searchService = searchService
         self.reachability = reachability
         self.assetPlaybackService = assetPlaybackService
         
@@ -143,29 +143,29 @@ internal final class MediaListingViewModel {
         setupDatasource()
         
         // detect when user does a search and taps the search button
-        searchText.asObservable()
-            .filter({ $0.count > 0 })
-            .subscribe(onNext: { [unowned self] searchText in
-                DDLogDebug("searchText: \(searchText)")
-                self.searchService.searchMediaItems(query: searchText,
-                                                    mediaCategory: nil,
-                                                    playlistUuid: self.playlistUuid,
-                                                    channelUuid: nil,
-                                                    publishedAfter: nil,
-                                                    updatedAfter: nil,
-                                                    presentedAfter: nil,
-                                                    offset: 1,
-                                                    limit: 10000000000000,
-                                                    cacheDirective: .fetchAndAppend)
-                    .subscribe(onSuccess: { mediaItemResponse, mediaItems in
-                        DDLogDebug("search media items: \(mediaItems)")
-                        self.searchedMedia.value = mediaItems
-                    }, onError: { error in
-                        DDLogError("search media items error: \(error)")
-                    })
-                    .disposed(by: self.bag)
-            })
-            .disposed(by: bag)
+//        searchText.asObservable()
+//            .filter({ $0.count > 0 })
+//            .subscribe(onNext: { [unowned self] searchText in
+//                DDLogDebug("searchText: \(searchText)")
+//                self.searchService.searchMediaItems(query: searchText,
+//                                                    mediaCategory: nil,
+//                                                    playlistUuid: self.playlistUuid,
+//                                                    channelUuid: nil,
+//                                                    publishedAfter: nil,
+//                                                    updatedAfter: nil,
+//                                                    presentedAfter: nil,
+//                                                    offset: 1,
+//                                                    limit: 10000000000000,
+//                                                    cacheDirective: .fetchAndAppend)
+//                    .subscribe(onSuccess: { mediaItemResponse, mediaItems in
+//                        DDLogDebug("search media items: \(mediaItems)")
+//                        self.searchedMedia.value = mediaItems
+//                    }, onError: { error in
+//                        DDLogError("search media items error: \(error)")
+//                    })
+//                    .disposed(by: self.bag)
+//            })
+//            .disposed(by: bag)
     }
 
     private func setupDatasource() {
@@ -196,50 +196,50 @@ internal final class MediaListingViewModel {
         }.disposed(by: self.bag)
 
         // setup searchedMedia sections
-        self.searchedMedia.asObservable()
-            .map { $0.map {
-                let icon: String!
-                
-                switch self.mediaCategory {
-                case .none:
-                    icon = "chapter"
-                case .some(.gospel):
-                    icon = "feet"
-                case .some(.livestream):
-                    icon = "disc_icon_white"
-                case .some(.motivation):
-                    icon = "feet"
-                case .some(.movie):
-                    icon = "disc_icon_white"
-                case .some(.music):
-                    icon = "disc_icon_white"
-                case .some(.podcast):
-                    icon = "disc_icon_white"
-                case .some(.preaching):
-                    icon = "feet"
-                case .some(.testimony):
-                    icon = "feet"
-                case .some(.tutorial):
-                    icon = "feet"
-                case .some(.conference):
-                    icon = "disc_icon_white"
-                case .some(.bible):
-                    icon = "chapter"
-                }
-                
-                
-                var presenter: String = "Unknown Presenter"
-                if let presenterName: String = $0.presenterName {
-                    presenter = presenterName
-                }
-                
-                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true) }
-            }
-            .next { [unowned self] names in
-                self.searchedSections.value = [
-                    MediaListingSectionViewModel(type: .media, items: names)
-                ]
-            }.disposed(by: bag)
+//        self.searchedMedia.asObservable()
+//            .map { $0.map {
+//                let icon: String!
+//
+//                switch self.mediaCategory {
+//                case .none:
+//                    icon = "chapter"
+//                case .some(.gospel):
+//                    icon = "feet"
+//                case .some(.livestream):
+//                    icon = "disc_icon_white"
+//                case .some(.motivation):
+//                    icon = "feet"
+//                case .some(.movie):
+//                    icon = "disc_icon_white"
+//                case .some(.music):
+//                    icon = "disc_icon_white"
+//                case .some(.podcast):
+//                    icon = "disc_icon_white"
+//                case .some(.preaching):
+//                    icon = "feet"
+//                case .some(.testimony):
+//                    icon = "feet"
+//                case .some(.tutorial):
+//                    icon = "feet"
+//                case .some(.conference):
+//                    icon = "disc_icon_white"
+//                case .some(.bible):
+//                    icon = "chapter"
+//                }
+//
+//
+//                var presenter: String = "Unknown Presenter"
+//                if let presenterName: String = $0.presenterName {
+//                    presenter = presenterName
+//                }
+//
+//                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true) }
+//            }
+//            .next { [unowned self] names in
+//                self.searchedSections.value = [
+//                    MediaListingSectionViewModel(type: .media, items: names)
+//                ]
+//            }.disposed(by: bag)
         
         // setup media sections
         self.media.asObservable()
