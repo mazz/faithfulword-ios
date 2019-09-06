@@ -193,9 +193,17 @@ internal final class AppDependencyModule {
     private static func attachMainFlowDependencies(to container: Container) {
 
         container.register(MediaListingCoordinator.self) { resolver in
-            MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
-                                    resettablePlaybackCoordinator: Resettable {
+            MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!, resettablePlaybackCoordinator: Resettable {
                                         resolver.resolve(PlaybackCoordinator.self)!
+                }, resettableMediaDetailsCoordinator: Resettable {
+                    resolver.resolve(MediaDetailsCoordinator.self)!
+                }
+            )
+        }
+        
+        container.register(MediaDetailsCoordinator.self) { resolver in
+            MediaDetailsCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!, resettablePlaybackCoordinator: Resettable {
+                resolver.resolve(PlaybackCoordinator.self)!
                 }
             )
         }
@@ -254,8 +262,6 @@ internal final class AppDependencyModule {
                 searchService: resolver.resolve(SearchServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
-//                assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!,
-//                remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!
             )
             }.inObjectScope(.transient)
 
@@ -263,8 +269,15 @@ internal final class AppDependencyModule {
             MediaSearchViewModel(
                 playlistUuid: playlistId,
                 mediaCategory: mediaCategory,
-//                productService: resolver.resolve(ProductServicing.self)!,
                 searchService: resolver.resolve(SearchServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
+            )
+            }.inObjectScope(.transient)
+
+        container.register(MediaDetailsViewModel.self) { resolver, playable in
+            MediaDetailsViewModel(
+                playable: playable,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )

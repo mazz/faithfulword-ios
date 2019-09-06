@@ -241,12 +241,12 @@ extension MediaSearchResultsViewController: UICollectionViewDelegate {
         let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
         
         switch item {
-        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
+        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator):
             let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemSearchResultsCell.description(), for: indexPath) as! MediaItemSearchResultsCell
             switch enumPlayable {
                 
             case .playable(let item):
-                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
+                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator)
  
             }
             return drillInCell

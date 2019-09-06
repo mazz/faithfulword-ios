@@ -49,7 +49,7 @@ internal final class MediaListingViewModel {
                 let section = self?.sections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
                 DDLogDebug("item: \(String(describing: item))")
-                if case .drillIn(let type, _, _, _, _, _)? = item {
+                if case .drillIn(let type, _, _, _, _)? = item {
                     switch type {
                     case .playable(let item):
                         DDLogDebug("item: \(item)")
@@ -62,7 +62,7 @@ internal final class MediaListingViewModel {
                 let section = self?.sections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
             // Don't emit an event for anything that is not a 'drillIn'
-                if case .drillIn(let type, _, _, _, _, _)? = item {
+                if case .drillIn(let type, _, _, _, _)? = item {
                 return type
             }
             return nil
@@ -100,7 +100,7 @@ internal final class MediaListingViewModel {
 
     // MARK: Dependencies
     public let playlistUuid: String!
-    public let mediaCategory: MediaCategory!
+    public var mediaCategory: MediaCategory!
     private let productService: ProductServicing!
     private let searchService: SearchServicing!
     private let assetPlaybackService: AssetPlaybackServicing!
@@ -233,7 +233,7 @@ internal final class MediaListingViewModel {
                     presenter = presenterName
                 }
                 
-                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true, showAmountDownloaded: false) }
+                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true) }
             }
             .next { [unowned self] names in
                 self.searchedSections.value = [
@@ -290,7 +290,7 @@ internal final class MediaListingViewModel {
                     presenter = presenterName
                 }
                 
-                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true, showAmountDownloaded: false) }
+                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true) }
             }
             .next { [unowned self] names in
                 self.sections.value = [
@@ -330,6 +330,9 @@ internal final class MediaListingViewModel {
             self.totalPages = mediaItemResponse.totalPages
             self.pageSize = mediaItemResponse.pageSize
             self.pageNumber = mediaItemResponse.pageNumber
+            if let mediaCategoryString = mediaItems.first?.mediaCategory {
+                self.mediaCategory = MediaCategory(rawValue: mediaCategoryString)
+            }
             
             self.lastOffset += 1
             

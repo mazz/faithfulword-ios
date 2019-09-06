@@ -63,7 +63,7 @@ final class MediaItemSearchResultsCell: MagazineLayoutCollectionViewCell {
     }
     
 //    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool) {
-    func set(playable: Playable, title: String, presenter: String, showBottomSeparator: Bool, showAmountDownloaded: Bool) {
+    func set(playable: Playable, title: String, presenter: String, showBottomSeparator: Bool) {
 //        titleLabel.text = text
         self.playable = playable
         

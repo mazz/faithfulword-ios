@@ -16,7 +16,7 @@ internal enum PlaylistItemType {
 }
 
 public enum PlaylistDrillInType {
-    case playlistItemType(item: Playlist)
+    case playlistItemType(item: Playlist, mediaCategory: String)
 }
 
 extension PlaylistSectionViewModel: SectionModelType {

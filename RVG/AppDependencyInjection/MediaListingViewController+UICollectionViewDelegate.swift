@@ -45,12 +45,12 @@ extension MediaListingViewController: UICollectionViewDelegate {
         let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
         
         switch item {
-        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
+        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator):
             let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
             switch enumPlayable {
                 
             case .playable(let item):
-                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showAmountDownloaded: showAmountDownloaded)
+                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator)
                 
                 // show play icon or animating wave icon
                 if let selectedPlayable: Playable = selectedPlayable.value {

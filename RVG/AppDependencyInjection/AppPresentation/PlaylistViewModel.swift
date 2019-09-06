@@ -147,7 +147,7 @@ final class PlaylistViewModel {
                 default:
                     icon = "creation"
                 }
-                return PlaylistItemType.drillIn(type: .playlistItemType(item: $0), iconName: icon, title: $0.localizedname, showBottomSeparator: true)
+                return PlaylistItemType.drillIn(type: .playlistItemType(item: $0, mediaCategory: $0.mediaCategory), iconName: icon, title: $0.localizedname, showBottomSeparator: true)
                 }
             }
             .next { [unowned self] list in

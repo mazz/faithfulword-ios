@@ -26,7 +26,7 @@ class ResultsTableController: BaseTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: BaseTableViewController.tableViewCellIdentifier, for: indexPath)
         
         switch item {
-        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator, showAmountDownloaded):
+        case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator):
 //            let drillInCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemCell.description(), for: indexPath) as! MediaItemCell
             switch enumPlayable {
                 

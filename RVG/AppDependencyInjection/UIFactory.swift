@@ -19,6 +19,8 @@ internal protocol AppUIMaking {
 //    func makeBibleLanguagePage() -> BibleLanguageViewController
     func makeBibleLanguagePage() -> RadioListViewController
     func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController
+    func makeMediaSearching(playlistId: String, mediaCategory: MediaCategory) -> MediaSearchResultsViewController
+    func makeMediaDetails(playable: Playable) -> MediaDetailsViewController
     func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController
     func makeSplashScreen() -> SplashScreenViewController
 
@@ -73,17 +75,29 @@ extension UIFactory: AppUIMaking {
         mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaCategory)
         mediaListingViewController.searchViewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
         mediaListingViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
-//        mediaListingViewController.downloadingService = resolver.resolve(DownloadService.self)
         mediaListingViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
 
         
-        let mediaSearchResultsViewController = MediaSearchResultsViewController.make(storyboardName: StoryboardName.mediaSearching)
-        mediaSearchResultsViewController.viewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
-        
-        mediaListingViewController.mediaSearchResultsViewController = mediaSearchResultsViewController
+//        let mediaSearchResultsViewController = MediaSearchResultsViewController.make(storyboardName: StoryboardName.mediaSearching)
+//        mediaSearchResultsViewController.viewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
+//
+//        mediaListingViewController.mediaSearchResultsViewController = mediaSearchResultsViewController
 
-        //        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
         return mediaListingViewController
+    }
+
+    func makeMediaSearching(playlistId: String, mediaCategory: MediaCategory) -> MediaSearchResultsViewController {
+        let mediaSearchingViewController = MediaSearchResultsViewController.make(storyboardName: StoryboardName.mediaSearching)
+        mediaSearchingViewController.viewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
+        return mediaSearchingViewController
+    }
+    
+    func makeMediaDetails(playable: Playable) -> MediaDetailsViewController {
+        let mediaDetailsViewController = MediaDetailsViewController.make(storyboardName: StoryboardName.mediaDetails)
+        mediaDetailsViewController.viewModel = resolver.resolve(MediaDetailsViewModel.self, argument: playable)
+        mediaDetailsViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
+
+        return mediaDetailsViewController
     }
 
     internal func makeRoot() -> RootViewController {
