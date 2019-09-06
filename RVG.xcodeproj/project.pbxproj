@@ -139,8 +139,6 @@
 		4C958E9D2090242100A71C59 /* PopupContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C958E9C2090242000A71C59 /* PopupContentController.swift */; };
 		4C999C33215F160E002EF2F4 /* AssetPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0003209D6EDC00938C30 /* AssetPlaybackManager.swift */; };
 		4C999C34215F1614002EF2F4 /* RemoteCommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */; };
-		4C9FA0402318849600F7A237 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9FA03E2318849600F7A237 /* BaseTableViewController.swift */; };
-		4C9FA0412318849600F7A237 /* ResultsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9FA03F2318849600F7A237 /* ResultsTableController.swift */; };
 		4C9FA0432318851C00F7A237 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9FA0422318851B00F7A237 /* Product.swift */; };
 		4CA03C43231810BE003F676F /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA03C42231810BE003F676F /* SearchService.swift */; };
 		4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */; };
@@ -184,9 +182,7 @@
 		4CDD65731EEB7FE500C59DD5 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */; };
 		4CE055FB231886800057BB2F /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE055F9231886800057BB2F /* TableCell.swift */; };
 		4CE055FC231886800057BB2F /* TableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CE055FA231886800057BB2F /* TableCell.xib */; };
-		4CE055FE231887350057BB2F /* MediaListingViewController+UITableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE055FD231887340057BB2F /* MediaListingViewController+UITableViewDelegate.swift */; };
 		4CE056002319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */; };
-		4CE056022319F47D0057BB2F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE056012319F47C0057BB2F /* DetailViewController.swift */; };
 		4CE05604231ABE3C0057BB2F /* MediaSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE05603231ABE3C0057BB2F /* MediaSearchViewModel.swift */; };
 		4CEF753B2026CBA300C1BBF3 /* CategoryListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */; };
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
@@ -369,8 +365,6 @@
 		4C8EE8C31FF6010F003F483A /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		4C958E98208D3D6500A71C59 /* LNPopupController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LNPopupController.framework; path = Carthage/Build/iOS/LNPopupController.framework; sourceTree = "<group>"; };
 		4C958E9C2090242000A71C59 /* PopupContentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupContentController.swift; sourceTree = "<group>"; };
-		4C9FA03E2318849600F7A237 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
-		4C9FA03F2318849600F7A237 /* ResultsTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultsTableController.swift; sourceTree = "<group>"; };
 		4C9FA0422318851B00F7A237 /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		4CA03C42231810BE003F676F /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
 		4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetInflating.swift"; sourceTree = "<group>"; };
@@ -414,9 +408,7 @@
 		4CDD65721EEB7FE500C59DD5 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		4CE055F9231886800057BB2F /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
 		4CE055FA231886800057BB2F /* TableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableCell.xib; sourceTree = "<group>"; };
-		4CE055FD231887340057BB2F /* MediaListingViewController+UITableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaListingViewController+UITableViewDelegate.swift"; sourceTree = "<group>"; };
 		4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaListingViewController+UICollectionViewDelegate.swift"; sourceTree = "<group>"; };
-		4CE056012319F47C0057BB2F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		4CE05603231ABE3C0057BB2F /* MediaSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSearchViewModel.swift; sourceTree = "<group>"; };
 		4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingViewModel.swift; sourceTree = "<group>"; };
 		4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -718,13 +710,10 @@
 		4C9FA03D2318846700F7A237 /* Searching */ = {
 			isa = PBXGroup;
 			children = (
-				4C9FA03E2318849600F7A237 /* BaseTableViewController.swift */,
-				4C9FA03F2318849600F7A237 /* ResultsTableController.swift */,
 				4CA03C42231810BE003F676F /* SearchService.swift */,
 				4C9FA0422318851B00F7A237 /* Product.swift */,
 				4CE055F9231886800057BB2F /* TableCell.swift */,
 				4CE055FA231886800057BB2F /* TableCell.xib */,
-				4CE056012319F47C0057BB2F /* DetailViewController.swift */,
 				4C6FCD6B231B190E0025C1A3 /* MediaSearchResultsViewController.swift */,
 				4C6FCD6D231B194F0025C1A3 /* MediaDetailsViewController.swift */,
 			);
@@ -752,7 +741,6 @@
 				4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */,
 				4C7D546C2013DB210038B265 /* MediaListingViewController.swift */,
 				4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */,
-				4CE055FD231887340057BB2F /* MediaListingViewController+UITableViewDelegate.swift */,
 				4C3EA13D206B265100310024 /* PlaybackViewController.swift */,
 				4C958E9C2090242000A71C59 /* PopupContentController.swift */,
 				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
@@ -1268,7 +1256,6 @@
 				4C7EB894228B8EA8000E8DAB /* MediaChapter.swift in Sources */,
 				4C437AD42239F07000083197 /* HistoryService.swift in Sources */,
 				4CCE8C851FF4B7C600AFBAF2 /* MainCoordinator.swift in Sources */,
-				4C9FA0412318849600F7A237 /* ResultsTableController.swift in Sources */,
 				4CCE8C8B1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift in Sources */,
 				4CCE8C981FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift in Sources */,
 				4C7EB881228B8EA8000E8DAB /* GospelResponse.swift in Sources */,
@@ -1289,7 +1276,6 @@
 				4CD5C1BA20242A96007BFC1B /* VerseCell.swift in Sources */,
 				4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */,
 				4C9FA0432318851C00F7A237 /* Product.swift in Sources */,
-				4C9FA0402318849600F7A237 /* BaseTableViewController.swift in Sources */,
 				4C6D8E5122AC6FEE0025DA28 /* ChannelViewController.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4C7EB885228B8EA8000E8DAB /* Org.swift in Sources */,
@@ -1363,10 +1349,8 @@
 				4C21A72A201843DC000F02CE /* SlideAnimationController.swift in Sources */,
 				4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */,
 				4CA31F982009DF4800A94101 /* MediaListingCoordinator.swift in Sources */,
-				4CE056022319F47D0057BB2F /* DetailViewController.swift in Sources */,
 				4C0F48732025709F00A8904F /* CategoryListingViewController.swift in Sources */,
 				4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */,
-				4CE055FE231887350057BB2F /* MediaListingViewController+UITableViewDelegate.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
 				4CCE8C8D1FF4B96400AFBAF2 /* Optional.swift in Sources */,
 				4C7EB87B228B8EA8000E8DAB /* Book.swift in Sources */,
