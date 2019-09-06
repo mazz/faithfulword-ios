@@ -20,7 +20,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         //        collectionView.register(UINib(nibName: "SearchResultsCell", bundle: nil), forCellWithReuseIdentifier: SearchResultsCell.description())
         collectionView.register(UINib(nibName: "MediaItemCell", bundle: nil), forCellWithReuseIdentifier: MediaItemCell.description())
-        
+        collectionView.register(UINib(nibName: "MediaItemDetailsCell", bundle: nil), forCellWithReuseIdentifier: MediaItemDetailsCell.description())
+
         collectionView.isPrefetchingEnabled = false
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -37,7 +38,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
 
     // MARK: Fields
     
-    internal var viewModelSections: [MediaListingSectionViewModel] = []
+    internal var viewModelSections: [MediaDetailsSectionViewModel] = []
     internal var downloadingItems: [String: FileDownload] = [:]
     internal var downloadedItems: [String: FileDownload] = [:]
     internal var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
@@ -66,15 +67,15 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         let notificationCenter = NotificationCenter.default
         
         // MediaItemCell
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
         
         // DownloadService
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
 
         // Do any additional setup after loading the view.
         reactToViewModel()
@@ -206,7 +207,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         // assume section 0
         
         if viewModelSections.count > 0 {
-            let items: [MediaListingItemType] = viewModelSections[0].items
+            let items: [MediaDetailsItemType] = viewModelSections[0].items
             if items.count > 0 {
                 index = items.firstIndex(where: { item in
                     switch item {
@@ -216,6 +217,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                         case .playable(let item):
                             return item.uuid == fileDownload.playableUuid
                         }
+                    case .details(_, _, _):
+                        return false
                     }
                     
                 }) ?? -1
@@ -238,7 +241,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         // assume section 0
         
         if viewModelSections.count > 0 {
-            let items: [MediaListingItemType] = viewModelSections[0].items
+            let items: [MediaDetailsItemType] = viewModelSections[0].items
             if items.count > 0 {
                 index = items.firstIndex(where: { item in
                     switch item {
@@ -248,6 +251,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                         case .playable(let item):
                             return item.uuid == playable.uuid
                         }
+                    case .details(let playable, let presentedAt, let showBottomSeparator):
+                        return false
                     }
                     
                 }) ?? -1
@@ -330,8 +335,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
     
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaListingViewController initiateNotification filedownload: \(fileDownload)")
-            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            DDLogDebug("MediaDetailsViewController initiateNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -372,8 +377,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
     
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaListingViewController didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
-            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            DDLogDebug("MediaDetailsViewController didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -390,8 +395,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
     
     @objc func handleDownloadDidCompleteNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaListingViewController completeNotification filedownload: \(fileDownload)")
-            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            DDLogDebug("MediaDetailsViewController completeNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -412,8 +417,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
     
     @objc func handleDownloadDidErrorNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaListingViewController errorNotification filedownload: \(fileDownload)")
-            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            DDLogDebug("MediaDetailsViewController errorNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -430,8 +435,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
     
     @objc func handleDownloadDidCancelNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaListingViewController cancelNotification filedownload: \(fileDownload)")
-            DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            DDLogDebug("MediaDetailsViewController cancelNotification filedownload: \(fileDownload)")
+            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -471,7 +476,7 @@ extension MediaDetailsViewController: UICollectionViewDelegateMagazineLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, horizontalSpacingForItemsInSectionAtIndex index: Int) -> CGFloat {
-        return 12
+        return 0
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, verticalSpacingForElementsInSectionAtIndex index: Int) -> CGFloat {
@@ -479,16 +484,22 @@ extension MediaDetailsViewController: UICollectionViewDelegateMagazineLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForSectionAtIndex index: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 4, bottom: 24, right: 4)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForItemsInSectionAtIndex index: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 4, bottom: 24, right: 4)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 }
 
 
 extension MediaDetailsViewController: UICollectionViewDelegate {
+    
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return viewModelSections.count
+    }
+    
+
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if viewModelSections.count == 0 {
             return 0
@@ -522,7 +533,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
         //        if viewModelSections[0].items.count > 0 {
         //        DDLogDebug("viewModelSections[indexPath.section].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
         //        }
-        let item: MediaListingItemType = viewModelSections[indexPath.section].items[indexPath.row]
+        let item: MediaDetailsItemType = viewModelSections[indexPath.section].items[indexPath.row]
         
         switch item {
         case let .drillIn(enumPlayable, iconName, title, presenter, showBottomSeparator):
@@ -530,7 +541,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
             switch enumPlayable {
                 
             case .playable(let item):
-                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator)
+                drillInCell.set(playable: item, title: title, presenter: presenter, showBottomSeparator: showBottomSeparator, showIcon: false)
                 
                 // show play icon or animating wave icon
                 if let selectedPlayable: Playable = selectedPlayable.value {
@@ -677,6 +688,16 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                 }
             }
             return drillInCell
+            
+        case .details(let playable, let presentedAt, let showBottomSeparator):
+            
+//            switch enumPlayable {
+//            case .playable(let item):
+                let detailCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemDetailsCell.description(), for: indexPath) as! MediaItemDetailsCell
+                
+                detailCell.set(playable: playable, title: playable.localizedname, presenter: playable.presenterName ?? NSLocalizedString("Unknown Presenter", comment: ""), showBottomSeparator: showBottomSeparator, showTitle: false)
+                return detailCell
+//            }
         }
     }
     

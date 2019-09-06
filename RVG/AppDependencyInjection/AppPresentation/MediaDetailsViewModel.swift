@@ -17,11 +17,11 @@ private struct Constants {
 internal final class MediaDetailsViewModel {
     // MARK: Fields
     
-    public func section(at index: Int) -> MediaListingSectionViewModel {
+    public func section(at index: Int) -> MediaDetailsSectionViewModel {
         return sections.value[index]
     }
     
-    public func item(at indexPath: IndexPath) -> MediaListingItemType {
+    public func item(at indexPath: IndexPath) -> MediaDetailsItemType {
         return section(at: indexPath.section).items[indexPath.item]
     }
     
@@ -41,12 +41,12 @@ internal final class MediaDetailsViewModel {
     
     // media loaded on initial fetch
     public private(set) var media = Field<[Playable]>([])
-    public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
+    public private(set) var sections = Field<[MediaDetailsSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
     
     public private(set) var playableItem = Field<Playable?>(nil)
     
-    public var drillInEvent: Observable<MediaListingDrillInType> {
+    public var drillInEvent: Observable<MediaDetailsDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent
             .do(onNext: { [weak self] indexPath in
@@ -62,7 +62,7 @@ internal final class MediaDetailsViewModel {
                 }
                 
             })
-            .filterMap { [weak self] indexPath -> MediaListingDrillInType? in
+            .filterMap { [weak self] indexPath -> MediaDetailsDrillInType? in
                 let section = self?.sections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
                 // Don't emit an event for anything that is not a 'drillIn'
@@ -121,12 +121,12 @@ internal final class MediaDetailsViewModel {
             }.disposed(by: self.bag)
         
         self.media.asObservable()
-            .map { $0.map {
+            .map { $0.map { playable -> MediaDetailsItemType in
                 let icon: String!
                 
                 switch MediaCategory(rawValue: self.playable.mediaCategory) {
                 case .none:
-                    icon = "chapter"
+                    icon = "none"
                 case .some(.gospel):
                     icon = "feet"
                 case .some(.livestream):
@@ -151,16 +151,33 @@ internal final class MediaDetailsViewModel {
                     icon = "chapter"
                 }
                 var presenter: String = "Unknown Presenter"
-                if let presenterName: String = $0.presenterName {
+                if let presenterName: String = playable.presenterName {
                     presenter = presenterName
                 }
                 
-                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true) }
+                return MediaDetailsItemType.drillIn(type: .playable(item: playable), iconName: "none", title: playable.localizedname, presenter: presenter, showBottomSeparator: true)
+                }
             }
             .next { [unowned self] names in
-                self.sections.value = [
-                    MediaListingSectionViewModel(type: .media, items: names)
-                ]
+                
+                var detailsSection: MediaDetailsSectionViewModel
+                var mediaSection: MediaDetailsSectionViewModel
+                
+                if names.count > 0 {
+                    // details section
+                    if let mediaItem: MediaItem = self.playable as? MediaItem {
+                        // media section
+                        detailsSection = MediaDetailsSectionViewModel(type: .details, items: [MediaDetailsItemType.details(playable: mediaItem, presentedAt: mediaItem.presentedAt, showBottomSeparator: true)])
+//                        self.sections.value.append(MediaDetailsSectionViewModel(type: .details, items: [MediaDetailsItemType.details(playable: mediaItem, presentedAt: mediaItem.presentedAt, showBottomSeparator: true)]))
+                        mediaSection = (MediaDetailsSectionViewModel(type: .media, items: names))
+//                        self.sections.value.append(MediaDetailsSectionViewModel(type: .media, items: names))
+                        
+                        self.sections.value = [detailsSection, mediaSection]
+                    }
+                    
+                } else {
+                    self.sections.value = []
+                }
             }.disposed(by: bag)
         
         // assignment to self.media will generate sectionmodel

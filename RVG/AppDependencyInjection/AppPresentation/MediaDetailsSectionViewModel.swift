@@ -8,19 +8,19 @@ internal struct MediaDetailsSectionViewModel {
 
 internal enum MediaDetailsSectionType {
     case details
-    case menuItem
+    case media
 }
 
 internal enum MediaDetailsItemType {
     case details(
-        localizedname: String,
-        presenterName: String,
-        sourceMaterial: String,
-        presentedAt: TimeInterval?)
+        playable: Playable,
+        presentedAt: TimeInterval?,
+        showBottomSeparator: Bool)
     case drillIn(
         type: MediaDetailsDrillInType,
         iconName: String,
         title: String,
+        presenter: String,
         showBottomSeparator: Bool)
 }
 

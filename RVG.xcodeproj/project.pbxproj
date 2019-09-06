@@ -11,7 +11,9 @@
 		4C01A262231CAD7000617FEC /* MediaItemSearchResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */; };
 		4C01A266231E0B1C00617FEC /* MediaDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C01A265231E0B1C00617FEC /* MediaDetailsCoordinator.swift */; };
 		4C0801AC231F3DE7002FBE0E /* MediaDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0801AB231F3DE7002FBE0E /* MediaDetailsViewModel.swift */; };
-		4C0801AE2321E827002FBE0E /* MediaSearchSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0801AD2321E827002FBE0E /* MediaSearchSectionViewModel.swift */; };
+		4C0801AE2321E827002FBE0E /* MediaDetailsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0801AD2321E827002FBE0E /* MediaDetailsSectionViewModel.swift */; };
+		4C0801B22322BF4C002FBE0E /* MediaItemDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0801B02322BF4C002FBE0E /* MediaItemDetailsCell.swift */; };
+		4C0801B32322BF4C002FBE0E /* MediaItemDetailsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C0801B12322BF4C002FBE0E /* MediaItemDetailsCell.xib */; };
 		4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */; };
 		4C0F4871202542FA00A8904F /* CategoryListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */; };
 		4C0F48732025709F00A8904F /* CategoryListingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0F48722025709F00A8904F /* CategoryListingViewController.swift */; };
@@ -238,7 +240,9 @@
 		4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaItemSearchResultsCell.xib; sourceTree = "<group>"; };
 		4C01A265231E0B1C00617FEC /* MediaDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailsCoordinator.swift; sourceTree = "<group>"; };
 		4C0801AB231F3DE7002FBE0E /* MediaDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailsViewModel.swift; sourceTree = "<group>"; };
-		4C0801AD2321E827002FBE0E /* MediaSearchSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSearchSectionViewModel.swift; sourceTree = "<group>"; };
+		4C0801AD2321E827002FBE0E /* MediaDetailsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailsSectionViewModel.swift; sourceTree = "<group>"; };
+		4C0801B02322BF4C002FBE0E /* MediaItemDetailsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaItemDetailsCell.swift; sourceTree = "<group>"; };
+		4C0801B12322BF4C002FBE0E /* MediaItemDetailsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaItemDetailsCell.xib; sourceTree = "<group>"; };
 		4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingCoordinator.swift; sourceTree = "<group>"; };
 		4C0F4870202542FA00A8904F /* CategoryListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4C0F48722025709F00A8904F /* CategoryListingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingViewController.swift; sourceTree = "<group>"; };
@@ -564,7 +568,7 @@
 				4C437ABA223356C600083197 /* UserActionsViewModel.swift */,
 				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
 				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
-				4C0801AD2321E827002FBE0E /* MediaSearchSectionViewModel.swift */,
+				4C0801AD2321E827002FBE0E /* MediaDetailsSectionViewModel.swift */,
 				4CE05603231ABE3C0057BB2F /* MediaSearchViewModel.swift */,
 				4C0801AB231F3DE7002FBE0E /* MediaDetailsViewModel.swift */,
 				4C25039B216BE0360069AB49 /* DownloadViewModel.swift */,
@@ -668,6 +672,8 @@
 				4C3EA134206A716400310024 /* Playback */,
 				4C78CECF22876D22006FB8CB /* MediaItemCell.xib */,
 				4C78CED122876D5F006FB8CB /* MediaItemCell.swift */,
+				4C0801B02322BF4C002FBE0E /* MediaItemDetailsCell.swift */,
+				4C0801B12322BF4C002FBE0E /* MediaItemDetailsCell.xib */,
 				4C01A25F231CAD6E00617FEC /* MediaItemSearchResults.swift */,
 				4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */,
 				4C596251229E1E5E00947F73 /* PlaylistCollectionViewCell.swift */,
@@ -1074,6 +1080,7 @@
 			files = (
 				4C2C257D230755920001225C /* FontAwesome.otf in Resources */,
 				689880551F15A9F900CC2BC5 /* MediaMusicTableViewCell.xib in Resources */,
+				4C0801B32322BF4C002FBE0E /* MediaItemDetailsCell.xib in Resources */,
 				4C6FCD72231B200D0025C1A3 /* SearchResultsCell.xib in Resources */,
 				68121CB31ED7D12800273342 /* ChapterTableViewCell.xib in Resources */,
 				687BF6CF1EC00AE3002EDCC3 /* Localizable.strings in Resources */,
@@ -1297,7 +1304,7 @@
 				4CFB85002005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift in Sources */,
 				4C4A2CD422D01F2F008BB79A /* ActionData.swift in Sources */,
 				4C7EB854228B8BBD000E8DAB /* PlaylistSectionViewModel.swift in Sources */,
-				4C0801AE2321E827002FBE0E /* MediaSearchSectionViewModel.swift in Sources */,
+				4C0801AE2321E827002FBE0E /* MediaDetailsSectionViewModel.swift in Sources */,
 				4CCE8C6D1FF4B2DB00AFBAF2 /* Resettable.swift in Sources */,
 				4CCE8C871FF4B81500AFBAF2 /* NavigationCoordinating.swift in Sources */,
 				4CD89B8622E0E37000A1704C /* FileDownload.swift in Sources */,
@@ -1317,6 +1324,7 @@
 				4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */,
 				4CCE8C831FF4B7C600AFBAF2 /* BooksViewModel.swift in Sources */,
 				4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */,
+				4C0801B22322BF4C002FBE0E /* MediaItemDetailsCell.swift in Sources */,
 				4C7EB87F228B8EA8000E8DAB /* EnvironmentUrlItems.swift in Sources */,
 				4CFB84FC2005AEB400FEBB53 /* SettingDrillInCell.swift in Sources */,
 				4C999C34215F1614002EF2F4 /* RemoteCommandManager.swift in Sources */,
