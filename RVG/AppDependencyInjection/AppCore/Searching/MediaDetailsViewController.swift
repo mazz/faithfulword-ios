@@ -13,7 +13,12 @@ import RxDataSources
 import XLActionController
 import MagazineLayout
 
+
 class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /* , UICollectionViewDelegate */ {
+
+    private struct Constants {
+        static let mediaSection = 1
+    }
 
     internal lazy var collectionView: UICollectionView = {
         let layout = MagazineLayout()
@@ -83,6 +88,20 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
 
     }
     
+    deinit {
+        // Remove all KVO and notification observers.
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+        notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+        
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+    }
+
     // MARK: Private helpers
     
     private func reactToViewModel() {
@@ -202,12 +221,12 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         // a single row in the collectionView and avoid scrolling issues
         
         var index: Int = -1
-        var indexPath: IndexPath = IndexPath(row: index, section: 0)
+        var indexPath: IndexPath = IndexPath(row: index, section: Constants.mediaSection)
         
         // assume section 0
         
         if viewModelSections.count > 0 {
-            let items: [MediaDetailsItemType] = viewModelSections[0].items
+            let items: [MediaDetailsItemType] = viewModelSections[Constants.mediaSection].items
             if items.count > 0 {
                 index = items.firstIndex(where: { item in
                     switch item {
@@ -225,7 +244,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
             }
         }
         
-        indexPath = IndexPath(row: index, section: 0)
+        indexPath = IndexPath(row: index, section: Constants.mediaSection)
         return indexPath
     }
     
@@ -236,12 +255,12 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         // a single row in the collectionView and avoid scrolling issues
         
         var index: Int = -1
-        var indexPath: IndexPath = IndexPath(row: index, section: 0)
+        var indexPath: IndexPath = IndexPath(row: index, section: Constants.mediaSection)
         
         // assume section 0
         
         if viewModelSections.count > 0 {
-            let items: [MediaDetailsItemType] = viewModelSections[0].items
+            let items: [MediaDetailsItemType] = viewModelSections[Constants.mediaSection].items
             if items.count > 0 {
                 index = items.firstIndex(where: { item in
                     switch item {
@@ -251,14 +270,14 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                         case .playable(let item):
                             return item.uuid == playable.uuid
                         }
-                    case .details(let playable, let presentedAt, let showBottomSeparator):
+                    case .details(_,_,_):
                         return false
                     }
                     
                 }) ?? -1
             }
         }
-        indexPath = IndexPath(row: index, section: 0)
+        indexPath = IndexPath(row: index, section: Constants.mediaSection)
         return indexPath
     }
 

@@ -9,6 +9,10 @@ import MagazineLayout
 public final class MediaListingViewController: UIViewController, UICollectionViewDataSource /*,  UICollectionViewDelegate */ {
     // MARK: Private
     
+    private struct Constants {
+        static let mediaSection = 0
+    }
+    
     private lazy var collectionView: UICollectionView = {
         let layout = MagazineLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -238,7 +242,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     private func reactToViewModel() {
         viewModel.sections.asObservable()
             .observeOn(MainScheduler.instance)
-            .filter{ $0[0].items.count > 0 }
+            .filter{ $0[Constants.mediaSection].items.count > 0 }
             .next { [unowned self] sections in
                 // first time loading sections
                 if self.itemsUpdatedAtLeastOnce == false {
@@ -247,22 +251,52 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     self.itemsUpdatedAtLeastOnce = true
                 }
                 else {
-                    let currentItemsCount: Int = self.viewModelSections[0].items.count
-                    let appendCount: Int = sections[0].items.count - currentItemsCount
-                    let newItems = Array(sections[0].items.suffix(appendCount))
+                    let currentItemsCount: Int = self.viewModelSections[Constants.mediaSection].items.count
+                    let appendCount: Int = sections[Constants.mediaSection].items.count - currentItemsCount
+                    let newItems = Array(sections[Constants.mediaSection].items.suffix(appendCount))
                     DDLogDebug("newItems.count: \(newItems.count)")
                     
-                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
+                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: Constants.mediaSection) }
                     DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
                     self.viewModelSections = sections
                     
                     DispatchQueue.main.async {
-                        self.collectionView.performBatchUpdates({
-                            self.collectionView.insertItems(at: insertIndexPaths)
-                        }, completion: { result in
-                            self.collectionView.reloadData()
-                        })
+                        UIView.performWithoutAnimation {
+                            self.collectionView.performBatchUpdates({
+                                self.collectionView.insertItems(at: insertIndexPaths)
+                            }, completion: { result in
+                                self.collectionView.reloadData()
+                            })
+                        }
                     }
+//
+//
+//
+//
+//                    let amount = 5 // change this to the amount of items to add
+//                    let section = 0 // change this to your needs, too
+//                    let contentHeight = self.collectionView!.contentSize.height
+//                    let offsetY = self.collectionView!.contentOffset.y
+//                    let bottomOffset = contentHeight - offsetY
+//
+//                    CATransaction.begin()
+//                    CATransaction.setDisableActions(true)
+//
+//                    self.collectionView!.performBatchUpdates({
+//                        var indexPaths = [NSIndexPath]()
+//                        for i in 0..<amount {
+//                            let index = 0 + i
+//                            indexPaths.append(NSIndexPath(forItem: index, inSection: section))
+//                        }
+//                        if indexPaths.count > 0 {
+//                            self.collectionView!.insertItemsAtIndexPaths(indexPaths)
+//                        }
+//                    }, completion: {
+//                        finished in
+//                        print("completed loading of new stuff, animating")
+//                        self.collectionView!.contentOffset = CGPointMake(0, self.collectionView!.contentSize.height - bottomOffset)
+//                        CATransaction.commit()
+//                    })
                 }
             }.disposed(by: bag)
         
@@ -408,12 +442,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         // a single row in the collectionView and avoid scrolling issues
         
         var index: Int = -1
-        var indexPath: IndexPath = IndexPath(row: index, section: 0)
+        var indexPath: IndexPath = IndexPath(row: index, section: Constants.mediaSection)
         
         // assume section 0
         
         if viewModelSections.count > 0 {
-            let items: [MediaListingItemType] = viewModelSections[0].items
+            let items: [MediaListingItemType] = viewModelSections[Constants.mediaSection].items
             if items.count > 0 {
                 index = items.firstIndex(where: { item in
                     switch item {
@@ -429,7 +463,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             }
         }
         
-        indexPath = IndexPath(row: index, section: 0)
+        indexPath = IndexPath(row: index, section: Constants.mediaSection)
         return indexPath
     }
 
@@ -440,12 +474,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         // a single row in the collectionView and avoid scrolling issues
         
         var index: Int = -1
-        var indexPath: IndexPath = IndexPath(row: index, section: 0)
+        var indexPath: IndexPath = IndexPath(row: index, section: Constants.mediaSection)
         
         // assume section 0
         
         if viewModelSections.count > 0 {
-            let items: [MediaListingItemType] = viewModelSections[0].items
+            let items: [MediaListingItemType] = viewModelSections[Constants.mediaSection].items
             if items.count > 0 {
                 index = items.firstIndex(where: { item in
                     switch item {
@@ -460,7 +494,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 }) ?? -1
             }
         }
-        indexPath = IndexPath(row: index, section: 0)
+        indexPath = IndexPath(row: index, section: Constants.mediaSection)
         return indexPath
     }
 
@@ -666,7 +700,7 @@ extension MediaListingViewController: UIScrollViewDelegate {
             
             if offsetDiff - collectionView.frame.size.height <= 20.0 {
                 DDLogDebug("fetch!")
-                viewModel.fetchMoreMedia()
+                viewModel.fetchAppendMedia.onNext(true)
             }
         }
     }

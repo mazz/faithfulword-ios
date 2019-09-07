@@ -22,6 +22,11 @@ internal final class MediaListingViewModel {
         return filterText.asObservable()
     }
     
+    // onNext will append a fetched search to the current results with the
+    // current searchText
+    public var fetchAppendMedia: PublishSubject<Bool> = PublishSubject<Bool>()
+
+    
 //    public var searchText: Field<String> = Field<String>("")
 
 //    public var searchValue: Field<String> = Field<String>("")
@@ -298,6 +303,13 @@ internal final class MediaListingViewModel {
                 ]
             }.disposed(by: bag)
         
+        
+        fetchAppendMedia.asObservable()
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .next { [unowned self] _ in
+                self.fetchMoreMedia()
+            }.disposed(by: bag)
+
     }
     
     func initialFetch() {
