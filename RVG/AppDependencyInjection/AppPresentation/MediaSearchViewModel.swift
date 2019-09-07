@@ -36,7 +36,12 @@ internal final class MediaSearchViewModel {
     // current searchText
     public var fetchAppendSearch: PublishSubject<Bool> = PublishSubject<Bool>()
     
+    // the search for the current searchText was cancelled
     public var cancelSearch: Field<String> = Field<String>("")
+    
+    // true - the search for the current searchText yields no results
+    // false - the search for the current searchText yields a result > 0
+    public var emptyResult: Field<Bool> = Field<Bool>(false)
     
     // media loaded on search fetch
     public private(set) var searchedMedia = Field<[Playable]>([])
@@ -248,6 +253,8 @@ internal final class MediaSearchViewModel {
                                                     cacheDirective: .fetchAndAppend)
                     .subscribe(onSuccess: { mediaItemResponse, mediaItems in
                         DDLogDebug("search media items: \(mediaItems)")
+                        self.emptyResult.value = (mediaItems.count == 0)
+                        DDLogDebug("emptyResult: \(self.emptyResult.value)")
                         self.searchedMedia.value.append(contentsOf: mediaItems)
                         self.totalEntries = mediaItemResponse.totalEntries
                         self.totalPages = mediaItemResponse.totalPages
