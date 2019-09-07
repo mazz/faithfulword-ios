@@ -871,6 +871,11 @@ extension MediaListingViewController: UISearchBarDelegate {
 extension MediaListingViewController: UISearchResultsUpdating {
     public func updateSearchResults(for searchController: UISearchController) {
         DDLogDebug("searchController: \(String(describing: searchController))")
+        
+        if let mediaSearchResultsViewController: MediaSearchResultsViewController =  searchController.searchResultsController as? MediaSearchResultsViewController {
+            // reset "no result" label
+            mediaSearchResultsViewController.viewModel.emptyResult.value = false
+        }
     }
 }
 

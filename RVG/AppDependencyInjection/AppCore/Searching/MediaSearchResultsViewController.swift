@@ -35,7 +35,8 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
     internal var viewModel: MediaSearchViewModel!
     
     // MARK: Fields
-
+    let noResultLabel: UILabel = UILabel(frame: .zero)
+    
     internal var viewModelSections: [MediaListingSectionViewModel] = []
 
 //    internal var searchViewModel: MediaSearchViewModel!
@@ -55,7 +56,28 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
+        
+        noResultLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
+        noResultLabel.textAlignment = .center
+        noResultLabel.font = UIFont.systemFont(ofSize: 32)
+        noResultLabel.textColor = .gray
+        noResultLabel.backgroundColor = .clear
+        
 
+        collectionView.addSubview(noResultLabel)
+        noResultLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noResultLabel.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
+            noResultLabel.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
+            noResultLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -100),
+            noResultLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            noResultLabel.heightAnchor.constraint(equalToConstant: 300),
+            
+//            noResultLabel.topAnchor.constraint(equalTo: collectionView.topAnchor),
+//            noResultLabel.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor),
+            ])
+
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -63,6 +85,8 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
 //        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         // Do any additional setup after loading the view.
+        
+        self.noResultFoundLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
         
         reactToViewModel()
     }
@@ -100,6 +124,12 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
 //                    }
 //                }
             }.disposed(by: bag)
+        
+        viewModel.emptyResult.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] emptyResult in
+                self.noResultLabel.isHidden = !emptyResult
+        }.disposed(by: bag)
         
     }
 }
