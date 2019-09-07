@@ -11,14 +11,14 @@ import RxSwift
 import GRDB
 
 private struct Constants {
-    static let limit: Int = 10000000
+    static let limit: Int = 100
 }
 
 internal final class MediaSearchViewModel {
     // MARK: Fields
     
     public func section(at index: Int) -> MediaListingSectionViewModel {
-        return sections.value[index]
+        return searchedSections.value[index]
     }
     
     public func item(at indexPath: IndexPath) -> MediaListingItemType {
@@ -31,11 +31,8 @@ internal final class MediaSearchViewModel {
     }
     
     public var searchText: Field<String> = Field<String>("")
-    
-    //    public var searchValue: Field<String> = Field<String>("")
-    //    var searchValueObservable: Observable<String> {
-    //        return searchValue.asObservable()
-    //    }
+
+    public var fetchAppendSearch: PublishSubject<Bool> = PublishSubject<Bool>()
     
     // media filtered by search bar
     
@@ -44,8 +41,8 @@ internal final class MediaSearchViewModel {
     public private(set) var searchedSections = Field<[MediaListingSectionViewModel]>([])
     
     // media loaded on initial fetch
-    public private(set) var media = Field<[Playable]>([])
-    public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
+//    public private(set) var media = Field<[Playable]>([])
+//    public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
     
     public private(set) var playableItem = Field<Playable?>(nil)
@@ -77,15 +74,15 @@ internal final class MediaSearchViewModel {
         }
     }
     
-    public func fetchMoreMedia() {
-        DDLogDebug("fetchMoreMedia")
+    func fetchMoreSearchResults() {
+        DDLogDebug("fetchMoreSearchResults")
         // the case where are using media in cache/database
         // without fetching them from the network
-        if self.totalEntries != -1 && self.totalEntries <= self.media.value.count {
+        if self.totalEntries != -1 && self.totalEntries <= self.searchedMedia.value.count {
             return
         }
         
-        if self.totalEntries == self.media.value.count {
+        if self.totalEntries == self.searchedMedia.value.count {
             return
         }
         
@@ -97,14 +94,16 @@ internal final class MediaSearchViewModel {
             
             // we can get media from server, so get them
             DDLogDebug("MediaSearchViewModel reachability.reachable")
-            self.fetchMedia(offset: self.lastOffset + 1,
-                            limit: Constants.limit,
-                            cacheDirective: .fetchAndAppend)
+            self.fetchSearch(searchText: self.searchText.value,
+                             offset: self.lastOffset + 1,
+                             limit: Constants.limit,
+                             cacheDirective: .fetchAndAppend)
         case .unknown:
             DDLogDebug("MediaSearchViewModel reachability.unknown")
             // do nothing because we can't fetch
         }
     }
+
     
     // MARK: Dependencies
     public let playlistUuid: String!
@@ -151,31 +150,6 @@ internal final class MediaSearchViewModel {
         //        self.remoteCommandManager = remoteCommandManager
         
         setupDatasource()
-        
-        // detect when user does a search and taps the search button
-        searchText.asObservable()
-            .filter({ $0.count > 0 })
-            .subscribe(onNext: { [unowned self] searchText in
-                DDLogDebug("searchText: \(searchText)")
-                self.searchService.searchMediaItems(query: searchText,
-                                                    mediaCategory: self.mediaCategory.map { $0.rawValue },
-                                                    playlistUuid: self.playlistUuid,
-                                                    channelUuid: nil,
-                                                    publishedAfter: nil,
-                                                    updatedAfter: nil,
-                                                    presentedAfter: nil,
-                                                    offset: 1,
-                                                    limit: Constants.limit,
-                                                    cacheDirective: .fetchAndAppend)
-                    .subscribe(onSuccess: { mediaItemResponse, mediaItems in
-                        DDLogDebug("search media items: \(mediaItems)")
-                        self.searchedMedia.value = mediaItems
-                    }, onError: { error in
-                        DDLogError("search media items error: \(error)")
-                    })
-                    .disposed(by: self.bag)
-            })
-            .disposed(by: bag)
     }
     
     private func setupDatasource() {
@@ -236,18 +210,6 @@ internal final class MediaSearchViewModel {
                 case .some(.bible):
                     icon = "chapter"
                 }
-//                switch self.mediaType {
-//                case .audioChapter?:
-//                    icon = "chapter"
-//                    //                case .audioSermon?:
-//                //                    icon = "feet"
-//                case .audioGospel?:
-//                    icon = "double_feetprint_icon_white"
-//                case .audioMusic?:
-//                    icon = "disc_icon_white"
-//                default:
-//                    icon = "feet"
-//                }
                 
                 var presenter: String = "Unknown Presenter"
                 if let presenterName: String = $0.presenterName {
@@ -262,37 +224,54 @@ internal final class MediaSearchViewModel {
                 ]
             }.disposed(by: bag)
         
-        // setup media sections
-//        self.media.asObservable()
-//            .map { $0.map {
-//                let icon: String!
-//
-//                switch self.mediaType {
-//                case .audioChapter?:
-//                    icon = "chapter"
-//                    //                case .audioSermon?:
-//                //                    icon = "feet"
-//                case .audioGospel?:
-//                    icon = "double_feetprint_icon_white"
-//                case .audioMusic?:
-//                    icon = "disc_icon_white"
-//                default:
-//                    icon = "feet"
-//                }
-//
-//                var presenter: String = "Unknown Presenter"
-//                if let presenterName: String = $0.presenterName {
-//                    presenter = presenterName
-//                }
-//
-//                return MediaListingItemType.drillIn(type: .playable(item: $0), iconName: icon, title: $0.localizedname, presenter: presenter, showBottomSeparator: true, showAmountDownloaded: false) }
-//            }
-//            .next { [unowned self] names in
-//                self.sections.value = [
-//                    MediaListingSectionViewModel(type: .media, items: names)
-//                ]
-//            }.disposed(by: bag)
+        // detect when user does a search and taps the search button
+        searchText.asObservable()
+            // string must be longer than zero chars
+            .filter({ $0.count > 0 })
+            .subscribe(onNext: { [unowned self] searchText in
+                DDLogDebug("searchText: \(searchText)")
+                
+                // reset the searchedMedia because it's a new searchText
+                self.searchedMedia.value = []
+                
+                self.totalEntries = -1
+                self.totalPages = -1
+                self.pageSize = -1
+                self.pageNumber = -1
+                self.lastOffset = 0
+                
+                self.searchService.searchMediaItems(query: searchText,
+                                                    mediaCategory: self.mediaCategory.map { $0.rawValue },
+                                                    playlistUuid: self.playlistUuid,
+                                                    channelUuid: nil,
+                                                    publishedAfter: nil,
+                                                    updatedAfter: nil,
+                                                    presentedAfter: nil,
+                                                    offset: self.lastOffset + 1,
+                                                    limit: Constants.limit,
+                                                    cacheDirective: .fetchAndAppend)
+                    .subscribe(onSuccess: { mediaItemResponse, mediaItems in
+                        DDLogDebug("search media items: \(mediaItems)")
+                        self.searchedMedia.value.append(contentsOf: mediaItems)
+                        self.totalEntries = mediaItemResponse.totalEntries
+                        self.totalPages = mediaItemResponse.totalPages
+                        self.pageSize = mediaItemResponse.pageSize
+                        self.pageNumber = mediaItemResponse.pageNumber
+            
+                        self.lastOffset += 1
 
+                    }, onError: { error in
+                        DDLogError("search media items error: \(error)")
+                    })
+                    .disposed(by: self.bag)
+            })
+            .disposed(by: bag)
+        
+        fetchAppendSearch.asObservable()
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .next { [unowned self] _ in
+                self.fetchMoreSearchResults()
+        }.disposed(by: bag)
     }
     
     func initialFetch() {
@@ -317,50 +296,29 @@ internal final class MediaSearchViewModel {
 //            }.disposed(by: self.bag)
     }
     
-    func fetchMedia(offset: Int, limit: Int, cacheDirective: CacheDirective) {
-//        productService.fetchMediaItems(for: playlistUuid, offset: offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (mediaItemResponse, mediaItems) in
-//            DDLogDebug("fetchMediaItems: \(mediaItems)")
-//            self.media.value.append(contentsOf: mediaItems)
-//            self.totalEntries = mediaItemResponse.totalEntries
-//            self.totalPages = mediaItemResponse.totalPages
-//            self.pageSize = mediaItemResponse.pageSize
-//            self.pageNumber = mediaItemResponse.pageNumber
-//
-//            self.lastOffset += 1
-//
-//            self.assetPlaybackService.playables.value = self.media.value
-//        }) { error in
-//
-//            if let dbError: DatabaseError = error as? DatabaseError {
-//                switch dbError.extendedResultCode {
-//                case .SQLITE_CONSTRAINT:            // any constraint error
-//                    DDLogDebug("SQLITE_CONSTRAINT error")
-//                    // it is possible that we already have some or all the media
-//                    // from a previous run and that the last fetch tried to
-//                    // insert values that were already present. So increment
-//                    // lastOffset by one so that eventually we will stop getting
-//                    // errors
-//                    //                    if self.media.value.count == limit && self.totalEntries == -1 {
-//                    //                        self.lastOffset += 1
-//                    //                    }
-//
-//                    // we got a SQLITE_CONSTRAINT error, assume that we at least have
-//                    // `limit` number of items
-//                    // this will stop the data service from continually calling the server
-//                    // because of the fetchMoreMedia() guards
-//                    if self.media.value.count >= limit && self.totalEntries == -1 {
-//                        self.totalEntries = self.media.value.count
-//                    }
-//                default:                            // any other database error
-//                    DDLogDebug("some db error: \(dbError)")
-//                }
-//
-//            } else {
-//                DDLogDebug("fetchMedia failed with error: \(error.localizedDescription)")
-//            }
-//
-//
-//            }.disposed(by: self.bag)
+    func fetchSearch(searchText: String, offset: Int, limit: Int, cacheDirective: CacheDirective) {
+        DDLogDebug("searchText: \(searchText)")
+        self.searchService.searchMediaItems(query: searchText,
+                                            mediaCategory: self.mediaCategory.map { $0.rawValue },
+                                            playlistUuid: self.playlistUuid,
+                                            channelUuid: nil,
+                                            publishedAfter: nil,
+                                            updatedAfter: nil,
+                                            presentedAfter: nil,
+                                            offset: offset,
+                                            limit: limit,
+                                            cacheDirective: .fetchAndAppend)
+            .subscribe(onSuccess: { mediaItemResponse, mediaItems in
+                DDLogDebug("search media items: \(mediaItems)")
+                self.searchedMedia.value.append(contentsOf: mediaItems)
+                self.totalEntries = mediaItemResponse.totalEntries
+                self.totalPages = mediaItemResponse.totalPages
+                self.pageSize = mediaItemResponse.pageSize
+                self.pageNumber = mediaItemResponse.pageNumber
+                
+                self.lastOffset += 1
+        })
+        .disposed(by: bag)
     }
     
     private func reactToReachability() {
