@@ -20,6 +20,8 @@ final class PlaylistViewModel {
     public private(set) var sections = Field<[PlaylistSectionViewModel]>([])
     public let selectItemEvent = PublishSubject<IndexPath>()
     
+    public var fetchAppendPlaylists: PublishSubject = PublishSubject<Bool>()
+    
     public var drillInEvent: Observable<PlaylistDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent.filterMap { [unowned self] indexPath -> PlaylistDrillInType? in
@@ -155,6 +157,14 @@ final class PlaylistViewModel {
                     PlaylistSectionViewModel(type: .playlist, items: list)
                 ]
             }.disposed(by: self.bag)
+        
+        fetchAppendPlaylists.asObservable()
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .next { [unowned self] _ in
+                self.fetchMorePlaylists()
+            }.disposed(by: bag)
+        
+
     }
     
     func initialFetch() {

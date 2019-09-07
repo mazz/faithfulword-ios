@@ -156,7 +156,7 @@ extension ChannelViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMorePlaylists()
+            viewModel.fetchAppendPlaylists.onNext(true)
         }
     }
     
@@ -167,7 +167,7 @@ extension ChannelViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMorePlaylists()
+            viewModel.fetchAppendPlaylists.onNext(true)
         }
     }
 }

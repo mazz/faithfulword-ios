@@ -23,12 +23,12 @@ internal final class LanguageViewModel: RadioListViewModeling {
     private let bag =  DisposeBag()
 
     public var selectionEvent = PublishSubject<IndexPath>()
-
     public var title: Observable<String> {
         return Observable.just(NSLocalizedString("Set Bible Language", comment: "").l10n())
     }
 
     public var errorEvent = PublishSubject<Error>()
+    public var fetchAppendItems: PublishSubject = PublishSubject<Bool>()
 
     private var internalSections = Field<[RadioListSectionViewModel]>([])
 
@@ -83,6 +83,13 @@ internal final class LanguageViewModel: RadioListViewModeling {
                 self.datasource.value = [(section: RadioListSectionViewModel(type: .list, items: listItems), languageIdentifiers: identifiers)]
             })
             .disposed(by: bag)
+        
+        fetchAppendItems.asObservable()
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .next { [unowned self] _ in
+                self.fetchMoreItems()
+            }.disposed(by: bag)
+
     }
 
     func setupSelection() {

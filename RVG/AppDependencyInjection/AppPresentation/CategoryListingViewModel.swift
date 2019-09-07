@@ -29,6 +29,8 @@ final class CategoryListingViewModel {
         }
     }
 
+    public var fetchAppendCategories: PublishSubject = PublishSubject<Bool>()
+
     public func fetchMoreCategories() {
         self.fetchCategoryListing(stride: 50)
     }
@@ -71,6 +73,13 @@ final class CategoryListingViewModel {
                     CategoryListingSectionViewModel(type: .category, items: list)
                 ]
             }.disposed(by: self.bag)
+
+        fetchAppendCategories.asObservable()
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .next { [unowned self] _ in
+                self.fetchMoreCategories()
+            }.disposed(by: bag)
+        
 
         self.fetchCategoryListing(stride: 50)
     }
