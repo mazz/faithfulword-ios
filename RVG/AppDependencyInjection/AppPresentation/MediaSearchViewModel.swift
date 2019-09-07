@@ -32,9 +32,11 @@ internal final class MediaSearchViewModel {
     
     public var searchText: Field<String> = Field<String>("")
 
+    // onNext will append a fetched search to the current results with the
+    // current searchText
     public var fetchAppendSearch: PublishSubject<Bool> = PublishSubject<Bool>()
     
-    // media filtered by search bar
+    public var cancelSearch: Field<String> = Field<String>("")
     
     // media loaded on search fetch
     public private(set) var searchedMedia = Field<[Playable]>([])
@@ -232,13 +234,7 @@ internal final class MediaSearchViewModel {
                 DDLogDebug("searchText: \(searchText)")
                 
                 // reset the searchedMedia because it's a new searchText
-                self.searchedMedia.value = []
-                
-                self.totalEntries = -1
-                self.totalPages = -1
-                self.pageSize = -1
-                self.pageNumber = -1
-                self.lastOffset = 0
+                self.resetSearchResults()
                 
                 self.searchService.searchMediaItems(query: searchText,
                                                     mediaCategory: self.mediaCategory.map { $0.rawValue },
@@ -272,6 +268,21 @@ internal final class MediaSearchViewModel {
             .next { [unowned self] _ in
                 self.fetchMoreSearchResults()
         }.disposed(by: bag)
+        
+        cancelSearch.asObservable()
+            .next { [unowned self]  _ in
+                self.resetSearchResults()
+        }.disposed(by: bag)
+    }
+    
+    func resetSearchResults() {
+        self.searchedMedia.value = []
+        
+        self.totalEntries = -1
+        self.totalPages = -1
+        self.pageSize = -1
+        self.pageNumber = -1
+        self.lastOffset = 0
     }
     
     func initialFetch() {

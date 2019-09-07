@@ -811,6 +811,8 @@ extension MediaListingViewController {
     }
 }
 
+// MARK: UISearchControllerDelegate
+
 extension MediaListingViewController: UISearchControllerDelegate {
     public func willPresentSearchController(_ searchController: UISearchController) {
         DDLogDebug("searchController: \(String(describing: searchController))")
@@ -822,6 +824,8 @@ extension MediaListingViewController: UISearchControllerDelegate {
         }
     }
 }
+
+// MARK: UISearchBarDelegate
 
 extension MediaListingViewController: UISearchBarDelegate {
     
@@ -854,6 +858,13 @@ extension MediaListingViewController: UISearchBarDelegate {
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         
+    }
+    
+    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            DDLogDebug("probably cleared searchbar")
+            mediaSearchResultsViewController.viewModel.cancelSearch.value = searchText
+        }
     }
 }
 
