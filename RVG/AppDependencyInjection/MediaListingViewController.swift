@@ -67,6 +67,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     }
     
     private var searchController: UISearchController = UISearchController(searchResultsController: nil)
+    private var filterController: UISearchController = UISearchController(searchResultsController: nil)
+
     /// Secondary search results table view.
 //    internal var resultsTableController: ResultsTableController!
 //    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
@@ -133,6 +135,15 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         
+        
+        filterController.dimsBackgroundDuringPresentation = false
+        filterController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
+        filterController.searchResultsUpdater = self
+        filterController.searchBar.delegate = self // Monitor when the search button is tapped.
+        filterController.searchBar.autocapitalizationType = .none
+        //        searchController.dimsBackgroundDuringPresentation = true // The default is true.
+        filterController.delegate = self
+
         // have view model capture uisearchbar keyboard events
         // for filter use case
 //        searchController.searchBar.rx.text
@@ -334,6 +345,31 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             }
             .disposed(by: bag)
         
+        viewModel.networkStatus
+            .asObservable()
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .next { [unowned self] networkStatus in
+                switch networkStatus {
+                case .unknown:
+                    DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
+//                    self.searchController = UISearchController(searchResultsController: nil)
+//                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
+                    self.navigationItem.searchController = self.filterController
+                case .notReachable:
+                    DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
+//                    self.searchController = UISearchController(searchResultsController: nil)
+//                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
+                    self.navigationItem.searchController = self.filterController
+
+                    
+                case .reachable(_):
+                    DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
+//                    self.searchController = UISearchController(searchResultsController: self.mediaSearchResultsViewController)
+//                    self.searchController.searchBar.placeholder = NSLocalizedString("Search", comment: "").l10n()
+                    self.navigationItem.searchController = self.searchController
+                }
+            }.disposed(by: bag)
+
     }
     
     private func bindPlaybackViewModel() {
@@ -898,6 +934,10 @@ extension MediaListingViewController: UISearchBarDelegate {
         if searchText == "" {
             DDLogDebug("probably cleared searchbar")
             mediaSearchResultsViewController.viewModel.cancelSearch.value = searchText
+        } else {
+            // we are looking for searchText.count > 0 for filtering because
+            // we filter on the fly
+            viewModel.filterText.onNext(searchText)
         }
     }
 }
