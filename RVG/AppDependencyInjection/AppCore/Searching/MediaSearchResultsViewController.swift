@@ -86,7 +86,7 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
 
         // Do any additional setup after loading the view.
         
-        self.noResultFoundLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
+//        self.noResultFoundLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
         
         reactToViewModel()
     }
