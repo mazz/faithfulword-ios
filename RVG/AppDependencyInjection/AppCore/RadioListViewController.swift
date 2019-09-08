@@ -97,7 +97,8 @@ extension RadioListViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMoreItems()
+//            viewModel.fetchMoreItems()
+            viewModel.fetchAppendItems.onNext(true)
         }
     }
     
@@ -110,7 +111,9 @@ extension RadioListViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMoreItems()
+//            viewModel.fetchMoreItems()
+            viewModel.fetchAppendItems.onNext(true)
+
         }
     }
 }

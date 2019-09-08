@@ -39,7 +39,7 @@ internal final class SideMenuViewModel {
 
     private func setupDatasource() {
         //        sections.value =
-        let menuItems: [SideMenuItemType] = [
+        let mediaMenuItems: [SideMenuItemType] = [
             SideMenuItemType.drillIn(type: .bible,
                                      iconName: "books-stack-of-three",
                                      title: NSLocalizedString("Bible", comment: "").l10n(),
@@ -55,14 +55,17 @@ internal final class SideMenuViewModel {
             SideMenuItemType.drillIn(type: .music,
                                      iconName: "discs_icon_white",
                                      title: NSLocalizedString("Music", comment: "").l10n(),
+                                     showBottomSeparator: true)
+        ]
+        let miscMenuItems: [SideMenuItemType] = [
+
+            SideMenuItemType.drillIn(type: .history,
+                                     iconName: "recents",
+                                     title: NSLocalizedString("History", comment: "").l10n(),
                                      showBottomSeparator: true),
             SideMenuItemType.drillIn(type: .setBibleLanguage,
-                                     iconName: "language_menu",
+                                     iconName: "lang",
                                      title: NSLocalizedString("Set Bible Language", comment: "").l10n(),
-                                     showBottomSeparator: true),
-            SideMenuItemType.drillIn(type: .share,
-                                     iconName: "share_ic",
-                                     title: NSLocalizedString("Share", comment: "").l10n(),
                                      showBottomSeparator: true),
             SideMenuItemType.drillIn(type: .donate,
                                      iconName: "donate",
@@ -81,7 +84,8 @@ internal final class SideMenuViewModel {
                                      title: NSLocalizedString("Feedback", comment: "").l10n(),
                                      showBottomSeparator: true)]
         sections.value = [
-            SideMenuSectionViewModel(type: .menuItem, items: menuItems),
+            SideMenuSectionViewModel(type: .menuItem, items: mediaMenuItems),
+            SideMenuSectionViewModel(type: .menuItem, items: miscMenuItems),
             SideMenuSectionViewModel(type: .quote, items: [
                 SideMenuItemType.quote(body: NSLocalizedString("Holding fast the faithful word as he hath been taught, that he may be able by sound doctrine both to exhort and to convince the gainsayers.", comment: "").l10n(), chapterAndVerse: NSLocalizedString("Titus 1:9", comment: "").l10n())
                 ])

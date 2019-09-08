@@ -39,9 +39,9 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.titleLabel.text = NSLocalizedString("Donate to KJVRVG", comment: "")
-        self.title = NSLocalizedString("Donate", comment: "")
-        self.donateButton.setTitle(NSLocalizedString("Donate via PayPal", comment: ""), for: .normal)
+        self.titleLabel.text = NSLocalizedString("Donate to KJVRVG", comment: "").l10n()
+        self.title = NSLocalizedString("Donate", comment: "").l10n()
+        self.donateButton.setTitle(NSLocalizedString("Donate via PayPal", comment: "").l10n(), for: .normal)
 //        self.navigationController?.isNavigationBarHidden=false
         
         DDLogDebug("PayPal iOS SDK Version: \(PayPalMobile.libraryVersion())")
@@ -67,7 +67,7 @@ class DonateViewController: UIViewController, PayPalPaymentDelegate, UITextField
     }
 
     func _setupSuccessView() {
-        successMessageLabel.text = NSLocalizedString("Your donation was successful.\nThank you!", comment: "")
+        successMessageLabel.text = NSLocalizedString("Your donation was successful.\nThank you!", comment: "").l10n()
         successView.isHidden = true
     }
 

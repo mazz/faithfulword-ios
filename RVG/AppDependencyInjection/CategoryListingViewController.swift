@@ -120,7 +120,7 @@ extension CategoryListingViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMoreCategories()
+            viewModel.fetchAppendCategories.onNext(true)
         }
     }
     
@@ -133,7 +133,7 @@ extension CategoryListingViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMoreCategories()
+            viewModel.fetchAppendCategories.onNext(true)
         }
     }
 }

@@ -36,7 +36,7 @@ extension CategoryListingCoordinator: NavigationCoordinating {
         DispatchQueue.main.async {
             DDLogDebug("goToCategory categorizable: \(categorizable)")
             self.resettableMediaListingCoordinator.value.playlistId = categorizable.categoryUuid
-            self.resettableMediaListingCoordinator.value.mediaType = (categorizable is Gospel) ? .audioGospel : .audioMusic
+            self.resettableMediaListingCoordinator.value.mediaCategory = (categorizable is Gospel) ? .gospel : .music
 //                : (categorizable is Music)
 //                ? .audioMusic : .audioSermon
             self.resettableMediaListingCoordinator.value.flow(with: { viewController in

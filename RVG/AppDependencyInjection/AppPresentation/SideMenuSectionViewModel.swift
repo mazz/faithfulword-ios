@@ -21,8 +21,9 @@ public enum SideMenuDrillInType {
     case gospel
     case preaching
     case music
+    case history
     case aboutUs
-    case share
+//    case share
     case setBibleLanguage
     case donate
     case privacyPolicy

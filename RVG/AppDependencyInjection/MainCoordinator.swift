@@ -157,13 +157,13 @@ extension MainCoordinator: NavigationCoordinating {
         //        viewController.navigationItem.rightBarButtonItem = close
     }
 
-    private func goToPlaylist(for playlistUuid: String) {
-        DDLogDebug("goToPlaylist: \(playlistUuid)")
+    private func goToPlaylist(_ forPlaylistUuid: String, _ mediaCategory: String) {
+        DDLogDebug("goToPlaylist: \(forPlaylistUuid), mediaCategory: \(mediaCategory)")
         // do not use a new flow, because Chapters is part of the Book flow AFAICT
         //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
         
-        self.resettableMediaListingCoordinator.value.playlistId = playlistUuid
-        self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
+        self.resettableMediaListingCoordinator.value.playlistId = forPlaylistUuid
+        self.resettableMediaListingCoordinator.value.mediaCategory = MediaCategory(rawValue: mediaCategory)
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
             
             self.mainNavigationController.pushViewController(
@@ -184,7 +184,7 @@ extension MainCoordinator: NavigationCoordinating {
         //        self.resettableSplashScreenCoordinator.value.flow(with: { viewController in
 
         self.resettableMediaListingCoordinator.value.playlistId = bookUuid
-        self.resettableMediaListingCoordinator.value.mediaType = .audioChapter
+        self.resettableMediaListingCoordinator.value.mediaCategory = .bible
         self.resettableMediaListingCoordinator.value.flow(with: { viewController in
 
             self.mainNavigationController.pushViewController(
@@ -307,9 +307,9 @@ extension MainCoordinator {
         mainViewModel.drillInEvent.next { [unowned self] type in
             switch type {
                 
-            case .playlistItemType(let item):
+            case .playlistItemType(let item, let mediaCategory):
                 DDLogDebug("handle event: \(item)")
-                self.goToPlaylist(for: item.uuid)
+                self.goToPlaylist(item.uuid, mediaCategory)
             }
         }
     }
@@ -403,8 +403,8 @@ extension MainCoordinator {
                     self.goToExternalWebBrowser(url: NSURL(
                         string: "https://www.faithfulwordapp.com/")!
                         as URL)
-                case .share:
-                    DDLogDebug(".share")
+                case .history:
+                    DDLogDebug(".history")
                 case .setBibleLanguage:
                     DDLogDebug(".setBibleLanguage")
                     self.goToBibleLanguageFlow()

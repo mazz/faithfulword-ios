@@ -34,6 +34,7 @@ public struct UserActionPlayable: Codable, Playable {
     //    public var localizedName: String?
 //    public var medThumbnailPath: String?
     public var mediaCategory: String
+    public var multilanguage: Bool
 //    public var medium: String
 //    public var ordinal: Int?
     public var path: String?
@@ -68,6 +69,7 @@ extension UserActionPlayable {
         static let localizedname = Column("localizedname")
         static let mediaCategory = Column("mediaCategory")
         static let medThumbnailPath = Column("medThumbnailPath")
+        static let multilanguage = Column("multilanguage")
         static let path = Column("path")
         static let playableUuid = Column("playableUuid")
         static let playlistUuid = Column("playlistUuid")

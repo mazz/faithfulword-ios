@@ -45,6 +45,19 @@ protocol FileDownloadDataServicing {
     func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
 }
 
+public protocol SearchDataServicing {
+    func searchMediaItems(query: String,
+                          mediaCategory: String?,
+                          playlistUuid: String?,
+                          channelUuid: String?,
+                          publishedAfter: TimeInterval?,
+                          updatedAfter: TimeInterval?,
+                          presentedAfter: TimeInterval?,
+                          offset: Int,
+                          limit: Int,
+                          cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
+
+}
 // Provides account related data to the app
 public protocol AccountDataServicing {
 
@@ -240,6 +253,52 @@ extension DataService: FileDownloadDataServicing {
     public func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
         return dataStore.fileDownloads(for: playlistUuid)
     }
+}
+
+extension DataService: SearchDataServicing {
+    public func searchMediaItems(query: String,
+                                 mediaCategory: String?,
+                                 playlistUuid: String?,
+                                 channelUuid: String?,
+                                 publishedAfter: TimeInterval?,
+                                 updatedAfter: TimeInterval?,
+                                 presentedAfter: TimeInterval?,
+                                 offset: Int,
+                                 limit: Int,
+                                 cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])> {
+        
+        let moyaResponse = self.networkingApi.rx.request(.search(query: query,
+                                                                 mediaCategory: mediaCategory,
+                                                                 playlistUuid: playlistUuid,
+                                                                 channelUuid: channelUuid,
+                                                                 publishedAfter: publishedAfter,
+                                                                 updatedAfter: updatedAfter,
+                                                                 presentedAfter: presentedAfter,
+                                                                 offset: offset,
+                                                                 limit: limit))
+        
+        let response: Single<MediaItemResponse> = moyaResponse.map { response -> MediaItemResponse in
+            do {
+                let jsonObj = try response.mapJSON()
+                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(MediaItemResponse.self)
+            } catch {
+                DDLogError("Moya decode error: \(error)")
+                throw DataServiceError.decodeFailed
+            }
+        }
+        
+        return response.flatMap { [unowned self] response -> Single<(MediaItemResponse, [MediaItem])> in
+//            let mediaItems: Single<[MediaItem]> = self.appendPersistedMediaItems(mediaItems: response.result)
+            let mediaItems: Single<[MediaItem]> = Single.just(response.result)
+            return mediaItems.map({ items -> (MediaItemResponse, [MediaItem]) in
+                let tuple: (MediaItemResponse, [MediaItem]) = (response, items)
+                return tuple
+            })
+        }
+    }
+    
+    
 }
 
 extension DataService: AccountDataServicing {

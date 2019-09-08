@@ -18,19 +18,16 @@ internal protocol AppUIMaking {
     func makeSideMenu() -> SideMenuViewController
 //    func makeBibleLanguagePage() -> BibleLanguageViewController
     func makeBibleLanguagePage() -> RadioListViewController
-    func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController
+    func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController
+    func makeMediaSearching(playlistId: String, mediaCategory: MediaCategory) -> MediaSearchResultsViewController
+    func makeMediaDetails(playable: Playable) -> MediaDetailsViewController
     func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController
     func makeSplashScreen() -> SplashScreenViewController
 
     func makePopupPlayer() -> PopupContentController
 }
 
-/// Protocol facade for factory making all settings related UI.
-internal protocol SettingsUIMaking {
-    //    func makeSettings() -> SettingsViewController
-}
-
-/// The king of UI creation in GoseMobileSample app.
+/// The king of UI creation in the app.
 /// Having a single factory fronted by facades avoids circular-dependency problems that often arise with multiple
 /// factories.  This is because the nature of interactions between screens are not hierarchical in general, and
 /// sometimes inverts at different points in the app.
@@ -73,15 +70,34 @@ extension UIFactory: AppUIMaking {
         return bibleLanguageViewController
     }
 
-    func makeMediaListing(playlistId: String, mediaType: MediaType) -> MediaListingViewController {
+    func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController {
         let mediaListingViewController = MediaListingViewController.make(storyboardName: StoryboardName.mediaListing)
-        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaType)
+        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self, arguments: playlistId, mediaCategory)
+//        mediaListingViewController.searchViewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
         mediaListingViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
-//        mediaListingViewController.downloadingService = resolver.resolve(DownloadService.self)
         mediaListingViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
 
-        //        mediaListingViewController.viewModel = resolver.resolve(MediaListingViewModel.self)
+        
+//        let mediaSearchResultsViewController = MediaSearchResultsViewController.make(storyboardName: StoryboardName.mediaSearching)
+//        mediaSearchResultsViewController.viewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
+//
+//        mediaListingViewController.mediaSearchResultsViewController = mediaSearchResultsViewController
+
         return mediaListingViewController
+    }
+
+    func makeMediaSearching(playlistId: String, mediaCategory: MediaCategory) -> MediaSearchResultsViewController {
+        let mediaSearchingViewController = MediaSearchResultsViewController.make(storyboardName: StoryboardName.mediaSearching)
+        mediaSearchingViewController.viewModel = resolver.resolve(MediaSearchViewModel.self, arguments: playlistId, mediaCategory)
+        return mediaSearchingViewController
+    }
+    
+    func makeMediaDetails(playable: Playable) -> MediaDetailsViewController {
+        let mediaDetailsViewController = MediaDetailsViewController.make(storyboardName: StoryboardName.mediaDetails)
+        mediaDetailsViewController.viewModel = resolver.resolve(MediaDetailsViewModel.self, argument: playable)
+        mediaDetailsViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
+
+        return mediaDetailsViewController
     }
 
     internal func makeRoot() -> RootViewController {
@@ -157,15 +173,3 @@ extension UIFactory: AppUIMaking {
             .make(storyboardName: StoryboardName.splashScreen)
     }
 }
-
-// MARK: <SettingsUIMaking>
-//extension UIFactory: SettingsUIMaking {
-//    internal func makeSettings() -> SettingsViewController {
-//        let controller =  SettingsViewController
-//            .make(storyboardName: StoryboardName.settings)
-//        controller.viewModel = resolver
-//            .resolve(SettingsViewModel.self)
-//        return controller
-//    }
-//}
-

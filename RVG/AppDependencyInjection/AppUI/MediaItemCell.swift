@@ -69,7 +69,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     }
     
 //    func set(uuid: String, title: String, presenter: String, showBottomSeparator: Bool) {
-    func set(playable: Playable, title: String, presenter: String, showBottomSeparator: Bool, showAmountDownloaded: Bool) {
+    func set(playable: Playable, title: String, presenter: String, showBottomSeparator: Bool, showIcon: Bool) {
 //        titleLabel.text = text
         self.playable = playable
         
@@ -81,8 +81,12 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
         artworkImageView.layer.borderWidth = 0
 
         separatorView.isHidden = !showBottomSeparator
+        artworkImageView.isHidden = !showIcon
         
         contentView.backgroundColor = UIColor.white
+        
+        
+        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }

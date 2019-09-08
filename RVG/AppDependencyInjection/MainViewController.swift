@@ -158,7 +158,7 @@ extension MainViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMorePlaylists()
+            viewModel.fetchAppendPlaylists.onNext(true)
         }
     }
     
@@ -169,7 +169,7 @@ extension MainViewController: UIScrollViewDelegate {
         
         if offsetDiff - collectionView.frame.size.height <= 20.0 {
             DDLogDebug("fetch!")
-            viewModel.fetchMorePlaylists()
+            viewModel.fetchAppendPlaylists.onNext(true)
         }
     }
 }
