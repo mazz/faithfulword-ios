@@ -72,9 +72,6 @@ class MediaSearchResultsViewController: UIViewController, UICollectionViewDataSo
             noResultLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -100),
             noResultLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
             noResultLabel.heightAnchor.constraint(equalToConstant: 300),
-            
-//            noResultLabel.topAnchor.constraint(equalTo: collectionView.topAnchor),
-//            noResultLabel.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor),
             ])
 
         

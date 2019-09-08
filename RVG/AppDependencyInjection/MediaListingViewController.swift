@@ -48,6 +48,9 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     internal var previousSelectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     internal var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
     
+    let noResultLabel: UILabel = UILabel(frame: .zero)
+
+    
     /// MARK: Search
 
     internal var viewModelSearchSections: [MediaListingSectionViewModel] = []
@@ -97,6 +100,25 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
+        
+        
+        noResultLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
+        noResultLabel.textAlignment = .center
+        noResultLabel.font = UIFont.systemFont(ofSize: 32)
+        noResultLabel.textColor = .gray
+        noResultLabel.backgroundColor = .clear
+        
+        
+        collectionView.addSubview(noResultLabel)
+        noResultLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noResultLabel.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
+            noResultLabel.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
+            noResultLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -100),
+            noResultLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            noResultLabel.heightAnchor.constraint(equalToConstant: 300),
+            ])
+
         
         let notificationCenter = NotificationCenter.default
         
@@ -251,9 +273,10 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     // MARK: Private helpers
     
     private func reactToViewModel() {
-        viewModel.sections.asObservable()
+        viewModel.filteredSections.asObservable()
             .observeOn(MainScheduler.instance)
-            .filter{ $0[Constants.mediaSection].items.count > 0 }
+//            .debug()
+//            .filter{ $0[Constants.mediaSection].items.count > 0 }
             .next { [unowned self] sections in
                 // first time loading sections
                 if self.itemsUpdatedAtLeastOnce == false {
@@ -264,22 +287,34 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 else {
                     let currentItemsCount: Int = self.viewModelSections[Constants.mediaSection].items.count
                     let appendCount: Int = sections[Constants.mediaSection].items.count - currentItemsCount
-                    let newItems = Array(sections[Constants.mediaSection].items.suffix(appendCount))
-                    DDLogDebug("newItems.count: \(newItems.count)")
                     
-                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: Constants.mediaSection) }
-                    DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
-                    self.viewModelSections = sections
-                    
-                    DispatchQueue.main.async {
-                        UIView.performWithoutAnimation {
-                            self.collectionView.performBatchUpdates({
-                                self.collectionView.insertItems(at: insertIndexPaths)
-                            }, completion: { result in
+                    // we are filtering items since the count is reducing, just hard reloadData()
+                    if appendCount <= 0 {
+                        DispatchQueue.main.async {
+                            UIView.performWithoutAnimation {
+                                self.viewModelSections = sections
                                 self.collectionView.reloadData()
-                            })
+                            }
+                        }
+                    } else {
+                        let newItems = Array(sections[Constants.mediaSection].items.suffix(appendCount))
+                        DDLogDebug("newItems.count: \(newItems.count)")
+                        
+                        let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: Constants.mediaSection) }
+                        DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
+                        self.viewModelSections = sections
+                        
+                        DispatchQueue.main.async {
+                            UIView.performWithoutAnimation {
+                                self.collectionView.performBatchUpdates({
+                                    self.collectionView.insertItems(at: insertIndexPaths)
+                                }, completion: { result in
+                                    self.collectionView.reloadData()
+                                })
+                            }
                         }
                     }
+                    
 //
 //
 //
@@ -354,20 +389,33 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
 //                    self.searchController = UISearchController(searchResultsController: nil)
 //                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
-                    self.navigationItem.searchController = self.filterController
+                    DispatchQueue.main.async {
+                        self.navigationItem.searchController = self.filterController
+                    }
+                    
                 case .notReachable:
                     DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
 //                    self.searchController = UISearchController(searchResultsController: nil)
 //                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
-                    self.navigationItem.searchController = self.filterController
+                    DispatchQueue.main.async {
+                        self.navigationItem.searchController = self.filterController
+                    }
 
                     
                 case .reachable(_):
                     DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
 //                    self.searchController = UISearchController(searchResultsController: self.mediaSearchResultsViewController)
 //                    self.searchController.searchBar.placeholder = NSLocalizedString("Search", comment: "").l10n()
-                    self.navigationItem.searchController = self.searchController
+                    DispatchQueue.main.async {
+                        self.navigationItem.searchController = self.searchController
+                    }
                 }
+            }.disposed(by: bag)
+
+        viewModel.emptyFilteredResult.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] emptyResult in
+                self.noResultLabel.isHidden = !emptyResult
             }.disposed(by: bag)
 
     }
@@ -916,6 +964,10 @@ extension MediaListingViewController: UISearchBarDelegate {
     public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
         
         searchBar.setShowsCancelButton(false, animated: true)
+        
+        // reset the filteredMedia to no filtering to show the entire list
+        // of content because they cancelled filtering
+        viewModel.filterText.onNext("")
         return true
 //        var textHasChars: Bool = false
 //
@@ -934,11 +986,14 @@ extension MediaListingViewController: UISearchBarDelegate {
         if searchText == "" {
             DDLogDebug("probably cleared searchbar")
             mediaSearchResultsViewController.viewModel.cancelSearch.value = searchText
-        } else {
-            // we are looking for searchText.count > 0 for filtering because
-            // we filter on the fly
-            viewModel.filterText.onNext(searchText)
         }
+        viewModel.filterText.onNext(searchText)
+
+//        else {
+//            // we are looking for searchText.count > 0 for filtering because
+//            // we filter on the fly
+//            viewModel.filterText.onNext(searchText)
+//        }
     }
 }
 

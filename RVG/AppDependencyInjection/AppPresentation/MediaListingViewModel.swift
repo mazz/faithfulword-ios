@@ -10,7 +10,7 @@ internal final class MediaListingViewModel {
     // MARK: Fields
 
     public func section(at index: Int) -> MediaListingSectionViewModel {
-        return sections.value[index]
+        return filteredSections.value[index]
     }
 
     public func item(at indexPath: IndexPath) -> MediaListingItemType {
@@ -26,6 +26,10 @@ internal final class MediaListingViewModel {
     // current searchText
     public var fetchAppendMedia: PublishSubject<Bool> = PublishSubject<Bool>()
     
+    // true - the search for the current filterText yields no results
+    // false - the search for the current filterText yields a result > 0
+    public var emptyFilteredResult: Field<Bool> = Field<Bool>(false)
+
     // media loaded on initial fetch
     public private(set) var media = Field<[Playable]>([])
     public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
@@ -41,7 +45,7 @@ internal final class MediaListingViewModel {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent
             .do(onNext: { [weak self] indexPath in
-                let section = self?.sections.value[indexPath.section]
+                let section = self?.filteredSections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
                 DDLogDebug("item: \(String(describing: item))")
                 if case .drillIn(let type, _, _, _, _)? = item {
@@ -54,7 +58,7 @@ internal final class MediaListingViewModel {
 
             })
             .filterMap { [weak self] indexPath -> MediaListingDrillInType? in
-                let section = self?.sections.value[indexPath.section]
+                let section = self?.filteredSections.value[indexPath.section]
                 let item = section?.items[indexPath.item]
             // Don't emit an event for anything that is not a 'drillIn'
                 if case .drillIn(let type, _, _, _, _)? = item {
@@ -262,7 +266,20 @@ internal final class MediaListingViewModel {
                         return ($0.localizedname.lowercased().contains(filterText.lowercased()))
                     })
                     }).subscribe(onNext: { filteredPlayables in
-                        DDLogDebug("filteredPlayables: \(filteredPlayables)")
+                        
+                        switch self.networkStatus.value {
+                            
+                        case .unknown:
+                            DDLogDebug("filteredPlayables count: \(filteredPlayables.count)")
+                            self.emptyFilteredResult.value = (filteredPlayables.count == 0)
+                            self.filteredMedia.value = filteredPlayables
+                        case .notReachable:
+                            DDLogDebug("filteredPlayables count: \(filteredPlayables.count)")
+                            self.emptyFilteredResult.value = (filteredPlayables.count == 0)
+                            self.filteredMedia.value = filteredPlayables
+                        case .reachable(_):
+                            DDLogDebug("do nothing with \(filterText) because we are online")
+                        }
                     }).disposed(by: self.bag)
         }.disposed(by: bag)
     }
@@ -281,6 +298,10 @@ internal final class MediaListingViewModel {
             } else {
                 self.media.value = persistedMediaItems
                 self.assetPlaybackService.playables.value = self.media.value
+                
+                // self.media is our source of truth
+                self.filteredMedia.value = self.media.value
+                
                 self.lastOffset = Int(ceil(CGFloat(persistedMediaItems.count / Constants.limit)))
             }
         }) { error in
@@ -291,8 +312,11 @@ internal final class MediaListingViewModel {
     
     func fetchMedia(offset: Int, limit: Int, cacheDirective: CacheDirective) {
         productService.fetchMediaItems(for: playlistUuid, offset: offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (mediaItemResponse, mediaItems) in
-            DDLogDebug("fetchMediaItems: \(mediaItems)")
+//            DDLogDebug("fetchMediaItems: \(mediaItems)")
             self.media.value.append(contentsOf: mediaItems)
+            
+            self.filteredMedia.value = self.media.value
+            
             self.totalEntries = mediaItemResponse.totalEntries
             self.totalPages = mediaItemResponse.totalPages
             self.pageSize = mediaItemResponse.pageSize
