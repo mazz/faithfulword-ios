@@ -18,6 +18,7 @@ internal protocol AppUIMaking {
     func makeSideMenu() -> SideMenuViewController
 //    func makeBibleLanguagePage() -> BibleLanguageViewController
     func makeBibleLanguagePage() -> RadioListViewController
+    func makeHistoryPage() -> HistoryViewController
     func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController
     func makeMediaSearching(playlistId: String, mediaCategory: MediaCategory) -> MediaSearchResultsViewController
     func makeMediaDetails(playable: Playable) -> MediaDetailsViewController
@@ -68,6 +69,13 @@ extension UIFactory: AppUIMaking {
         let bibleLanguageViewController = RadioListViewController.make(storyboardName: StoryboardName.bibleLanguage)
         bibleLanguageViewController.viewModel = resolver.resolve(LanguageViewModel.self)
         return bibleLanguageViewController
+    }
+
+    func makeHistoryPage() -> HistoryViewController {
+        let historyViewController = HistoryViewController.make(storyboardName: StoryboardName.history)
+        historyViewController.historyPlaybackViewModel = resolver.resolve(MediaFilterViewModel.self)
+        historyViewController.historyDownloadViewModel = resolver.resolve(MediaFilterViewModel.self)
+        return historyViewController
     }
 
     func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController {

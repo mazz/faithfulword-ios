@@ -229,6 +229,11 @@ internal final class AppDependencyModule {
             )
         }
 
+        container.register(HistoryCoordinator.self) { resolver in
+            HistoryCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
+            )
+        }
+
         container.register(MainCoordinator.self) { resolver in
             MainCoordinator(
                 appUIMaking: resolver.resolve(AppUIMaking.self)!,
@@ -243,6 +248,8 @@ internal final class AppDependencyModule {
                 },
                 resettableBibleLanguageCoordinator: Resettable {
                     resolver.resolve(BibleLanguageCoordinator.self)!
+                }, resettableHistoryCoordinator: Resettable {
+                    resolver.resolve(HistoryCoordinator.self)!
                 },
                 productService: resolver.resolve(ProductServicing.self)!
             )
@@ -313,6 +320,40 @@ internal final class AppDependencyModule {
         container.register(DownloadListingViewModel.self) { resolver in
             DownloadListingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
             }.inObjectScope(.transient)
+        
+//        container.register(HistoryPlaybackViewModel.self) { resolver, playlistId, mediaCategory in
+//            HistoryPlaybackViewModel(
+//                playlistUuid: playlistId,
+//                mediaCategory: mediaCategory,
+//                productService: resolver.resolve(ProductServicing.self)!,
+//                //                searchService: resolver.resolve(SearchServicing.self)!,
+//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+//                reachability: resolver.resolve(RxClassicReachable.self)!
+//            )
+//            }.inObjectScope(.transient)
+//
+//        container.register(HistoryDownloadViewModel.self) { resolver, playlistId, mediaCategory in
+//            HistoryDownloadViewModel(
+//                playlistUuid: playlistId,
+//                mediaCategory: mediaCategory,
+//                productService: resolver.resolve(ProductServicing.self)!,
+//                //                searchService: resolver.resolve(SearchServicing.self)!,
+//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+//                reachability: resolver.resolve(RxClassicReachable.self)!
+//            )
+//            }.inObjectScope(.transient)
+        
+        container.register(MediaFilterViewModel.self) { resolver, playlistId, mediaCategory in
+            MediaFilterViewModel(
+                playlistUuid: playlistId,
+                mediaCategory: mediaCategory,
+                productService: resolver.resolve(ProductServicing.self)!,
+                //                searchService: resolver.resolve(SearchServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
+            )
+            }.inObjectScope(.transient)
+
 
     }
 

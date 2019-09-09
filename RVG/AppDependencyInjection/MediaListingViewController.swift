@@ -54,7 +54,6 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     /// MARK: Search
 
     internal var viewModelSearchSections: [MediaListingSectionViewModel] = []
-    var products = [Product]() // for testing of search only, remove once navigation is working
 
     /// State restoration values.
     private enum RestorationKeys: String {

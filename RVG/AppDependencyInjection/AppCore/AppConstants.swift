@@ -1,6 +1,7 @@
 import Foundation
 
 struct StoryboardName {
+    static let history = "History"
     static let main = "Root"
     static let splashScreen = "SplashScreen"
     static let settings = "Settings"
