@@ -44,8 +44,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
     // MARK: Fields
     
     internal var viewModelSections: [MediaDetailsSectionViewModel] = []
-    internal var downloadingItems: [String: FileDownload] = [:]
-    internal var downloadedItems: [String: FileDownload] = [:]
+//    internal var downloadingItems: [String: FileDownload] = [:]
+//    internal var downloadedItems: [String: FileDownload] = [:]
     internal var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     internal var previousSelectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     internal var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
@@ -76,11 +76,11 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
         
         // DownloadService
-        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
 
         // Do any additional setup after loading the view.
         reactToViewModel()
@@ -95,11 +95,11 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
         notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
         
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
     }
 
     // MARK: Private helpers
@@ -180,7 +180,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
             .subscribe(onNext: { fileDownloads in
                 
                 fileDownloads.forEach({ [unowned self] fileDownload in
-                    self.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
                 })
                 
                 DDLogDebug("viewModel.playlistUuid: \(self.viewModel.playable.playlistUuid) fileDownloads: \(fileDownloads)")
@@ -197,11 +197,11 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                 
                 if let playableUuid: String? = playableUuid.element,
                     let uuid: String = playableUuid,
-                    let download: FileDownload = self.downloadedItems[uuid],
+                    let download: FileDownload = self.downloadListingViewModel.downloadedItems[uuid],
                     let indexPath: IndexPath = self.indexOfFileDownloadInViewModel(fileDownload: download) {
                     
                     // remove it from downloadedItems
-                    self.downloadedItems[uuid] = nil
+                    self.downloadListingViewModel.downloadedItems[uuid] = nil
                     
                     if indexPath.row >= 0 {
                         UIView.performWithoutAnimation {
@@ -212,6 +212,29 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
             }
             .disposed(by: bag)
         
+        downloadListingViewModel.fileDownloadDirty
+            .asObservable()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] fileDownload in
+                let indexPath: IndexPath = self.indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+                if indexPath.row != -1 {
+                    self.lastProgressChangedUpdate.onNext(indexPath)
+                }
+
+            }).disposed(by: bag)
+        
+        
+        downloadListingViewModel.fileDownloadDirtyComplete
+            .asObservable()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] fileDownload in
+                let indexPath: IndexPath = self.indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+                if indexPath.row != -1 {
+                    self.lastDownloadCompleteUpdate.onNext(indexPath)
+                }
+                
+            }).disposed(by: bag)
+
     }
     
     // returns -1 on not found
@@ -298,11 +321,11 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
             //        actionController.addAction(Action(ActionData(title: "Add to Watch Later", image: UIImage(named: "yt-add-to-watch-later-icon")!), style: .default, handler: { action in
             //        }))
             
-            if let fileDownload: FileDownload = downloadedItems[mediaItem.uuid] {
+            if let fileDownload: FileDownload = downloadListingViewModel.downloadedItems[mediaItem.uuid] {
                 actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                     self.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
                 }))
-            } else if let downloading: FileDownload = downloadingItems[mediaItem.uuid] {
+            } else if let downloading: FileDownload = downloadListingViewModel.downloadingItems[mediaItem.uuid] {
                 actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                     self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
                 }))
@@ -314,7 +337,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                     
                 }))
             }
-            if let fileDownload: FileDownload = downloadedItems[mediaItem.uuid] {
+            if let fileDownload: FileDownload = downloadListingViewModel.downloadedItems[mediaItem.uuid] {
                 actionController.addAction(Action(ActionData(title: "Share File...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
                     
                     self.shareFile(mediaItem: mediaItem)
@@ -357,7 +380,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
             DDLogDebug("MediaDetailsViewController initiateNotification filedownload: \(fileDownload)")
             DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
-            downloadingItems[fileDownload.playableUuid] = fileDownload
+            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
             
             self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
             
@@ -394,81 +417,81 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
         }
     }
     
-    @objc func handleDownloadDidProgressNotification(notification: Notification) {
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaDetailsViewController didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
-            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
-            
-            downloadingItems[fileDownload.playableUuid] = fileDownload
-            
-            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
-            
-            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
-            if indexPath.row != -1 {
-                lastProgressChangedUpdate.onNext(indexPath)
-            }
-            
-            //            lastProgressChangedUpdate.onNext(Date())
-        }
-    }
+//    @objc func handleDownloadDidProgressNotification(notification: Notification) {
+//        if let fileDownload: FileDownload = notification.object as? FileDownload {
+//            DDLogDebug("MediaDetailsViewController didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+//            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+//
+//            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+//
+//            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+//
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastProgressChangedUpdate.onNext(indexPath)
+//            }
+//
+//            //            lastProgressChangedUpdate.onNext(Date())
+//        }
+//    }
     
-    @objc func handleDownloadDidCompleteNotification(notification: Notification) {
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaDetailsViewController completeNotification filedownload: \(fileDownload)")
-            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
-            
-            downloadingItems[fileDownload.playableUuid] = fileDownload
-            
-            // store download as `downloaded`
-            downloadedItems[fileDownload.playableUuid] = fileDownload
-            
-            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
-            
-            //            lastProgressChangedUpdate.onNext(Date())
-            //            lastDownloadCompleteUpdate.onNext(Date())
-            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
-            if indexPath.row != -1 {
-                lastDownloadCompleteUpdate.onNext(indexPath)
-            }
-            
-        }
-    }
+//    @objc func handleDownloadDidCompleteNotification(notification: Notification) {
+//        if let fileDownload: FileDownload = notification.object as? FileDownload {
+//            DDLogDebug("MediaDetailsViewController completeNotification filedownload: \(fileDownload)")
+//            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+//
+//            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+//
+//            // store download as `downloaded`
+//            downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+//
+//            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+//
+//            //            lastProgressChangedUpdate.onNext(Date())
+//            //            lastDownloadCompleteUpdate.onNext(Date())
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastDownloadCompleteUpdate.onNext(indexPath)
+//            }
+//
+//        }
+//    }
     
-    @objc func handleDownloadDidErrorNotification(notification: Notification) {
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaDetailsViewController errorNotification filedownload: \(fileDownload)")
-            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
-            
-            downloadingItems[fileDownload.playableUuid] = fileDownload
-            
-            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
-            
-            //            lastProgressChangedUpdate.onNext(Date())
-            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
-            if indexPath.row != -1 {
-                lastProgressChangedUpdate.onNext(indexPath)
-            }
-            
-        }
-    }
+//    @objc func handleDownloadDidErrorNotification(notification: Notification) {
+//        if let fileDownload: FileDownload = notification.object as? FileDownload {
+//            DDLogDebug("MediaDetailsViewController errorNotification filedownload: \(fileDownload)")
+//            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+//
+//            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+//
+//            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+//
+//            //            lastProgressChangedUpdate.onNext(Date())
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastProgressChangedUpdate.onNext(indexPath)
+//            }
+//
+//        }
+//    }
     
-    @objc func handleDownloadDidCancelNotification(notification: Notification) {
-        if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("MediaDetailsViewController cancelNotification filedownload: \(fileDownload)")
-            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
-            
-            downloadingItems[fileDownload.playableUuid] = fileDownload
-            
-            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
-            
-            //            lastProgressChangedUpdate.onNext(Date())
-            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
-            if indexPath.row != -1 {
-                lastProgressChangedUpdate.onNext(indexPath)
-            }
-            
-        }
-    }
+//    @objc func handleDownloadDidCancelNotification(notification: Notification) {
+//        if let fileDownload: FileDownload = notification.object as? FileDownload {
+//            DDLogDebug("MediaDetailsViewController cancelNotification filedownload: \(fileDownload)")
+//            DDLogDebug("MediaDetailsViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+//            
+//            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+//            
+//            self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
+//            
+//            //            lastProgressChangedUpdate.onNext(Date())
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastProgressChangedUpdate.onNext(indexPath)
+//            }
+//            
+//        }
+//    }
 
 }
 
@@ -598,7 +621,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                     }
                 }
                 
-                if let fileDownload: FileDownload = downloadingItems[item.uuid] {
+                if let fileDownload: FileDownload = downloadListingViewModel.downloadingItems[item.uuid] {
                     
                     drillInCell.progressView.isHidden = false
                     drillInCell.amountDownloaded.isHidden = false
@@ -642,7 +665,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
                         
                         // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
+                        self.downloadListingViewModel.downloadingItems[item.uuid] = nil
                         
                     case .complete:
                         drillInCell.progressView.isHidden = true
@@ -653,7 +676,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
                         
                         // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
+                        self.downloadListingViewModel.downloadingItems[item.uuid] = nil
                         
                     case .error:
                         drillInCell.progressView.isHidden = true
@@ -664,7 +687,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
                         
                         // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
+                        self.downloadListingViewModel.downloadingItems[item.uuid] = nil
                         
                     case .unknown:
                         drillInCell.progressView.isHidden = true
@@ -681,7 +704,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                 
                 // update UI with downloaded items
                 
-                if let fileDownload: FileDownload = downloadedItems[item.uuid] {
+                if let fileDownload: FileDownload = downloadListingViewModel.downloadedItems[item.uuid] {
                     drillInCell.progressView.isHidden = true
                     drillInCell.amountDownloaded.isHidden = false
                     
@@ -693,7 +716,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                     // if we just deleted the file, update the UI
                     
                     // make sure that it is not in the downloading items
-                    if let _: FileDownload = downloadingItems[item.uuid] {
+                    if let _: FileDownload = downloadListingViewModel.downloadingItems[item.uuid] {
                         // do nothing because we want to show progress in UI
                         // if it is downloading
                     } else {

@@ -19,7 +19,23 @@ internal final class DownloadListingViewModel {
 //    public var downloadAssetIdentifier = Field<String?>(nil)
 //    //https: //remoteurl.com/full/path.mp3
     public var fileDownloadDeleted = Field<String?>(nil)
+    
+    // every time a file download state changes from one of the notification
+    // callbacks, it gets published with fileDownloadDirty. The view controller can observe
+    // this and determine which collection view index path needs to be refreshed
+    public var fileDownloadDirty: PublishSubject<FileDownload> = PublishSubject<FileDownload>()
+    
+    // every time a file download state changes to complete from one of the notification
+    // callbacks, it gets published with fileDownloadDirtyComplete. The view controller can observe
+    // this and determine which collection view index path needs to be refreshed
+    public var fileDownloadDirtyComplete: PublishSubject<FileDownload> = PublishSubject<FileDownload>()
+
 //
+    public var downloadingItems: [String: FileDownload] = [:]
+    public var downloadedItems: [String: FileDownload] = [:]
+
+    
+    
 //    // the state of the download button image name
 //    public let downloadImageNameEvent = Field<String>("download_icon_black")
     // MARK: Dependencies
@@ -28,7 +44,33 @@ internal final class DownloadListingViewModel {
     
     internal init(downloadService: DownloadServicing) {
         self.downloadService = downloadService
+        
+        let notificationCenter = NotificationCenter.default
+        
+        // MediaItemCell
+//        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+        
+        // DownloadService
+        notificationCenter.addObserver(self, selector: #selector(DownloadListingViewModel.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadListingViewModel.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadListingViewModel.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadListingViewModel.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(DownloadListingViewModel.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+
     }
+    
+    deinit {
+        // Remove all KVO and notification observers.
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+    }
+
 
     public func storedFileDownload(for playableUuid: String) -> Single<FileDownload?> {
         return self.downloadService.fetchFileDownloadHistory(playableUuid: playableUuid)
@@ -73,5 +115,100 @@ internal final class DownloadListingViewModel {
             downloadService.cancelDownload(filename: fileIdentifier, playlistUuid: playlistUuid)
         }
     }
+    
+    // MARK: DownloadService notifications
+    
+    @objc func handleDownloadDidInitiateNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("DownloadListingViewModel initiateNotification filedownload: \(fileDownload)")
+            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            self.updateFileDownloadHistory(for: fileDownload)
+            
+            fileDownloadDirty.onNext(fileDownload)
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastProgressChangedUpdate.onNext(indexPath)
+//            }
+        }
+    }
+    
+    @objc func handleDownloadDidProgressNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("DownloadListingViewModel didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
+            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            self.updateFileDownloadHistory(for: fileDownload)
+            
+            fileDownloadDirty.onNext(fileDownload)
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastProgressChangedUpdate.onNext(indexPath)
+//            }
+            
+            //            lastProgressChangedUpdate.onNext(Date())
+        }
+    }
+    
+    @objc func handleDownloadDidCompleteNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("DownloadListingViewModel completeNotification filedownload: \(fileDownload)")
+            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            // store download as `downloaded`
+            downloadedItems[fileDownload.playableUuid] = fileDownload
+            
+            self.updateFileDownloadHistory(for: fileDownload)
+            
+
+            fileDownloadDirtyComplete.onNext(fileDownload)
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastDownloadCompleteUpdate.onNext(indexPath)
+//            }
+        }
+    }
+    
+    @objc func handleDownloadDidErrorNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("DownloadListingViewModel errorNotification filedownload: \(fileDownload)")
+            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            self.updateFileDownloadHistory(for: fileDownload)
+            
+            fileDownloadDirty.onNext(fileDownload)
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastProgressChangedUpdate.onNext(indexPath)
+//            }
+        }
+    }
+    
+    @objc func handleDownloadDidCancelNotification(notification: Notification) {
+        if let fileDownload: FileDownload = notification.object as? FileDownload {
+            DDLogDebug("DownloadListingViewModel cancelNotification filedownload: \(fileDownload)")
+            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            
+            downloadingItems[fileDownload.playableUuid] = fileDownload
+            
+            self.updateFileDownloadHistory(for: fileDownload)
+
+            fileDownloadDirty.onNext(fileDownload)
+
+//            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+//            if indexPath.row != -1 {
+//                lastProgressChangedUpdate.onNext(indexPath)
+//            }
+        }
+    }
+
 }
 
