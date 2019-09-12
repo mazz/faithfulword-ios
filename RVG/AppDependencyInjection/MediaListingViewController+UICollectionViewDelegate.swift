@@ -88,7 +88,7 @@ extension MediaListingViewController: UICollectionViewDelegate {
                     }
                 }
                 
-                if let fileDownload: FileDownload = downloadingItems[item.uuid] {
+                if let fileDownload: FileDownload = downloadListingViewModel.downloadingItems[item.uuid] {
                     
                     drillInCell.progressView.isHidden = false
                     drillInCell.amountDownloaded.isHidden = false
@@ -132,7 +132,7 @@ extension MediaListingViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
                         
                         // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
+                        self.downloadListingViewModel.downloadingItems[item.uuid] = nil
                         
                     case .complete:
                         drillInCell.progressView.isHidden = true
@@ -143,7 +143,7 @@ extension MediaListingViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
                         
                         // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
+                        self.downloadListingViewModel.downloadingItems[item.uuid] = nil
                         
                     case .error:
                         drillInCell.progressView.isHidden = true
@@ -154,7 +154,7 @@ extension MediaListingViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
                         
                         // remove it from downloadingItems
-                        self.downloadingItems[item.uuid] = nil
+                        self.downloadListingViewModel.downloadingItems[item.uuid] = nil
                         
                     case .unknown:
                         drillInCell.progressView.isHidden = true
@@ -171,19 +171,23 @@ extension MediaListingViewController: UICollectionViewDelegate {
                 
                 // update UI with downloaded items
                 
-                if let fileDownload: FileDownload = downloadedItems[item.uuid] {
+                if let fileDownload: FileDownload = downloadListingViewModel.downloadedItems[item.uuid] {
                     drillInCell.progressView.isHidden = true
                     drillInCell.amountDownloaded.isHidden = false
                     
-                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) : String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount))) / \(fileSizeFormattedString(for: fileDownload.totalCount)))")
+                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) : String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount)) / \(fileSizeFormattedString(for: fileDownload.totalCount))")
                     drillInCell.downloadStateButton.isHidden = false
                     drillInCell.downloadStateButton.isEnabled = false
-                    drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
+                    if fileDownload.progress == 1.0 {
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
+                    } else if fileDownload.progress < 1.0  && fileDownload.progress > 0.0   {
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+                    }
                 } else {
                     // if we just deleted the file, update the UI
                     
                     // make sure that it is not in the downloading items
-                    if let _: FileDownload = downloadingItems[item.uuid] {
+                    if let _: FileDownload = downloadListingViewModel.downloadingItems[item.uuid] {
                         // do nothing because we want to show progress in UI
                         // if it is downloading
                     } else {
