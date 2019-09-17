@@ -151,7 +151,8 @@ class PopupContentController: UIViewController {
                     let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value,
                     let localizedName: String = playable.localizedname,
                     let presenterName: String = playable.presenterName ?? "Unknown",
-                    let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) else { return }
+                    let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                    let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) else { return }
 
                 let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(selectedPlayable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
                 

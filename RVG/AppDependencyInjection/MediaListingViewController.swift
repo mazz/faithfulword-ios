@@ -122,9 +122,87 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         let notificationCenter = NotificationCenter.default
         
         // MediaItemCell
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
         
+//        MediaItemCell.mediaItemCellUserDidTapRetryNotification
+        notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            DDLogDebug("notification: \(notification)")
+            if let mediaItem: MediaItem = notification.object as? MediaItem,
+                let weakSelf = self {
+                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+            }
+        }
+        
+        notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            
+            DDLogDebug("notification: \(notification)")
+            if let mediaItem: MediaItem = notification.object as? MediaItem,
+                let weakSelf = self {
+                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+            }
+        }
+
+        notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            
+            DDLogDebug("notification: \(notification)")
+            /*
+             - some : Faithful_Word.MediaItem(contentProviderLink: nil, duration: 0.0, hashId: "gqRj", insertedAt: 1565925286.0, ipfsLink: nil, languageId: "en", largeThumbnailPath: nil, localizedname: "Matthew 1", medThumbnailPath: nil, mediaCategory: "bible", medium: "audio", ordinal: Optional(1), path: Optional("bible/en/0040-0001-Matthew-en.mp3"), playlistUuid: "8e06e658-9cdf-4ca0-8aa5-a3e958e6b035", presentedAt: nil, presenterName: Optional("Eli Lambert"), publishedAt: nil, smallThumbnailPath: nil, sourceMaterial: Optional("King James Bible (KJV)"), tags: [], trackNumber: Optional(1), updatedAt: Optional(1565925318.0), uuid: "39be7a9d-fbe8-49a3-a5d4-16c3e10b0c2d")
+             */
+            if let mediaItem: MediaItem = notification.object as? MediaItem,
+                let weakSelf = self,
+                let path: String = mediaItem.path,
+                let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
+                let actionController = YoutubeActionController()
+                
+                
+                let fileIdentifier: String = mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
+                //        actionController.addAction(Action(ActionData(title: "Add to Watch Later", image: UIImage(named: "yt-add-to-watch-later-icon")!), style: .default, handler: { action in
+                //        }))
+                
+                if let fileDownload: FileDownload = weakSelf.downloadListingViewModel.downloadedItems[mediaItem.uuid] {
+                    actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                        weakSelf.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
+                    }))
+                } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
+                    actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                        weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                    }))
+                }
+                else {
+                    actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                        //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
+                        weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                        
+                    }))
+                }
+                if let fileDownload: FileDownload = weakSelf.downloadListingViewModel.downloadedItems[mediaItem.uuid] {
+                    actionController.addAction(Action(ActionData(title: "Share File...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
+                        
+                        weakSelf.shareFile(mediaItem: mediaItem)
+                    }))
+                }
+                actionController.addAction(Action(ActionData(title: "Share Link...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
+                    weakSelf.shareLink(mediaItem: mediaItem)
+                }))
+                
+                actionController.addAction(Action(ActionData(title: "Cancel", image: UIImage(named: "yt-cancel-icon")!), style: .cancel, handler: nil))
+                
+                weakSelf.present(actionController, animated: true, completion: nil)
+            }
+            
+            //        if let fileDownload: FileDownload = notification.object as? FileDownload,
+            //            let downloadAsset: Asset = self.downloadAsset.value {
+            //            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
+            //            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+            //
+            //                self.downloadState.onNext(.initiating)
+            //            }
+            //
+            //        }
+            
+        }
         // DownloadService
 //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
 //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
@@ -465,14 +543,73 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     private func bindDownloadListingViewModel() {
         
+        Observable.combineLatest(downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid).asObservable(),
+                                 downloadListingViewModel.storedFileDownloads(for: viewModel.playlistUuid).asObservable())
+            .subscribe(onNext: { activeDownloads, fileDownloads in
+                DDLogDebug("activeDownloads: \(activeDownloads) fileDownloads: \(fileDownloads)")
+                
+                // put activeDownloads in downloading
+                activeDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+                })
+                
+                // put .complete in downloaded
+                var notCompleted: [FileDownload] = []
+                // put anything that is not .complete in downloadingItems
+                fileDownloads.forEach({ [unowned self] fileDownload in
+                    if fileDownload.state != .complete {
+                        notCompleted.append(fileDownload)
+                    } else {
+                        self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    }
+                })
+                
+                // put interrupted in downloaded, to allow the user the option of restarting
+                // by tapping the restart button
+                var interruptedDownloads: [FileDownload] = []
+                notCompleted.forEach({ [unowned self] notCompletedDownload in
+                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
+                    
+                    let notCompletePresentInActive: Bool = activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid }
+                    
+                    if notCompletePresentInActive == false {
+                        // interrupted
+                        interruptedDownloads.append(notCompletedDownload)
+                    }
+                
+//                let interruptedDownloads: [FileDownload] = notCompleted.filter({ notCompletedDownload -> Bool in
+//                    activeDownloads.contains(where: { activeDownload -> Bool in
+//                        activeDownload.playlistUuid != notCompletedDownload.playlistUuid
+//                    })
+                })
+                
+                interruptedDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    })
+
+                DDLogDebug("interruptedDownloads: \(interruptedDownloads)")
+                
+            }).disposed(by: bag)
+        
+//        downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid)
+//            .asObservable()
+//            .next { activeDownloads in
+//                DDLogDebug("viewModel activeDownloads: \(activeDownloads)")
+//            }.disposed(by: bag)
+        
         // the moment the viewmodel playlistuuid changes we
         // get the file downloads for that playlist
         downloadListingViewModel.storedFileDownloads(for: viewModel.playlistUuid)
             .asObservable()
             .subscribe(onNext: { fileDownloads in
                 
+                // put anything that is not .complete in downloadingItems
                 fileDownloads.forEach({ [unowned self] fileDownload in
-                    self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    if fileDownload.state != .complete {
+                        self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+                    } else {
+                        self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    }
                 })
                 
                 DDLogDebug("viewModel.playlistUuid: \(self.viewModel.playlistUuid) fileDownloads: \(fileDownloads)")
@@ -614,7 +751,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
          */
         if let mediaItem: MediaItem = notification.object as? MediaItem,
             let path: String = mediaItem.path,
-            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
+            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
             let actionController = YoutubeActionController()
             
             
@@ -909,7 +1047,8 @@ extension MediaListingViewController {
         
         if let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
             let path: String = mediaItem.path,
-            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
+            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
             
             let firstPart: String = "\(presenterName.replacingOccurrences(of: " ", with: ""))"
             let secondPart: String = "\(mediaItem.localizedname.replacingOccurrences(of: " ", with: "")).\(remoteUrl.pathExtension)"

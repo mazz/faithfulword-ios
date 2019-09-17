@@ -5,6 +5,7 @@ public struct DownloadStateTitleConstants {
     static let cancelFile = "cancel-ex-1" // fa-times (Aliases: fa-remove, fa-close)
     static let completedFile = "completed-check-1" // fa-check
     static let errorRetryFile = "retry" // fa-check
+    static let errorDeletedFile = "irrecoverable-file-error" // fa-check
 }
 
 public struct AnimationImageTitleConstants {
@@ -36,7 +37,7 @@ final class MediaItemCell: MagazineLayoutCollectionViewCell {
     @IBOutlet private weak var presenterLabel: UILabel!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var separatorView: UIView!
-    @IBOutlet private weak var moreButton: UIButton!
+    @IBOutlet public weak var moreButton: UIButton!
     @IBOutlet public weak var playStateImageView: UIImageView!
     @IBOutlet public weak var downloadStateButton: UIButton!
     @IBOutlet public weak var amountDownloaded: UILabel!

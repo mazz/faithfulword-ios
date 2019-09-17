@@ -80,6 +80,10 @@ internal final class DownloadListingViewModel {
         return self.downloadService.fetchStoredFileDownloads(for: playableUuid)
     }
     
+    public func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]> {
+        return self.downloadService.activeFileDownloads(playlistUuid)
+    }
+    
     public func updateFileDownloadHistory(for fileDownload: FileDownload) {
         self.downloadService.updateFileDownloadHistory(fileDownload: fileDownload)
             .asObservable()
@@ -97,9 +101,11 @@ internal final class DownloadListingViewModel {
     
     func fetchDownload(for playable: Playable, playlistUuid: String) {
         if let path: String = playable.path,
-            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
+            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
             let fileIdentifier: String = playable.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
             
+            downloadedItems[playable.uuid] = nil
             downloadService.fetchDownload(url: remoteUrl.absoluteString,
                                           filename: fileIdentifier,
                                           playableUuid: playable.uuid,
@@ -109,7 +115,8 @@ internal final class DownloadListingViewModel {
 
     func cancelDownload(for playable: Playable, playlistUuid: String) {
         if let path: String = playable.path,
-            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
+            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
             let fileIdentifier: String = playable.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
             
             downloadService.cancelDownload(filename: fileIdentifier, playlistUuid: playlistUuid)
@@ -180,11 +187,32 @@ internal final class DownloadListingViewModel {
             DDLogDebug("DownloadListingViewModel errorNotification filedownload: \(fileDownload)")
             DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
-            downloadingItems[fileDownload.playableUuid] = fileDownload
+//            downloadingItems[fileDownload.playableUuid] = fileDownload
             
-            self.updateFileDownloadHistory(for: fileDownload)
+            // when cloudfront cannot find a file, we see completedCount > totalCount
+            // if completedCount > totalCount
+            // we should:
+            // show the error state in downloadedItems, this will show the error for this session only
+            // delete the file
+            // remove the item from downloadingItems
+            // NOT record the download
+            // else
+            // assume the user cancelled the file and HWIDownload is reporting an error
             
-            fileDownloadDirty.onNext(fileDownload)
+            if fileDownload.completedCount > fileDownload.totalCount {
+                
+                self.deleteFileDownload(for: fileDownload.playableUuid, pathExtension: fileDownload.localUrl.lastPathComponent)
+                self.fileDownloadDirty.onNext(fileDownload)
+//                self.fileDownloadDeleted.value = fileDownload.playableUuid
+                self.downloadingItems[fileDownload.playableUuid] = nil
+                self.downloadedItems[fileDownload.playableUuid] = fileDownload
+
+            } else { // user cancelled
+                self.updateFileDownloadHistory(for: fileDownload)
+                
+                fileDownloadDirty.onNext(fileDownload)
+            }
+            
 //            let indexPath: IndexPath = indexOfFileDownloadInViewModel(fileDownload: fileDownload)
 //            if indexPath.row != -1 {
 //                lastProgressChangedUpdate.onNext(indexPath)
