@@ -182,13 +182,15 @@ extension MediaListingViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
                         drillInCell.downloadStateButton.isHidden = false
                         drillInCell.downloadStateButton.isEnabled = false
-                    } else if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
-                        drillInCell.amountDownloaded.text = String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount)) / \(fileSizeFormattedString(for: fileDownload.totalCount))")
-                        
-                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
-                        drillInCell.downloadStateButton.isHidden = false
-                        drillInCell.downloadStateButton.isEnabled = true
-                    } else if fileDownload.completedCount > fileDownload.totalCount {
+                    }
+//                    else if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
+//                        drillInCell.amountDownloaded.text = String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount)) / \(fileSizeFormattedString(for: fileDownload.totalCount))")
+//
+//                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+//                        drillInCell.downloadStateButton.isHidden = false
+//                        drillInCell.downloadStateButton.isEnabled = true
+//                    }
+                else if fileDownload.completedCount > fileDownload.totalCount {
                         drillInCell.amountDownloaded.text = NSLocalizedString("Download Error", comment: "").l10n()
                         
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorDeletedFile), for: .normal)
@@ -212,6 +214,27 @@ extension MediaListingViewController: UICollectionViewDelegate {
                         drillInCell.downloadStateButton.setImage(nil, for: .normal)
                         
                     }
+                }
+                
+                if let fileDownload: FileDownload = downloadListingViewModel.downloadInterruptedItems[item.uuid] {
+                    drillInCell.progressView.isHidden = true
+                    drillInCell.amountDownloaded.isHidden = false
+                    
+                    if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
+                        drillInCell.amountDownloaded.text = String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount)) / \(fileSizeFormattedString(for: fileDownload.totalCount))")
+                        
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = true
+                    } else if fileDownload.completedCount > fileDownload.totalCount {
+                        drillInCell.amountDownloaded.text = NSLocalizedString("Download Error", comment: "").l10n()
+                        
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorDeletedFile), for: .normal)
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
+                    }
+                    //                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) :
+                    //                    drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
                 }
             }
             return drillInCell

@@ -165,7 +165,14 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                         weakSelf.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
                     }))
-                } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
+                } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] {
+                actionController.addAction(Action(ActionData(title: "Restart Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                    
+                    // clear-out from interrupted items
+                    weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
+                    
+                    weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                })) } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
                     actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                         weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
                     }))
@@ -178,10 +185,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     }))
                 }
                 if let fileDownload: FileDownload = weakSelf.downloadListingViewModel.downloadedItems[mediaItem.uuid] {
-                    actionController.addAction(Action(ActionData(title: "Share File...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
-                        
-                        weakSelf.shareFile(mediaItem: mediaItem)
-                    }))
+                    if fileDownload.progress == 1.0  {
+                        actionController.addAction(Action(ActionData(title: "Share File...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
+                            
+                            weakSelf.shareFile(mediaItem: mediaItem)
+                        }))                        
+                    }
                 }
                 actionController.addAction(Action(ActionData(title: "Share Link...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
                     weakSelf.shareLink(mediaItem: mediaItem)
@@ -561,6 +570,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         notCompleted.append(fileDownload)
                     } else {
                         self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                        DDLogDebug("completedDownload: \(fileDownload)")
                     }
                 })
                 
@@ -568,7 +578,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 // by tapping the restart button
                 var interruptedDownloads: [FileDownload] = []
                 notCompleted.forEach({ [unowned self] notCompletedDownload in
-                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
+//                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
                     
                     let notCompletePresentInActive: Bool = activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid }
                     
@@ -584,11 +594,11 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 })
                 
                 interruptedDownloads.forEach({ [unowned self] fileDownload in
-                    self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    self.downloadListingViewModel.downloadInterruptedItems[fileDownload.playableUuid] = fileDownload
                     })
 
                 DDLogDebug("interruptedDownloads: \(interruptedDownloads)")
-                
+
             }).disposed(by: bag)
         
 //        downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid)
@@ -606,7 +616,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 // put anything that is not .complete in downloadingItems
                 fileDownloads.forEach({ [unowned self] fileDownload in
                     if fileDownload.state != .complete {
-                        self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+//                        self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
                     } else {
                         self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
                     }
@@ -632,6 +642,9 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     // remove it from downloadedItems
                     self.downloadListingViewModel.downloadedItems[uuid] = nil
                     
+                    // remove it from downloadInterruptedItems
+                    self.downloadListingViewModel.downloadInterruptedItems[uuid] = nil
+
                     if indexPath.row >= 0 {
                         UIView.performWithoutAnimation {
                             self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
@@ -763,6 +776,10 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             if let fileDownload: FileDownload = downloadListingViewModel.downloadedItems[mediaItem.uuid] {
                 actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                     self.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
+                }))
+            } else if let downloading: FileDownload = downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] {
+                actionController.addAction(Action(ActionData(title: "Restart Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                    self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
                 }))
             } else if let downloading: FileDownload = downloadListingViewModel.downloadingItems[mediaItem.uuid] {
                 actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in

@@ -33,6 +33,7 @@ internal final class DownloadListingViewModel {
 //
     public var downloadingItems: [String: FileDownload] = [:]
     public var downloadedItems: [String: FileDownload] = [:]
+    public var downloadInterruptedItems: [String: FileDownload] = [:]
 
     
     
@@ -91,6 +92,12 @@ internal final class DownloadListingViewModel {
     }
 
     func deleteFileDownload(for playableUuid: String, pathExtension: String) {
+        
+        // it may have been a partially downloaded file, so also remove it from downloadedItems
+//        self.downloadedItems[playableUuid] = nil
+//        self.downloadingItems[playableUuid] = nil
+//        self.fileDownloadDeleted.value = playableUuid
+        
         Observable.combineLatest(self.downloadService.deleteFileDownloadFile(playableUuid: playableUuid, pathExtension: pathExtension).asObservable(), self.downloadService.deleteFileDownloadHistory(playableUuid: playableUuid).asObservable())
             .next({ _ in
                 DDLogDebug("deleteFileDownload deleted playableUuid: \(playableUuid)")
