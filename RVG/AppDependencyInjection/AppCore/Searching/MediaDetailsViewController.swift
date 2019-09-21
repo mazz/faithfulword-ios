@@ -558,11 +558,11 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                     drillInCell.amountDownloaded.isHidden = false
                     
                     if fileDownload.progress == 1.0 {
-                        drillInCell.amountDownloaded.text = fileSizeFormattedString(for: fileDownload.completedCount)
+                        drillInCell.amountDownloaded.text = fileDownload.completedCount.fileSizeString()
                         
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
                     } else if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
-                        drillInCell.amountDownloaded.text = String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount)) / \(fileSizeFormattedString(for: fileDownload.totalCount))")
+                        drillInCell.amountDownloaded.text = String(describing: " \(fileDownload.completedCount.fileSizeString()) / \(fileDownload.totalCount.fileSizeString()))")
                         
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
                     } else if fileDownload.completedCount > fileDownload.totalCount {
@@ -612,108 +612,81 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
     
 }
 
-// https://stackoverflow.com/a/49343299
-extension MediaDetailsViewController {
-    func fileSizeFormattedString(for fileSize: Int64) -> String {
-        if fileSize >= 0 {
-            // bytes
-            if fileSize < 1023 {
-                return String(format: "%lu bytes", CUnsignedLong(fileSize))
-            }
-            // KB
-            var floatSize = Float(fileSize / 1024)
-            if floatSize < 1023 {
-                return String(format: "%.1f KB", floatSize)
-            }
-            // MB
-            floatSize = floatSize / 1024
-            if floatSize < 1023 {
-                return String(format: "%.1f MB", floatSize)
-            }
-            // GB
-            floatSize = floatSize / 1024
-            return String(format: "%.1f GB", floatSize)
-        } else { // return 0 bytes if negative
-            return String(format: "%lu bytes", CUnsignedLong(0))
-        }
-    }
-}
-
-extension MediaDetailsViewController {
-    func shareLink(mediaItem: MediaItem) {
-        if let hashLink: URL = URL(string: "https://api.faithfulword.app/m"),
-            let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
-            let shareUrl: URL = hashLink.appendingPathComponent(mediaItem.hashId) {
-            DDLogDebug("hashLink: \(shareUrl)")
-            
-            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
-            let itemsToShare: [Any] = [message, shareUrl]
-            
-            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
-            
-            activityViewController.excludedActivityTypes = [
-                .addToReadingList,
-                .openInIBooks,
-                .print,
-                .saveToCameraRoll,
-                .postToWeibo,
-                .postToFlickr,
-                .postToVimeo,
-                .postToTencentWeibo]
-            
-            self.present(activityViewController, animated: true, completion: {})
-        }
-        
-        
-    }
-    
-    func shareFile(mediaItem: MediaItem) {
-        // copy file to temp dir to rename it
-        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
-        // generate temp file url path
-        
-        if let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
-            let path: String = mediaItem.path,
-            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
-            
-            let firstPart: String = "\(presenterName.replacingOccurrences(of: " ", with: ""))"
-            let secondPart: String = "\(mediaItem.localizedname.replacingOccurrences(of: " ", with: "")).\(remoteUrl.pathExtension)"
-            let destinationLastPathComponent: String = String(describing: "\(firstPart)-\(secondPart)")
-            
-            let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)")))
-            let temporaryFileURL: URL = temporaryDirectoryURL.appendingPathComponent(destinationLastPathComponent)
-            DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
-            
-            // capture the audio file as a Data blob and then write it
-            // to temp dir
-            
-            do {
-                let audioData: Data = try Data(contentsOf: sourceFileUrl, options: .uncached)
-                try audioData.write(to: temporaryFileURL, options: .atomicWrite)
-            } catch {
-                DDLogDebug("error writing temp audio file: \(error)")
-                return
-            }
-            
-            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
-            let itemsToShare: [Any] = [message, temporaryFileURL]
-            
-            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
-            
-            activityViewController.excludedActivityTypes = [
-                .addToReadingList,
-                .openInIBooks,
-                .print,
-                .saveToCameraRoll,
-                .postToWeibo,
-                .postToFlickr,
-                .postToVimeo,
-                .postToTencentWeibo]
-            
-            self.present(activityViewController, animated: true, completion: {})
-        }
-        
-        
-    }
-}
+//extension MediaDetailsViewController {
+//    func shareLink(mediaItem: MediaItem) {
+//        if let hashLink: URL = URL(string: "https://api.faithfulword.app/m"),
+//            let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
+//            let shareUrl: URL = hashLink.appendingPathComponent(mediaItem.hashId) {
+//            DDLogDebug("hashLink: \(shareUrl)")
+//
+//            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
+//            let itemsToShare: [Any] = [message, shareUrl]
+//
+//            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
+//            
+//            activityViewController.excludedActivityTypes = [
+//                .addToReadingList,
+//                .openInIBooks,
+//                .print,
+//                .saveToCameraRoll,
+//                .postToWeibo,
+//                .postToFlickr,
+//                .postToVimeo,
+//                .postToTencentWeibo]
+//
+//            self.present(activityViewController, animated: true, completion: {})
+//        }
+//
+//
+//    }
+//
+//    func shareFile(mediaItem: MediaItem) {
+//        // copy file to temp dir to rename it
+//        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+//        // generate temp file url path
+//
+//        if let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
+//            let path: String = mediaItem.path,
+//            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+//            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
+//
+//            let firstPart: String = "\(presenterName.replacingOccurrences(of: " ", with: ""))"
+//            let secondPart: String = "\(mediaItem.localizedname.replacingOccurrences(of: " ", with: "")).\(remoteUrl.pathExtension)"
+//            let destinationLastPathComponent: String = String(describing: "\(firstPart)-\(secondPart)")
+//
+//            let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)")))
+//            let temporaryFileURL: URL = temporaryDirectoryURL.appendingPathComponent(destinationLastPathComponent)
+//            DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
+//
+//            // capture the audio file as a Data blob and then write it
+//            // to temp dir
+//
+//            do {
+//                let audioData: Data = try Data(contentsOf: sourceFileUrl, options: .uncached)
+//                try audioData.write(to: temporaryFileURL, options: .atomicWrite)
+//            } catch {
+//                DDLogDebug("error writing temp audio file: \(error)")
+//                return
+//            }
+//
+//            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
+//            let itemsToShare: [Any] = [message, temporaryFileURL]
+//
+//            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
+//
+//            activityViewController.excludedActivityTypes = [
+//                .addToReadingList,
+//                .openInIBooks,
+//                .print,
+//                .saveToCameraRoll,
+//                .postToWeibo,
+//                .postToFlickr,
+//                .postToVimeo,
+//                .postToTencentWeibo]
+//
+//            self.present(activityViewController, animated: true, completion: {})
+//        }
+//
+//
+//    }
+//}

@@ -148,6 +148,8 @@
 		4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */; };
 		4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */; };
 		4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */; };
+		4CAABC062336DDE40026A1D2 /* Int64+NumberFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAABC052336DDE40026A1D2 /* Int64+NumberFormatting.swift */; };
+		4CAABC082336E4B80026A1D2 /* UIViewController+Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAABC072336E4B80026A1D2 /* UIViewController+Sharing.swift */; };
 		4CBA17942325B44000023801 /* HistoryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17932325B43F00023801 /* HistoryCoordinator.swift */; };
 		4CBA17982325B6CC00023801 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17972325B6CB00023801 /* HistoryViewController.swift */; };
 		4CBA179A2325B6ED00023801 /* HistoryPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17992325B6ED00023801 /* HistoryPlaybackViewController.swift */; };
@@ -383,6 +385,8 @@
 		4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestedNameCell.xib; sourceTree = "<group>"; };
 		4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedNameCell.swift; sourceTree = "<group>"; };
+		4CAABC052336DDE40026A1D2 /* Int64+NumberFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int64+NumberFormatting.swift"; sourceTree = "<group>"; };
+		4CAABC072336E4B80026A1D2 /* UIViewController+Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Sharing.swift"; sourceTree = "<group>"; };
 		4CBA17932325B43F00023801 /* HistoryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCoordinator.swift; sourceTree = "<group>"; };
 		4CBA17972325B6CB00023801 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		4CBA17992325B6ED00023801 /* HistoryPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPlaybackViewController.swift; sourceTree = "<group>"; };
@@ -633,6 +637,7 @@
 				4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */,
 				4C3EA130206A6EB600310024 /* UIView+Constraining.swift */,
 				4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */,
+				4CAABC072336E4B80026A1D2 /* UIViewController+Sharing.swift */,
 				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
 				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
 			);
@@ -652,6 +657,7 @@
 				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
 				4CBE0F752161747100646F76 /* Color+Image.swift */,
 				4C250393216868120069AB49 /* String+Hashing.swift */,
+				4CAABC052336DDE40026A1D2 /* Int64+NumberFormatting.swift */,
 				4C2503992169A1760069AB49 /* AnyObserverMaking.swift */,
 			);
 			path = AppUtilities;
@@ -1279,6 +1285,7 @@
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
 				4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */,
 				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
+				4CAABC062336DDE40026A1D2 /* Int64+NumberFormatting.swift in Sources */,
 				4CBA17982325B6CC00023801 /* HistoryViewController.swift in Sources */,
 				4C7EB88A228B8EA8000E8DAB /* MediaChapterResponse.swift in Sources */,
 				4C22F5A822FF83A90057DEBE /* UserLoginResponse.swift in Sources */,
@@ -1398,6 +1405,7 @@
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
 				4C7EB891228B8EA8000E8DAB /* Gospel.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
+				4CAABC082336E4B80026A1D2 /* UIViewController+Sharing.swift in Sources */,
 				4CE055FB231886800057BB2F /* TableCell.swift in Sources */,
 				4C7EB8A2228FB283000E8DAB /* MediaItem.swift in Sources */,
 				4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */,

@@ -177,7 +177,7 @@ extension MediaListingViewController: UICollectionViewDelegate {
                     drillInCell.amountDownloaded.isHidden = false
                     
                     if fileDownload.progress == 1.0 {
-                        drillInCell.amountDownloaded.text = fileSizeFormattedString(for: fileDownload.completedCount)
+                        drillInCell.amountDownloaded.text = fileDownload.completedCount.fileSizeString() //fileSizeFormattedString(for: fileDownload.completedCount)
                         
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
                         drillInCell.downloadStateButton.isHidden = false
@@ -221,7 +221,7 @@ extension MediaListingViewController: UICollectionViewDelegate {
                     drillInCell.amountDownloaded.isHidden = false
                     
                     if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
-                        drillInCell.amountDownloaded.text = String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount)) / \(fileSizeFormattedString(for: fileDownload.totalCount))")
+                        drillInCell.amountDownloaded.text = String(describing: " \(fileDownload.completedCount.fileSizeString() ) / \(fileDownload.totalCount.fileSizeString())")
                         
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
                         drillInCell.downloadStateButton.isHidden = false
