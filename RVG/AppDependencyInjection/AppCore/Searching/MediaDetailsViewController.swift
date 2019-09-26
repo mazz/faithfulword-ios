@@ -526,7 +526,16 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                         
                         // remove it from downloadingItems
                         self.downloadListingViewModel.downloadingItems[item.uuid] = nil
+                    case .interrupted:
+                        drillInCell.progressView.isHidden = true
+                        drillInCell.amountDownloaded.isHidden = false
+                        drillInCell.amountDownloaded.text = fileDownload.extendedDescription
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
+                        drillInCell.downloadStateButton.setImage(UIImage(contentsOfFile: DownloadStateTitleConstants.errorRetryFile), for: .normal)
                         
+                        // remove it from downloadingItems
+                        self.downloadListingViewModel.downloadingItems[item.uuid] = nil
                     case .error:
                         drillInCell.progressView.isHidden = true
                         drillInCell.amountDownloaded.isHidden = false

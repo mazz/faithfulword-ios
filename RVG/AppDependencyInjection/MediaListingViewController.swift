@@ -130,6 +130,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("notification: \(notification)")
             if let mediaItem: MediaItem = notification.object as? MediaItem,
                 let weakSelf = self {
+                // clear-out from interrupted items
+                weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
                 weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
             }
         }

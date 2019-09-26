@@ -123,6 +123,16 @@ internal final class DownloadViewModel {
                     self.downloadStarting.value = false
                     self.downloadInProgress.value = true
                     self.completedDownload.value = false
+                } else if fileDownloadState == .cancelled {
+                    self.downloadNotStarted.value = true
+                    self.downloadStarting.value = false
+                    self.downloadInProgress.value = false
+                    self.completedDownload.value = false
+                } else if fileDownloadState == .interrupted {
+                    self.downloadNotStarted.value = true
+                    self.downloadStarting.value = false
+                    self.downloadInProgress.value = false
+                    self.completedDownload.value = false
                 } else if fileDownloadState == .complete {
                     self.downloadNotStarted.value = false
                     self.downloadStarting.value = false

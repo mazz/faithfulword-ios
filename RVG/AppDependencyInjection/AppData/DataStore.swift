@@ -73,6 +73,7 @@ public protocol DataStoring {
     
     // MARK: FileDownload list
     func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func fetchInterruptedDownloads(_ playlistUuid: String?) -> Single<[FileDownload]>
     
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
@@ -1563,7 +1564,7 @@ extension DataStore: DataStoring {
                     
 //                    do {
                         try playableUuids.forEach({ uuid in
-                            if let download = try FileDownload.filter(Column("playableUuid") == playableUuids[0]).fetchOne(db) {
+                            if let download = try FileDownload.filter(Column("playableUuid") == uuid).fetchOne(db) {
                                 // update existing download
                                 
                                 // db update
@@ -1658,6 +1659,33 @@ extension DataStore: DataStoring {
                     fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
                 }
                 single(.success(fetchFileDownloads))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func fetchInterruptedDownloads(_ playlistUuid: String? = nil) -> Single<[FileDownload]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchFileDownloads: [FileDownload]?
+                var interrupted: [FileDownload] = []
+                try self.dbPool.read { db in
+                    if let fetchPlaylistUuid: String = playlistUuid {
+                        fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == fetchPlaylistUuid).fetchAll(db)
+                        if let fileDownloads: [FileDownload] = fetchFileDownloads {
+                            interrupted = fileDownloads.filter { $0.state == .inProgress && $0.progress < 1.0 }
+                        }
+                    } else {
+                        fetchFileDownloads = try FileDownload.fetchAll(db)
+                        if let fileDownloads: [FileDownload] = fetchFileDownloads {
+                            interrupted = fileDownloads.filter { $0.state == .inProgress && $0.progress < 1.0 }
+                        }
+                    }
+                }
+                single(.success(interrupted))
             } catch {
                 DDLogDebug("error: \(error)")
                 single(.error(error))

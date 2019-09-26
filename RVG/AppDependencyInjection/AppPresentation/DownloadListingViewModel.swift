@@ -156,6 +156,11 @@ internal final class DownloadListingViewModel {
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
+            // it is possible it once was downloadInterruptedItems, so let's clobber it out
+            if let _: FileDownload = downloadInterruptedItems[fileDownload.playableUuid] {
+                downloadInterruptedItems[fileDownload.playableUuid] = nil
+            }
+            
             self.updateFileDownloadHistory(for: fileDownload)
             
             fileDownloadDirty.onNext(fileDownload)

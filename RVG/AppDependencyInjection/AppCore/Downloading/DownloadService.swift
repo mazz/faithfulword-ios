@@ -18,6 +18,8 @@ protocol DownloadServicing {
 
     func fetchDownload(url: String, filename: String, playableUuid: String, playlistUuid: String?) // -> Single<Void>
     func cancelAllDownloads()
+    func resetIncompleteDownloads(toState: FileDownloadState)
+    func deleteHwiDownloadDirectory()
     func cancelDownload(filename: String, playlistUuid: String?) // -> Single<Void>
     func inProgressDownloads() -> [String]
     
@@ -323,6 +325,23 @@ extension DownloadService: DownloadServicing {
             .subscribeAndDispose(by: bag)
     }
     
+    func resetIncompleteDownloads(toState: FileDownloadState) {
+        // use .initial because .cancelled results in a bad UI state for fullDownloadProgressButton
+        
+        fetchInterruptedDownloads()
+            .subscribe(onSuccess: { [unowned self] interruptedDownloads in
+                self.updateFileDownloads(playableUuids: interruptedDownloads.map { $0.playableUuid }, to: toState)
+                    .asObservable()
+                    .subscribeAndDispose(by: self.bag)
+            }, onError: { error in
+                DDLogDebug("interruptedDownloads error: \(error)")
+            })
+
+        updateFileDownloads(playableUuids: inProgressDownloads(), to: toState)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+    
 
     
     func fetchDownload(url: String, filename: String, playableUuid: String, playlistUuid: String? = nil) { // -> Single<Void> {
@@ -428,6 +447,28 @@ extension DownloadService: DownloadServicing {
         DDLogDebug("inProgressDownloads: \(inProgressDownloads)")
         return inProgressUuids
     }
+    
+    func fetchInterruptedDownloads(_ playlistUuid: String? = nil) -> Single<[FileDownload]> {
+        return self.dataService.fetchInterruptedDownloads(playlistUuid)
+    }
+    
+    func deleteHwiDownloadDirectory() {
+        
+        let directory: URL = FileSystem.hwiFileDownloadDirectory
+        let fileManager = FileManager.default
+        do {
+            try fileManager.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            DDLogDebug("error while creating directory")
+        }
+        
+        do {
+            try fileManager.removeItem(at: directory)
+        }
+        catch let error {
+            print("Ooops! Something went wrong removing dir: \(error)")
+        }
+    }
 }
 
 extension DownloadService {
@@ -531,6 +572,11 @@ class FileSystem {
         let directory: URL = FileSystem.documentsDirectory.appendingPathComponent("Saved/")
         return directory
     }()
-    
+
+    static let hwiFileDownloadDirectory: URL = {
+        let directory: URL = FileSystem.documentsDirectory.appendingPathComponent("file-download/")
+        return directory
+    }()
+
 }
 

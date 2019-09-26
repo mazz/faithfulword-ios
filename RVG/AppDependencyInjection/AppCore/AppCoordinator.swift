@@ -69,6 +69,18 @@ internal class AppCoordinator {
             self.backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(withName: "main", expirationHandler: nil)
         }
         
+        NotificationCenter.default.addObserver(forName: UIApplication.didFinishLaunchingNotification, object: nil, queue: nil) { notification in
+            // we need to cleanup the downloads if they were interrupted
+            // - if their progress is < 1.0 but their state is .inProgress,
+            //   remark it as .interrupted
+            
+            self.downloadService.resetIncompleteDownloads(toState: .interrupted)
+            
+            // HWI download manager has a proprietary dir where it saves
+            // files to. delete it and its contents at startup
+            self.downloadService.deleteHwiDownloadDirectory()
+        }
+        
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(AppCoordinator.handleApplicationWillTerminate(notification:)), name: AppDelegate.applicationWillTerminate, object: nil)
 
