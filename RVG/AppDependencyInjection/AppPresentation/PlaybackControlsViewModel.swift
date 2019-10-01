@@ -123,6 +123,12 @@ public final class PlaybackControlsViewModel {
             .disposed(by: bag)
     }
     
+    func playPlayback() {
+        assetPlaybackService.playPlayback()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
     func pausePlayback() {
         assetPlaybackService.pausePlayback()
             .asObservable()
@@ -134,12 +140,31 @@ public final class PlaybackControlsViewModel {
             .asObservable()
             .subscribeAndDispose(by: bag)
     }
+    
+    func seekTo(_ position: TimeInterval) {
+        assetPlaybackService.seekTo(position)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
 
     func updatePlaybackRate(_ rate: Float) {
         assetPlaybackService.updatePlaybackRate(rate)
             .asObservable()
             .subscribeAndDispose(by: bag)
     }
+
+    func nextTrack() {
+        assetPlaybackService.nextTrack()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+    
+    func previousTrack() {
+        assetPlaybackService.previousTrack()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }    
+    
     // MARK: Notification Observer Methods
     
     /// events should happen in this sequence:

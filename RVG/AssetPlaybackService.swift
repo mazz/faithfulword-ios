@@ -10,9 +10,13 @@ public protocol AssetPlaybackServicing {
     var playableItem: Field<Playable?> { get }
     var playables: Field<[Playable]> { get }
     
+    func playPlayback() -> Single<Void>
     func pausePlayback() -> Single<Void>
     func togglePlayPause() -> Single<Void>
     func updatePlaybackRate(_ rate: Float) -> Single<Void>
+    func nextTrack() -> Single<Void>
+    func previousTrack() -> Single<Void>
+    func seekTo(_ position: TimeInterval) -> Single<Void>
 
 //    var playerItem: Observable<AVPlayerItem?> { get }
 //    var player: AVPlayer { get }
@@ -97,6 +101,14 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
         }
     }
     
+    public func playPlayback() -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.assetPlaybackManager.play()
+            single(.success(()))
+            return Disposables.create {}
+        }
+    }
+    
     public func pausePlayback() -> Single<Void> {
         return Single.create { [weak self] single in
             self?.assetPlaybackManager.pause()
@@ -121,7 +133,31 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
             return Disposables.create {}
         }
     }
+
+    public func nextTrack() -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.assetPlaybackManager.nextTrack()
+            single(.success(()))
+            return Disposables.create {}
+        }
+    }
+
+    public func previousTrack() -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.assetPlaybackManager.previousTrack()
+            single(.success(()))
+            return Disposables.create {}
+        }
+    }
     
+    public func seekTo(_ position: TimeInterval) -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.assetPlaybackManager.seekTo(position)
+            single(.success(()))
+            return Disposables.create {}
+        }
+    }
+    //
 
     private func reactToReachability() {
         reachability.startNotifier().asObservable()

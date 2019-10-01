@@ -695,7 +695,7 @@ class PopupContentController: UIViewController {
     @IBAction func handleUserDidPressBackwardButton(_ sender: Any) {
 //        if playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackPosition < 5.0 {
             // If the currently playing asset is less than 5 seconds into playback then skip to the previous `Asset`.
-            playbackViewModel.assetPlaybackService.assetPlaybackManager.previousTrack()
+            playbackViewModel.previousTrack()
 //            resetDownloadingViewModel()
 //        }
 //        else {
@@ -705,7 +705,7 @@ class PopupContentController: UIViewController {
     }
     
     @IBAction func handleUserDidPressForwardButton(_ sender: Any) {
-        playbackViewModel.assetPlaybackService.assetPlaybackManager.nextTrack()
+        playbackViewModel.nextTrack()
     }
     
     @IBAction func share(sender: AnyObject) {
@@ -824,8 +824,8 @@ class PopupContentController: UIViewController {
             //            self.handleRemoteCommandNextTrackNotification(notification: notification)
             NotificationCenter.default.post(name: AssetPlaybackManager.nextTrackNotification, object: nil, userInfo: [Asset.uuidKey: playbackAsset.uuid])
         } else if self.repeatMode == .repeatOne {
-            playbackViewModel.assetPlaybackService.assetPlaybackManager.seekTo(0)
-            playbackViewModel.assetPlaybackService.assetPlaybackManager.play()
+            playbackViewModel.seekTo(0)
+            playbackViewModel.playPlayback()
         }
     }
     
