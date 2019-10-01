@@ -9,6 +9,9 @@ public protocol AssetPlaybackServicing {
     var assetPlaybackManager: AssetPlaybackManager { get }
     var playableItem: Field<Playable?> { get }
     var playables: Field<[Playable]> { get }
+    
+    func pausePlayback() -> Single<Void>
+    func togglePlayPause() -> Single<Void>
 
 //    var playerItem: Observable<AVPlayerItem?> { get }
 //    var player: AVPlayer { get }
@@ -93,6 +96,23 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
         }
     }
     
+    public func pausePlayback() -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.assetPlaybackManager.pause()
+            
+            single(.success(()))
+            return Disposables.create {}
+        }
+    }
+    
+    public func togglePlayPause() -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.assetPlaybackManager.togglePlayPause()
+            single(.success(()))
+            return Disposables.create {}
+        }
+    }
+
     private func reactToReachability() {
         reachability.startNotifier().asObservable()
             .map({ status -> String in

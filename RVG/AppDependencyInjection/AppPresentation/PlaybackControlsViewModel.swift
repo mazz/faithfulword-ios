@@ -123,6 +123,18 @@ public final class PlaybackControlsViewModel {
             .disposed(by: bag)
     }
     
+    func pausePlayback() {
+        assetPlaybackService.pausePlayback()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
+    func togglePlayPause() {
+        assetPlaybackService.togglePlayPause()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
     // MARK: Notification Observer Methods
     
     /// events should happen in this sequence:

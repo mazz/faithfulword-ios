@@ -145,7 +145,8 @@ extension AppCoordinator: NavigationCoordinating {
 
                         if authState == .unauthenticated {
                             // load default org if unauthenticated
-                            
+                            Loaf.dismiss(sender: self.rootViewController)
+
                             switch self.networkStatus.value {
                             case .notReachable:
                                 self.loadDefaultOrg()
@@ -159,7 +160,8 @@ extension AppCoordinator: NavigationCoordinating {
 
                         } else if authState == .authenticated || authState == .emailUnconfirmed {
                             DDLogDebug("authState: \(authState)")
-                            
+                            Loaf.dismiss(sender: self.rootViewController)
+
                             // TODO:
                             // unload currently loaded org and then
                             // load unique org that is associated with UserAppUser

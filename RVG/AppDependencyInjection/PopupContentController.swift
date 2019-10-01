@@ -180,7 +180,7 @@ class PopupContentController: UIViewController {
                                       playbackRate: playbackRate,
                                       urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
 
-                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.pause()
+                self.playbackViewModel.pausePlayback()
                 self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
 
                 self.downloadingViewModel.downloadAssetIdentifier.value = self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))
@@ -645,7 +645,7 @@ class PopupContentController: UIViewController {
     }
     
     @objc func doPlayPause() {
-        playbackViewModel.assetPlaybackService.assetPlaybackManager.togglePlayPause()
+        playbackViewModel.togglePlayPause()
         
         //        updateToolbarItemState()
     }
