@@ -12,6 +12,7 @@ public protocol AssetPlaybackServicing {
     
     func pausePlayback() -> Single<Void>
     func togglePlayPause() -> Single<Void>
+    func updatePlaybackRate(_ rate: Float) -> Single<Void>
 
 //    var playerItem: Observable<AVPlayerItem?> { get }
 //    var player: AVPlayer { get }
@@ -112,6 +113,15 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
             return Disposables.create {}
         }
     }
+    
+    public func updatePlaybackRate(_ rate: Float) -> Single<Void> {
+        return Single.create { [weak self] single in
+            self?.assetPlaybackManager.playbackRate(rate)
+            single(.success(()))
+            return Disposables.create {}
+        }
+    }
+    
 
     private func reactToReachability() {
         reachability.startNotifier().asObservable()

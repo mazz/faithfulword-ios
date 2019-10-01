@@ -135,6 +135,11 @@ public final class PlaybackControlsViewModel {
             .subscribeAndDispose(by: bag)
     }
 
+    func updatePlaybackRate(_ rate: Float) {
+        assetPlaybackService.updatePlaybackRate(rate)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
     // MARK: Notification Observer Methods
     
     /// events should happen in this sequence:

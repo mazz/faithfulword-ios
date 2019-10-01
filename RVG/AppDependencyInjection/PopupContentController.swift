@@ -538,8 +538,6 @@ class PopupContentController: UIViewController {
         let notificationCenter = NotificationCenter.default
         
         notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
-//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
-//        notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(PopupContentController.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(PopupContentController.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
 
@@ -628,7 +626,7 @@ class PopupContentController: UIViewController {
         
         notificationCenter.removeObserver(self, name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
         notificationCenter.removeObserver(self, name: AssetPlaybackManager.previousTrackNotification, object: nil)
-        notificationCenter.removeObserver(self, name: AssetPlaybackManager.nextTrackNotification, object: nil)
+//        notificationCenter.removeObserver(self, name: AssetPlaybackManager.nextTrackNotification, object: nil)
         notificationCenter.removeObserver(self, name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
         
         //        assetPlaybackManager.removeObserver(self, forKeyPath: #keyPath(AssetPlaybackManager.percentProgress))
@@ -690,7 +688,7 @@ class PopupContentController: UIViewController {
             }
         }
         if let rate = Float(speedTitle) {
-            playbackViewModel.assetPlaybackService.assetPlaybackManager.playbackRate(rate)
+            playbackViewModel.updatePlaybackRate(rate)
         }
     }
     
