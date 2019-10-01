@@ -58,7 +58,7 @@ public final class PlaybackControlsViewModel {
                 DDLogDebug("scrubValue: \(scrubValue)")
                 //                if let assetPlaybackService = self.assetPlaybackService {
                 //                if let assetPlaybackManager = self.assetPlaybackService.assetPlaybackManager {
-                self.assetPlaybackService.assetPlaybackManager.seekTo(Double(scrubValue))
+                self.seekTo(Double(scrubValue))
                 //                }
             })
             .disposed(by: bag)
@@ -85,11 +85,11 @@ public final class PlaybackControlsViewModel {
                 switch networkStatus {
                     
                 case .unknown:
-                    self.assetPlaybackService.assetPlaybackManager.pause()
+                    self.pausePlayback()
                     self.playDisabled.value = !fileExists
                 case .notReachable:
                     if !fileExists {
-                        self.assetPlaybackService.assetPlaybackManager.pause()
+                        self.pausePlayback()
                     }
                     self.playDisabled.value = !fileExists
                 case .reachable(_):
@@ -163,7 +163,7 @@ public final class PlaybackControlsViewModel {
         assetPlaybackService.previousTrack()
             .asObservable()
             .subscribeAndDispose(by: bag)
-    }    
+    }
     
     // MARK: Notification Observer Methods
     
@@ -225,11 +225,11 @@ public final class PlaybackControlsViewModel {
         switch self.networkStatus.value {
             
         case .unknown:
-            self.assetPlaybackService.assetPlaybackManager.pause()
+            self.pausePlayback()
             self.playDisabled.value = !fileExists
         case .notReachable:
             if !fileExists {
-                self.assetPlaybackService.assetPlaybackManager.pause()
+                self.pausePlayback()
             }
             self.playDisabled.value = !fileExists
         case .reachable(_):
@@ -254,7 +254,7 @@ public final class PlaybackControlsViewModel {
             
             //        if assetIndex < playables.count - 1 { self.playbackPlayable.value = playables[assetIndex + 1] }
         if assetIndex < playables.count - 1 {
-            self.assetPlaybackService.assetPlaybackManager.pause()
+            self.pausePlayback()
             self.assetPlaybackService.playableItem.value = playables[assetIndex + 1]
             self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
         }
@@ -270,7 +270,7 @@ public final class PlaybackControlsViewModel {
         
 //        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }
         if assetIndex > 0 {
-            self.assetPlaybackService.assetPlaybackManager.pause()
+            self.pausePlayback()
             self.assetPlaybackService.playableItem.value = playables[assetIndex - 1]
             self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
         }
