@@ -3,6 +3,7 @@ import UIKit
 import RxSwift
 import L10n_swift
 import Alamofire
+import Loaf
 
 /// Coordinator in charge of navigating between the two main states of the app.
 /// Operates on the level of the rootViewController and switches between the
@@ -211,6 +212,15 @@ extension AppCoordinator: NavigationCoordinating {
                     }
                 }
             case .reachable(_):
+                
+                Loaf(NSLocalizedString("Connecting …", comment: "").l10n(),
+                     state: .info,
+                     location: .bottom,
+                     presentingDirection: .vertical,
+                     dismissingDirection: .vertical,
+                     sender: self.rootViewController)
+                    .show(.custom(Double.greatestFiniteMagnitude))
+
                 if persisted.count == 0 {
                     self.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [unowned self] fetchedOrgs in
                         loadedOrgs = fetchedOrgs
@@ -224,7 +234,21 @@ extension AppCoordinator: NavigationCoordinating {
                             }
                         }
                     }) { error in
+                        // typical error here: MoyaError|AFError Error Domain=NSURLErrorDomain Code=-1001 "The request timed out."
                         DDLogDebug("error: \(error)")
+                        DDLogDebug("⚠️ Internet but no Org found, can't do anything")
+//                        DispatchQueue.main.async {
+                            Loaf.dismiss(sender: self.rootViewController)
+                            Loaf(NSLocalizedString("You are online but server cannot be reached.", comment: "").l10n(),
+                                 state: .error,
+                                 location: .bottom,
+                                 presentingDirection: .vertical,
+                                 dismissingDirection: .vertical,
+                                 sender: self.rootViewController)
+                                .show()
+//                        }
+
+                        self.swapInNoResourceFlow()
                         }.disposed(by: self.bag)
                 } else {
                     loadedOrgs = persisted

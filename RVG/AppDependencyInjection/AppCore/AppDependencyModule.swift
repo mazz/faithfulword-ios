@@ -101,7 +101,9 @@ internal final class AppDependencyModule {
             }.inObjectScope(.container)
 
         container.register(AssetPlaybackServicing.self) { resolver in
-            AssetPlaybackService(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!, remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!)
+            AssetPlaybackService(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!, remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!,
+         reachability: resolver.resolve(RxClassicReachable.self)!
+            )
             }.inObjectScope(.container)
 
         container.register(AppCoordinator.self) { resolver in
@@ -259,7 +261,7 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService: resolver.resolve(LanguageServicing.self)!
             )
-        }.inObjectScope(.transient)
+        }.inObjectScope(.container)
 
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaCategory in
             MediaListingViewModel(
@@ -270,7 +272,7 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
         container.register(MediaSearchViewModel.self) { resolver, playlistId, mediaCategory in
             MediaSearchViewModel(
@@ -280,7 +282,7 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
         container.register(MediaDetailsViewModel.self) { resolver, playable in
             MediaDetailsViewModel(
@@ -288,14 +290,14 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
         container.register(CategoryListingViewModel.self) { resolver, categoryType in
             CategoryListingViewModel(
                 categoryType: categoryType,
                 productService: resolver.resolve(ProductServicing.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
         container.register(PlaylistViewModel.self) { resolver, channelUuid in
             PlaylistViewModel(
@@ -303,7 +305,7 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
         container.register(LanguageViewModel.self) { resolver in
             LanguageViewModel(
@@ -311,15 +313,15 @@ internal final class AppDependencyModule {
                 languageService:
                 resolver.resolve(LanguageServicing.self)!
             )
-        }.inObjectScope(.transient)
+        }.inObjectScope(.container)
 
         container.register(DownloadViewModel.self) { resolver in
             DownloadViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
         container.register(DownloadListingViewModel.self) { resolver in
             DownloadListingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
         
 //        container.register(HistoryPlaybackViewModel.self) { resolver, playlistId, mediaCategory in
 //            HistoryPlaybackViewModel(
@@ -330,7 +332,7 @@ internal final class AppDependencyModule {
 //                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
 //                reachability: resolver.resolve(RxClassicReachable.self)!
 //            )
-//            }.inObjectScope(.transient)
+//            }.inObjectScope(.container)
 //
 //        container.register(HistoryDownloadViewModel.self) { resolver, playlistId, mediaCategory in
 //            HistoryDownloadViewModel(
@@ -341,7 +343,7 @@ internal final class AppDependencyModule {
 //                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
 //                reachability: resolver.resolve(RxClassicReachable.self)!
 //            )
-//            }.inObjectScope(.transient)
+//            }.inObjectScope(.container)
         
         container.register(MediaFilterViewModel.self) { resolver, playlistId, mediaCategory in
             MediaFilterViewModel(
@@ -352,7 +354,7 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
 
     }

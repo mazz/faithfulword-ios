@@ -42,6 +42,7 @@ public protocol AssetPlaybackServicing {
 /// Manages all account related things
 public final class AssetPlaybackService: AssetPlaybackServicing {
     // MARK: Fields
+    private let bag = DisposeBag()
 
     public private(set) var playableItem = Field<Playable?>(nil)
     public private(set) var playables = Field<[Playable]>([])
@@ -49,11 +50,14 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
     // MARK: Dependencies
     public let assetPlaybackManager: AssetPlaybackManager
     internal let remoteCommandManager: RemoteCommandManager
+    private let reachability: RxClassicReachable
+    private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
 
-    public init(assetPlaybackManager: AssetPlaybackManager,
-                remoteCommandManager: RemoteCommandManager) {
 
-
+    init(assetPlaybackManager: AssetPlaybackManager,
+                remoteCommandManager: RemoteCommandManager,
+                reachability: RxClassicReachable) {
+        self.reachability = reachability
 
         self.assetPlaybackManager = assetPlaybackManager
         self.remoteCommandManager = remoteCommandManager
@@ -87,5 +91,44 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
         } catch {
             DDLogDebug("AVAudioSession error: \(error)")
         }
+    }
+    
+    private func reactToReachability() {
+        reachability.startNotifier().asObservable()
+            .map({ status -> String in
+                
+                var outStatus: String = "unknown"
+                switch status {
+                    
+                case .unknown:
+                    outStatus = "unknown"
+                case .notReachable:
+                    outStatus = "notReachable"
+                case .reachable(ClassicReachability.ConnectionType.wwan):
+                    outStatus = "reachableWwan"
+                case .reachable(ClassicReachability.ConnectionType.ethernetOrWifi):
+                    outStatus = "reachableEthernetOrWifi"
+                    
+                }
+                return outStatus
+            })
+            .filter { $0 == "reachableEthernetOrWifi" }
+            .filter { $0 == "reachableWwan"}
+            .filter { $0 == "notReachable" }
+            .take(1)
+            .subscribe(onNext: { networkStatus in
+                
+                if networkStatus == "reachableWwan" {
+                    self.networkStatus.value = .reachable(ClassicReachability.ConnectionType.wwan)
+                } else if networkStatus == "reachableEthernetOrWifi" {
+                    self.networkStatus.value = .reachable(ClassicReachability.ConnectionType.ethernetOrWifi)
+                } else if networkStatus == "notReachable" {
+                    self.networkStatus.value = .notReachable
+                } else if networkStatus == "unknown" {
+                    self.networkStatus.value = .unknown
+                } else {
+                    self.networkStatus.value = .unknown
+                }
+            }).disposed(by: bag)
     }
 }

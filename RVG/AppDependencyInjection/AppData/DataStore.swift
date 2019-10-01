@@ -92,9 +92,32 @@ public final class DataStore {
     
     // MARK: Dependencies
     public var dbPool: DatabasePool {
-        let documentsURL: URL = getDocumentsDirectory()
-        let databasePath = documentsURL.appendingPathComponent("db.sqlite")
-        return try! openDatabase(atPath: databasePath.absoluteString)
+        
+        var resultPool: DatabasePool!
+        
+        if let pool = _dbPool {
+            return pool
+        } else {
+            let documentsURL: URL = getDocumentsDirectory()
+            let databasePath = documentsURL.appendingPathComponent("db.sqlite")
+            do {
+                // Connect to the database
+                // See https://github.com/groue/GRDB.swift/#database-connections
+                _dbPool = try DatabasePool(path: databasePath.absoluteString)
+                print("new _dbPool at databasePath: \(databasePath.absoluteString)")
+                
+                if let databasePool = _dbPool {
+                    // Use DatabaseMigrator to define the database schema
+                    // See https://github.com/groue/GRDB.swift/#migrations
+                    try migrator.migrate(databasePool)
+                    resultPool = databasePool
+                }
+                
+            } catch {
+                fatalError("error opening database: \(error)")
+            }
+        }
+        return resultPool
     }
     
     func getDocumentsDirectory() -> URL {
@@ -424,28 +447,6 @@ public final class DataStore {
         return migrator
     }
     
-    internal func openDatabase(atPath path: String) throws -> DatabasePool {
-        var resultPool: DatabasePool!
-        
-        if let databasePool = _dbPool {
-            resultPool = databasePool
-            return resultPool
-        } else {
-            // Connect to the database
-            // See https://github.com/groue/GRDB.swift/#database-connections
-            _dbPool = try DatabasePool(path: path)
-            DDLogDebug("new _dbPool at databasePath: \(path)")
-            
-            if let databasePool = _dbPool {
-                // Use DatabaseMigrator to define the database schema
-                // See https://github.com/groue/GRDB.swift/#migrations
-                try migrator.migrate(databasePool)
-                resultPool = databasePool
-                return resultPool
-            }
-        }
-        return resultPool
-    }
 }
 
 
