@@ -239,17 +239,6 @@ extension AppCoordinator: NavigationCoordinating {
                         // typical error here: MoyaError|AFError Error Domain=NSURLErrorDomain Code=-1001 "The request timed out."
                         DDLogDebug("error: \(error)")
                         DDLogDebug("⚠️ Internet but no Org found, can't do anything")
-//                        DispatchQueue.main.async {
-                            Loaf.dismiss(sender: self.rootViewController)
-                            Loaf(NSLocalizedString("You are online but server cannot be reached.", comment: "").l10n(),
-                                 state: .error,
-                                 location: .bottom,
-                                 presentingDirection: .vertical,
-                                 dismissingDirection: .vertical,
-                                 sender: self.rootViewController)
-                                .show()
-//                        }
-
                         self.swapInNoResourceFlow()
                         }.disposed(by: self.bag)
                 } else {
@@ -407,6 +396,16 @@ extension AppCoordinator: NavigationCoordinating {
                         
                     }, onError: { error in
                         DDLogDebug("⚠️ login error! \(error)")
+                        Loaf.dismiss(sender: self.rootViewController)
+
+                        Loaf(error.localizedDescription,
+                             state: .info,
+                             location: .bottom,
+                             presentingDirection: .vertical,
+                             dismissingDirection: .vertical,
+                             sender: self.rootViewController)
+                            .show()
+
                     })
                 .disposed(by: self.bag)
 //                    .asObservable()

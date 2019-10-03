@@ -256,12 +256,21 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!
             )
         }
+        
+        /**
+         view models should be stored as transient, otherwise they will
+         be effectively `cached` in the container. Setting them to .container
+         will create odd side-effects where swinject will use the viewmodel
+         in the container rather than make a new viewmodel when making a view controller
+        */
+        
+        
         container.register(BooksViewModel.self) { resolver in
             BooksViewModel(
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService: resolver.resolve(LanguageServicing.self)!
             )
-        }.inObjectScope(.container)
+        }.inObjectScope(.transient)
 
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaCategory in
             MediaListingViewModel(
@@ -272,7 +281,7 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
 
         container.register(MediaSearchViewModel.self) { resolver, playlistId, mediaCategory in
             MediaSearchViewModel(
@@ -282,7 +291,7 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
 
         container.register(MediaDetailsViewModel.self) { resolver, playable in
             MediaDetailsViewModel(
@@ -290,14 +299,14 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
 
         container.register(CategoryListingViewModel.self) { resolver, categoryType in
             CategoryListingViewModel(
                 categoryType: categoryType,
                 productService: resolver.resolve(ProductServicing.self)!
             )
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
 
         container.register(PlaylistViewModel.self) { resolver, channelUuid in
             PlaylistViewModel(
@@ -305,7 +314,7 @@ internal final class AppDependencyModule {
                 productService: resolver.resolve(ProductServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
 
         container.register(LanguageViewModel.self) { resolver in
             LanguageViewModel(
@@ -313,15 +322,15 @@ internal final class AppDependencyModule {
                 languageService:
                 resolver.resolve(LanguageServicing.self)!
             )
-        }.inObjectScope(.container)
+        }.inObjectScope(.transient)
 
         container.register(DownloadViewModel.self) { resolver in
             DownloadViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
 
         container.register(DownloadListingViewModel.self) { resolver in
             DownloadListingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
         
 //        container.register(HistoryPlaybackViewModel.self) { resolver, playlistId, mediaCategory in
 //            HistoryPlaybackViewModel(
@@ -354,7 +363,7 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.container)
+            }.inObjectScope(.transient)
 
 
     }

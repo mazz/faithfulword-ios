@@ -95,6 +95,7 @@ class PopupContentController: UIViewController {
             .next { [unowned self] playDisabled in
                 self.playPauseButton.isEnabled = !playDisabled
                 self.fullPlayPauseButton.isEnabled = !playDisabled
+                self.fullToggleSpeedButton.isEnabled = !playDisabled
         }
         .disposed(by: bag)
         
