@@ -83,7 +83,7 @@
                                                 <attributedString key="attributedText">
                                                     <fragment content="-:--">
                                                         <attributes>
-                                                            <color key="NSColor" red="0.6588235294117647" green="0.6588235294117647" blue="0.6588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                             <font key="NSFont" size="13" name="HelveticaNeue"/>
                                                             <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                         </attributes>
@@ -100,7 +100,7 @@
                                                 <attributedString key="attributedText">
                                                     <fragment content="-:--">
                                                         <attributes>
-                                                            <color key="NSColor" red="0.6588235294117647" green="0.6588235294117647" blue="0.6588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                             <font key="NSFont" size="13" name="HelveticaNeue"/>
                                                             <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                         </attributes>
@@ -176,7 +176,7 @@
                                                     <attributedString key="attributedTitle">
                                                         <fragment content="1.0x">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.6588235294117647" green="0.6588235294117647" blue="0.6588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <font key="NSFont" size="19" name="HelveticaNeue"/>
                                                             </attributes>
                                                         </fragment>
