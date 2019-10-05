@@ -180,10 +180,14 @@ extension DownloadService: HWIFileDownloadDelegate {
     }
     
     func normalizeProgressValue(_ progress: Float) -> Float {
-        if progress < 0.0 {
-            return 0.0
+        if !progress.isNaN {
+            if progress < 0.0 {
+                return 0.0
+            } else {
+                return progress
+            }
         } else {
-            return progress
+            return 0  // bail with 0
         }
     }
     

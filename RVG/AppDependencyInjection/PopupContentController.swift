@@ -573,7 +573,7 @@ class PopupContentController: UIViewController {
         dateComponentFormatter.allowedUnits = [.minute, .second]
         dateComponentFormatter.zeroFormattingBehavior = [.pad]
         
-//        fullPlaybackSlider.thumbTintColor = UIColor.lightGray //UIColor(red: CGFloat(238/255), green: CGFloat(238/255), blue: CGFloat(238/255), alpha: CGFloat(1))
+        fullPlaybackSlider.thumbTintColor = UIColor.lightGray //UIColor(red: CGFloat(0/255), green: CGFloat(122/255), blue: CGFloat(255/255), alpha: CGFloat(1))
         fullSongNameLabel.fadeLength = 10.0
         fullSongNameLabel.speed = .duration(8.0)
         
