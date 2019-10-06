@@ -350,12 +350,6 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         
         notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
         notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
-        
-//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-//        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
     }
     
     // MARK: Private helpers
@@ -559,7 +553,6 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     }
     
     private func bindDownloadListingViewModel() {
-        
         Observable.combineLatest(downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid).asObservable(),
                                  downloadListingViewModel.storedFileDownloads(for: viewModel.playlistUuid).asObservable())
             .subscribe(onNext: { activeDownloads, fileDownloads in

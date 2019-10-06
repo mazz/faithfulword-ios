@@ -75,6 +75,15 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
 //        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
 //        notificationCenter.addObserver(self, selector: #selector(MediaDetailsViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
         
+        notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            DDLogDebug("notification: \(notification)")
+            if let mediaItem: MediaItem = notification.object as? MediaItem,
+                let weakSelf = self {
+                // clear-out from interrupted items
+                weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
+                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+            }
+        }
         notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
             DDLogDebug("notification: \(notification)")
             if let mediaItem: MediaItem = notification.object as? MediaItem,
@@ -105,7 +114,14 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                         actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                             weakSelf.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
                         }))
-                    } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
+                    }  else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] {
+                        actionController.addAction(Action(ActionData(title: "Restart Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                            
+                            // clear-out from interrupted items
+                            weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
+                            
+                            weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                        })) } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
                         actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                             weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
                         }))
@@ -198,6 +214,55 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
 
     private func bindDownloadListingViewModel() {
         
+        Observable.combineLatest(downloadListingViewModel.activeFileDownloads(viewModel.playable.playlistUuid).asObservable(),
+                                 downloadListingViewModel.storedFileDownloads(for: viewModel.playable.playlistUuid).asObservable())
+            .subscribe(onNext: { activeDownloads, fileDownloads in
+                DDLogDebug("activeDownloads: \(activeDownloads) fileDownloads: \(fileDownloads)")
+                
+                // put activeDownloads in downloading
+                activeDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+                })
+                
+                // put .complete in downloaded
+                var notCompleted: [FileDownload] = []
+                // put anything that is not .complete in downloadingItems
+                fileDownloads.forEach({ [unowned self] fileDownload in
+                    if fileDownload.state != .complete {
+                        notCompleted.append(fileDownload)
+                    } else {
+                        self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                        DDLogDebug("completedDownload: \(fileDownload)")
+                    }
+                })
+                
+                // put interrupted in downloaded, to allow the user the option of restarting
+                // by tapping the restart button
+                var interruptedDownloads: [FileDownload] = []
+                notCompleted.forEach({ [unowned self] notCompletedDownload in
+                    //                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
+                    
+                    let notCompletePresentInActive: Bool = activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid }
+                    
+                    if notCompletePresentInActive == false {
+                        // interrupted
+                        interruptedDownloads.append(notCompletedDownload)
+                    }
+                    
+                    //                let interruptedDownloads: [FileDownload] = notCompleted.filter({ notCompletedDownload -> Bool in
+                    //                    activeDownloads.contains(where: { activeDownload -> Bool in
+                    //                        activeDownload.playlistUuid != notCompletedDownload.playlistUuid
+                    //                    })
+                })
+                
+                interruptedDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadInterruptedItems[fileDownload.playableUuid] = fileDownload
+                })
+                
+                DDLogDebug("interruptedDownloads: \(interruptedDownloads)")
+                
+            }).disposed(by: bag)
+
         // the moment the viewmodel playlistuuid changes we
         // get the file downloads for that playlist
         downloadListingViewModel.storedFileDownloads(for: viewModel.playable.playlistUuid)
@@ -492,6 +557,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                         drillInCell.amountDownloaded.isHidden = false
                         drillInCell.amountDownloaded.text = ""
                     case .inProgress:
+                        drillInCell.progressView.isHidden = false
                         drillInCell.progressView.progress = fileDownload.progress
                         drillInCell.amountDownloaded.text = fileDownload.extendedDescription
                         drillInCell.downloadStateButton.isHidden = false
@@ -567,22 +633,28 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                     drillInCell.amountDownloaded.isHidden = false
                     
                     if fileDownload.progress == 1.0 {
-                        drillInCell.amountDownloaded.text = fileDownload.completedCount.fileSizeString()
+                        drillInCell.amountDownloaded.text = fileDownload.completedCount.fileSizeString() //fileSizeFormattedString(for: fileDownload.completedCount)
                         
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
-                    } else if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
-                        drillInCell.amountDownloaded.text = String(describing: " \(fileDownload.completedCount.fileSizeString()) / \(fileDownload.totalCount.fileSizeString()))")
-                        
-                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
-                    } else if fileDownload.completedCount > fileDownload.totalCount {
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
+                    }
+                        //                    else if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
+                        //                        drillInCell.amountDownloaded.text = String(describing: " \(fileSizeFormattedString(for: fileDownload.completedCount)) / \(fileSizeFormattedString(for: fileDownload.totalCount))")
+                        //
+                        //                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+                        //                        drillInCell.downloadStateButton.isHidden = false
+                        //                        drillInCell.downloadStateButton.isEnabled = true
+                        //                    }
+                    else if fileDownload.completedCount > fileDownload.totalCount {
                         drillInCell.amountDownloaded.text = NSLocalizedString("Download Error", comment: "").l10n()
                         
                         drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorDeletedFile), for: .normal)
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
                     }
-//                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) :
-                    drillInCell.downloadStateButton.isHidden = false
-                    drillInCell.downloadStateButton.isEnabled = false
-//                    drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
+                    //                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) :
+                    //                    drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
                 } else {
                     // if we just deleted the file, update the UI
                     
@@ -599,6 +671,28 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
                         
                     }
                 }
+                
+                if let fileDownload: FileDownload = downloadListingViewModel.downloadInterruptedItems[item.uuid] {
+                    drillInCell.progressView.isHidden = true
+                    drillInCell.amountDownloaded.isHidden = false
+                    
+                    if fileDownload.progress < 1.0 && fileDownload.progress >= 0.0 {
+                        drillInCell.amountDownloaded.text = String(describing: " \(fileDownload.completedCount.fileSizeString() ) / \(fileDownload.totalCount.fileSizeString())")
+                        
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorRetryFile), for: .normal)
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = true
+                    } else if fileDownload.completedCount > fileDownload.totalCount {
+                        drillInCell.amountDownloaded.text = NSLocalizedString("Download Error", comment: "").l10n()
+                        
+                        drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.errorDeletedFile), for: .normal)
+                        drillInCell.downloadStateButton.isHidden = false
+                        drillInCell.downloadStateButton.isEnabled = false
+                    }
+                    //                    drillInCell.amountDownloaded.text = (fileDownload.progress == 1.0) ? fileSizeFormattedString(for: fileDownload.completedCount) :
+                    //                    drillInCell.downloadStateButton.setImage(UIImage(named: DownloadStateTitleConstants.completedFile), for: .normal)
+                }
+
             }
             return drillInCell
             
