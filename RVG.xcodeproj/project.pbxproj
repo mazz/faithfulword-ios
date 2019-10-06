@@ -73,6 +73,10 @@
 		4C5FAD772037AEE600397BFF /* RadioListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD762037AEE600397BFF /* RadioListViewController.swift */; };
 		4C5FAD792037B04200397BFF /* UIViewController+Alerting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */; };
 		4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */; };
+		4C63203A23491E4B00C1B709 /* NoResourceCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63203823491E4700C1B709 /* NoResourceCoordinator.swift */; };
+		4C63203B23491E4B00C1B709 /* NoResource.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C63203923491E4900C1B709 /* NoResource.storyboard */; };
+		4C63203D2349247C00C1B709 /* NoResourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63203C2349247C00C1B709 /* NoResourceViewController.swift */; };
+		4C63203F23493A4400C1B709 /* NoResourceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63203E23493A4400C1B709 /* NoResourceViewModel.swift */; };
 		4C6C86C722E5488C0006DEE9 /* RPCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6C86C622E548890006DEE9 /* RPCircularProgress.swift */; };
 		4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */; };
 		4C6D8E4D22AC6B310025DA28 /* ChannelCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4C22AC6B2E0025DA28 /* ChannelCoordinator.swift */; };
@@ -311,6 +315,10 @@
 		4C5FAD762037AEE600397BFF /* RadioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioListViewController.swift; sourceTree = "<group>"; };
 		4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerting.swift"; sourceTree = "<group>"; };
 		4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
+		4C63203823491E4700C1B709 /* NoResourceCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoResourceCoordinator.swift; sourceTree = "<group>"; };
+		4C63203923491E4900C1B709 /* NoResource.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NoResource.storyboard; sourceTree = "<group>"; };
+		4C63203C2349247C00C1B709 /* NoResourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResourceViewController.swift; sourceTree = "<group>"; };
+		4C63203E23493A4400C1B709 /* NoResourceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResourceViewModel.swift; sourceTree = "<group>"; };
 		4C6C86C622E548890006DEE9 /* RPCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCircularProgress.swift; sourceTree = "<group>"; };
 		4C6D8E4322A21FD80025DA28 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoProviding.swift; sourceTree = "<group>"; };
@@ -580,6 +588,7 @@
 				4C3EA13B206B249F00310024 /* DeviceNowPlayingViewModel.swift */,
 				4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */,
 				4C437ABA223356C600083197 /* UserActionsViewModel.swift */,
+				4C63203E23493A4400C1B709 /* NoResourceViewModel.swift */,
 				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
 				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
 				4C0801AD2321E827002FBE0E /* MediaDetailsSectionViewModel.swift */,
@@ -782,6 +791,9 @@
 				4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */,
 				4C7D546C2013DB210038B265 /* MediaListingViewController.swift */,
 				4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */,
+				4C63203923491E4900C1B709 /* NoResource.storyboard */,
+				4C63203823491E4700C1B709 /* NoResourceCoordinator.swift */,
+				4C63203C2349247C00C1B709 /* NoResourceViewController.swift */,
 				4C3EA13D206B265100310024 /* PlaybackViewController.swift */,
 				4C958E9C2090242000A71C59 /* PopupContentController.swift */,
 				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
@@ -1132,6 +1144,7 @@
 				4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */,
 				4CBA179E2325B75400023801 /* History.storyboard in Resources */,
 				4CFB84F92005AE1A00FEBB53 /* SettingDrillInCellStacked.xib in Resources */,
+				4C63203B23491E4B00C1B709 /* NoResource.storyboard in Resources */,
 				4CFB84FE2005AEEB00FEBB53 /* Root.storyboard in Resources */,
 				4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
@@ -1380,6 +1393,7 @@
 				4C7D546D2013DB220038B265 /* MediaListingViewController.swift in Sources */,
 				4C7EB883228B8EA8000E8DAB /* SessionError.swift in Sources */,
 				4C7EB897228B8EA8000E8DAB /* MessageWithSubjectActivityItem.swift in Sources */,
+				4C63203D2349247C00C1B709 /* NoResourceViewController.swift in Sources */,
 				4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */,
 				4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */,
 				4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */,
@@ -1402,6 +1416,7 @@
 				4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
 				4CCE8C8D1FF4B96400AFBAF2 /* Optional.swift in Sources */,
+				4C63203A23491E4B00C1B709 /* NoResourceCoordinator.swift in Sources */,
 				4C7EB87B228B8EA8000E8DAB /* Book.swift in Sources */,
 				68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
@@ -1424,6 +1439,7 @@
 				4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */,
 				4CCE8C6B1FF4B2A000AFBAF2 /* UIMaking.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
+				4C63203F23493A4400C1B709 /* NoResourceViewModel.swift in Sources */,
 				4C3EA131206A6EB600310024 /* UIView+Constraining.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				4C0801AC231F3DE7002FBE0E /* MediaDetailsViewModel.swift in Sources */,

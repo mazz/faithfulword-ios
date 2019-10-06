@@ -4,6 +4,7 @@ struct StoryboardName {
     static let history = "History"
     static let main = "Root"
     static let splashScreen = "SplashScreen"
+    static let noResource = "NoResource"
     static let settings = "Settings"
     static let sideMenu = "SideMenu"
     static let bibleLanguage = "SideMenu"

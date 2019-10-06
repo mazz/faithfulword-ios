@@ -118,6 +118,9 @@ internal final class AppDependencyModule {
                 resettableSplashScreenCoordinator: Resettable {
                     resolver.resolve(SplashScreenCoordinator.self)!
                 },
+                resettableNoResourceCoordinator: Resettable {
+                    resolver.resolve(NoResourceCoordinator.self)!
+                },
                 //                resettableAccountSetupCoordinator: Resettable {
                 //                    resolver.resolve(AccountSetupCoordinator.self)!
                 //                },
@@ -236,6 +239,11 @@ internal final class AppDependencyModule {
             )
         }
 
+        container.register(NoResourceCoordinator.self) { resolver in
+            NoResourceCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
+            )
+        }
+        
         container.register(MainCoordinator.self) { resolver in
             MainCoordinator(
                 appUIMaking: resolver.resolve(AppUIMaking.self)!,
@@ -271,6 +279,12 @@ internal final class AppDependencyModule {
                 languageService: resolver.resolve(LanguageServicing.self)!
             )
         }.inObjectScope(.transient)
+
+        container.register(NoResourceViewModel.self) { resolver, appFlowStatus, appNetworkStatus, serverStatus in
+            NoResourceViewModel(appFlowStatus: appFlowStatus,
+                                appNetworkStatus: appNetworkStatus,
+                                serverStatus: serverStatus)
+            }.inObjectScope(.transient)
 
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaCategory in
             MediaListingViewModel(
