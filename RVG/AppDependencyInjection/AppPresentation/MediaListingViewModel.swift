@@ -30,6 +30,10 @@ internal final class MediaListingViewModel {
     // false - the search for the current filterText yields a result > 0
     public var emptyFilteredResult: Field<Bool> = Field<Bool>(false)
 
+    // true - the network fetch succeeded but yielded no results
+    // false - the network fetch succeeded and yielded a result > 0
+    public var emptyFetchResult: Field<Bool> = Field<Bool>(false)
+
     // media loaded on initial fetch
     public private(set) var media = Field<[Playable]>([])
     public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
@@ -302,6 +306,9 @@ internal final class MediaListingViewModel {
                 // self.media is our source of truth
                 self.filteredMedia.value = self.media.value
                 
+                self.emptyFetchResult.value = (persistedMediaItems.count == 0)
+
+                
                 self.lastOffset = Int(ceil(CGFloat(persistedMediaItems.count / Constants.limit)))
             }
         }) { error in
@@ -328,6 +335,9 @@ internal final class MediaListingViewModel {
             self.lastOffset += 1
             
             self.assetPlaybackService.playables.value = self.media.value
+            
+            self.emptyFetchResult.value = (mediaItems.count == 0)
+
         }) { error in
             
             if let dbError: DatabaseError = error as? DatabaseError {
@@ -349,6 +359,7 @@ internal final class MediaListingViewModel {
                     // because of the fetchMoreMedia() guards
                     if self.media.value.count >= limit && self.totalEntries == -1 {
                         self.totalEntries = self.media.value.count
+
                     }
                 default:                            // any other database error
                     DDLogDebug("some db error: \(dbError)")

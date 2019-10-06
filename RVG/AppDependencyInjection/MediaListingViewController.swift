@@ -506,6 +506,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 self.noResultLabel.isHidden = !emptyResult
             }.disposed(by: bag)
 
+        viewModel.emptyFetchResult.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] emptyResult in
+                self.noResultLabel.isHidden = !emptyResult
+            }.disposed(by: bag)
+
     }
     
     private func bindPlaybackViewModel() {
