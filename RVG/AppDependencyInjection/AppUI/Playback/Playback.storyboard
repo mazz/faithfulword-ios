@@ -83,7 +83,7 @@
                                                 <attributedString key="attributedText">
                                                     <fragment content="-:--">
                                                         <attributes>
-                                                            <color key="NSColor" red="0.6588235294117647" green="0.6588235294117647" blue="0.6588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                             <font key="NSFont" size="13" name="HelveticaNeue"/>
                                                             <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                         </attributes>
@@ -100,7 +100,7 @@
                                                 <attributedString key="attributedText">
                                                     <fragment content="-:--">
                                                         <attributes>
-                                                            <color key="NSColor" red="0.6588235294117647" green="0.6588235294117647" blue="0.6588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                             <font key="NSFont" size="13" name="HelveticaNeue"/>
                                                             <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                         </attributes>
@@ -117,7 +117,7 @@
                                                 <state key="normal" image="nowPlaying_pause"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="egg-tI-Yhc" userLabel="Next">
-                                                <rect key="frame" x="218" y="75" width="44" height="44"/>
+                                                <rect key="frame" x="204.5" y="61.5" width="71" height="71"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_next"/>
                                                 <connections>
@@ -125,7 +125,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zAW-fg-84x" userLabel="Prev">
-                                                <rect key="frame" x="58" y="75" width="44" height="44"/>
+                                                <rect key="frame" x="44.5" y="61.5" width="71" height="71"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_prev"/>
                                                 <connections>
@@ -159,12 +159,12 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rp0-OT-67e">
-                                                <rect key="frame" x="20" y="170.5" width="49" height="38"/>
+                                                <rect key="frame" x="20" y="170.5" width="38" height="38"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="38" id="0FC-kq-soq"/>
-                                                    <constraint firstAttribute="width" constant="49" id="hOF-X1-VGC"/>
+                                                    <constraint firstAttribute="width" constant="38" id="hOF-X1-VGC"/>
                                                 </constraints>
-                                                <state key="normal" title="Button" image="loop"/>
+                                                <state key="normal" title="Button" image="repeat"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rIc-v1-SES">
                                                 <rect key="frame" x="247" y="174.5" width="60" height="30"/>
@@ -176,7 +176,7 @@
                                                     <attributedString key="attributedTitle">
                                                         <fragment content="1.0x">
                                                             <attributes>
-                                                                <color key="NSColor" red="0.6588235294117647" green="0.6588235294117647" blue="0.6588235294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                <color key="NSColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                                 <font key="NSFont" size="19" name="HelveticaNeue"/>
                                                             </attributes>
                                                         </fragment>
@@ -187,10 +187,10 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1dQ-qe-0Qs">
-                                                <rect key="frame" x="135" y="170.5" width="50" height="38"/>
+                                                <rect key="frame" x="135" y="164.5" width="50" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="50" id="fC6-Hy-2qb"/>
-                                                    <constraint firstAttribute="height" constant="38" id="ydk-1F-Fmb"/>
+                                                    <constraint firstAttribute="height" constant="50" id="ydk-1F-Fmb"/>
                                                 </constraints>
                                                 <state key="normal" title="Button" image="cloud-down"/>
                                             </button>
@@ -311,12 +311,12 @@
     </scenes>
     <resources>
         <image name="bg-rectangle" width="375" height="667"/>
-        <image name="cloud-down" width="50" height="38"/>
+        <image name="cloud-down" width="128" height="128"/>
         <image name="creation" width="586.66668701171875" height="579.33331298828125"/>
-        <image name="loop" width="55" height="42"/>
-        <image name="nowPlaying_next" width="44" height="44"/>
+        <image name="nowPlaying_next" width="71" height="71"/>
         <image name="nowPlaying_pause" width="44" height="44"/>
-        <image name="nowPlaying_prev" width="44" height="44"/>
+        <image name="nowPlaying_prev" width="71" height="71"/>
+        <image name="repeat" width="256" height="256"/>
         <image name="share-box" width="128" height="128"/>
     </resources>
 </document>

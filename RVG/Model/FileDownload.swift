@@ -109,8 +109,10 @@ extension FileDownloadState: Codable {
         case 5:
             self = .complete
         case 6:
-            self = .error
+            self = .interrupted
         case 7:
+            self = .error
+        case 8:
             self = .unknown
         default:
             throw CodingError.unknownValue
@@ -132,10 +134,12 @@ extension FileDownloadState: Codable {
             try container.encode(4, forKey: .rawValue)
         case .complete:
             try container.encode(5, forKey: .rawValue)
-        case .error:
+        case .interrupted:
             try container.encode(6, forKey: .rawValue)
-        case .unknown:
+        case .error:
             try container.encode(7, forKey: .rawValue)
+        case .unknown:
+            try container.encode(8, forKey: .rawValue)
         }
     }
 }
@@ -147,6 +151,7 @@ public enum FileDownloadState {
     case cancelling
     case cancelled
     case complete
+    case interrupted
     case error
     case unknown
 }

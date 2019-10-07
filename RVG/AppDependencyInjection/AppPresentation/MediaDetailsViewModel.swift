@@ -10,10 +10,6 @@ import Foundation
 import RxSwift
 import GRDB
 
-private struct Constants {
-    static let limit: Int = 10000000
-}
-
 internal final class MediaDetailsViewModel {
     // MARK: Fields
     

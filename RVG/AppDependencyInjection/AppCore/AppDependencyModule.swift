@@ -101,7 +101,9 @@ internal final class AppDependencyModule {
             }.inObjectScope(.container)
 
         container.register(AssetPlaybackServicing.self) { resolver in
-            AssetPlaybackService(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!, remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!)
+            AssetPlaybackService(assetPlaybackManager: resolver.resolve(AssetPlaybackManager.self)!, remoteCommandManager: resolver.resolve(RemoteCommandManager.self)!,
+         reachability: resolver.resolve(RxClassicReachable.self)!
+            )
             }.inObjectScope(.container)
 
         container.register(AppCoordinator.self) { resolver in
@@ -115,6 +117,9 @@ internal final class AppDependencyModule {
                 },
                 resettableSplashScreenCoordinator: Resettable {
                     resolver.resolve(SplashScreenCoordinator.self)!
+                },
+                resettableNoResourceCoordinator: Resettable {
+                    resolver.resolve(NoResourceCoordinator.self)!
                 },
                 //                resettableAccountSetupCoordinator: Resettable {
                 //                    resolver.resolve(AccountSetupCoordinator.self)!
@@ -229,6 +234,16 @@ internal final class AppDependencyModule {
             )
         }
 
+        container.register(HistoryCoordinator.self) { resolver in
+            HistoryCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
+            )
+        }
+
+        container.register(NoResourceCoordinator.self) { resolver in
+            NoResourceCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
+            )
+        }
+        
         container.register(MainCoordinator.self) { resolver in
             MainCoordinator(
                 appUIMaking: resolver.resolve(AppUIMaking.self)!,
@@ -243,16 +258,33 @@ internal final class AppDependencyModule {
                 },
                 resettableBibleLanguageCoordinator: Resettable {
                     resolver.resolve(BibleLanguageCoordinator.self)!
+                }, resettableHistoryCoordinator: Resettable {
+                    resolver.resolve(HistoryCoordinator.self)!
                 },
                 productService: resolver.resolve(ProductServicing.self)!
             )
         }
+        
+        /**
+         view models should be stored as transient, otherwise they will
+         be effectively `cached` in the container. Setting them to .container
+         will create odd side-effects where swinject will use the viewmodel
+         in the container rather than make a new viewmodel when making a view controller
+        */
+        
+        
         container.register(BooksViewModel.self) { resolver in
             BooksViewModel(
                 productService: resolver.resolve(ProductServicing.self)!,
                 languageService: resolver.resolve(LanguageServicing.self)!
             )
         }.inObjectScope(.transient)
+
+        container.register(NoResourceViewModel.self) { resolver, appFlowStatus, appNetworkStatus, serverStatus in
+            NoResourceViewModel(appFlowStatus: appFlowStatus,
+                                appNetworkStatus: appNetworkStatus,
+                                serverStatus: serverStatus)
+            }.inObjectScope(.transient)
 
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaCategory in
             MediaListingViewModel(
@@ -313,6 +345,40 @@ internal final class AppDependencyModule {
         container.register(DownloadListingViewModel.self) { resolver in
             DownloadListingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
             }.inObjectScope(.transient)
+        
+//        container.register(HistoryPlaybackViewModel.self) { resolver, playlistId, mediaCategory in
+//            HistoryPlaybackViewModel(
+//                playlistUuid: playlistId,
+//                mediaCategory: mediaCategory,
+//                productService: resolver.resolve(ProductServicing.self)!,
+//                //                searchService: resolver.resolve(SearchServicing.self)!,
+//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+//                reachability: resolver.resolve(RxClassicReachable.self)!
+//            )
+//            }.inObjectScope(.container)
+//
+//        container.register(HistoryDownloadViewModel.self) { resolver, playlistId, mediaCategory in
+//            HistoryDownloadViewModel(
+//                playlistUuid: playlistId,
+//                mediaCategory: mediaCategory,
+//                productService: resolver.resolve(ProductServicing.self)!,
+//                //                searchService: resolver.resolve(SearchServicing.self)!,
+//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+//                reachability: resolver.resolve(RxClassicReachable.self)!
+//            )
+//            }.inObjectScope(.container)
+        
+        container.register(MediaFilterViewModel.self) { resolver, playlistId, mediaCategory in
+            MediaFilterViewModel(
+                playlistUuid: playlistId,
+                mediaCategory: mediaCategory,
+                productService: resolver.resolve(ProductServicing.self)!,
+                //                searchService: resolver.resolve(SearchServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
+            )
+            }.inObjectScope(.transient)
+
 
     }
 

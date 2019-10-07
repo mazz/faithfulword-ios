@@ -22,10 +22,15 @@ public protocol DataStoring {
     func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]>
     func deleteMediaItems() -> Single<Void>
 
-    func addUser(addingUser: UserAppUser) -> Single<UserAppUser>
-    func fetchUser() -> Single<UserAppUser>
-    func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser>
+    func addAppUser(addingUser: UserAppUser) -> Single<UserAppUser>
+    func deleteAppUser() -> Single<Void>
+    func fetchAppUser() -> Single<UserAppUser?>
     
+    func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser>
+    func deleteLoginUser() -> Single<Void>
+    func fetchLoginUser() -> Single<UserLoginUser?>
+
+
 //    func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -73,6 +78,7 @@ public protocol DataStoring {
     
     // MARK: FileDownload list
     func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func fetchInterruptedDownloads(_ playlistUuid: String?) -> Single<[FileDownload]>
     
     // MARK: Playlist
     func fetchPlayables(for categoryUuid: String) -> Single<[Playable]>
@@ -91,9 +97,32 @@ public final class DataStore {
     
     // MARK: Dependencies
     public var dbPool: DatabasePool {
-        let documentsURL: URL = getDocumentsDirectory()
-        let databasePath = documentsURL.appendingPathComponent("db.sqlite")
-        return try! openDatabase(atPath: databasePath.absoluteString)
+        
+        var resultPool: DatabasePool!
+        
+        if let pool = _dbPool {
+            return pool
+        } else {
+            let documentsURL: URL = getDocumentsDirectory()
+            let databasePath = documentsURL.appendingPathComponent("db.sqlite")
+            do {
+                // Connect to the database
+                // See https://github.com/groue/GRDB.swift/#database-connections
+                _dbPool = try DatabasePool(path: databasePath.absoluteString)
+                print("new _dbPool at databasePath: \(databasePath.absoluteString)")
+                
+                if let databasePool = _dbPool {
+                    // Use DatabaseMigrator to define the database schema
+                    // See https://github.com/groue/GRDB.swift/#migrations
+                    try migrator.migrate(databasePool)
+                    resultPool = databasePool
+                }
+                
+            } catch {
+                fatalError("error opening database: \(error)")
+            }
+        }
+        return resultPool
     }
     
     func getDocumentsDirectory() -> URL {
@@ -115,6 +144,7 @@ public final class DataStore {
                     
                     orgTable.column("uuid", .text).primaryKey()
                     orgTable.column("bannerPath", .text)
+                    orgTable.column("orgId", .integer)
                     orgTable.column("basename", .text)
                     orgTable.column("shortname", .text)
                     orgTable.column("insertedAt", .double)
@@ -423,28 +453,6 @@ public final class DataStore {
         return migrator
     }
     
-    internal func openDatabase(atPath path: String) throws -> DatabasePool {
-        var resultPool: DatabasePool!
-        
-        if let databasePool = _dbPool {
-            resultPool = databasePool
-            return resultPool
-        } else {
-            // Connect to the database
-            // See https://github.com/groue/GRDB.swift/#database-connections
-            _dbPool = try DatabasePool(path: path)
-            DDLogDebug("new _dbPool at databasePath: \(path)")
-            
-            if let databasePool = _dbPool {
-                // Use DatabaseMigrator to define the database schema
-                // See https://github.com/groue/GRDB.swift/#migrations
-                try migrator.migrate(databasePool)
-                resultPool = databasePool
-                return resultPool
-            }
-        }
-        return resultPool
-    }
 }
 
 
@@ -688,7 +696,7 @@ extension DataStore: DataStoring {
     
     // will error if there is already one user because for now
     // this is a single-user app
-    public func addUser(addingUser: UserAppUser) -> Single<UserAppUser> {
+    public func addAppUser(addingUser: UserAppUser) -> Single<UserAppUser> {
         return Single.create { [unowned self] single in
             var resultUser: UserAppUser = addingUser
             do {
@@ -717,14 +725,13 @@ extension DataStore: DataStoring {
         //        return Single.just("")
     }
 
-    public func fetchUser() -> Single<UserAppUser> {
+    public func fetchAppUser() -> Single<UserAppUser?> {
         return Single.create { [unowned self] single in
             do {
-                var fetchUser: UserAppUser!
+                var fetchUser: UserAppUser?
                 try self.dbPool.read { db in
-                    if let user = try UserAppUser.fetchOne(db) {
-                        fetchUser = user
-                    }
+                    let user = try UserAppUser.fetchOne(db)
+                    fetchUser = user
                 }
                 single(.success(fetchUser))
             } catch {
@@ -734,6 +741,23 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
+    
+    public func deleteAppUser() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try UserAppUser.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+
     
     public func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser> {
         return Single.create { [unowned self] single in
@@ -754,6 +778,38 @@ extension DataStore: DataStoring {
         }
     }
     
+    public func deleteLoginUser() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try UserLoginUser.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+    
+    public func fetchLoginUser() -> Single<UserLoginUser?> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchUser: UserLoginUser?
+                try self.dbPool.read { db in
+                    let user = try UserLoginUser.fetchOne(db)
+                    fetchUser = user
+                }
+                single(.success(fetchUser))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
     
 //    public func addUser(session: String) -> Single<String> {
 //        return Single.create { [unowned self] single in
@@ -1563,7 +1619,7 @@ extension DataStore: DataStoring {
                     
 //                    do {
                         try playableUuids.forEach({ uuid in
-                            if let download = try FileDownload.filter(Column("playableUuid") == playableUuids[0]).fetchOne(db) {
+                            if let download = try FileDownload.filter(Column("playableUuid") == uuid).fetchOne(db) {
                                 // update existing download
                                 
                                 // db update
@@ -1658,6 +1714,33 @@ extension DataStore: DataStoring {
                     fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
                 }
                 single(.success(fetchFileDownloads))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
+    public func fetchInterruptedDownloads(_ playlistUuid: String? = nil) -> Single<[FileDownload]> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchFileDownloads: [FileDownload]?
+                var interrupted: [FileDownload] = []
+                try self.dbPool.read { db in
+                    if let fetchPlaylistUuid: String = playlistUuid {
+                        fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == fetchPlaylistUuid).fetchAll(db)
+                        if let fileDownloads: [FileDownload] = fetchFileDownloads {
+                            interrupted = fileDownloads.filter { $0.state == .inProgress && $0.progress < 1.0 }
+                        }
+                    } else {
+                        fetchFileDownloads = try FileDownload.fetchAll(db)
+                        if let fileDownloads: [FileDownload] = fetchFileDownloads {
+                            interrupted = fileDownloads.filter { $0.state == .inProgress && $0.progress < 1.0 }
+                        }
+                    }
+                }
+                single(.success(interrupted))
             } catch {
                 DDLogDebug("error: \(error)")
                 single(.error(error))

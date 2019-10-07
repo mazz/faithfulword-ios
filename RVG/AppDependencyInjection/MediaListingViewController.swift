@@ -42,8 +42,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     // MARK: Fields
     
     internal var viewModelSections: [MediaListingSectionViewModel] = []
-    internal var downloadingItems: [String: FileDownload] = [:]
-    internal var downloadedItems: [String: FileDownload] = [:]
+//    internal var downloadingItems: [String: FileDownload] = [:]
+//    internal var downloadedItems: [String: FileDownload] = [:]
     internal var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     internal var previousSelectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     internal var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
@@ -54,7 +54,6 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     /// MARK: Search
 
     internal var viewModelSearchSections: [MediaListingSectionViewModel] = []
-    var products = [Product]() // for testing of search only, remove once navigation is working
 
     /// State restoration values.
     private enum RestorationKeys: String {
@@ -123,15 +122,104 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         let notificationCenter = NotificationCenter.default
         
         // MediaItemCell
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
         
+//        MediaItemCell.mediaItemCellUserDidTapRetryNotification
+        notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            DDLogDebug("notification: \(notification)")
+            if let mediaItem: MediaItem = notification.object as? MediaItem,
+                let weakSelf = self {
+                // clear-out from interrupted items
+                weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
+                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+            }
+        }
+        
+        notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            
+            DDLogDebug("notification: \(notification)")
+            if let mediaItem: MediaItem = notification.object as? MediaItem,
+                let weakSelf = self {
+                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+            }
+        }
+
+        notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            
+            DDLogDebug("notification: \(notification)")
+            /*
+             - some : Faithful_Word.MediaItem(contentProviderLink: nil, duration: 0.0, hashId: "gqRj", insertedAt: 1565925286.0, ipfsLink: nil, languageId: "en", largeThumbnailPath: nil, localizedname: "Matthew 1", medThumbnailPath: nil, mediaCategory: "bible", medium: "audio", ordinal: Optional(1), path: Optional("bible/en/0040-0001-Matthew-en.mp3"), playlistUuid: "8e06e658-9cdf-4ca0-8aa5-a3e958e6b035", presentedAt: nil, presenterName: Optional("Eli Lambert"), publishedAt: nil, smallThumbnailPath: nil, sourceMaterial: Optional("King James Bible (KJV)"), tags: [], trackNumber: Optional(1), updatedAt: Optional(1565925318.0), uuid: "39be7a9d-fbe8-49a3-a5d4-16c3e10b0c2d")
+             */
+            if let mediaItem: MediaItem = notification.object as? MediaItem,
+                let weakSelf = self,
+                let path: String = mediaItem.path,
+                let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
+                let actionController = YoutubeActionController()
+                
+                
+                let fileIdentifier: String = mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
+                //        actionController.addAction(Action(ActionData(title: "Add to Watch Later", image: UIImage(named: "yt-add-to-watch-later-icon")!), style: .default, handler: { action in
+                //        }))
+                
+                if let fileDownload: FileDownload = weakSelf.downloadListingViewModel.downloadedItems[mediaItem.uuid] {
+                    actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                        weakSelf.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
+                    }))
+                } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] {
+                actionController.addAction(Action(ActionData(title: "Restart Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                    
+                    // clear-out from interrupted items
+                    weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
+                    
+                    weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                })) } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
+                    actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                        weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                    }))
+                }
+                else {
+                    actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                        //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
+                        weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                        
+                    }))
+                }
+                if let fileDownload: FileDownload = weakSelf.downloadListingViewModel.downloadedItems[mediaItem.uuid] {
+                    if fileDownload.progress == 1.0  {
+                        actionController.addAction(Action(ActionData(title: "Share File...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
+                            
+                            weakSelf.shareFile(mediaItem: mediaItem)
+                        }))                        
+                    }
+                }
+                actionController.addAction(Action(ActionData(title: "Share Link...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
+                    weakSelf.shareLink(mediaItem: mediaItem)
+                }))
+                
+                actionController.addAction(Action(ActionData(title: "Cancel", image: UIImage(named: "yt-cancel-icon")!), style: .cancel, handler: nil))
+                
+                weakSelf.present(actionController, animated: true, completion: nil)
+            }
+            
+            //        if let fileDownload: FileDownload = notification.object as? FileDownload,
+            //            let downloadAsset: Asset = self.downloadAsset.value {
+            //            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
+            //            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
+            //
+            //                self.downloadState.onNext(.initiating)
+            //            }
+            //
+            //        }
+            
+        }
         // DownloadService
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
         
         /// SEARCH
         
@@ -262,12 +350,6 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         
         notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
         notificationCenter.removeObserver(self, name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
-        
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-        notificationCenter.removeObserver(self, name: DownloadService.fileDownloadDidErrorNotification, object: nil)
     }
     
     // MARK: Private helpers
@@ -418,6 +500,12 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 self.noResultLabel.isHidden = !emptyResult
             }.disposed(by: bag)
 
+        viewModel.emptyFetchResult.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] emptyResult in
+                self.noResultLabel.isHidden = !emptyResult
+            }.disposed(by: bag)
+
     }
     
     private func bindPlaybackViewModel() {
@@ -465,6 +553,60 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     }
     
     private func bindDownloadListingViewModel() {
+        Observable.combineLatest(downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid).asObservable(),
+                                 downloadListingViewModel.storedFileDownloads(for: viewModel.playlistUuid).asObservable())
+            .subscribe(onNext: { activeDownloads, fileDownloads in
+                DDLogDebug("activeDownloads: \(activeDownloads) fileDownloads: \(fileDownloads)")
+                
+                // put activeDownloads in downloading
+                activeDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+                })
+                
+                // put .complete in downloaded
+                var notCompleted: [FileDownload] = []
+                // put anything that is not .complete in downloadingItems
+                fileDownloads.forEach({ [unowned self] fileDownload in
+                    if fileDownload.state != .complete {
+                        notCompleted.append(fileDownload)
+                    } else {
+                        self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                        DDLogDebug("completedDownload: \(fileDownload)")
+                    }
+                })
+                
+                // put interrupted in downloaded, to allow the user the option of restarting
+                // by tapping the restart button
+                var interruptedDownloads: [FileDownload] = []
+                notCompleted.forEach({ [unowned self] notCompletedDownload in
+//                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
+                    
+                    let notCompletePresentInActive: Bool = activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid }
+                    
+                    if notCompletePresentInActive == false {
+                        // interrupted
+                        interruptedDownloads.append(notCompletedDownload)
+                    }
+                
+//                let interruptedDownloads: [FileDownload] = notCompleted.filter({ notCompletedDownload -> Bool in
+//                    activeDownloads.contains(where: { activeDownload -> Bool in
+//                        activeDownload.playlistUuid != notCompletedDownload.playlistUuid
+//                    })
+                })
+                
+                interruptedDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadInterruptedItems[fileDownload.playableUuid] = fileDownload
+                    })
+
+                DDLogDebug("interruptedDownloads: \(interruptedDownloads)")
+
+            }).disposed(by: bag)
+        
+//        downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid)
+//            .asObservable()
+//            .next { activeDownloads in
+//                DDLogDebug("viewModel activeDownloads: \(activeDownloads)")
+//            }.disposed(by: bag)
         
         // the moment the viewmodel playlistuuid changes we
         // get the file downloads for that playlist
@@ -472,8 +614,13 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .asObservable()
             .subscribe(onNext: { fileDownloads in
                 
+                // put anything that is not .complete in downloadingItems
                 fileDownloads.forEach({ [unowned self] fileDownload in
-                    self.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    if fileDownload.state != .complete {
+//                        self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+                    } else {
+                        self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                    }
                 })
                 
                 DDLogDebug("viewModel.playlistUuid: \(self.viewModel.playlistUuid) fileDownloads: \(fileDownloads)")
@@ -490,12 +637,15 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 
                 if let playableUuid: String? = playableUuid.element,
                     let uuid: String = playableUuid,
-                    let download: FileDownload = self.downloadedItems[uuid],
+                    let download: FileDownload = self.downloadListingViewModel.downloadedItems[uuid],
                     let indexPath: IndexPath = self.indexOfFileDownloadInViewModel(fileDownload: download) {
                     
                     // remove it from downloadedItems
-                    self.downloadedItems[uuid] = nil
+                    self.downloadListingViewModel.downloadedItems[uuid] = nil
                     
+                    // remove it from downloadInterruptedItems
+                    self.downloadListingViewModel.downloadInterruptedItems[uuid] = nil
+
                     if indexPath.row >= 0 {
                         UIView.performWithoutAnimation {
                             self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
@@ -504,6 +654,30 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 }
             }
             .disposed(by: bag)
+        
+        downloadListingViewModel.fileDownloadDirty
+            .asObservable()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] fileDownload in
+                let indexPath: IndexPath = self.indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+                if indexPath.row != -1 {
+                    self.lastProgressChangedUpdate.onNext(indexPath)
+                }
+                
+            }).disposed(by: bag)
+        
+        
+        downloadListingViewModel.fileDownloadDirtyComplete
+            .asObservable()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [unowned self] fileDownload in
+                let indexPath: IndexPath = self.indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+                if indexPath.row != -1 {
+                    self.lastDownloadCompleteUpdate.onNext(indexPath)
+                }
+                
+            }).disposed(by: bag)
+
         
     }
     //    private func reactToContentSizeChange() {
@@ -582,75 +756,6 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         return indexPath
     }
 
-    // MARK: MediaItemCell notifications
-    
-    @objc func handleUserDidTapMoreNotification(notification: Notification) {
-        DDLogDebug("notification: \(notification)")
-        /*
-         - some : Faithful_Word.MediaItem(contentProviderLink: nil, duration: 0.0, hashId: "gqRj", insertedAt: 1565925286.0, ipfsLink: nil, languageId: "en", largeThumbnailPath: nil, localizedname: "Matthew 1", medThumbnailPath: nil, mediaCategory: "bible", medium: "audio", ordinal: Optional(1), path: Optional("bible/en/0040-0001-Matthew-en.mp3"), playlistUuid: "8e06e658-9cdf-4ca0-8aa5-a3e958e6b035", presentedAt: nil, presenterName: Optional("Eli Lambert"), publishedAt: nil, smallThumbnailPath: nil, sourceMaterial: Optional("King James Bible (KJV)"), tags: [], trackNumber: Optional(1), updatedAt: Optional(1565925318.0), uuid: "39be7a9d-fbe8-49a3-a5d4-16c3e10b0c2d")
-         */
-        if let mediaItem: MediaItem = notification.object as? MediaItem,
-            let path: String = mediaItem.path,
-            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
-            let actionController = YoutubeActionController()
-            
-            
-            let fileIdentifier: String = mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)"))
-            //        actionController.addAction(Action(ActionData(title: "Add to Watch Later", image: UIImage(named: "yt-add-to-watch-later-icon")!), style: .default, handler: { action in
-            //        }))
-            
-            if let fileDownload: FileDownload = downloadedItems[mediaItem.uuid] {
-                actionController.addAction(Action(ActionData(title: "Delete File...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                    self.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
-                }))
-            } else if let downloading: FileDownload = downloadingItems[mediaItem.uuid] {
-                actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                    self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
-                }))
-            }
-            else {
-                actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                    //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
-                    self.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
-                    
-                }))
-            }
-            if let fileDownload: FileDownload = downloadedItems[mediaItem.uuid] {
-                actionController.addAction(Action(ActionData(title: "Share File...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
-                    
-                    self.shareFile(mediaItem: mediaItem)
-                }))
-            }
-            actionController.addAction(Action(ActionData(title: "Share Link...", image: UIImage(named: "yt-share-icon")!), style: .default, handler: { action in
-                self.shareLink(mediaItem: mediaItem)
-            }))
-
-            actionController.addAction(Action(ActionData(title: "Cancel", image: UIImage(named: "yt-cancel-icon")!), style: .cancel, handler: nil))
-            
-            present(actionController, animated: true, completion: nil)
-        }
-        
-        //        if let fileDownload: FileDownload = notification.object as? FileDownload,
-        //            let downloadAsset: Asset = self.downloadAsset.value {
-        //            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
-        //            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
-        //
-        //                self.downloadState.onNext(.initiating)
-        //            }
-        //
-        //        }
-    }
-    
-    //    handleUserDidTapCancelNotification
-    
-    @objc func handleUserDidTapCancelNotification(notification: Notification) {
-        DDLogDebug("notification: \(notification)")
-        if let mediaItem: MediaItem = notification.object as? MediaItem {
-            self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
-        }
-        
-        
-    }
     // MARK: DownloadService notifications
     
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
@@ -658,7 +763,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("MediaListingViewController initiateNotification filedownload: \(fileDownload)")
             DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
-            downloadingItems[fileDownload.playableUuid] = fileDownload
+            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
             
             self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
             
@@ -700,7 +805,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("MediaListingViewController didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
             DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
-            downloadingItems[fileDownload.playableUuid] = fileDownload
+            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
             
             self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
             
@@ -718,10 +823,10 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("MediaListingViewController completeNotification filedownload: \(fileDownload)")
             DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
-            downloadingItems[fileDownload.playableUuid] = fileDownload
+            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
             
             // store download as `downloaded`
-            downloadedItems[fileDownload.playableUuid] = fileDownload
+            downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
             
             self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
             
@@ -740,7 +845,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("MediaListingViewController errorNotification filedownload: \(fileDownload)")
             DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
-            downloadingItems[fileDownload.playableUuid] = fileDownload
+            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
             
             self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
             
@@ -758,7 +863,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("MediaListingViewController cancelNotification filedownload: \(fileDownload)")
             DDLogDebug("MediaListingViewController lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
             
-            downloadingItems[fileDownload.playableUuid] = fileDownload
+            downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
             
             self.downloadListingViewModel.updateFileDownloadHistory(for: fileDownload)
             
@@ -828,106 +933,84 @@ extension MediaListingViewController: UICollectionViewDelegateMagazineLayout {
     }
 }
 
-// https://stackoverflow.com/a/49343299
-extension MediaListingViewController {
-    func fileSizeFormattedString(for fileSize: Int64) -> String {
-        // bytes
-        if fileSize < 1023 {
-            return String(format: "%lu bytes", CUnsignedLong(fileSize))
-        }
-        // KB
-        var floatSize = Float(fileSize / 1024)
-        if floatSize < 1023 {
-            return String(format: "%.1f KB", floatSize)
-        }
-        // MB
-        floatSize = floatSize / 1024
-        if floatSize < 1023 {
-            return String(format: "%.1f MB", floatSize)
-        }
-        // GB
-        floatSize = floatSize / 1024
-        return String(format: "%.1f GB", floatSize)
-    }
-}
-
-extension MediaListingViewController {
-    func shareLink(mediaItem: MediaItem) {
-        if let hashLink: URL = URL(string: "https://api.faithfulword.app/m"),
-            let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
-            let shareUrl: URL = hashLink.appendingPathComponent(mediaItem.hashId) {
-            DDLogDebug("hashLink: \(shareUrl)")
-            
-            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
-            let itemsToShare: [Any] = [message, shareUrl]
-            
-            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
-            
-            activityViewController.excludedActivityTypes = [
-                .addToReadingList,
-                .openInIBooks,
-                .print,
-                .saveToCameraRoll,
-                .postToWeibo,
-                .postToFlickr,
-                .postToVimeo,
-                .postToTencentWeibo]
-            
-            self.present(activityViewController, animated: true, completion: {})
-        }
-        
-
-    }
-    
-    func shareFile(mediaItem: MediaItem) {
-        // copy file to temp dir to rename it
-        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
-        // generate temp file url path
-        
-        if let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
-            let path: String = mediaItem.path,
-            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path)) {
-            
-            let firstPart: String = "\(presenterName.replacingOccurrences(of: " ", with: ""))"
-            let secondPart: String = "\(mediaItem.localizedname.replacingOccurrences(of: " ", with: "")).\(remoteUrl.pathExtension)"
-            let destinationLastPathComponent: String = String(describing: "\(firstPart)-\(secondPart)")
-            
-            let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)")))
-            let temporaryFileURL: URL = temporaryDirectoryURL.appendingPathComponent(destinationLastPathComponent)
-            DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
-            
-            // capture the audio file as a Data blob and then write it
-            // to temp dir
-            
-            do {
-                let audioData: Data = try Data(contentsOf: sourceFileUrl, options: .uncached)
-                try audioData.write(to: temporaryFileURL, options: .atomicWrite)
-            } catch {
-                DDLogDebug("error writing temp audio file: \(error)")
-                return
-            }
-            
-            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
-            let itemsToShare: [Any] = [message, temporaryFileURL]
-            
-            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
-            
-            activityViewController.excludedActivityTypes = [
-                .addToReadingList,
-                .openInIBooks,
-                .print,
-                .saveToCameraRoll,
-                .postToWeibo,
-                .postToFlickr,
-                .postToVimeo,
-                .postToTencentWeibo]
-            
-            self.present(activityViewController, animated: true, completion: {})
-        }
-        
-
-    }
-}
+//extension MediaListingViewController {
+//    func shareLink(mediaItem: MediaItem) {
+//        if let hashLink: URL = URL(string: "https://api.faithfulword.app/m"),
+//            let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
+//            let shareUrl: URL = hashLink.appendingPathComponent(mediaItem.hashId) {
+//            DDLogDebug("hashLink: \(shareUrl)")
+//
+//            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
+//            let itemsToShare: [Any] = [message, shareUrl]
+//
+//            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
+//
+//            activityViewController.excludedActivityTypes = [
+//                .addToReadingList,
+//                .openInIBooks,
+//                .print,
+//                .saveToCameraRoll,
+//                .postToWeibo,
+//                .postToFlickr,
+//                .postToVimeo,
+//                .postToTencentWeibo]
+//
+//            self.present(activityViewController, animated: true, completion: {})
+//        }
+//
+//
+//    }
+//
+//    func shareFile(mediaItem: MediaItem) {
+//        // copy file to temp dir to rename it
+//        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+//        // generate temp file url path
+//
+//        if let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
+//            let path: String = mediaItem.path,
+//            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+//            let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
+//
+//            let firstPart: String = "\(presenterName.replacingOccurrences(of: " ", with: ""))"
+//            let secondPart: String = "\(mediaItem.localizedname.replacingOccurrences(of: " ", with: "")).\(remoteUrl.pathExtension)"
+//            let destinationLastPathComponent: String = String(describing: "\(firstPart)-\(secondPart)")
+//
+//            let sourceFileUrl: URL = FileSystem.savedDirectory.appendingPathComponent(mediaItem.uuid.appending(String(describing: ".\(remoteUrl.pathExtension)")))
+//            let temporaryFileURL: URL = temporaryDirectoryURL.appendingPathComponent(destinationLastPathComponent)
+//            DDLogDebug("temporaryFileURL: \(temporaryFileURL)")
+//
+//            // capture the audio file as a Data blob and then write it
+//            // to temp dir
+//
+//            do {
+//                let audioData: Data = try Data(contentsOf: sourceFileUrl, options: .uncached)
+//                try audioData.write(to: temporaryFileURL, options: .atomicWrite)
+//            } catch {
+//                DDLogDebug("error writing temp audio file: \(error)")
+//                return
+//            }
+//
+//            let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
+//            let itemsToShare: [Any] = [message, temporaryFileURL]
+//
+//            let activityViewController = UIActivityViewController(activityItems: itemsToShare, applicationActivities: nil)
+//
+//            activityViewController.excludedActivityTypes = [
+//                .addToReadingList,
+//                .openInIBooks,
+//                .print,
+//                .saveToCameraRoll,
+//                .postToWeibo,
+//                .postToFlickr,
+//                .postToVimeo,
+//                .postToTencentWeibo]
+//
+//            self.present(activityViewController, animated: true, completion: {})
+//        }
+//
+//
+//    }
+//}
 
 // MARK: UISearchControllerDelegate
 

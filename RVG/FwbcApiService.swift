@@ -40,6 +40,9 @@ public enum FwbcApiService {
     // v1.3/auth/identity/callback
     case userLogin(email: String, password: String)
 
+    // v1.3/users
+    case userSignup(user: [String: AnyHashable])
+
     // v1.1/music/{gid}/media
     // v1.2/music/{gid}/media
     // v1.3/music/{uuid}/media?language-id=en&offset=1&limit=50
@@ -98,6 +101,8 @@ extension FwbcApiService: TargetType {
 //            return "/search"
         case .userLogin(_, _):
             return "/auth/identity/callback"
+        case .userSignup(_):
+            return "/users"
 
             
         case .musicMedia(let uuid, _, _):
@@ -140,7 +145,8 @@ extension FwbcApiService: TargetType {
             return .post
         case .userLogin:
             return .post
-            
+        case .userSignup:
+            return .post
             
         case .musicMedia:
             return .get
@@ -209,7 +215,8 @@ extension FwbcApiService: TargetType {
         case .userLogin(let email, let password):
             return ["email": email,
                     "password": password]
-
+        case .userSignup(let user):
+            return ["user": user]
             //        case search(query: String,
             //                    mediaCategory: String,
             //                    playlistUuid: String,
@@ -259,6 +266,8 @@ extension FwbcApiService: TargetType {
             return JSONEncoding.default // Send parameters as JSON in request body
         case .userLogin:
             return JSONEncoding.default
+        case .userSignup:
+                return JSONEncoding.default
             
         case .musicMedia(let uuid, let offset, let limit):
             return URLEncoding.default
@@ -317,7 +326,14 @@ extension FwbcApiService: TargetType {
             return "{\"query\": \(query), \"mediaCategory\": \(mediaCategory), \"playlistUuid\": \(playlistUuid), \"channelUuid\": \(channelUuid), \"publishedAfter\": \(publishedAfter), \"updatedAfter\": \(updatedAfter), \"presentedAfter\": \(presentedAfter), \"offset\": \(offset), \"limit\": \(limit)}".utf8Encoded
             
         case .userLogin(let email, let password):
-            return "{\"email\": \(email), \"password\": \(password)".utf8Encoded
+            return "{\"email\": \(email), \"password\": \(password)}".utf8Encoded
+        case .userSignup(let user):
+            return "{\"user\": {\"username\": \(user["username"]), \"name\": \(user["name"]), \"email\": \(user["email"]), \"password\": \(user["password"]), \"passwordRepeat\": \(user["passwordRepeat"]), \"locale\": \(user["locale"])}".utf8Encoded
+            
+            
+            
+            
+            //  \(email), \"password\": \(password)".utf8Encoded
             
         case .booksChapterMedia(let uuid, let languageId, let offset, let limit):
             return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
@@ -392,7 +408,9 @@ extension FwbcApiService: TargetType {
                                       encoding: JSONEncoding.default)
         case .userLogin(let email, let password):
             return .requestParameters(parameters: ["email": email, "password": password], encoding: JSONEncoding.default)
-            
+        case .userSignup(let user):
+            return .requestParameters(parameters: ["user": user], encoding: JSONEncoding.default)
+
             
             
         case .musicMedia(let uuid, let offset, let limit):

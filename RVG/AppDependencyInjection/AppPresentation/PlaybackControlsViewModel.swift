@@ -58,7 +58,7 @@ public final class PlaybackControlsViewModel {
                 DDLogDebug("scrubValue: \(scrubValue)")
                 //                if let assetPlaybackService = self.assetPlaybackService {
                 //                if let assetPlaybackManager = self.assetPlaybackService.assetPlaybackManager {
-                self.assetPlaybackService.assetPlaybackManager.seekTo(Double(scrubValue))
+                self.seekTo(Double(scrubValue))
                 //                }
             })
             .disposed(by: bag)
@@ -85,11 +85,11 @@ public final class PlaybackControlsViewModel {
                 switch networkStatus {
                     
                 case .unknown:
-                    self.assetPlaybackService.assetPlaybackManager.pause()
+                    self.pausePlayback()
                     self.playDisabled.value = !fileExists
                 case .notReachable:
                     if !fileExists {
-                        self.assetPlaybackService.assetPlaybackManager.pause()
+                        self.pausePlayback()
                     }
                     self.playDisabled.value = !fileExists
                 case .reachable(_):
@@ -103,7 +103,7 @@ public final class PlaybackControlsViewModel {
         selectedPlayable.asObservable()
             .filterNils()
             .next { [unowned self] selectedPlayable in
-                DDLogDebug("playbackPlayable.asObservable: \(selectedPlayable)")
+                DDLogDebug("selectedPlayable: \(selectedPlayable)")
                 self.historyService.fetchLastUserActionPlayableState(for: selectedPlayable.uuid)
                     .asObservable()
                     .next({ [unowned self] historyPlayable in
@@ -121,6 +121,70 @@ public final class PlaybackControlsViewModel {
                     .disposed(by: self.bag)
             }
             .disposed(by: bag)
+    }
+    
+    func playPlayback() {
+        assetPlaybackService.playPlayback()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
+    func pausePlayback() {
+        assetPlaybackService.pausePlayback()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
+    func togglePlayPause() {
+        assetPlaybackService.togglePlayPause()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+    
+    func seekTo(_ position: TimeInterval) {
+        assetPlaybackService.seekTo(position)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
+    func updatePlaybackRate(_ rate: Float) {
+        assetPlaybackService.updatePlaybackRate(rate)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
+    func nextTrack() {
+        assetPlaybackService.nextTrack()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
+    // returns the next Playable track i.e. if the
+    // user is offline, will return the next Playable
+    // in the current playlist that has been downloaded
+    // if the user is online, it will be the next ordinal track
+    
+    func nextPlayableTrack() -> Single<Playable?> {
+        return assetPlaybackService.nextPlayableTrack()
+//            .asObservable()
+//            .subscribeAndDispose(by: bag)
+    }
+
+    func previousTrack() {
+        return assetPlaybackService.previousTrack()
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+
+    // returns the previous Playable track i.e. if the
+    // user is offline, will return the previous Playable
+    // in the current playlist that has been downloaded
+    // if the user is online, it will be the previous ordinal track
+
+    func previousPlayableTrack() -> Single<Playable?> {
+        return assetPlaybackService.previousPlayableTrack()
+//            .asObservable()
+//            .subscribeAndDispose(by: bag)
     }
     
     // MARK: Notification Observer Methods
@@ -183,11 +247,11 @@ public final class PlaybackControlsViewModel {
         switch self.networkStatus.value {
             
         case .unknown:
-            self.assetPlaybackService.assetPlaybackManager.pause()
+            self.pausePlayback()
             self.playDisabled.value = !fileExists
         case .notReachable:
             if !fileExists {
-                self.assetPlaybackService.assetPlaybackManager.pause()
+                self.pausePlayback()
             }
             self.playDisabled.value = !fileExists
         case .reachable(_):
@@ -212,9 +276,18 @@ public final class PlaybackControlsViewModel {
             
             //        if assetIndex < playables.count - 1 { self.playbackPlayable.value = playables[assetIndex + 1] }
         if assetIndex < playables.count - 1 {
-            self.assetPlaybackService.assetPlaybackManager.pause()
-            self.assetPlaybackService.playableItem.value = playables[assetIndex + 1]
-            self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
+            self.nextPlayableTrack()
+                .subscribe(onSuccess: { [weak self] nextPlayable in
+                    if let _ = nextPlayable {
+                        self?.pausePlayback()
+                        self?.assetPlaybackService.playableItem.value = nextPlayable
+                        self?.selectedPlayable.value = self?.assetPlaybackService.playableItem.value
+                    }
+                }) { error in
+                DDLogDebug("error: \(error)")
+            }.disposed(by: bag)
+//            self.assetPlaybackService.playableItem.value = playables[assetIndex + 1]
+//            self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
         }
 //        }
     }
@@ -226,13 +299,20 @@ public final class PlaybackControlsViewModel {
         guard let assetUuid = notification.userInfo?[Asset.uuidKey] as? String else { return }
         guard let assetIndex = playables.firstIndex(where: { $0.uuid == assetUuid }) else { return }
         
-//        if assetIndex > 0 { self.playbackPlayable.value = playables[assetIndex - 1] }
         if assetIndex > 0 {
-            self.assetPlaybackService.assetPlaybackManager.pause()
-            self.assetPlaybackService.playableItem.value = playables[assetIndex - 1]
-            self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
+            self.pausePlayback()
+            self.previousPlayableTrack()
+                .subscribe(onSuccess: { [weak self] previousPlayable in
+                    if let _ = previousPlayable {
+                        self?.assetPlaybackService.playableItem.value = previousPlayable
+                        self?.selectedPlayable.value = self?.assetPlaybackService.playableItem.value
+                    }
+                }) { error in
+                    DDLogDebug("error: \(error)")
+            }.disposed(by: bag)
+//            self.assetPlaybackService.playableItem.value = playables[assetIndex - 1]
+//            self.selectedPlayable.value = self.assetPlaybackService.playableItem.value
         }
-//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
     }
     
     @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
@@ -274,7 +354,8 @@ extension PlaybackControlsViewModel {
     func playableHasLocalFile() -> Bool {
         guard let playable: Playable = self.selectedPlayable.value,
             let path: String = playable.path,
-            let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(path))
+            let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+            let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded))
             else { return false }
         
         let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)

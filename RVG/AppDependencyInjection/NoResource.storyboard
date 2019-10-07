@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--No Resource View Controller-->
+        <scene sceneID="e9s-lu-oYw">
+            <objects>
+                <viewController storyboardIdentifier="NoResourceViewController" id="7cH-cI-wj2" customClass="NoResourceViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Yh7-mr-SRV">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You're offline. Check your connection." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="80f-h8-mBL">
+                                <rect key="frame" x="16" y="367" width="288" height="53"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="53" id="FaN-VF-Gea"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect to the Internet" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lvh-0M-6N1">
+                                <rect key="frame" x="16" y="247" width="288" height="112"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="112" id="PI0-bD-tlE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud-server" translatesAutoresizingMaskIntoConstraints="NO" id="pvD-MN-Lol">
+                                <rect key="frame" x="16" y="36" width="288" height="240"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="240" id="nzH-vQ-Dgy"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QaK-lR-m2d">
+                                <rect key="frame" x="100" y="428" width="120" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="cOo-hH-KKJ"/>
+                                    <constraint firstAttribute="height" constant="45" id="csW-Oi-5aS"/>
+                                </constraints>
+                                <state key="normal" title="Try Again"/>
+                                <connections>
+                                    <action selector="tryAgainAction:" destination="7cH-cI-wj2" eventType="touchUpInside" id="K6P-bd-z9C"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="80f-h8-mBL" firstAttribute="top" secondItem="Lvh-0M-6N1" secondAttribute="bottom" constant="8" symbolic="YES" id="FIt-Dg-nuB"/>
+                            <constraint firstItem="80f-h8-mBL" firstAttribute="centerX" secondItem="QaK-lR-m2d" secondAttribute="centerX" id="Jdj-eP-Mlw"/>
+                            <constraint firstItem="Lvh-0M-6N1" firstAttribute="leading" secondItem="pvD-MN-Lol" secondAttribute="leading" id="LJg-ew-YYu"/>
+                            <constraint firstItem="QaK-lR-m2d" firstAttribute="top" secondItem="80f-h8-mBL" secondAttribute="bottom" constant="8" symbolic="YES" id="MvB-Jh-zOT"/>
+                            <constraint firstItem="pvD-MN-Lol" firstAttribute="centerX" secondItem="Yh7-mr-SRV" secondAttribute="centerX" id="S5h-eg-fyL"/>
+                            <constraint firstItem="Lvh-0M-6N1" firstAttribute="top" secondItem="raU-g3-qft" secondAttribute="top" constant="227" id="T8u-V2-jGV"/>
+                            <constraint firstItem="Lvh-0M-6N1" firstAttribute="trailing" secondItem="pvD-MN-Lol" secondAttribute="trailing" id="VN4-PX-LNV"/>
+                            <constraint firstItem="80f-h8-mBL" firstAttribute="trailing" secondItem="Lvh-0M-6N1" secondAttribute="trailing" id="XWX-7u-D5i"/>
+                            <constraint firstItem="pvD-MN-Lol" firstAttribute="top" secondItem="raU-g3-qft" secondAttribute="top" constant="16" id="bDY-au-G8p"/>
+                            <constraint firstItem="Lvh-0M-6N1" firstAttribute="leading" secondItem="Yh7-mr-SRV" secondAttribute="leadingMargin" id="bq4-MZ-M0d"/>
+                            <constraint firstItem="80f-h8-mBL" firstAttribute="leading" secondItem="Lvh-0M-6N1" secondAttribute="leading" id="fOu-MO-KdO"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="raU-g3-qft"/>
+                    </view>
+                    <connections>
+                        <outlet property="actionButton" destination="QaK-lR-m2d" id="qA1-mw-KcS"/>
+                        <outlet property="bodyMessage" destination="80f-h8-mBL" id="fST-Gd-wc1"/>
+                        <outlet property="titleMessage" destination="Lvh-0M-6N1" id="jAL-MU-nPt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ALr-oU-eX4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-91.875" y="182.74647887323943"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cloud-server" width="700" height="540"/>
+    </resources>
+</document>

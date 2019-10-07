@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--History View Controller-->
+        <scene sceneID="ijz-Gp-kOX">
+            <objects>
+                <viewController storyboardIdentifier="HistoryViewController" id="fXb-DK-LUo" customClass="HistoryViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aP0-sH-n3Q">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ifc-7s-lzu">
+                                <rect key="frame" x="52" y="52" width="310" height="29"/>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                </segments>
+                            </segmentedControl>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dfd-uQ-iAC">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="dfd-uQ-iAC" firstAttribute="leading" secondItem="p3g-L3-ZvK" secondAttribute="leading" id="4o4-89-uze"/>
+                            <constraint firstItem="Ifc-7s-lzu" firstAttribute="centerX" secondItem="aP0-sH-n3Q" secondAttribute="centerX" id="5tX-k4-UW8"/>
+                            <constraint firstItem="Ifc-7s-lzu" firstAttribute="top" secondItem="p3g-L3-ZvK" secondAttribute="top" constant="8" id="Dlj-bT-Ffr"/>
+                            <constraint firstItem="Ifc-7s-lzu" firstAttribute="width" secondItem="aP0-sH-n3Q" secondAttribute="height" multiplier="121:350" id="GAL-QP-azm"/>
+                            <constraint firstItem="dfd-uQ-iAC" firstAttribute="trailing" secondItem="p3g-L3-ZvK" secondAttribute="trailing" id="bDn-dj-ZIt"/>
+                            <constraint firstItem="dfd-uQ-iAC" firstAttribute="top" secondItem="Ifc-7s-lzu" secondAttribute="bottom" constant="8" id="fMC-1I-2cv"/>
+                            <constraint firstItem="p3g-L3-ZvK" firstAttribute="bottom" secondItem="dfd-uQ-iAC" secondAttribute="bottom" id="gSf-Yg-bvS"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="p3g-L3-ZvK"/>
+                    </view>
+                    <connections>
+                        <outlet property="historySelectionControl" destination="Ifc-7s-lzu" id="ovD-Fp-fwc"/>
+                        <outlet property="listingContainer" destination="dfd-uQ-iAC" id="gfi-Jl-abp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QgM-nK-PSx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-776.81159420289862" y="45.535714285714285"/>
+        </scene>
+        <!--History Download View Controller-->
+        <scene sceneID="YHO-W8-PMo">
+            <objects>
+                <viewController storyboardIdentifier="HistoryDownloadViewController" id="os8-XU-xZH" customClass="HistoryDownloadViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5L4-Jd-K3g">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="saR-YF-iKZ"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kWn-ID-RQS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-128" y="46"/>
+        </scene>
+        <!--History Playback View Controller-->
+        <scene sceneID="bJp-kj-dYl">
+            <objects>
+                <viewController storyboardIdentifier="HistoryPlaybackViewController" id="6x2-6j-x80" customClass="HistoryPlaybackViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="H97-dT-4pA">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="OBr-rp-Sdg"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a2W-8Z-Fti" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="536" y="46"/>
+        </scene>
+    </scenes>
+</document>

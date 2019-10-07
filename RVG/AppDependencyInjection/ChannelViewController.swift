@@ -51,7 +51,8 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
     internal var viewModel: PlaylistViewModel!
     
     // MARK: Fields
-    
+    let noResultLabel: UILabel = UILabel(frame: .zero)
+
     private var viewModelSections: [PlaylistSectionViewModel] = []
     private let bag = DisposeBag()
     
@@ -70,6 +71,23 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         
+        noResultLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
+        noResultLabel.textAlignment = .center
+        noResultLabel.font = UIFont.systemFont(ofSize: 32)
+        noResultLabel.textColor = .gray
+        noResultLabel.backgroundColor = .clear
+        
+        
+        collectionView.addSubview(noResultLabel)
+        noResultLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noResultLabel.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
+            noResultLabel.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
+            noResultLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -100),
+            noResultLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            noResultLabel.heightAnchor.constraint(equalToConstant: 300),
+            ])
+
         reactToViewModel()
     }
     
@@ -118,6 +136,14 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
                     }
                 }
             }.disposed(by: bag)
+        
+        viewModel.emptyFetchResult.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] emptyResult in
+                self.noResultLabel.isHidden = !emptyResult
+//                self.noResultLabel.isHidden = false
+            }.disposed(by: bag)
+        
     }
 }
 

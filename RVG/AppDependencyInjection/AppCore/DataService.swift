@@ -43,6 +43,7 @@ protocol FileDownloadDataServicing {
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     // list
     func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func fetchInterruptedDownloads(_ playlistUuid: String?) -> Single<[FileDownload]>
 }
 
 public protocol SearchDataServicing {
@@ -66,11 +67,16 @@ public protocol AccountDataServicing {
     var loginUser: Observable<UserLoginUser?> { get }
 
     func loginUser(email: String, password: String) -> Single<UserLoginResponse>
-    func addUser(user: UserAppUser) -> Single<Void>
+    func signupUser(user: [String: AnyHashable]) -> Single<UserSignupResponse>
+    func addAppUser(user: UserAppUser) -> Single<Void>
 //    func addLoginUser(user: UserLoginUser) -> Single<Void>
-    func fetchUser() -> Single<UserAppUser>
+    func fetchAppUser() -> Single<UserAppUser?>
+    func replacePersistedAppUser(user: UserAppUser) -> Single<UserAppUser>
 //    func fetchLoginUser() -> Single<UserLoginUser>
+    func fetchLoginUser() -> Single<UserLoginUser?>
     func appendPersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser>
+    func replacePersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser>
+    
 }
 
 /// Provides product related data to the app
@@ -253,6 +259,10 @@ extension DataService: FileDownloadDataServicing {
     public func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
         return dataStore.fileDownloads(for: playlistUuid)
     }
+    
+    public func fetchInterruptedDownloads(_ playlistUuid: String? = nil) -> Single<[FileDownload]> {
+        return dataStore.fetchInterruptedDownloads(playlistUuid)
+    }
 }
 
 extension DataService: SearchDataServicing {
@@ -302,6 +312,7 @@ extension DataService: SearchDataServicing {
 }
 
 extension DataService: AccountDataServicing {
+    
     public func loginUser(email: String, password: String) -> Single<UserLoginResponse> {
         let moyaResponse = self.networkingApi.rx.request(.userLogin(email: email, password: password))
         let response: Single<UserLoginResponse> = moyaResponse.map { response in
@@ -323,26 +334,64 @@ extension DataService: AccountDataServicing {
         
     }
     
+    public func signupUser(user: [String: AnyHashable]) -> Single<UserSignupResponse> {
+        let moyaResponse = self.networkingApi.rx.request(.userSignup(user: user))
+        let response: Single<UserSignupResponse> = moyaResponse.map { response in
+            do {
+                let jsonObj = try response.mapJSON()
+                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(UserSignupResponse.self)
+            } catch {
+                DDLogError("Moya decode error: \(error)")
+                throw DataServiceError.decodeFailed
+            }
+            
+        }
+            .do(onSuccess: { [unowned self] signupResponse in
+                self._token.value = signupResponse.token
+                self._user.value = signupResponse.user
+            })
+        return response
+    }
+    
     public var user: Single<UserLoginUser?> {
         return Single.just(_user.value)
     }
     
-    public func addUser(user: UserAppUser) -> Single<Void> {
-        return self.dataStore.addUser(addingUser: user)
-            .toVoid()
-    }
-
-    public func fetchUser() -> Single<UserAppUser> {
-        return self.dataStore.fetchUser()
-    }
-
+    
     public var token: Observable<String?> { return _token.asObservable() }
     public var loginUser: Observable<UserLoginUser?> { return _user.asObservable() }
 
     // MARK: Helpers
+    public func addAppUser(user: UserAppUser) -> Single<Void> {
+        return self.dataStore.addAppUser(addingUser: user)
+            .toVoid()
+    }
+    
+    public func fetchAppUser() -> Single<UserAppUser?> {
+        return self.dataStore.fetchAppUser()
+    }
+    
+    public func replacePersistedAppUser(user: UserAppUser) -> Single<UserAppUser> {
+        return dataStore.deleteAppUser()
+            .flatMap { [unowned self] _ in
+                self.dataStore.addAppUser(addingUser: user)
+        }
+    }
 
     public func appendPersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser> {
         return self.dataStore.addLoginUser(addingUser: user)
+    }
+    
+    public func fetchLoginUser() -> Single<UserLoginUser?> {
+        return self.dataStore.fetchLoginUser()
+    }
+    
+    public func replacePersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser> {
+        return dataStore.deleteLoginUser()
+            .flatMap { [unowned self] _ in
+                self.dataStore.addLoginUser(addingUser: user)
+        }
     }
 }
 

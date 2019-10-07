@@ -18,6 +18,8 @@ protocol DownloadServicing {
 
     func fetchDownload(url: String, filename: String, playableUuid: String, playlistUuid: String?) // -> Single<Void>
     func cancelAllDownloads()
+    func resetIncompleteDownloads(toState: FileDownloadState)
+    func deleteHwiDownloadDirectory()
     func cancelDownload(filename: String, playlistUuid: String?) // -> Single<Void>
     func inProgressDownloads() -> [String]
     
@@ -28,6 +30,7 @@ protocol DownloadServicing {
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     
     func fetchStoredFileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]>
 }
 
 extension DownloadService: HWIFileDownloadDelegate {
@@ -44,21 +47,26 @@ extension DownloadService: HWIFileDownloadDelegate {
             self.writeFileToSavedDirectory(localSourceUrl: localFileURL, localDestinationUrl: fullPath, deleteSource: true)
             self.decrementNetworkActivityIndicatorActivityCount()
             
-            DispatchQueue.main.async {
-                var download: FileDownload = FileDownload(url: fileDownload.url,
+            DispatchQueue.main.async { [weak self] in
+                if let weakSelf = self {
+                    var download: FileDownload = FileDownload(url: fileDownload.url,
                                                               uuid: fileDownload.uuid,
                                                               playableUuid: fileDownload.playableUuid,
                                                               localUrl: fileDownload.localUrl,
                                                               updatedAt: Date().timeIntervalSince1970,
                                                               insertedAt: fileDownload.insertedAt,
-                                                              progress: 1.0,
-                                                              totalCount: fileDownload.totalCount,
-                                                              completedCount: fileDownload.completedCount,
+                                                              progress: weakSelf.normalizeProgressValue(1.0),
+                                                              totalCount: weakSelf.normalizeTotalCountValue(fileDownload.totalCount),
+                                                              completedCount: weakSelf.normalizeCompletedCountValue(fileDownload.completedCount),
                                                               state: .complete)
-                
-                download.playlistUuid = fileDownload.playlistUuid
-                
-                NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: download)
+                    
+                    download.playlistUuid = fileDownload.playlistUuid
+                    
+                    // remove from list of active downloads
+                    weakSelf.fileDownloads[identifier] = nil
+                    
+                    NotificationCenter.default.post(name: DownloadService.fileDownloadDidCompleteNotification, object: download)
+                }
             }
         }
         
@@ -108,9 +116,9 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                                       localUrl: fileDownload.localUrl,
                                                                       updatedAt: Date().timeIntervalSince1970,
                                                                       insertedAt: fileDownload.insertedAt,
-                                                                      progress: hwiProgress.downloadProgress,
-                                                                      totalCount: hwiProgress.expectedFileSize,
-                                                                      completedCount: hwiProgress.receivedFileSize,
+                                                                      progress: weakSelf.normalizeProgressValue(hwiProgress.downloadProgress),
+                                                                      totalCount: weakSelf.normalizeTotalCountValue(hwiProgress.expectedFileSize),
+                                                                      completedCount: weakSelf.normalizeCompletedCountValue(hwiProgress.receivedFileSize),
                                                                       state: .inProgress)
                             
                             download.extendedDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
@@ -148,13 +156,16 @@ extension DownloadService: HWIFileDownloadDelegate {
                                                               localUrl: fileDownload.localUrl,
                                                               updatedAt: Date().timeIntervalSince1970,
                                                               insertedAt: fileDownload.insertedAt,
-                                                              progress: Float(fileDownload.completedCount)/Float(fileDownload.totalCount),
-                                                              totalCount: fileDownload.totalCount,
-                                                              completedCount: fileDownload.completedCount,
+                                                              progress: weakSelf.normalizeProgressValue(Float(fileDownload.completedCount)/Float(fileDownload.totalCount)),
+                                                              totalCount: weakSelf.normalizeTotalCountValue(fileDownload.totalCount),
+                                                              completedCount: weakSelf.normalizeCompletedCountValue(fileDownload.completedCount),
                                                               state: .error)//,
 //                                                              userUuid: "DB7F19C8-1A16-4D2F-8509-EDA538A3157B")
                     download.playlistUuid = fileDownload.playlistUuid
 //                    download.extendedDescription = stateItem.progress?.nativeProgress.localizedAdditionalDescription
+
+                    // remove from list of active downloads
+                    weakSelf.fileDownloads[identifier] = nil
 
                     NotificationCenter.default.post(name: DownloadService.fileDownloadDidErrorNotification, object: download)
                     weakSelf.removeDownloadResources(for: identifier)
@@ -168,6 +179,34 @@ extension DownloadService: HWIFileDownloadDelegate {
         
     }
     
+    func normalizeProgressValue(_ progress: Float) -> Float {
+        if !progress.isNaN {
+            if progress < 0.0 {
+                return 0.0
+            } else {
+                return progress
+            }
+        } else {
+            return 0  // bail with 0
+        }
+    }
+    
+    func normalizeTotalCountValue(_ totalCount: Int64) -> Int64 {
+        if totalCount <= 0 {
+            return 1
+        } else {
+            return totalCount
+        }
+    }
+
+    func normalizeCompletedCountValue(_ completedCount: Int64) -> Int64 {
+        if completedCount <= 0 {
+            return 0
+        } else {
+            return completedCount
+        }
+    }
+
     public func onAuthenticationChallenge(_ challenge: URLAuthenticationChallenge, downloadIdentifier: String, completionHandler: @escaping (URLCredential?, URLSession.AuthChallengeDisposition) -> Void) {
         completionHandler(nil, URLSession.AuthChallengeDisposition.performDefaultHandling)
 
@@ -266,6 +305,17 @@ extension DownloadService: DownloadServicing {
         return self.dataService.fileDownloads(for: playlistUuid)
     }
     
+    func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]> {
+        return Single.create { [unowned self] single in
+            var values = Array(self.fileDownloads.values)
+            
+            values = values.filter { $0.playlistUuid == playlistUuid }
+            
+            single(.success(values))
+            return Disposables.create {}
+        }
+    }
+    
     
     // tell the download service to stop recording inProgress state
     // in local db to all fileDownloads. this is to fix the situation
@@ -275,6 +325,23 @@ extension DownloadService: DownloadServicing {
     func cancelAllDownloads() {
         // use .initial because .cancelled results in a bad UI state for fullDownloadProgressButton
         updateFileDownloads(playableUuids: inProgressDownloads(), to: .initial)
+            .asObservable()
+            .subscribeAndDispose(by: bag)
+    }
+    
+    func resetIncompleteDownloads(toState: FileDownloadState) {
+        // use .initial because .cancelled results in a bad UI state for fullDownloadProgressButton
+        
+        fetchInterruptedDownloads()
+            .subscribe(onSuccess: { [unowned self] interruptedDownloads in
+                self.updateFileDownloads(playableUuids: interruptedDownloads.map { $0.playableUuid }, to: toState)
+                    .asObservable()
+                    .subscribeAndDispose(by: self.bag)
+            }, onError: { error in
+                DDLogDebug("interruptedDownloads error: \(error)")
+            })
+
+        updateFileDownloads(playableUuids: inProgressDownloads(), to: toState)
             .asObservable()
             .subscribeAndDispose(by: bag)
     }
@@ -349,13 +416,16 @@ extension DownloadService: DownloadServicing {
                                                               localUrl: self.saveLocationUrl(identifier: identifier, removeExistingFile: false),
                                                               updatedAt: Date().timeIntervalSince1970,
                                                               insertedAt: download.insertedAt,
-                                                              progress: download.progress,
-                                                              totalCount: download.totalCount,
-                                                              completedCount: download.completedCount,
+                                                              progress: self.normalizeProgressValue(Float(download.completedCount)/Float(download.totalCount)),
+                                                              totalCount: self.normalizeTotalCountValue(download.totalCount),
+                                                              completedCount: self.normalizeCompletedCountValue(download.completedCount),
                                                               state: .cancelled)//,
                 //                                                          userUuid: download.userUuid)
                 
                 fileDownload.playlistUuid = playlistUuid
+
+                // remove from list of active downloads
+                self.fileDownloads[identifier] = nil
 
                 NotificationCenter.default.post(name: DownloadService.fileDownloadDidCancelNotification, object: fileDownload)
                 
@@ -378,8 +448,30 @@ extension DownloadService: DownloadServicing {
                 inProgressUuids.append(download.playableUuid)
             }
         }
-
+        DDLogDebug("inProgressDownloads: \(inProgressDownloads)")
         return inProgressUuids
+    }
+    
+    func fetchInterruptedDownloads(_ playlistUuid: String? = nil) -> Single<[FileDownload]> {
+        return self.dataService.fetchInterruptedDownloads(playlistUuid)
+    }
+    
+    func deleteHwiDownloadDirectory() {
+        
+        let directory: URL = FileSystem.hwiFileDownloadDirectory
+        let fileManager = FileManager.default
+        do {
+            try fileManager.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            DDLogDebug("error while creating directory")
+        }
+        
+        do {
+            try fileManager.removeItem(at: directory)
+        }
+        catch let error {
+            print("Ooops! Something went wrong removing dir: \(error)")
+        }
     }
 }
 
@@ -484,6 +576,11 @@ class FileSystem {
         let directory: URL = FileSystem.documentsDirectory.appendingPathComponent("Saved/")
         return directory
     }()
-    
+
+    static let hwiFileDownloadDirectory: URL = {
+        let directory: URL = FileSystem.documentsDirectory.appendingPathComponent("file-download/")
+        return directory
+    }()
+
 }
 

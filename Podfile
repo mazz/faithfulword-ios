@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '10.0'
+platform :ios, '11.0'
 
 target 'FaithfulWord' do
     # Comment this line if you're not using Swift and don't want to use dynamic frameworks
@@ -13,7 +13,7 @@ target 'FaithfulWord' do
     pod 'Firebase/Messaging'
 #    pod 'Firebase/Crash'
 #    pod 'Moya/RxSwift'
-    pod 'Moya/RxSwift', '~> 14.0.0-alpha.2'
+    pod 'Moya/RxSwift', '~> 14.0.0-beta.1'
     pod 'RxSwift'
 #    pod 'RxGRDB'
     pod 'GRDB.swift', '~> 4.0.1'
@@ -22,7 +22,7 @@ target 'FaithfulWord' do
     pod 'Swinject'
     pod 'RxDataSources'
 #    pod 'Alamofire', '~>4.7'
-    pod 'Alamofire', '~> 5.0.0-alpha.7'
+    pod 'Alamofire', '~> 5.0.0-rc.1'
 #    pod 'AlamofireImage', '~>3.3'
 #    pod 'AlamofireImage'
     pod 'Fabric'
@@ -34,4 +34,7 @@ target 'FaithfulWord' do
     # action sheets
     pod 'XLActionController'
     pod 'HWIFileDownload'
+    pod 'Loaf'
+    pod 'Starscream'
+    pod 'SwiftKeychainWrapper'
 end

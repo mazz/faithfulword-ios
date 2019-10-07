@@ -15,8 +15,8 @@ public protocol NetworkReachabilityManaging {
     func stopListening()
 }
 
-extension NetworkReachabilityManager: NetworkReachabilityManaging {
-}
+//extension NetworkReachabilityManager: NetworkReachabilityManaging {
+//}
 
 /// An Rx wrapper around the reachability API from Alamofire.
 public protocol RxReachable {

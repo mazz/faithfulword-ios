@@ -57,6 +57,8 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
     private var viewModelSections: [PlaylistSectionViewModel] = []
     private let bag = DisposeBag()
     
+    let noResultLabel: UILabel = UILabel(frame: .zero)
+
     // MARK: Lifecycle
     
     public override func viewDidLoad() {
@@ -70,6 +72,23 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
+
+        noResultLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
+        noResultLabel.textAlignment = .center
+        noResultLabel.font = UIFont.systemFont(ofSize: 32)
+        noResultLabel.textColor = .gray
+        noResultLabel.backgroundColor = .clear
+        
+        
+        collectionView.addSubview(noResultLabel)
+        noResultLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noResultLabel.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor),
+            noResultLabel.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor),
+            noResultLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -100),
+            noResultLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            noResultLabel.heightAnchor.constraint(equalToConstant: 300),
             ])
 
         reactToViewModel()
@@ -120,7 +139,14 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
                     }
                 }
             }.disposed(by: bag)
+        
+        viewModel.emptyFetchResult.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] emptyResult in
+                self.noResultLabel.isHidden = !emptyResult
+            }.disposed(by: bag)
     }
+    
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {

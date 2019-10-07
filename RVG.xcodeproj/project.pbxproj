@@ -73,6 +73,11 @@
 		4C5FAD772037AEE600397BFF /* RadioListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD762037AEE600397BFF /* RadioListViewController.swift */; };
 		4C5FAD792037B04200397BFF /* UIViewController+Alerting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */; };
 		4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */; };
+		4C63203A23491E4B00C1B709 /* NoResourceCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63203823491E4700C1B709 /* NoResourceCoordinator.swift */; };
+		4C63203B23491E4B00C1B709 /* NoResource.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C63203923491E4900C1B709 /* NoResource.storyboard */; };
+		4C63203D2349247C00C1B709 /* NoResourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63203C2349247C00C1B709 /* NoResourceViewController.swift */; };
+		4C63203F23493A4400C1B709 /* NoResourceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C63203E23493A4400C1B709 /* NoResourceViewModel.swift */; };
+		4C6320412349A78300C1B709 /* UserSignupResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6320402349A78200C1B709 /* UserSignupResponse.swift */; };
 		4C6C86C722E5488C0006DEE9 /* RPCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6C86C622E548890006DEE9 /* RPCircularProgress.swift */; };
 		4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */; };
 		4C6D8E4D22AC6B310025DA28 /* ChannelCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6D8E4C22AC6B2E0025DA28 /* ChannelCoordinator.swift */; };
@@ -148,6 +153,17 @@
 		4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */; };
 		4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */; };
 		4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */; };
+		4CAABC062336DDE40026A1D2 /* Int64+NumberFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAABC052336DDE40026A1D2 /* Int64+NumberFormatting.swift */; };
+		4CAABC082336E4B80026A1D2 /* UIViewController+Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CAABC072336E4B80026A1D2 /* UIViewController+Sharing.swift */; };
+		4CBA17942325B44000023801 /* HistoryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17932325B43F00023801 /* HistoryCoordinator.swift */; };
+		4CBA17982325B6CC00023801 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17972325B6CB00023801 /* HistoryViewController.swift */; };
+		4CBA179A2325B6ED00023801 /* HistoryPlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17992325B6ED00023801 /* HistoryPlaybackViewController.swift */; };
+		4CBA179C2325B70300023801 /* HistoryDownloadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA179B2325B70300023801 /* HistoryDownloadViewController.swift */; };
+		4CBA179E2325B75400023801 /* History.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CBA179D2325B75400023801 /* History.storyboard */; };
+		4CBA17A02325C27B00023801 /* HistoryPlaybackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA179F2325C27B00023801 /* HistoryPlaybackViewModel.swift */; };
+		4CBA17A22325C3C000023801 /* HistoryDownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17A12325C3C000023801 /* HistoryDownloadViewModel.swift */; };
+		4CBA17A42325CCFF00023801 /* MediaFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17A32325CCFF00023801 /* MediaFilterViewModel.swift */; };
+		4CBA17A72325CDFF00023801 /* MediaFilterResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17A62325CDFF00023801 /* MediaFilterResultsViewController.swift */; };
 		4CBE0F5221605CA500646F76 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBE0F5121605CA400646F76 /* QuartzCore.framework */; };
 		4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F732160932400646F76 /* SlimSlider.swift */; };
 		4CBE0F762161747200646F76 /* Color+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F752161747100646F76 /* Color+Image.swift */; };
@@ -300,6 +316,11 @@
 		4C5FAD762037AEE600397BFF /* RadioListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioListViewController.swift; sourceTree = "<group>"; };
 		4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alerting.swift"; sourceTree = "<group>"; };
 		4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
+		4C63203823491E4700C1B709 /* NoResourceCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoResourceCoordinator.swift; sourceTree = "<group>"; };
+		4C63203923491E4900C1B709 /* NoResource.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NoResource.storyboard; sourceTree = "<group>"; };
+		4C63203C2349247C00C1B709 /* NoResourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResourceViewController.swift; sourceTree = "<group>"; };
+		4C63203E23493A4400C1B709 /* NoResourceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResourceViewModel.swift; sourceTree = "<group>"; };
+		4C6320402349A78200C1B709 /* UserSignupResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserSignupResponse.swift; path = Model/UserSignupResponse.swift; sourceTree = "<group>"; };
 		4C6C86C622E548890006DEE9 /* RPCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPCircularProgress.swift; sourceTree = "<group>"; };
 		4C6D8E4322A21FD80025DA28 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		4C6D8E4522A3180D0025DA28 /* DeviceInfoProviding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoProviding.swift; sourceTree = "<group>"; };
@@ -374,6 +395,17 @@
 		4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaListingSectionViewModel.swift; sourceTree = "<group>"; };
 		4CA31FA1200B080E00A94101 /* SuggestedNameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestedNameCell.xib; sourceTree = "<group>"; };
 		4CA31FA2200B080E00A94101 /* SuggestedNameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestedNameCell.swift; sourceTree = "<group>"; };
+		4CAABC052336DDE40026A1D2 /* Int64+NumberFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int64+NumberFormatting.swift"; sourceTree = "<group>"; };
+		4CAABC072336E4B80026A1D2 /* UIViewController+Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Sharing.swift"; sourceTree = "<group>"; };
+		4CBA17932325B43F00023801 /* HistoryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCoordinator.swift; sourceTree = "<group>"; };
+		4CBA17972325B6CB00023801 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		4CBA17992325B6ED00023801 /* HistoryPlaybackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPlaybackViewController.swift; sourceTree = "<group>"; };
+		4CBA179B2325B70300023801 /* HistoryDownloadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDownloadViewController.swift; sourceTree = "<group>"; };
+		4CBA179D2325B75400023801 /* History.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = History.storyboard; sourceTree = "<group>"; };
+		4CBA179F2325C27B00023801 /* HistoryPlaybackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPlaybackViewModel.swift; sourceTree = "<group>"; };
+		4CBA17A12325C3C000023801 /* HistoryDownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDownloadViewModel.swift; sourceTree = "<group>"; };
+		4CBA17A32325CCFF00023801 /* MediaFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFilterViewModel.swift; sourceTree = "<group>"; };
+		4CBA17A62325CDFF00023801 /* MediaFilterResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFilterResultsViewController.swift; sourceTree = "<group>"; };
 		4CBE0F5121605CA400646F76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4CBE0F732160932400646F76 /* SlimSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlimSlider.swift; sourceTree = "<group>"; };
 		4CBE0F752161747100646F76 /* Color+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Image.swift"; sourceTree = "<group>"; };
@@ -558,6 +590,7 @@
 				4C3EA13B206B249F00310024 /* DeviceNowPlayingViewModel.swift */,
 				4C5FAD7A2037BD3300397BFF /* LanguageViewModel.swift */,
 				4C437ABA223356C600083197 /* UserActionsViewModel.swift */,
+				4C63203E23493A4400C1B709 /* NoResourceViewModel.swift */,
 				4CA31F9F2009EA0100A94101 /* MediaListingSectionViewModel.swift */,
 				4CA31F9D2009E76600A94101 /* MediaListingViewModel.swift */,
 				4C0801AD2321E827002FBE0E /* MediaDetailsSectionViewModel.swift */,
@@ -586,6 +619,7 @@
 		4C21A72720161B19000F02CE /* AppCore */ = {
 			isa = PBXGroup;
 			children = (
+				4CBA17A52325CDDD00023801 /* History */,
 				4C9FA03D2318846700F7A237 /* Searching */,
 				4CEB302922E884FD00E039D3 /* Downloading */,
 				4C7D5465200EF7A90038B265 /* Account */,
@@ -599,7 +633,6 @@
 				4C8EE8C31FF6010F003F483A /* DataService.swift */,
 				4C5FAD682035258E00397BFF /* LanguageService.swift */,
 				4C437AB82232334200083197 /* UserActionsService.swift */,
-				4C437AD32239F07000083197 /* HistoryService.swift */,
 				4C3998FD2021FC34008E76E8 /* MenuTransitionManager.swift */,
 				4CCE8C861FF4B81400AFBAF2 /* NavigationCoordinating.swift */,
 				4C8EE8C11FF60105003F483A /* ProductService.swift */,
@@ -615,6 +648,7 @@
 				4CFB850A2007098100FEBB53 /* UIView+Sizing.swift */,
 				4C3EA130206A6EB600310024 /* UIView+Constraining.swift */,
 				4C5FAD782037B04100397BFF /* UIViewController+Alerting.swift */,
+				4CAABC072336E4B80026A1D2 /* UIViewController+Sharing.swift */,
 				4CCE8C971FF4BE2800AFBAF2 /* UIViewController+Instantiating.swift */,
 				4CCE8C721FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift */,
 			);
@@ -634,6 +668,7 @@
 				4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */,
 				4CBE0F752161747100646F76 /* Color+Image.swift */,
 				4C250393216868120069AB49 /* String+Hashing.swift */,
+				4CAABC052336DDE40026A1D2 /* Int64+NumberFormatting.swift */,
 				4C2503992169A1760069AB49 /* AnyObserverMaking.swift */,
 			);
 			path = AppUtilities;
@@ -720,6 +755,22 @@
 			path = Searching;
 			sourceTree = "<group>";
 		};
+		4CBA17A52325CDDD00023801 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				4CBA17A62325CDFF00023801 /* MediaFilterResultsViewController.swift */,
+				4CBA17A32325CCFF00023801 /* MediaFilterViewModel.swift */,
+				4C437AD32239F07000083197 /* HistoryService.swift */,
+				4CBA179F2325C27B00023801 /* HistoryPlaybackViewModel.swift */,
+				4CBA17A12325C3C000023801 /* HistoryDownloadViewModel.swift */,
+				4CBA17972325B6CB00023801 /* HistoryViewController.swift */,
+				4CBA179B2325B70300023801 /* HistoryDownloadViewController.swift */,
+				4CBA17992325B6ED00023801 /* HistoryPlaybackViewController.swift */,
+				4CBA179D2325B75400023801 /* History.storyboard */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
 		4CCE8C631FF4AD7B00AFBAF2 /* AppDependencyInjection */ = {
 			isa = PBXGroup;
 			children = (
@@ -729,6 +780,7 @@
 				4C3EA133206A714300310024 /* AppUI */,
 				4C21A72820161B3E000F02CE /* AppUtilities */,
 				4C5FAD602031D5B400397BFF /* BibleLanguageCoordinator.swift */,
+				4CBA17932325B43F00023801 /* HistoryCoordinator.swift */,
 				4C01A265231E0B1C00617FEC /* MediaDetailsCoordinator.swift */,
 				4C0F486C2024AF8D00A8904F /* CategoryListingCoordinator.swift */,
 				4C0F48722025709F00A8904F /* CategoryListingViewController.swift */,
@@ -741,6 +793,9 @@
 				4C281F4E2094D031000A2910 /* PlaybackCoordinator.swift */,
 				4C7D546C2013DB210038B265 /* MediaListingViewController.swift */,
 				4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */,
+				4C63203923491E4900C1B709 /* NoResource.storyboard */,
+				4C63203823491E4700C1B709 /* NoResourceCoordinator.swift */,
+				4C63203C2349247C00C1B709 /* NoResourceViewController.swift */,
 				4C3EA13D206B265100310024 /* PlaybackViewController.swift */,
 				4C958E9C2090242000A71C59 /* PopupContentController.swift */,
 				4CFB84FD2005AEEB00FEBB53 /* Root.storyboard */,
@@ -947,6 +1002,7 @@
 				4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */,
 				4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */,
 				4C22F5A722FF83A80057DEBE /* UserLoginResponse.swift */,
+				4C6320402349A78200C1B709 /* UserSignupResponse.swift */,
 				4C22F5A922FF84100057DEBE /* UserLoginUser.swift */,
 				4C7EB8A1228FB283000E8DAB /* MediaItem.swift */,
 				4CD89B8522E0E37000A1704C /* FileDownload.swift */,
@@ -1089,7 +1145,9 @@
 				68BF02DC1F12977300D7F2CA /* MusicTableViewCell.xib in Resources */,
 				4C6FCD74231B200D0025C1A3 /* SearchResultsCellStacked.xib in Resources */,
 				4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */,
+				4CBA179E2325B75400023801 /* History.storyboard in Resources */,
 				4CFB84F92005AE1A00FEBB53 /* SettingDrillInCellStacked.xib in Resources */,
+				4C63203B23491E4B00C1B709 /* NoResource.storyboard in Resources */,
 				4CFB84FE2005AEEB00FEBB53 /* Root.storyboard in Resources */,
 				4CA31FA3200B081000A94101 /* SuggestedNameCell.xib in Resources */,
 				687BF6DE1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.xib in Resources */,
@@ -1120,6 +1178,7 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/HWIFileDownload/HWIFileDownload.framework",
 				"${BUILT_PRODUCTS_DIR}/L10n-swift/L10n_swift.framework",
+				"${BUILT_PRODUCTS_DIR}/Loaf/Loaf.framework",
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MagazineLayout/MagazineLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
@@ -1129,6 +1188,8 @@
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework",
 				"${BUILT_PRODUCTS_DIR}/UICircularProgressRing/UICircularProgressRing.framework",
 				"${BUILT_PRODUCTS_DIR}/XLActionController/XLActionController.framework",
@@ -1143,6 +1204,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HWIFileDownload.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/L10n_swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Loaf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MagazineLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
@@ -1152,6 +1214,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftKeychainWrapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swinject.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UICircularProgressRing.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XLActionController.framework",
@@ -1243,6 +1307,8 @@
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
 				4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */,
 				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
+				4CAABC062336DDE40026A1D2 /* Int64+NumberFormatting.swift in Sources */,
+				4CBA17982325B6CC00023801 /* HistoryViewController.swift in Sources */,
 				4C7EB88A228B8EA8000E8DAB /* MediaChapterResponse.swift in Sources */,
 				4C22F5A822FF83A90057DEBE /* UserLoginResponse.swift in Sources */,
 				4C10EAEA209164B7008A8B00 /* PlaybackControlsViewModel.swift in Sources */,
@@ -1254,6 +1320,7 @@
 				4C7EB8A0228FB240000E8DAB /* MediaItemResponse.swift in Sources */,
 				4C5FAD612031D5B400397BFF /* BibleLanguageCoordinator.swift in Sources */,
 				4C7EB894228B8EA8000E8DAB /* MediaChapter.swift in Sources */,
+				4CBA179C2325B70300023801 /* HistoryDownloadViewController.swift in Sources */,
 				4C437AD42239F07000083197 /* HistoryService.swift in Sources */,
 				4CCE8C851FF4B7C600AFBAF2 /* MainCoordinator.swift in Sources */,
 				4CCE8C8B1FF4B93A00AFBAF2 /* ObservableType+Utilities.swift in Sources */,
@@ -1284,6 +1351,7 @@
 				4C7EB898228B8EA8000E8DAB /* BookResponse.swift in Sources */,
 				4C4A2CD122D01B82008BB79A /* Spotify.swift in Sources */,
 				4CCE8C7F1FF4B6D000AFBAF2 /* AppAnimations.swift in Sources */,
+				4CBA17A22325C3C000023801 /* HistoryDownloadViewModel.swift in Sources */,
 				4C21A72C20200ED3000F02CE /* SideMenuCoordinator.swift in Sources */,
 				4C6FCD6C231B190E0025C1A3 /* MediaSearchResultsViewController.swift in Sources */,
 				4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */,
@@ -1297,12 +1365,14 @@
 				4C3998FE2021FC35008E76E8 /* MenuTransitionManager.swift in Sources */,
 				4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */,
 				4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */,
+				4CBA17A72325CDFF00023801 /* MediaFilterResultsViewController.swift in Sources */,
 				4CCE8C911FF4BC1A00AFBAF2 /* BlurAnimationController.swift in Sources */,
 				4C4A2CDA22D020C4008BB79A /* Youtube.swift in Sources */,
 				4C7EB88C228B8EA8000E8DAB /* Music.swift in Sources */,
 				4C596253229E1E5E00947F73 /* PlaylistCollectionViewCell.swift in Sources */,
 				4C7EB89C228E6C1B000E8DAB /* PlaylistResponse.swift in Sources */,
 				4C22F5AA22FF84100057DEBE /* UserLoginUser.swift in Sources */,
+				4C6320412349A78300C1B709 /* UserSignupResponse.swift in Sources */,
 				4C250394216868120069AB49 /* String+Hashing.swift in Sources */,
 				4C5FAD692035258E00397BFF /* LanguageService.swift in Sources */,
 				4C7D5467200EF7D30038B265 /* LoginSequencer.swift in Sources */,
@@ -1331,6 +1401,7 @@
 				4C7D546D2013DB220038B265 /* MediaListingViewController.swift in Sources */,
 				4C7EB883228B8EA8000E8DAB /* SessionError.swift in Sources */,
 				4C7EB897228B8EA8000E8DAB /* MessageWithSubjectActivityItem.swift in Sources */,
+				4C63203D2349247C00C1B709 /* NoResourceViewController.swift in Sources */,
 				4CFB85062005BA1F00FEBB53 /* UIView+NibInstantiating.swift in Sources */,
 				4C2767C520071E1900783371 /* UICollectionView+ViewManaging.swift in Sources */,
 				4C381D9320084A1800FD2DEA /* DeviceGroupSelectionCell.swift in Sources */,
@@ -1353,11 +1424,13 @@
 				4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */,
 				68E2BE451EBD622300FCD897 /* CurrencyField.swift in Sources */,
 				4CCE8C8D1FF4B96400AFBAF2 /* Optional.swift in Sources */,
+				4C63203A23491E4B00C1B709 /* NoResourceCoordinator.swift in Sources */,
 				4C7EB87B228B8EA8000E8DAB /* Book.swift in Sources */,
 				68BF02DB1F12977300D7F2CA /* MusicTableViewCell.swift in Sources */,
 				687BF6DD1EC2BB5D002EDCC3 /* MainMenuFooterTableViewCell.swift in Sources */,
 				4C7EB891228B8EA8000E8DAB /* Gospel.swift in Sources */,
 				68BC8AE61EC5662A00FBC7C2 /* MainMenuTableViewCell.swift in Sources */,
+				4CAABC082336E4B80026A1D2 /* UIViewController+Sharing.swift in Sources */,
 				4CE055FB231886800057BB2F /* TableCell.swift in Sources */,
 				4C7EB8A2228FB283000E8DAB /* MediaItem.swift in Sources */,
 				4CCE8C691FF4B26B00AFBAF2 /* UIFactory.swift in Sources */,
@@ -1374,21 +1447,25 @@
 				4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */,
 				4CCE8C6B1FF4B2A000AFBAF2 /* UIMaking.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
+				4C63203F23493A4400C1B709 /* NoResourceViewModel.swift in Sources */,
 				4C3EA131206A6EB600310024 /* UIView+Constraining.swift in Sources */,
 				70CD20A71E6486CC00AF619F /* Constants.swift in Sources */,
 				4C0801AC231F3DE7002FBE0E /* MediaDetailsViewModel.swift in Sources */,
 				701F01551E65DA2E0010B320 /* ClassicReachability.swift in Sources */,
 				4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */,
 				68BBC8851FCD12400008962B /* AppVersioning.swift in Sources */,
+				4CBA179A2325B6ED00023801 /* HistoryPlaybackViewController.swift in Sources */,
 				68E2BE421EBC143400FCD897 /* UIView+Debug.m in Sources */,
 				4C7EB87A228B8EA8000E8DAB /* Categorizable.swift in Sources */,
 				4C7EB893228B8EA8000E8DAB /* ChannelResponse.swift in Sources */,
 				4C437AD6223C60DB00083197 /* UIFont+PlaybackUI.swift in Sources */,
 				4CA31FA02009EA0100A94101 /* MediaListingSectionViewModel.swift in Sources */,
 				4C0F4871202542FA00A8904F /* CategoryListingSectionViewModel.swift in Sources */,
+				4CBA17942325B44000023801 /* HistoryCoordinator.swift in Sources */,
 				4C5FAD5F2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift in Sources */,
 				4C3EA137206A71D200310024 /* DeviceNowPlayingBarView.swift in Sources */,
 				4C2503982168691A0069AB49 /* DownloadService.swift in Sources */,
+				4CBA17A42325CCFF00023801 /* MediaFilterViewModel.swift in Sources */,
 				4C6D8E4D22AC6B310025DA28 /* ChannelCoordinator.swift in Sources */,
 				4C7EB852228B88E6000E8DAB /* PlaylistViewModel.swift in Sources */,
 				4C22F5A622EA8C630057DEBE /* DownloadStateItem.swift in Sources */,
@@ -1398,6 +1475,7 @@
 				4CC18C0020079B4900D7BF3D /* CustomCollectionViewFlowLayout.swift in Sources */,
 				4C6FCD6E231B194F0025C1A3 /* MediaDetailsViewController.swift in Sources */,
 				4CCE8C671FF4B07700AFBAF2 /* AppDependencyModule.swift in Sources */,
+				4CBA17A02325C27B00023801 /* HistoryPlaybackViewModel.swift in Sources */,
 				4C7EB884228B8EA8000E8DAB /* UserActionPlayable.swift in Sources */,
 				4C7EB87C228B8EA8000E8DAB /* EnvironmentUrlItemKey.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,

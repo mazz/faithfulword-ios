@@ -1,46 +1,46 @@
 PODS:
-  - Alamofire (5.0.0-beta.7)
+  - Alamofire (5.0.0-rc.2)
   - CocoaLumberjack/Core (3.5.3)
   - CocoaLumberjack/Swift (3.5.3):
     - CocoaLumberjack/Core
-  - Crashlytics (3.13.4):
+  - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
   - Differentiator (4.0.1)
   - Fabric (1.10.2)
-  - Firebase/Core (6.6.0):
+  - Firebase/Core (6.9.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (= 6.1.0)
-  - Firebase/CoreOnly (6.6.0):
-    - FirebaseCore (= 6.2.0)
-  - Firebase/Messaging (6.6.0):
+    - FirebaseAnalytics (= 6.1.2)
+  - Firebase/CoreOnly (6.9.0):
+    - FirebaseCore (= 6.3.0)
+  - Firebase/Messaging (6.9.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 4.1.2)
-  - FirebaseAnalytics (6.1.0):
-    - FirebaseCore (~> 6.2)
+    - FirebaseMessaging (~> 4.1.4)
+  - FirebaseAnalytics (6.1.2):
+    - FirebaseCore (~> 6.3)
     - FirebaseInstanceID (~> 4.2)
-    - GoogleAppMeasurement (= 6.1.0)
+    - GoogleAppMeasurement (= 6.1.2)
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
     - GoogleUtilities/Network (~> 6.0)
     - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
-  - FirebaseAnalyticsInterop (1.3.0)
-  - FirebaseCore (6.2.0):
+  - FirebaseAnalyticsInterop (1.4.0)
+  - FirebaseCore (6.3.0):
     - FirebaseCoreDiagnostics (~> 1.0)
     - FirebaseCoreDiagnosticsInterop (~> 1.0)
     - GoogleUtilities/Environment (~> 6.2)
     - GoogleUtilities/Logger (~> 6.2)
-  - FirebaseCoreDiagnostics (1.0.1):
+  - FirebaseCoreDiagnostics (1.1.0):
     - FirebaseCoreDiagnosticsInterop (~> 1.0)
     - GoogleDataTransportCCTSupport (~> 1.0)
     - GoogleUtilities/Environment (~> 6.2)
     - GoogleUtilities/Logger (~> 6.2)
   - FirebaseCoreDiagnosticsInterop (1.0.0)
-  - FirebaseInstanceID (4.2.3):
+  - FirebaseInstanceID (4.2.5):
     - FirebaseCore (~> 6.0)
     - GoogleUtilities/Environment (~> 6.0)
     - GoogleUtilities/UserDefaults (~> 6.0)
-  - FirebaseMessaging (4.1.2):
+  - FirebaseMessaging (4.1.5):
     - FirebaseAnalyticsInterop (~> 1.3)
     - FirebaseCore (~> 6.2)
     - FirebaseInstanceID (~> 4.1)
@@ -49,53 +49,54 @@ PODS:
     - GoogleUtilities/Reachability (~> 6.2)
     - GoogleUtilities/UserDefaults (~> 6.2)
     - Protobuf (~> 3.1)
-  - GoogleAppMeasurement (6.1.0):
+  - GoogleAppMeasurement (6.1.2):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
     - GoogleUtilities/Network (~> 6.0)
     - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (~> 0.3)
-  - GoogleDataTransport (1.1.1)
-  - GoogleDataTransportCCTSupport (1.0.1):
-    - GoogleDataTransport (~> 1.1)
+  - GoogleDataTransport (2.0.0)
+  - GoogleDataTransportCCTSupport (1.1.0):
+    - GoogleDataTransport (~> 2.0)
     - nanopb
-  - GoogleUtilities/AppDelegateSwizzler (6.2.5):
+  - GoogleUtilities/AppDelegateSwizzler (6.3.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (6.2.5)
-  - GoogleUtilities/Logger (6.2.5):
+  - GoogleUtilities/Environment (6.3.0)
+  - GoogleUtilities/Logger (6.3.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/MethodSwizzler (6.2.5):
+  - GoogleUtilities/MethodSwizzler (6.3.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/Network (6.2.5):
+  - GoogleUtilities/Network (6.3.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (6.2.5)"
-  - GoogleUtilities/Reachability (6.2.5):
+  - "GoogleUtilities/NSData+zlib (6.3.0)"
+  - GoogleUtilities/Reachability (6.3.0):
     - GoogleUtilities/Logger
-  - GoogleUtilities/UserDefaults (6.2.5):
+  - GoogleUtilities/UserDefaults (6.3.0):
     - GoogleUtilities/Logger
   - GRDB.swift (4.0.1):
     - GRDB.swift/standard (= 4.0.1)
   - GRDB.swift/standard (4.0.1)
   - HWIFileDownload (3.5)
-  - L10n-swift (5.5.1):
-    - L10n-swift/Core (= 5.5.1)
-    - L10n-swift/Extension (= 5.5.1)
-    - L10n-swift/IBInspectable (= 5.5.1)
-  - L10n-swift/Core (5.5.1)
-  - L10n-swift/Extension (5.5.1):
+  - L10n-swift (5.5.2):
+    - L10n-swift/Core (= 5.5.2)
+    - L10n-swift/Extension (= 5.5.2)
+    - L10n-swift/IBInspectable (= 5.5.2)
+  - L10n-swift/Core (5.5.2)
+  - L10n-swift/Extension (5.5.2):
     - L10n-swift/Core
-  - L10n-swift/IBInspectable (5.5.1):
+  - L10n-swift/IBInspectable (5.5.2):
     - L10n-swift/Core
+  - Loaf (0.5.0)
   - MagazineLayout (1.5.0)
   - MarqueeLabel/Swift (3.2.1)
   - MBProgressHUD (1.0.0)
-  - Moya/Core (14.0.0-alpha.2):
-    - Alamofire (= 5.0.0-beta.7)
-  - Moya/RxSwift (14.0.0-alpha.2):
+  - Moya/Core (14.0.0-beta.3):
+    - Alamofire (= 5.0.0-rc.2)
+  - Moya/RxSwift (14.0.0-beta.3):
     - Moya/Core
     - RxSwift (~> 5.0)
   - nanopb (0.3.901):
@@ -103,7 +104,7 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
-  - Protobuf (3.9.0)
+  - Protobuf (3.9.2)
   - RxCocoa (5.0.0):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
@@ -114,15 +115,17 @@ PODS:
   - RxRelay (5.0.0):
     - RxSwift (~> 5)
   - RxSwift (5.0.0)
-  - SwiftLint (0.34.0)
-  - Swinject (2.6.2)
-  - UICircularProgressRing (6.2.1)
-  - XLActionController (5.0.0):
-    - XLActionController/Core (= 5.0.0)
-  - XLActionController/Core (5.0.0)
+  - Starscream (3.1.0)
+  - SwiftKeychainWrapper (3.4.0)
+  - SwiftLint (0.35.0)
+  - Swinject (2.7.1)
+  - UICircularProgressRing (6.3.0)
+  - XLActionController (5.0.1):
+    - XLActionController/Core (= 5.0.1)
+  - XLActionController/Core (5.0.1)
 
 DEPENDENCIES:
-  - Alamofire (~> 5.0.0-alpha.7)
+  - Alamofire (~> 5.0.0-rc.1)
   - CocoaLumberjack/Swift
   - Crashlytics
   - Fabric
@@ -132,13 +135,16 @@ DEPENDENCIES:
   - GRDB.swift (~> 4.0.1)
   - HWIFileDownload
   - L10n-swift
+  - Loaf
   - MagazineLayout
   - MarqueeLabel/Swift
   - MBProgressHUD (~> 1.0.0)
-  - Moya/RxSwift (~> 14.0.0-alpha.2)
+  - Moya/RxSwift (~> 14.0.0-beta.1)
   - RxCocoa
   - RxDataSources
   - RxSwift
+  - Starscream
+  - SwiftKeychainWrapper
   - SwiftLint
   - Swinject
   - UICircularProgressRing
@@ -166,6 +172,7 @@ SPEC REPOS:
     - GRDB.swift
     - HWIFileDownload
     - L10n-swift
+    - Loaf
     - MagazineLayout
     - MarqueeLabel
     - MBProgressHUD
@@ -176,47 +183,52 @@ SPEC REPOS:
     - RxDataSources
     - RxRelay
     - RxSwift
+    - Starscream
+    - SwiftKeychainWrapper
     - SwiftLint
     - Swinject
     - UICircularProgressRing
     - XLActionController
 
 SPEC CHECKSUMS:
-  Alamofire: bd07938ceecad59d2492aeecb1f785a8f2721160
+  Alamofire: f9450d3c7f6bea2ad62e7a541c3e9b186c7991d6
   CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
-  Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
+  Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   Differentiator: 886080237d9f87f322641dedbc5be257061b0602
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
-  Firebase: a2b5951f30ff38fd3b3bdae9c7d340f940fd3c51
-  FirebaseAnalytics: 48414ae5cbf6976d8a2f7177e0466540e5ab33ce
-  FirebaseAnalyticsInterop: 0f250d71e8741352407a8db351e6de78c5c56d35
-  FirebaseCore: 8c9e08bce0c72a3affd83927d8184cf244918bc8
-  FirebaseCoreDiagnostics: 4c04ae09d0ab027c30179828c6bb47764df1bd13
+  Firebase: 2d750c54cda57d5a6ae31212cfe5cc813c6be7e4
+  FirebaseAnalytics: 5d9ccbf46ed25d3ec9304d263f85bddf1e93e2d2
+  FirebaseAnalyticsInterop: d48b6ab67bcf016a05e55b71fc39c61c0cb6b7f3
+  FirebaseCore: 8b2765c445d40db7137989b7146a3aa3f91b5529
+  FirebaseCoreDiagnostics: be4f7a09d02ab305f18de59a470412caddb64c2a
   FirebaseCoreDiagnosticsInterop: 6829da2b8d1fc795ff1bd99df751d3788035d2cb
-  FirebaseInstanceID: 8b42755db950682e7de0d167bc6fb26a57b244af
-  FirebaseMessaging: ddd74d13644ef24cc4e2d95cabd1cf408e99b7b0
-  GoogleAppMeasurement: 47285fa897e5a125df56b9ef8750a1d81e4598a8
-  GoogleDataTransport: ffbadce4ab93c88fb9dd8e6366c47bfcb4a32193
-  GoogleDataTransportCCTSupport: 3451e7d8ba19093e533362a6d78d6d9014c6a037
-  GoogleUtilities: e7dc37039b19df7fe543479d3e4a02ac8d11bb69
+  FirebaseInstanceID: 550df9be1f99f751d8fcde3ac342a1e21a0e6c42
+  FirebaseMessaging: b22b949cc45c14da01e60404dd7bffc78956380c
+  GoogleAppMeasurement: 0ae90be1cc4dad40f4a27fc767ef59fa032ec87b
+  GoogleDataTransport: c8617c00e4f3eb9418e42ac0e8ac5241a9d555dd
+  GoogleDataTransportCCTSupport: 9f352523e8785a71f6754f51eeff09f49ec19268
+  GoogleUtilities: 9c2c544202301110b29f7974a82e77fdcf12bf51
   GRDB.swift: 106a830decf1d92a3fc63c6d6a2f6586f6187297
   HWIFileDownload: 0f98b30f473f7448233124fd4a0e9d9cb674b99c
-  L10n-swift: c9f36dd59a5584f950b0aaf3105ec5cd9759ae24
+  L10n-swift: df60a7240564e3271a41f93dfbab9f4bfd49ac60
+  Loaf: 0800b444431366bc395d54267975d4ad4ad5c99c
   MagazineLayout: fe41dc2cf1923e3bf377cd8d906a4455a0bf9c83
   MarqueeLabel: 2daf039bf916937c8a4c9adfc13577cc5e51b4ce
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
-  Moya: a6f1894cf6baec301aa02b0ecf10e5d8ade556ae
+  Moya: 1741bc26d2a3ad30f0410750868c7661fdd3b180
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
-  Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
+  Protobuf: 67fb42ba613def994e61854de2b3164f13790cc4
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
-  SwiftLint: 79d48a17c6565dc286c37efb8322c7b450f95c67
-  Swinject: cf7458774b1b00323080a9c67e47a1ee7f9d2af1
-  UICircularProgressRing: b52543c79dbd89844e13f0053e3f565b7d7efc5c
-  XLActionController: d7dea0b162bd3977311bcba7d377b88d6b87a7b4
+  Starscream: 08172b481e145289c4930cb567230fb55897cfa4
+  SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
+  SwiftLint: 5553187048b900c91aa03552807681bb6b027846
+  Swinject: ddf78b8486dd9b71a667b852cad919ab4484478e
+  UICircularProgressRing: e700fb0505328e88ee53c4ed92bee6d1a5b8bbe3
+  XLActionController: ec9207228162569df1c90dccded2e88d0f39b2e7
 
-PODFILE CHECKSUM: 8821694387e9c55103900bf1257ce4db022f7539
+PODFILE CHECKSUM: 42d4e70cec7e933f99817ce82fb03d4ccc5affa1
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.6.1

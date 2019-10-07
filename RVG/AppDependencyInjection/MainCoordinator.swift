@@ -37,6 +37,7 @@ internal final class MainCoordinator: NSObject {
     internal let resettableChannelCoordinator: Resettable<ChannelCoordinator>
     private let resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>
     private let resettableBibleLanguageCoordinator: Resettable<BibleLanguageCoordinator>
+    private let resettableHistoryCoordinator: Resettable<HistoryCoordinator>
 
     private let productService: ProductServicing
 
@@ -55,6 +56,7 @@ internal final class MainCoordinator: NSObject {
         resettableSideMenuCoordinator: Resettable<SideMenuCoordinator>,
         resettableChannelCoordinator: Resettable<ChannelCoordinator>,
         resettableBibleLanguageCoordinator: Resettable<BibleLanguageCoordinator>,
+        resettableHistoryCoordinator: Resettable<HistoryCoordinator>,
         productService: ProductServicing
 
         //                  resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>,
@@ -68,6 +70,7 @@ internal final class MainCoordinator: NSObject {
         self.resettableSideMenuCoordinator = resettableSideMenuCoordinator
         self.resettableChannelCoordinator = resettableChannelCoordinator
         self.resettableBibleLanguageCoordinator = resettableBibleLanguageCoordinator
+        self.resettableHistoryCoordinator = resettableHistoryCoordinator
         self.productService = productService
 
 
@@ -217,6 +220,24 @@ extension MainCoordinator: NavigationCoordinating {
             }, context: .present)
     }
 
+    func goToHistoryFlow() {
+        self.mainNavigationController.dismiss(animated: true, completion: {
+            self.resettableHistoryCoordinator.value.flow(with: { viewController in
+                
+                self.mainNavigationController.pushViewController(
+                    viewController,
+                    animated: true
+                )
+                //            self.mainNavigationController.present(viewController, animated: true)
+            }, completion: { _ in
+                self.mainNavigationController.dismiss(animated: true)
+                self.resettableHistoryCoordinator.reset()
+                //            self.resettableSplashScreenCoordinator.reset()
+                
+            }, context: .push(onto: self.mainNavigationController))
+        })
+    }
+    
     func goToBibleLanguageFlow() {
         self.mainNavigationController.dismiss(animated: true, completion: {
             self.resettableBibleLanguageCoordinator.value.flow(with: { viewController in
@@ -405,6 +426,7 @@ extension MainCoordinator {
                         as URL)
                 case .history:
                     DDLogDebug(".history")
+                    self.goToHistoryFlow()
                 case .setBibleLanguage:
                     DDLogDebug(".setBibleLanguage")
                     self.goToBibleLanguageFlow()

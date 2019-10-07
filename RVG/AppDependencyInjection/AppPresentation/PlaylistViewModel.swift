@@ -21,7 +21,11 @@ final class PlaylistViewModel {
     public let selectItemEvent = PublishSubject<IndexPath>()
     
     public var fetchAppendPlaylists: PublishSubject = PublishSubject<Bool>()
-    
+
+    // true - the network fetch succeeded but yielded no results
+    // false - the network fetch succeeded and yielded a result > 0
+    public var emptyFetchResult: Field<Bool> = Field<Bool>(false)
+
     public var drillInEvent: Observable<PlaylistDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent.filterMap { [unowned self] indexPath -> PlaylistDrillInType? in
@@ -171,9 +175,7 @@ final class PlaylistViewModel {
         productService.persistedPlaylists(for: self.channelUuid).subscribe(onSuccess: { [unowned self] playlists in
             if playlists.count == 0 {
                 switch self.networkStatus.value {
-                case .unknown:
-                    DDLogError("⚠️ no playlists and no network! should probably make the user aware somehow")
-                case .notReachable:
+                case .unknown, .notReachable:
                     DDLogError("⚠️ no playlists and no network! should probably make the user aware somehow")
                 case .reachable(_):
                     self.fetchPlaylist(offset: self.lastOffset + 1,
@@ -199,6 +201,9 @@ final class PlaylistViewModel {
             self.pageNumber = playlistResponse.pageNumber
 
             self.lastOffset += 1
+            
+            self.emptyFetchResult.value = (playlists.count == 0)
+
         }) { error in
             
             if let dbError: DatabaseError = error as? DatabaseError {

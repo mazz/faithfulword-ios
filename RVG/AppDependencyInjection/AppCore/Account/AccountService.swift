@@ -22,10 +22,14 @@ public protocol AccountServicing {
     // Current user's music service accounts
 //    var musicServiceAccounts: Observable<[MusicServiceAccount]> { get }
     
+//    func addAppUser(user: UserAppUser) -> Single<Void>
+    func fetchAppUser() -> Single<UserAppUser?>
+
     func start()
     func logout()
     
     func startLoginFlow(email: String, password: String) -> Single<UserLoginResponse>
+    func startSignupFlow(user: [String: AnyHashable]) -> Single<UserSignupResponse>
 //    func startLoginFlow(over viewController: UIViewController) -> Single<Void>
 //    func startRegistrationFlow(over viewController: UIViewController) -> Single<Void>
 //    func startUpdateFlow(over viewController: UIViewController)
@@ -73,8 +77,9 @@ extension AccountService: AccountServicing {
     public func start() {
         
         Observable.combineLatest(loginSequencer.sessionToken, loginSequencer.loginUser)
-            .subscribe(onNext: { sessionToken, loginUser in
-                if let sessionToken = sessionToken,
+            .subscribe(onNext: { [weak self] sessionToken, loginUser in
+                if let strongSelf = self,
+                    let sessionToken = sessionToken,
                     let loginUser = loginUser {
                     let uuid: String = NSUUID().uuidString
                     let appUser: UserAppUser = UserAppUser(userId: loginUser.id,
@@ -87,29 +92,30 @@ extension AccountService: AccountServicing {
                                                    language: "en",
                                                    userLoginUserUuid: loginUser.uuid)
                     
-                    self.currentUser = appUser
+                    strongSelf.currentUser = appUser
 
-                    self.dataService.appendPersistedLoginUser(user: loginUser)
-                        .asObservable()
-                        .subscribe(onNext: { userLoginUser in
+                    strongSelf.dataService.replacePersistedLoginUser(user: loginUser)
+                        .subscribe(onSuccess: { [weak self] userLoginUser in
                             
-                            self.dataService.addUser(user: appUser)
-                                .asObservable()
-                                .subscribeAndDispose(by: self.bag)
+                            if let strongSelf = self {
+                                strongSelf.dataService.replacePersistedAppUser(user: appUser)
+                                    .asObservable()
+                                    .subscribeAndDispose(by: strongSelf.bag)
+                            }
                             
-                        })
-                        .disposed(by: self.bag)
-                    
+                            }, onError: { error in
+                                
+                        }).disposed(by: strongSelf.bag)
                     
                     
                     if loginUser.email_confirmed == false {
-                        self.authStateBehaviorSubject.onNext(.emailUnconfirmed)
+                        strongSelf.authStateBehaviorSubject.onNext(.emailUnconfirmed)
                     } else {
-                        self.authStateBehaviorSubject.onNext(.authenticated)
+                        strongSelf.authStateBehaviorSubject.onNext(.authenticated)
                     }
                 } else {
-                    self.currentUser = nil
-                    self.authStateBehaviorSubject.onNext(.unauthenticated)
+                    self?.currentUser = nil
+                    self?.authStateBehaviorSubject.onNext(.unauthenticated)
                 }
             })
             .disposed(by: self.bag)
@@ -132,6 +138,14 @@ extension AccountService: AccountServicing {
 
     public func startLoginFlow(email: String, password: String) -> Single<UserLoginResponse> {
         return loginSequencer.login(email: email, password: password)
+    }
+    
+    public func startSignupFlow(user: [String: AnyHashable]) -> Single<UserSignupResponse> {
+        return loginSequencer.signup(user: user)
+    }
+    
+    public func fetchAppUser() -> Single<UserAppUser?> {
+        return dataService.fetchAppUser()
     }
 
 //    public func startLoginFlow(over viewController: UIViewController) -> Single<Void> {
