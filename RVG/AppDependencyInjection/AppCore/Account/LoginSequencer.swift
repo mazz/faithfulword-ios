@@ -6,6 +6,8 @@ public protocol LoginSequencing {
     var loginUser: Observable<UserLoginUser?> { get }
 
     func login(email: String, password: String) -> Single<UserLoginResponse>
+    func signup(user: [String: AnyHashable]) -> Single<UserSignupResponse>
+
 //    func startRegistrationFlow(over viewController: UIViewController) -> Single<Void>
 //    func startUpdateFlow(over viewController: UIViewController)
     func logout()
@@ -66,6 +68,10 @@ extension LoginSequencer: LoginSequencing {
 //    public func startUpdateFlow(over viewController: UIViewController) {
 //        didyaManaging.startUpdateFlow(over: viewController)
 //    }
+    
+    public func signup(user: [String: AnyHashable]) -> Single<UserSignupResponse> {
+        return self.dataService.signupUser(user: user)
+    }
     
     public func logout() {
         // currently we do not delete a user on logout because that would remove all

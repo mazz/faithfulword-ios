@@ -22,10 +22,15 @@ public protocol DataStoring {
     func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]>
     func deleteMediaItems() -> Single<Void>
 
-    func addUser(addingUser: UserAppUser) -> Single<UserAppUser>
-    func fetchUser() -> Single<UserAppUser>
-    func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser>
+    func addAppUser(addingUser: UserAppUser) -> Single<UserAppUser>
+    func deleteAppUser() -> Single<Void>
+    func fetchAppUser() -> Single<UserAppUser?>
     
+    func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser>
+    func deleteLoginUser() -> Single<Void>
+    func fetchLoginUser() -> Single<UserLoginUser?>
+
+
 //    func addUser(session: String) -> Single<String>
     //    func updateUserLanguage(identifier: String) -> Single<String>
     func updateUserLanguage(identifier: String) -> Single<String>
@@ -139,6 +144,7 @@ public final class DataStore {
                     
                     orgTable.column("uuid", .text).primaryKey()
                     orgTable.column("bannerPath", .text)
+                    orgTable.column("orgId", .integer)
                     orgTable.column("basename", .text)
                     orgTable.column("shortname", .text)
                     orgTable.column("insertedAt", .double)
@@ -690,7 +696,7 @@ extension DataStore: DataStoring {
     
     // will error if there is already one user because for now
     // this is a single-user app
-    public func addUser(addingUser: UserAppUser) -> Single<UserAppUser> {
+    public func addAppUser(addingUser: UserAppUser) -> Single<UserAppUser> {
         return Single.create { [unowned self] single in
             var resultUser: UserAppUser = addingUser
             do {
@@ -719,14 +725,13 @@ extension DataStore: DataStoring {
         //        return Single.just("")
     }
 
-    public func fetchUser() -> Single<UserAppUser> {
+    public func fetchAppUser() -> Single<UserAppUser?> {
         return Single.create { [unowned self] single in
             do {
-                var fetchUser: UserAppUser!
+                var fetchUser: UserAppUser?
                 try self.dbPool.read { db in
-                    if let user = try UserAppUser.fetchOne(db) {
-                        fetchUser = user
-                    }
+                    let user = try UserAppUser.fetchOne(db)
+                    fetchUser = user
                 }
                 single(.success(fetchUser))
             } catch {
@@ -736,6 +741,23 @@ extension DataStore: DataStoring {
             return Disposables.create {}
         }
     }
+    
+    public func deleteAppUser() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try UserAppUser.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+
     
     public func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser> {
         return Single.create { [unowned self] single in
@@ -756,6 +778,38 @@ extension DataStore: DataStoring {
         }
     }
     
+    public func deleteLoginUser() -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try UserLoginUser.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+    
+    public func fetchLoginUser() -> Single<UserLoginUser?> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchUser: UserLoginUser?
+                try self.dbPool.read { db in
+                    let user = try UserLoginUser.fetchOne(db)
+                    fetchUser = user
+                }
+                single(.success(fetchUser))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
     
 //    public func addUser(session: String) -> Single<String> {
 //        return Single.create { [unowned self] single in

@@ -4,6 +4,7 @@ import RxSwift
 import L10n_swift
 import Alamofire
 import Loaf
+import SwiftKeychainWrapper
 
 /// Coordinator in charge of navigating between the two main states of the app.
 /// Operates on the level of the rootViewController and switches between the
@@ -264,10 +265,12 @@ extension AppCoordinator: NavigationCoordinating {
                         strongSelf.swapInNoResourceFlow()
                     } else {
                         loadedOrgs = persisted
-                        if let uuid: String = loadedOrgs.first?.uuid {
+                        if let org: Org = loadedOrgs.first {
                             strongSelf.serverStatus = .notConnected
                             strongSelf.appFlowStatus = .loadChannels
-                            strongSelf.loadChannels(for: uuid)
+                            strongSelf.loadChannels(for: org.uuid)
+                            
+                            strongSelf.loginToOrg(org)
                         }
                     }
                 case .reachable(_):
@@ -287,10 +290,12 @@ extension AppCoordinator: NavigationCoordinating {
                                 DDLogDebug("⚠️ No internet and no Org found, can't do anything")
                                 strongSelf.swapInNoResourceFlow()
                             } else {
-                                if let uuid: String = loadedOrgs.first?.uuid {
+                                if let org: Org = loadedOrgs.first {
                                     strongSelf.serverStatus = .connected
                                     strongSelf.appFlowStatus = .loadChannels
-                                    strongSelf.loadChannels(for: uuid)
+                                    strongSelf.loadChannels(for: org.uuid)
+                                    
+                                    strongSelf.loginToOrg(org)
                                 }
                             }
                         }) { error in
@@ -302,10 +307,12 @@ extension AppCoordinator: NavigationCoordinating {
                             }.disposed(by: strongSelf.bag)
                     } else {
                         loadedOrgs = persisted
-                        if let uuid: String = loadedOrgs.first?.uuid {
+                        if let org: Org = loadedOrgs.first {
                             strongSelf.serverStatus = .connected
                             strongSelf.appFlowStatus = .loadChannels
-                            strongSelf.loadChannels(for: uuid)
+                            strongSelf.loadChannels(for: org.uuid)
+                            
+                            strongSelf.loginToOrg(org)
                         }
                     }
                 }
@@ -318,6 +325,59 @@ extension AppCoordinator: NavigationCoordinating {
             DDLogDebug("⚠️ error getting persistedDefaultOrgs: \(error)")
             self.swapInNoResourceFlow()
         }.disposed(by: self.bag)
+    }
+    
+    private func loginToOrg(_ org: Org)  {
+        self.accountService.fetchAppUser()
+            .subscribe(onSuccess: { [weak self] userAppUser in
+                if let strongSelf = self {
+                    if let user: UserAppUser = userAppUser,
+                        let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.useridx") {
+                        // found a stored UserAppUser, so start login flow
+                        strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
+                            .subscribe(onSuccess: { userLoginResponse in
+                                DDLogDebug("userLoginResponse \(userLoginResponse)")
+                            }, onError: { error in
+                                DDLogDebug("⚠️ login error! \(error)")
+                                Loaf.dismiss(sender: strongSelf.rootViewController)
+                                //                                        Loaf(error.localizedDescription,
+                                //                                             state: .info,
+                                //                                             location: .bottom,
+                                //                                             presentingDirection: .vertical,
+                                //                                             dismissingDirection: .vertical,
+                                //                                             sender: strongSelf.rootViewController)
+                                //                                            .show()
+                                
+                            }).disposed(by: strongSelf.bag)
+                        
+                    } else {
+                        // did not find a stored UserAppUser, so start signup flow
+                        
+                        let hashSource: String = NSUUID().uuidString
+                        let faithfulWordAppIdx: String = String("fw\(hashSource.sha512Hex.prefix(30))")
+                        let name: String = faithfulWordAppIdx.filter { "abcdefghijklmnopqrstuvwxyz".contains($0) }
+                        
+                        if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.useridx") {
+                            strongSelf.accountService.startSignupFlow(user: ["username" : faithfulWordAppIdx,
+                                                                             "name": name,
+                                                                             "email": "\(faithfulWordAppIdx)@faithfulword.app",
+                                "password": faithfulWordAppIdx,
+                                "passwordRepeat": faithfulWordAppIdx,
+                                "locale": "en",
+                                "org_id": org.orgId])
+                                .subscribe(onSuccess: { signupResponse in
+                                    DDLogDebug("signupResponse \(signupResponse)")
+                                }, onError: { error in
+                                    DDLogDebug("⚠️ login error! \(error)")
+                                }).disposed(by: strongSelf.bag)
+                        }
+                        
+                        
+                    }
+                }
+                }, onError: { error in
+                    
+            }).disposed(by: self.bag)
     }
     
     private func loadChannels(for orgUuid: String) {
@@ -456,39 +516,106 @@ extension AppCoordinator: NavigationCoordinating {
 //                                      language: "en")
                 
                 
-                // bootstrap login/fetching of session HERE because we have no login UI
-                self.accountService.startLoginFlow(email: "joseph@faithfulword.app", password: "password")
-                    .subscribe(onSuccess: { [unowned self] userLoginResponse in
-                        let user: UserAppUser = UserAppUser(userId: userLoginResponse.user.id,
-                                              uuid: NSUUID().uuidString,
-                                              orgId: userLoginResponse.user.org_id,
-                                              name: userLoginResponse.user.name ?? "unknown",
-                                              email: userLoginResponse.user.email,
-                                              session: userLoginResponse.token,
-                                              pushNotifications: false,
-                                              language: "en",
-                                              userLoginUserUuid: userLoginResponse.user.uuid)
-                        
-                        
-                    }, onError: { error in
-                        DDLogDebug("⚠️ login error! \(error)")
-                        Loaf.dismiss(sender: self.rootViewController)
-
-                        Loaf(error.localizedDescription,
-                             state: .info,
-                             location: .bottom,
-                             presentingDirection: .vertical,
-                             dismissingDirection: .vertical,
-                             sender: self.rootViewController)
-                            .show()
-
-                    })
-                .disposed(by: self.bag)
-//                    .asObservable()
-                
+//                self.accountService.startSignupFlow(user: ["user": "" ])
                     
-//                    .subscribeAndDispose(by: self.bag)
+                // bootstrap login/fetching of session HERE because we have no login UI
+//                self.accountService.startLoginFlow(email: "joseph@faithfulword.app", password: "password")
+//                    .subscribe(onSuccess: { [unowned self] userLoginResponse in
+//                        let user: UserAppUser = UserAppUser(userId: userLoginResponse.user.id,
+//                                              uuid: NSUUID().uuidString,
+//                                              orgId: userLoginResponse.user.org_id,
+//                                              name: userLoginResponse.user.name ?? "unknown",
+//                                              email: userLoginResponse.user.email,
+//                                              session: userLoginResponse.token,
+//                                              pushNotifications: false,
+//                                              language: "en",
+//                                              userLoginUserUuid: userLoginResponse.user.uuid)
+//
+//
+//                    }, onError: { error in
+//                        DDLogDebug("⚠️ login error! \(error)")
+//                        Loaf.dismiss(sender: self.rootViewController)
+//
+//                        Loaf(error.localizedDescription,
+//                             state: .info,
+//                             location: .bottom,
+//                             presentingDirection: .vertical,
+//                             dismissingDirection: .vertical,
+//                             sender: self.rootViewController)
+//                            .show()
+//
+//                    }).disposed(by: self.bag)
                 
+                
+//{
+//    "user": {
+//        "username": "jeebin",
+//        "name": "Jedediah Solomon",
+//        "email": "grabbler@test.test",
+//        "password": "Open1sesa",
+//        "passwordRepeat": "Open1sesa",
+//        "locale": "en",
+//        "org_id": 1
+//    }
+//}
+//                self.accountService.startSignupFlow(user: ["user" : ["username" : "jeebin",
+//                                                                     "name": "Jedediah Solomon",
+//                                                                     "email": "grabbler@test.test",
+//                                                                     "password": "asdfasdf1",
+//                                                                     "passwordRepeat": "asdfasdf1",
+//                                                                     "locale": "en",
+//                                                                     "org_id": 1]])
+
+//                self.accountService.fetchAppUser()
+//                    .subscribe(onSuccess: { [weak self] userAppUser in
+//                        if let strongSelf = self {
+//                            if let user: UserAppUser = userAppUser,
+//                                let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.useridx") {
+//                                // found a stored UserAppUser, so start login flow
+//                                strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
+//                                    .subscribe(onSuccess: { userLoginResponse in
+//                                        DDLogDebug("userLoginResponse \(userLoginResponse)")
+//                                    }, onError: { error in
+//                                        DDLogDebug("⚠️ login error! \(error)")
+//                                        Loaf.dismiss(sender: strongSelf.rootViewController)
+////                                        Loaf(error.localizedDescription,
+////                                             state: .info,
+////                                             location: .bottom,
+////                                             presentingDirection: .vertical,
+////                                             dismissingDirection: .vertical,
+////                                             sender: strongSelf.rootViewController)
+////                                            .show()
+//
+//                                    }).disposed(by: strongSelf.bag)
+//
+//                            } else {
+//                                // did not find a stored UserAppUser, so start signup flow
+//
+//                                let hashSource: String = NSUUID().uuidString
+//                                let faithfulWordAppIdx: String = String("fw\(hashSource.sha512Hex.prefix(30))")
+//                                let name: String = faithfulWordAppIdx.filter { "abcdefghijklmnopqrstuvwxyz".contains($0) }
+//
+//                                if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.useridx") {
+//                                    strongSelf.accountService.startSignupFlow(user: ["username" : faithfulWordAppIdx,
+//                                                                                     "name": name,
+//                                                                                     "email": "\(faithfulWordAppIdx)@faithfulword.app",
+//                                                                                     "password": faithfulWordAppIdx,
+//                                                                                     "passwordRepeat": faithfulWordAppIdx,
+//                                                                                     "locale": "en",
+//                                                                                     "org_id": 1])
+//                                        .subscribe(onSuccess: { signupResponse in
+//                                            DDLogDebug("signupResponse \(signupResponse)")
+//                                        }, onError: { error in
+//                                            DDLogDebug("⚠️ login error! \(error)")
+//                                        }).disposed(by: strongSelf.bag)
+//                                }
+//
+//
+//                            }
+//                        }
+//                        }, onError: { error in
+//
+//                    }).disposed(by: self.bag)
             }, context: .other)
     }
     

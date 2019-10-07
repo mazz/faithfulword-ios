@@ -35,4 +35,6 @@ target 'FaithfulWord' do
     pod 'XLActionController'
     pod 'HWIFileDownload'
     pod 'Loaf'
+    pod 'Starscream'
+    pod 'SwiftKeychainWrapper'
 end

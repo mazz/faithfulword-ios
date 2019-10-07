@@ -3,7 +3,8 @@ import GRDB
 
 public struct Org: Codable {
 //    var userId: Int64?
-    var uuid: String
+    public var uuid: String
+    public var orgId: Int
     public var bannerPath: String?
     public var basename: String
     public var shortname: String
@@ -68,6 +69,7 @@ extension Org {
     enum Columns {
 //        static let userId = Column("userId")
         static let uuid = Column("uuid")
+        static let orgId = Column("orgId")
         static let bannerPath = Column("bannerPath")
         static let basename = Column("basename")
         static let shortname = Column("shortname")

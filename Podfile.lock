@@ -115,6 +115,8 @@ PODS:
   - RxRelay (5.0.0):
     - RxSwift (~> 5)
   - RxSwift (5.0.0)
+  - Starscream (3.1.0)
+  - SwiftKeychainWrapper (3.4.0)
   - SwiftLint (0.35.0)
   - Swinject (2.7.1)
   - UICircularProgressRing (6.3.0)
@@ -141,6 +143,8 @@ DEPENDENCIES:
   - RxCocoa
   - RxDataSources
   - RxSwift
+  - Starscream
+  - SwiftKeychainWrapper
   - SwiftLint
   - Swinject
   - UICircularProgressRing
@@ -179,6 +183,8 @@ SPEC REPOS:
     - RxDataSources
     - RxRelay
     - RxSwift
+    - Starscream
+    - SwiftKeychainWrapper
     - SwiftLint
     - Swinject
     - UICircularProgressRing
@@ -216,11 +222,13 @@ SPEC CHECKSUMS:
   RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
+  Starscream: 08172b481e145289c4930cb567230fb55897cfa4
+  SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
   SwiftLint: 5553187048b900c91aa03552807681bb6b027846
   Swinject: ddf78b8486dd9b71a667b852cad919ab4484478e
   UICircularProgressRing: e700fb0505328e88ee53c4ed92bee6d1a5b8bbe3
   XLActionController: ec9207228162569df1c90dccded2e88d0f39b2e7
 
-PODFILE CHECKSUM: 563a52d0f3876af0b11e1b067d82940045146d39
+PODFILE CHECKSUM: 42d4e70cec7e933f99817ce82fb03d4ccc5affa1
 
 COCOAPODS: 1.6.1
