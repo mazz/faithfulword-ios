@@ -92,6 +92,7 @@ public protocol ProductDataServicing {
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     
     func persistedDefaultOrgs() -> Single<[Org]>
+    func persistedDefaultOrg() -> Single<Org?>
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
     func deletePersistedChannels() -> Single<Void>
@@ -421,6 +422,10 @@ extension DataService: ProductDataServicing {
             .do(onSuccess: { [unowned self] orgs in
                 self._orgs.value = orgs
             })
+    }
+    
+    public func persistedDefaultOrg() -> Single<Org?> {
+        return dataStore.fetchDefaultOrg()
     }
 
     public func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {

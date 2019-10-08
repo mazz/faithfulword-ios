@@ -9,6 +9,8 @@ public protocol DataStoring {
     func fetchDefaultOrgs() -> Single<[Org]>
     func addDefaultOrgs(orgs: [Org]) -> Single<[Org]>
     func deleteDefaultOrgs() -> Single<Void>
+    
+    func fetchDefaultOrg() -> Single<Org?>
 
     func fetchChannels(for channelUuid: String) -> Single<[Channel]>
     func addChannels(channels: [Channel]) -> Single<[Channel]>
@@ -516,6 +518,31 @@ extension DataStore: DataStoring {
                 single(.error(error))
             }
             return Disposables.create()
+        }
+    }
+
+    public func fetchDefaultOrg() -> Single<Org?> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchOrg: Org?
+                var fetchOrgs: [Org] = []
+                //                let chapters: [Org]!
+                try self.dbPool.read { db in
+                    fetchOrgs = try Org.fetchAll(db)
+                }
+                
+                if fetchOrgs.count == 1 {
+                    if let org = fetchOrgs.first {
+                        fetchOrg = org
+                    }
+                }
+
+                single(.success(fetchOrg))
+            } catch {
+                print("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
         }
     }
 
