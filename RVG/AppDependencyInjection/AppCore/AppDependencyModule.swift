@@ -326,6 +326,7 @@ internal final class AppDependencyModule {
             PlaylistViewModel(
                 channelUuid: channelUuid,
                 productService: resolver.resolve(ProductServicing.self)!,
+                languageService: resolver.resolve(LanguageServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
             }.inObjectScope(.transient)

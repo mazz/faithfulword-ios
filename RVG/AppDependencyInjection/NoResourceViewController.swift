@@ -43,7 +43,7 @@ public final class NoResourceViewController: UIViewController {
             if internetReachable {
                 titleMessage.text = NSLocalizedString("Server Not Available", comment: "").l10n()
                 bodyMessage.text = NSLocalizedString("You're online, but cannot connect. Please try again later.", comment: "").l10n()
-                actionButton.setTitle(NSLocalizedString("Close", comment: "").l10n(), for: .normal)
+                actionButton.setTitle(NSLocalizedString("Try Again", comment: "").l10n(), for: .normal)
             }
         case .connected:
             DDLogDebug("this should never reach here")

@@ -146,8 +146,28 @@ internal class AppCoordinator {
                         strongSelf.loadDefaultOrg()
                     case .loadChannels:
                         DDLogDebug("loadChannels")
+                        strongSelf.productService.persistedDefaultOrg()
+                            .subscribe(onSuccess: { org in
+                                if let org = org {
+                                    strongSelf.loadChannels(for: org.uuid)
+                                } else {
+                                    DDLogDebug("no persisted org found")
+                                }
+                            }, onError: { error in
+                                DDLogDebug("error fetching persisted org: \(error)")
+                            }).disposed(by: strongSelf.bag)
                     case .main:
                         DDLogDebug("main")
+                        strongSelf.productService.persistedDefaultOrg()
+                            .subscribe(onSuccess: { org in
+                                if let org = org {
+                                    strongSelf.loadChannels(for: org.uuid)
+                                } else {
+                                    DDLogDebug("no persisted org found")
+                                }
+                            }, onError: { error in
+                                DDLogDebug("error fetching persisted org: \(error)")
+                            }).disposed(by: strongSelf.bag)
                     }
                 }
             }.disposed(by: self.bag)
@@ -196,24 +216,24 @@ extension AppCoordinator: NavigationCoordinating {
 
                 // we must fetch and set the user language before we do
                 // anything, really
-                self.languageService.fetchUserLanguage()
-                    .subscribe(onSuccess: { [weak self] userLanguage in
-                        
-                        if let rootViewController = self?.rootViewController {
-                            DDLogDebug("self.languageService.userLanguage.value: \(self?.languageService.userLanguage.value) == \(userLanguage)")
-                            L10n.shared.language = (userLanguage == "") ? "en" : userLanguage
+//                self.languageService.fetchUserLanguage()
+//                    .subscribe(onSuccess: { [weak self] userLanguage in
+                
+                        if let rootViewController = self.rootViewController {
+//                            DDLogDebug("self.languageService.userLanguage.value: \(self?.languageService.userLanguage.value) == \(userLanguage)")
+//                            L10n.shared.language = (userLanguage == "") ? "en" : userLanguage
                             
                             if authState == .unauthenticated {
                                 // load default org if unauthenticated
                                 Loaf.dismiss(sender: rootViewController)
                                 
-                                switch self?.networkStatus.value {
-                                case .notReachable?, .reachable(_)?, .unknown?:
-                                    self?.appFlowStatus = .loadOrg
-                                    self?.loadDefaultOrg()
-                                case .none:
-                                    self?.appFlowStatus = .loadOrg
-                                    self?.loadDefaultOrg()
+                                switch self.networkStatus.value {
+                                case .notReachable, .reachable(_), .unknown:
+                                    self.appFlowStatus = .loadOrg
+                                    self.loadDefaultOrg()
+//                                case .none:
+//                                    self.appFlowStatus = .loadOrg
+//                                    self.loadDefaultOrg()
                                 }
                                 
                             } else if authState == .authenticated || authState == .emailUnconfirmed {
@@ -241,9 +261,9 @@ extension AppCoordinator: NavigationCoordinating {
                         
                         
                         
-                    }, onError: { error in
-                        DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
-                    }).disposed(by: self.bag)
+//                    }, onError: { error in
+//                        DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
+//                    }).disposed(by: self.bag)
             })
             .disposed(by: bag)
     }
@@ -332,32 +352,38 @@ extension AppCoordinator: NavigationCoordinating {
             .subscribe(onSuccess: { [weak self] userAppUser in
                 if let strongSelf = self {
                     if let user: UserAppUser = userAppUser,
-                        let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.useridx") {
+                        let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.userpassword") {
                         // found a stored UserAppUser, so start login flow
-                        strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
-                            .subscribe(onSuccess: { userLoginResponse in
-                                DDLogDebug("userLoginResponse \(userLoginResponse)")
-                            }, onError: { error in
-                                DDLogDebug("⚠️ login error! \(error)")
-                                Loaf.dismiss(sender: strongSelf.rootViewController)
-                                //                                        Loaf(error.localizedDescription,
-                                //                                             state: .info,
-                                //                                             location: .bottom,
-                                //                                             presentingDirection: .vertical,
-                                //                                             dismissingDirection: .vertical,
-                                //                                             sender: strongSelf.rootViewController)
-                                //                                            .show()
-                                
-                            }).disposed(by: strongSelf.bag)
+                        
+                        // for v1.3 we will not be actually logging-in
+                        // instead below, make a fake user, even a fake password
+                        // the fake UserAppUser will not have a corresponding UserLoginUser
+                        // so do nothing here
+
+//                        strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
+//                            .subscribe(onSuccess: { userLoginResponse in
+//                                DDLogDebug("userLoginResponse \(userLoginResponse)")
+//                            }, onError: { error in
+//                                DDLogDebug("⚠️ login error! \(error)")
+//                                Loaf.dismiss(sender: strongSelf.rootViewController)
+//                            }).disposed(by: strongSelf.bag)
                         
                     } else {
                         // did not find a stored UserAppUser, so start signup flow
                         
+                        // for v1.3 we will not be actually logging-in
+                        // instead, make a fake user, even a fake password
+                        // the fake UserAppUser will not have a corresponding UserLoginUser
+                        
+                        
                         let hashSource: String = NSUUID().uuidString
                         let faithfulWordAppIdx: String = String("fw\(hashSource.sha512Hex.prefix(30))")
                         let name: String = faithfulWordAppIdx.filter { "abcdefghijklmnopqrstuvwxyz".contains($0) }
-                        
-                        if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.useridx") {
+                        if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.userpassword") {
+                            
+                        }
+                        /** uncomment hopefully someday
+                        if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.userpassword") {
                             strongSelf.accountService.startSignupFlow(user: ["username" : faithfulWordAppIdx,
                                                                              "name": name,
                                                                              "email": "\(faithfulWordAppIdx)@faithfulword.app",
@@ -371,8 +397,18 @@ extension AppCoordinator: NavigationCoordinating {
                                     DDLogDebug("⚠️ login error! \(error)")
                                 }).disposed(by: strongSelf.bag)
                         }
-                        
-                        
+                        */
+                        strongSelf.accountService.replaceAppUser(user: UserAppUser(userId: 0,
+                                                                              uuid: NSUUID().uuidString,
+                                                                              orgId: org.orgId,
+                                                                              name: name,
+                                                                              email: "\(faithfulWordAppIdx)@faithfulword.app",
+                            session: "fake.\(NSUUID().uuidString)",
+                            pushNotifications: false,
+                            language: L10n.shared.language,
+                            userLoginUserUuid: nil))
+                            .asObservable()
+                            .subscribeAndDispose(by: strongSelf.bag)
                     }
                 }
                 }, onError: { error in
@@ -570,7 +606,7 @@ extension AppCoordinator: NavigationCoordinating {
 //                    .subscribe(onSuccess: { [weak self] userAppUser in
 //                        if let strongSelf = self {
 //                            if let user: UserAppUser = userAppUser,
-//                                let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.useridx") {
+//                                let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.userpassword") {
 //                                // found a stored UserAppUser, so start login flow
 //                                strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
 //                                    .subscribe(onSuccess: { userLoginResponse in
@@ -595,7 +631,7 @@ extension AppCoordinator: NavigationCoordinating {
 //                                let faithfulWordAppIdx: String = String("fw\(hashSource.sha512Hex.prefix(30))")
 //                                let name: String = faithfulWordAppIdx.filter { "abcdefghijklmnopqrstuvwxyz".contains($0) }
 //
-//                                if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.useridx") {
+//                                if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.userpassword") {
 //                                    strongSelf.accountService.startSignupFlow(user: ["username" : faithfulWordAppIdx,
 //                                                                                     "name": name,
 //                                                                                     "email": "\(faithfulWordAppIdx)@faithfulword.app",

@@ -88,6 +88,8 @@ public protocol ProductDataServicing {
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])>
 
+    func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
+    
     func persistedChannels(for orgUuid: String) -> Single<[Channel]>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     
@@ -508,6 +510,10 @@ extension DataService: ProductDataServicing {
                 return tuple
             })
         }
+    }
+    
+    public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
+        return dataStore.deletePlaylists(forChannelUuid)
     }
 
     // MARK: Channels

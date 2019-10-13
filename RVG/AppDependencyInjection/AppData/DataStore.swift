@@ -19,7 +19,8 @@ public protocol DataStoring {
     func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func addPlaylists(playlists: [Playlist]) -> Single<[Playlist]>
     func deletePlaylists() -> Single<Void>
-
+    func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
+    
     func fetchMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
     func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]>
     func deleteMediaItems() -> Single<Void>
@@ -651,6 +652,22 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     try Playlist.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+    
+    public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try Playlist.filter(Column("channelUuid") == forChannelUuid).deleteAll(db)
                     return .commit
                 }
                 single(.success(()))
