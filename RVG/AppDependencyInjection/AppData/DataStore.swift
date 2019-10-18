@@ -96,47 +96,21 @@ public enum DataStoreError: Error {
 /// Storage class holding reference to realm object
 public final class DataStore {
     
-    internal var _dbPool: DatabasePool?
-    
-    // MARK: Dependencies
-    public var dbPool: DatabasePool {
+    public static func openDatabase(atPath path: String) throws -> DatabasePool {
+        // Connect to the database
+        // See https://github.com/groue/GRDB.swift/blob/master/README.md#database-connections
+        let dbPool = try DatabasePool(path: path)
+        print("new dbPool at databasePath: \(path)")
         
-        var resultPool: DatabasePool!
+        // Define the database schema
+        try migrator.migrate(dbPool)
         
-        if let pool = _dbPool {
-            return pool
-        } else {
-            let documentsURL: URL = getDocumentsDirectory()
-            let databasePath = documentsURL.appendingPathComponent("db.sqlite")
-            do {
-                // Connect to the database
-                // See https://github.com/groue/GRDB.swift/#database-connections
-                _dbPool = try DatabasePool(path: databasePath.absoluteString)
-                print("new _dbPool at databasePath: \(databasePath.absoluteString)")
-                
-                if let databasePool = _dbPool {
-                    // Use DatabaseMigrator to define the database schema
-                    // See https://github.com/groue/GRDB.swift/#migrations
-                    try migrator.migrate(databasePool)
-                    resultPool = databasePool
-                }
-                
-            } catch {
-                fatalError("error opening database: \(error)")
-            }
-        }
-        return resultPool
+        return dbPool
     }
-    
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentsDirectory = paths[0]
-        return documentsDirectory
-    }
-    
+
     /// The DatabaseMigrator that defines the database schema.
     // See https://github.com/groue/GRDB.swift/#migrations
-    internal var migrator: DatabaseMigrator {
+    static var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("v1.3") { db in
@@ -469,7 +443,7 @@ extension DataStore: DataStoring {
             do {
                 var fetchOrgs: [Org] = []
                 //                let chapters: [Org]!
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchOrgs = try Org.fetchAll(db)
                 }
                 single(.success(fetchOrgs))
@@ -485,7 +459,7 @@ extension DataStore: DataStoring {
     public func addDefaultOrgs(orgs: [Org]) -> Single<[Org]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
                     for org in orgs {
                         DDLogDebug("org: \(org)")
@@ -509,7 +483,7 @@ extension DataStore: DataStoring {
     public func deleteDefaultOrgs() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try Org.deleteAll(db)
                     return .commit
                 }
@@ -528,7 +502,7 @@ extension DataStore: DataStoring {
                 var fetchOrg: Org?
                 var fetchOrgs: [Org] = []
                 //                let chapters: [Org]!
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchOrgs = try Org.fetchAll(db)
                 }
                 
@@ -553,7 +527,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetched: [Channel] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetched = try Channel.filter(Column("orgUuid") == orgUuid).fetchAll(db)
                 }
                 single(.success(fetched))
@@ -568,7 +542,7 @@ extension DataStore: DataStoring {
     public func addChannels(channels: [Channel]) -> Single<[Channel]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
                     for channel in channels {
                         DDLogDebug("channel: \(channel)")
@@ -592,7 +566,7 @@ extension DataStore: DataStoring {
     public func deleteChannels() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try Channel.deleteAll(db)
                     return .commit
                 }
@@ -611,7 +585,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetched: [Playlist] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetched = try Playlist.filter(Column("channelUuid") == channelUuid).fetchAll(db)
                 }
                 single(.success(fetched))
@@ -626,7 +600,7 @@ extension DataStore: DataStoring {
     public func addPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
                     for playlist in playlists {
                         DDLogDebug("playlist: \(playlist)")
@@ -650,7 +624,7 @@ extension DataStore: DataStoring {
     public func deletePlaylists() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try Playlist.deleteAll(db)
                     return .commit
                 }
@@ -666,7 +640,7 @@ extension DataStore: DataStoring {
     public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try Playlist.filter(Column("channelUuid") == forChannelUuid).deleteAll(db)
                     return .commit
                 }
@@ -684,7 +658,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetched: [MediaItem] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetched = try MediaItem.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
                 }
                 single(.success(fetched))
@@ -699,7 +673,7 @@ extension DataStore: DataStoring {
     public func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
                     for mediaItem in items {
                         DDLogDebug("mediaItem: \(mediaItem)")
@@ -723,7 +697,7 @@ extension DataStore: DataStoring {
     public func deleteMediaItems() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try MediaItem.deleteAll(db)
                     return .commit
                 }
@@ -744,7 +718,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             var resultUser: UserAppUser = addingUser
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     if try UserAppUser.fetchCount(db) == 0 {
                         
 //                        var user = User(userId: nil,
@@ -773,7 +747,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchUser: UserAppUser?
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     let user = try UserAppUser.fetchOne(db)
                     fetchUser = user
                 }
@@ -789,7 +763,7 @@ extension DataStore: DataStoring {
     public func deleteAppUser() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try UserAppUser.deleteAll(db)
                     return .commit
                 }
@@ -807,7 +781,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             var resultUser: UserLoginUser = addingUser
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try resultUser.insert(db)
                     //                        resultUser = user.session
                     //                    }
@@ -825,7 +799,7 @@ extension DataStore: DataStoring {
     public func deleteLoginUser() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try UserLoginUser.deleteAll(db)
                     return .commit
                 }
@@ -842,7 +816,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchUser: UserLoginUser?
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     let user = try UserLoginUser.fetchOne(db)
                     fetchUser = user
                 }
@@ -889,7 +863,7 @@ extension DataStore: DataStoring {
     public func updateUser(updatingUser: UserAppUser) -> Single<UserAppUser> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.filter(Column("uuid") == updatingUser.uuid).fetchOne(db) {
                         var storeUser: UserAppUser = user
                         storeUser.name = updatingUser.name
@@ -912,7 +886,7 @@ extension DataStore: DataStoring {
 //    public func updateUser(updatingUser: User) -> Single<Void> {
 //        return Single.create { [unowned self] single in
 //            do {
-//                try self.dbPool.writeInTransaction { db in
+//                try dbPool.writeInTransaction { db in
 //                    if let book = try User.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
 //
 //                    if let user = try User.fetchOne(db) {
@@ -953,7 +927,7 @@ extension DataStore: DataStoring {
     public func updateUserLanguage(identifier: String) -> Single<String> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.fetchOne(db) {
                         var storeUser: UserAppUser = user
                         storeUser.language = identifier
@@ -974,7 +948,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var language: String = ""
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     if let user = try UserAppUser.fetchOne(db) {
                         language = user.language
                     }
@@ -994,7 +968,7 @@ extension DataStore: DataStoring {
                             for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.fetchOne(db) {
                         for category in categoryList {
                             DDLogDebug("category: \(category)")
@@ -1018,7 +992,7 @@ extension DataStore: DataStoring {
                     return .commit
                 }
                 var fetchCategoryList: [Categorizable] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     switch categoryListType {
                     case .gospel:
                         DDLogDebug("fetch .gospel")
@@ -1042,7 +1016,7 @@ extension DataStore: DataStoring {
     public func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     switch categoryListingType {
                     case .gospel:
                         DDLogDebug("delete .gospel")
@@ -1068,7 +1042,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchCategoryList: [Categorizable] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     switch categoryListingType {
                     case .gospel:
                         DDLogDebug("fetch .gospel")
@@ -1094,7 +1068,7 @@ extension DataStore: DataStoring {
     public func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let book = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
                         DDLogDebug("found chapter book: \(book)")
@@ -1118,7 +1092,7 @@ extension DataStore: DataStoring {
                 }
                 var fetchChapters: [Playable] = []
                 //                let chapters: [Playable]!
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchChapters = try MediaChapter.filter(Column("categoryUuid") == bookUuid).fetchAll(db)
                 }
                 single(.success(fetchChapters))
@@ -1138,7 +1112,7 @@ extension DataStore: DataStoring {
             do {
                 var fetchChapters: [Playable] = []
                 //                let chapters: [Playable]!
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchChapters = try MediaChapter.filter(Column("categoryUuid") == bookUuid).fetchAll(db)
                 }
                 single(.success(fetchChapters))
@@ -1153,7 +1127,7 @@ extension DataStore: DataStoring {
     public func deleteChapters(for bookUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let _ = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
@@ -1176,7 +1150,7 @@ extension DataStore: DataStoring {
     public func addMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let gospel = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         DDLogDebug("found gospel: \(gospel)")
@@ -1201,7 +1175,7 @@ extension DataStore: DataStoring {
                 
                 // return ALL entries
                 var fetchMediaGospel: [Playable] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchMediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
                 }
                 single(.success(fetchMediaGospel))
@@ -1217,7 +1191,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchMediaGospel: [Playable] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchMediaGospel = try MediaGospel.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
                 }
                 single(.success(fetchMediaGospel))
@@ -1232,7 +1206,7 @@ extension DataStore: DataStoring {
     public func deleteMediaGospel(for categoryUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let _ = try Gospel.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         try MediaGospel.filter(Column("categoryUuid") == categoryUuid).deleteAll(db)
@@ -1255,7 +1229,7 @@ extension DataStore: DataStoring {
     public func addMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let music = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         DDLogDebug("found music: \(music)")
@@ -1280,7 +1254,7 @@ extension DataStore: DataStoring {
                 
                 // return ALL entries
                 var fetchMediaMusic: [Playable] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchMediaMusic = try MediaMusic.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
                 }
                 single(.success(fetchMediaMusic))
@@ -1298,7 +1272,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchMediaMusic: [Playable] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchMediaMusic = try MediaMusic.filter(Column("categoryUuid") == categoryUuid).fetchAll(db)
                 }
                 single(.success(fetchMediaMusic))
@@ -1313,7 +1287,7 @@ extension DataStore: DataStoring {
     public func deleteMediaMusic(for categoryUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     if let _ = try Music.filter(Column("categoryUuid") == categoryUuid).fetchOne(db) {
                         try MediaMusic.filter(Column("categoryUuid") == categoryUuid).deleteAll(db)
@@ -1335,7 +1309,7 @@ extension DataStore: DataStoring {
     public func addBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
                     for bibleLanguage in bibleLanguages {
                         DDLogDebug("bibleLanguage: \(bibleLanguage)")
@@ -1361,7 +1335,7 @@ extension DataStore: DataStoring {
             do {
                 
                 var languages: [LanguageIdentifier] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     languages = try LanguageIdentifier.fetchAll(db)
                 }
                 single(.success(languages))
@@ -1376,7 +1350,7 @@ extension DataStore: DataStoring {
     public func deleteBibleLanguages() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     try LanguageIdentifier.deleteAll(db)
                     return .commit
                 }
@@ -1395,7 +1369,7 @@ extension DataStore: DataStoring {
     public func addBooks(books: [Book]) -> Single<[Book]> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.fetchOne(db) {
                         for book in books {
                             DDLogDebug("book: \(book)")
@@ -1408,7 +1382,7 @@ extension DataStore: DataStoring {
                     return .commit
                 }
                 var fetchBooks: [Book] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchBooks = try Book.fetchAll(db)
                 }
                 single(.success(fetchBooks))
@@ -1424,7 +1398,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchBooks: [Book] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchBooks = try Book.fetchAll(db)
                 }
                 single(.success(fetchBooks))
@@ -1440,7 +1414,7 @@ extension DataStore: DataStoring {
     public func deleteAllBooks() -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     let books = try Book.fetchAll(db)
                     for book in books {
                         try book.delete(db)
@@ -1462,7 +1436,7 @@ extension DataStore: DataStoring {
         // let update: Single<Void> =
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     // update
                     DDLogDebug("try action update playable.uuid: \(playable.uuid)")
                     if let action = try UserActionPlayable.filter(Column("playableUuid") == playable.uuid).fetchOne(db) {
@@ -1572,7 +1546,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchPlayableHistory: [Playable] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     let updatedAt = Column("updatedAt")
                     fetchPlayableHistory = try UserActionPlayable.order(updatedAt.desc).fetchAll(db)
                 }
@@ -1590,7 +1564,7 @@ extension DataStore: DataStoring {
             do {
                 var playable: UserActionPlayable!
                 
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     playable = try UserActionPlayable.filter(Column("playableUuid") == playableUuid).fetchOne(db)
                 }
                 single(.success(playable))
@@ -1607,7 +1581,7 @@ extension DataStore: DataStoring {
     public func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     // update
                     DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
                     if let download = try FileDownload.filter(Column("playableUuid") == fileDownload.playableUuid).fetchOne(db) {
@@ -1657,7 +1631,7 @@ extension DataStore: DataStoring {
     public func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     // update
 //                    DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
                     
@@ -1700,7 +1674,7 @@ extension DataStore: DataStoring {
             do {
                 var playable: FileDownload!
                 
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     playable = try FileDownload.filter(Column("playableUuid") == playableUuid).fetchOne(db)
                 }
                 single(.success(playable))
@@ -1715,7 +1689,7 @@ extension DataStore: DataStoring {
     public func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void> {
         return Single.create { [unowned self] single in
             do {
-                try self.dbPool.writeInTransaction { db in
+                try dbPool.writeInTransaction { db in
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
                     try FileDownload.filter(Column("playableUuid") == playableUuid).deleteAll(db)
                     return .commit
@@ -1754,7 +1728,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 var fetchFileDownloads: [FileDownload] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
                 }
                 single(.success(fetchFileDownloads))
@@ -1771,7 +1745,7 @@ extension DataStore: DataStoring {
             do {
                 var fetchFileDownloads: [FileDownload]?
                 var interrupted: [FileDownload] = []
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     if let fetchPlaylistUuid: String = playlistUuid {
                         fetchFileDownloads = try FileDownload.filter(Column("playlistUuid") == fetchPlaylistUuid).fetchAll(db)
                         if let fileDownloads: [FileDownload] = fetchFileDownloads {
@@ -1798,7 +1772,7 @@ extension DataStore: DataStoring {
             do {
                 var playables: [UserActionPlayable]!
                 
-                try self.dbPool.read { db in
+                try dbPool.read { db in
                     let sql = """
                         SELECT
                             userActionPlayableId,
