@@ -9,6 +9,8 @@ public protocol DataStoring {
     func fetchDefaultOrgs() -> Single<[Org]>
     func addDefaultOrgs(orgs: [Org]) -> Single<[Org]>
     func deleteDefaultOrgs() -> Single<Void>
+    
+    func fetchDefaultOrg() -> Single<Org?>
 
     func fetchChannels(for channelUuid: String) -> Single<[Channel]>
     func addChannels(channels: [Channel]) -> Single<[Channel]>
@@ -17,7 +19,8 @@ public protocol DataStoring {
     func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func addPlaylists(playlists: [Playlist]) -> Single<[Playlist]>
     func deletePlaylists() -> Single<Void>
-
+    func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
+    
     func fetchMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
     func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]>
     func deleteMediaItems() -> Single<Void>
@@ -519,6 +522,31 @@ extension DataStore: DataStoring {
         }
     }
 
+    public func fetchDefaultOrg() -> Single<Org?> {
+        return Single.create { [unowned self] single in
+            do {
+                var fetchOrg: Org?
+                var fetchOrgs: [Org] = []
+                //                let chapters: [Org]!
+                try self.dbPool.read { db in
+                    fetchOrgs = try Org.fetchAll(db)
+                }
+                
+                if fetchOrgs.count == 1 {
+                    if let org = fetchOrgs.first {
+                        fetchOrg = org
+                    }
+                }
+
+                single(.success(fetchOrg))
+            } catch {
+                print("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+
     //MARK: Channel
     
     public func fetchChannels(for orgUuid: String) -> Single<[Channel]> {
@@ -624,6 +652,22 @@ extension DataStore: DataStoring {
             do {
                 try self.dbPool.writeInTransaction { db in
                     try Playlist.deleteAll(db)
+                    return .commit
+                }
+                single(.success(()))
+            } catch {
+                DDLogDebug("error: \(error)")
+                single(.error(error))
+            }
+            return Disposables.create()
+        }
+    }
+    
+    public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
+        return Single.create { [unowned self] single in
+            do {
+                try self.dbPool.writeInTransaction { db in
+                    try Playlist.filter(Column("channelUuid") == forChannelUuid).deleteAll(db)
                     return .commit
                 }
                 single(.success(()))

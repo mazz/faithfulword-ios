@@ -88,10 +88,13 @@ public protocol ProductDataServicing {
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])>
 
+    func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
+    
     func persistedChannels(for orgUuid: String) -> Single<[Channel]>
     func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]>
     
     func persistedDefaultOrgs() -> Single<[Org]>
+    func persistedDefaultOrg() -> Single<Org?>
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
     func deletePersistedChannels() -> Single<Void>
@@ -422,6 +425,10 @@ extension DataService: ProductDataServicing {
                 self._orgs.value = orgs
             })
     }
+    
+    public func persistedDefaultOrg() -> Single<Org?> {
+        return dataStore.fetchDefaultOrg()
+    }
 
     public func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
         let moyaResponse = self.networkingApi.rx.request(.defaultOrgs(offset: offset, limit: limit))
@@ -503,6 +510,10 @@ extension DataService: ProductDataServicing {
                 return tuple
             })
         }
+    }
+    
+    public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
+        return dataStore.deletePlaylists(forChannelUuid)
     }
 
     // MARK: Channels

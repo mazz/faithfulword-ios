@@ -96,6 +96,7 @@ internal final class LanguageViewModel: RadioListViewModeling {
         self.selectionEvent.next { [unowned self] event in
             let identifier: String = self.datasource.value[event.section].languageIdentifiers[event.row]
             L10n.shared.language = identifier
+            self.languageService.swappedUserLanguage.value = identifier
 
             self.languageService.updateUserLanguage(languageIdentifier: identifier)
                 .asObservable()

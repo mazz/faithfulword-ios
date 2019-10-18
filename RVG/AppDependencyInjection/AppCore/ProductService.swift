@@ -14,7 +14,9 @@ public enum ProductServiceError: Error {
 public protocol ProductServicing {
 
     func persistedDefaultOrgs() -> Single<[Org]>
+    func persistedDefaultOrg() -> Single<Org?>
     func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
+    
     func deleteDefaultOrgs() -> Single<Void>
 
     func persistedChannels(for orgUuid: String) -> Single<[Channel]>
@@ -33,6 +35,8 @@ public protocol ProductServicing {
                         limit: Int,
                         cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
 
+    func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
+    
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
     var defaultOrgs: Field<[Org]> { get }
@@ -93,6 +97,9 @@ extension ProductService: ProductServicing {
                                                     cacheDirective: cacheDirective)
     }
 
+    public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
+        return dataService.deletePlaylists(forChannelUuid)
+    }
     
     public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {
         return dataService.persistedPlaylists(for: channelUuid)
@@ -124,6 +131,10 @@ extension ProductService: ProductServicing {
         return dataService.persistedDefaultOrgs()
     }
 
+    public func persistedDefaultOrg() -> Single<Org?> {
+        return dataService.persistedDefaultOrg()
+    }
+    
     public func fetchDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
         return dataService.fetchAndObserveDefaultOrgs(offset: offset, limit: limit)
     }

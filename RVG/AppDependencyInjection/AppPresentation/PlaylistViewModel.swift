@@ -1,6 +1,11 @@
 import Foundation
 import RxSwift
 import GRDB
+import L10n_swift
+
+protocol PlaylistViewModeling {
+    func item(at indexPath: IndexPath) -> PlaylistItemType
+}
 
 private struct Constants {
     static let limit: Int = 100
@@ -72,6 +77,7 @@ final class PlaylistViewModel {
     
     private let channelUuid: String!
     private let productService: ProductServicing!
+    private let languageService: LanguageServicing!
     private let reachability: RxClassicReachable!
     
     // MARK: Fields
@@ -89,10 +95,12 @@ final class PlaylistViewModel {
     
     internal init(channelUuid: String,
                   productService: ProductServicing,
+                  languageService: LanguageServicing,
                   reachability: RxClassicReachable                  
         ) {
         self.channelUuid = channelUuid
         self.productService = productService
+        self.languageService = languageService
         self.reachability = reachability
         setupDataSource()
     }
@@ -168,7 +176,45 @@ final class PlaylistViewModel {
                 self.fetchMorePlaylists()
             }.disposed(by: bag)
         
+        languageService.swappedUserLanguage
+            .asObservable()
+            .subscribe(onNext: { [weak self] swappedLanguage in
+                DDLogDebug("swappedLanguage user language: \(swappedLanguage) current language: \(L10n.shared.language) languageService user language: \(self?.languageService.userLanguage.value)")
+                
+                if let strongSelf = self {
+                    if swappedLanguage != "none" {
+                        strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
+                            .flatMap({ _ -> Single<Void> in
+                                
+//                                private var totalEntries: Int = -1
+//                                private var totalPages: Int = -1
+//                                private var pageSize: Int = -1
+//                                private var pageNumber: Int = -1
+//
+//                                private var lastOffset: Int = 0
 
+                                strongSelf.totalEntries = -1
+                                strongSelf.totalPages = -1
+                                strongSelf.pageSize = -1
+                                strongSelf.pageNumber = -1
+                                strongSelf.lastOffset = 0
+                                
+                                strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
+                                                   limit: Constants.limit,
+                                                   cacheDirective: .fetchAndReplace)
+                                return Single.just(())
+//
+//                                strongSelf.productService.fetchPlaylists(for: strongSelf.channelUuid, offset: strongSelf.lastOffset + 1, limit: Constants.limit, cacheDirective: .fetchAndReplace)
+                            })
+                            .asObservable()
+                            .subscribeAndDispose(by: strongSelf.bag)
+//                        .disposed(by: bag)
+                    }
+                }
+            }, onError: { error in
+                DDLogError("error: \(error)")
+            })
+            .disposed(by: bag)
     }
     
     func initialFetch() {
@@ -192,7 +238,11 @@ final class PlaylistViewModel {
     }
     
     func fetchPlaylist(offset: Int, limit: Int, cacheDirective: CacheDirective) {
-        productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (playlistResponse, playlists) in
+        DDLogDebug("fetchPlaylist self.channelUuid: \(self.channelUuid)")
+
+        productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheDirective: cacheDirective)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onSuccess: { (playlistResponse, playlists) in
             DDLogDebug("fetchPlaylists: \(playlists)")
             self.playlists.value.append(contentsOf: playlists)
             self.totalEntries = playlistResponse.totalEntries
