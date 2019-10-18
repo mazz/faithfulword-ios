@@ -9,6 +9,10 @@ import Fabric
 import Crashlytics
 import LNPopupController
 import CocoaLumberjack
+import GRDB
+
+// The shared database pool
+var dbPool: DatabasePool!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
@@ -24,8 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//        DDLog.add(DDOSLogger.sharedInstance)
-        
+        try! setupDatabase(application)
+
         setupDeviceInfoCache()
         
         DDLog.add(DDTTYLogger.sharedInstance)
@@ -56,6 +60,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
 
         return true
+    }
+    
+    private func setupDatabase(_ application: UIApplication) throws {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        let databasePath = documentsDirectory.appendingPathComponent("db.sqlite")
+        dbPool = try DataStore.openDatabase(atPath: databasePath.path)
+        
+        // Be a nice iOS citizen, and don't consume too much memory
+        // See https://github.com/groue/GRDB.swift/blob/master/README.md#memory-management
+        dbPool.setupMemoryManagement(in: application)
     }
     
     private func setupDeviceInfoCache() {
