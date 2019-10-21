@@ -37,4 +37,5 @@ target 'FaithfulWord' do
     pod 'Loaf'
     pod 'Starscream'
     pod 'SwiftKeychainWrapper'
+    pod 'SideMenu'
 end

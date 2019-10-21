@@ -2,6 +2,7 @@ import UIKit
 import RxSwift
 import SafariServices
 import LNPopupController
+import SideMenu
 
 internal enum MainRevealState {
     case closed
@@ -12,7 +13,6 @@ internal enum MainRevealState {
 internal final class MainCoordinator: NSObject {
     // MARK: Fields
 
-    private let menuTransitionManager = MenuTransitionManager()
     private var sideMenuController: SideMenuViewController?
     internal var mainNavigationController: UINavigationController!
     internal var gospelChannelUuid: String?
@@ -204,19 +204,38 @@ extension MainCoordinator: NavigationCoordinating {
     }
 
     func swapInSideMenuFlow() {
-        resettableSideMenuCoordinator.value.flow(with: { [unowned self] sideMenuViewController in
-            sideMenuViewController.transitioningDelegate = menuTransitionManager
-            menuTransitionManager.delegate = self
+        resettableSideMenuCoordinator.value.flow(with: { [weak self] sideMenuViewController in
+            
+            if let strongSelf = self,
+                let controller = sideMenuViewController as? SideMenuViewController {
+                strongSelf.sideMenuController = controller
+                handle(eventsFrom: (strongSelf.sideMenuController?.viewModel)!)
 
-            if let controller = sideMenuViewController as? SideMenuViewController {
-                self.sideMenuController = controller
-                handle(eventsFrom: (self.sideMenuController?.viewModel)!)
+                let menu = SideMenuNavigationController(rootViewController: controller)
+                var settings = SideMenuSettings()
+                settings.menuWidth = controller.view.frame.width*0.7
+                settings.statusBarEndAlpha = 0
+                let menuPresentationStyle: SideMenuPresentationStyle = .viewSlideOut
+                menuPresentationStyle.onTopShadowOpacity = 0.75
+                settings.completeGestureDuration = 0.25
+                settings.completionCurve = .easeInOut
+                settings.dismissDuration = 0.25
+                settings.presentationStyle = menuPresentationStyle
+                menu.settings = settings
+                menu.leftSide = true
+
+                SideMenuManager.default.leftMenuNavigationController = menu
+                SideMenuManager.default.addPanGestureToPresent(toView: strongSelf.mainNavigationController!.navigationBar)
+                SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: strongSelf.mainNavigationController!.view)
+                strongSelf.mainNavigationController.present(menu, animated: true, completion: nil)
             }
 
-            self.mainNavigationController.present(sideMenuViewController, animated: true)
-            }, completion: { [unowned self] _ in
-                self.mainNavigationController.dismiss(animated: true)
-                self.resettableSideMenuCoordinator.reset()
+            }, completion: { [weak self] _ in
+                
+                if let strongSelf = self {
+                    strongSelf.mainNavigationController.dismiss(animated: true)
+                    strongSelf.resettableSideMenuCoordinator.reset()
+                }
             }, context: .present)
     }
 
@@ -259,66 +278,10 @@ extension MainCoordinator: NavigationCoordinating {
     private func goToHamburger() {
         DDLogDebug("goToHamburger")
         self.swapInSideMenuFlow()
-        //        tappedHamburger.onNext(mainViewRevealed)
-
-
-        //        let mainViewController: MainViewController = self.mainNavigationController.viewControllers[0] as! MainViewController
-        //        self.mainNavigationController.viewControllers[0].transitioningDelegate = self
-
-
-        /*
-         let mainNavigationView: UIView = self.mainNavigationController.view
-         let mainView: UIView = self.mainNavigationController.viewControllers[0].view
-
-         var targetRect: CGRect!
-         let openX: CGFloat = mainView.frame.size.width * 0.85
-
-         switch mainViewRevealed {
-         case .closed:
-         targetRect = CGRect(x: openX,
-         y: originalMenuFrame.origin.y,
-         width: originalMenuFrame.size.width,
-         height: originalMenuFrame.size.height)
-         case .open:
-         targetRect = CGRect(x: 0.0,
-         y: originalMenuFrame.origin.y,
-         width: originalMenuFrame.size.width,
-         height: originalMenuFrame.size.height)
-         }
-         let hamburgerAnimation: UIViewPropertyAnimator = UIViewPropertyAnimator(duration: 0.5, dampingRatio: 0.8) {
-         mainNavigationView.frame = targetRect
-         }
-
-         hamburgerAnimation.addCompletion { [unowned self] position in
-         switch self.mainViewRevealed {
-         case .closed:
-         mainView.isUserInteractionEnabled = false
-         self.mainViewRevealed = .open
-         case .open:
-         mainView.isUserInteractionEnabled = true
-         self.mainViewRevealed = .closed
-         }
-         }
-         hamburgerAnimation.startAnimation()
-
-         */
-
-        //        self.resettableDeviceSelectionCoordinator.value.flow(with: { viewController in
-        //            self.mainNavigationController.present(viewController, animated: true)
-        //        }, completion: { _ in
-        //            self.mainNavigationController.dismiss(animated: true)
-        //            self.resettableDeviceSelectionCoordinator.reset()
-        //        }, context: .present)
     }
 
     private func goToSettings() {
         DDLogDebug("goToSettings")
-        //        resettableSettingsCoordinator.value.flow(with: { [unowned self] settingsFlowViewController in
-        //            self.mainNavigationController.present(settingsFlowViewController, animated: true)
-        //        }, completion: { [unowned self] _ in
-        //            self.mainNavigationController.dismiss(animated: true)
-        //            self.resettableSettingsCoordinator.reset()
-        //        }, context: .present)
     }
 }
 
@@ -450,7 +413,7 @@ extension MainCoordinator {
     }
 }
 
-extension MainCoordinator: MenuTransitionManagerDelegate {
+extension MainCoordinator {
     func dismiss() {
         self.mainNavigationController.dismiss(animated: true, completion: nil)
     }

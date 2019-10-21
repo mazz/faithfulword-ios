@@ -115,6 +115,7 @@ PODS:
   - RxRelay (5.0.0):
     - RxSwift (~> 5)
   - RxSwift (5.0.0)
+  - SideMenu (6.4.4)
   - Starscream (3.1.0)
   - SwiftKeychainWrapper (3.4.0)
   - SwiftLint (0.35.0)
@@ -143,6 +144,7 @@ DEPENDENCIES:
   - RxCocoa
   - RxDataSources
   - RxSwift
+  - SideMenu
   - Starscream
   - SwiftKeychainWrapper
   - SwiftLint
@@ -151,7 +153,7 @@ DEPENDENCIES:
   - XLActionController
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Alamofire
     - CocoaLumberjack
     - Crashlytics
@@ -189,6 +191,8 @@ SPEC REPOS:
     - Swinject
     - UICircularProgressRing
     - XLActionController
+  trunk:
+    - SideMenu
 
 SPEC CHECKSUMS:
   Alamofire: f9450d3c7f6bea2ad62e7a541c3e9b186c7991d6
@@ -222,6 +226,7 @@ SPEC CHECKSUMS:
   RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
   RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
+  SideMenu: e49a7d61d1f50e9bdaa866bbb9fc7d903c6400ed
   Starscream: 08172b481e145289c4930cb567230fb55897cfa4
   SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
   SwiftLint: 5553187048b900c91aa03552807681bb6b027846
@@ -229,6 +234,6 @@ SPEC CHECKSUMS:
   UICircularProgressRing: e700fb0505328e88ee53c4ed92bee6d1a5b8bbe3
   XLActionController: ec9207228162569df1c90dccded2e88d0f39b2e7
 
-PODFILE CHECKSUM: 42d4e70cec7e933f99817ce82fb03d4ccc5affa1
+PODFILE CHECKSUM: 4fa2178fd8ea1e9422ad4b10af2b89a610bbc956
 
-COCOAPODS: 1.6.1
+COCOAPODS: 1.8.4
