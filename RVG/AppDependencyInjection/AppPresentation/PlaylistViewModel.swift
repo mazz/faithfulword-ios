@@ -185,30 +185,20 @@ final class PlaylistViewModel {
                     if swappedLanguage != "none" {
                         strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
                             .flatMap({ _ -> Single<Void> in
-                                
-//                                private var totalEntries: Int = -1
-//                                private var totalPages: Int = -1
-//                                private var pageSize: Int = -1
-//                                private var pageNumber: Int = -1
-//
-//                                private var lastOffset: Int = 0
-
                                 strongSelf.totalEntries = -1
                                 strongSelf.totalPages = -1
                                 strongSelf.pageSize = -1
                                 strongSelf.pageNumber = -1
                                 strongSelf.lastOffset = 0
                                 
+                                strongSelf.sections.value = []
                                 strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
                                                    limit: Constants.limit,
                                                    cacheDirective: .fetchAndReplace)
                                 return Single.just(())
-//
-//                                strongSelf.productService.fetchPlaylists(for: strongSelf.channelUuid, offset: strongSelf.lastOffset + 1, limit: Constants.limit, cacheDirective: .fetchAndReplace)
                             })
                             .asObservable()
                             .subscribeAndDispose(by: strongSelf.bag)
-//                        .disposed(by: bag)
                     }
                 }
             }, onError: { error in
@@ -226,7 +216,7 @@ final class PlaylistViewModel {
                 case .reachable(_):
                     self.fetchPlaylist(offset: self.lastOffset + 1,
                                        limit: Constants.limit,
-                                       cacheDirective: .fetchAndReplace)
+                                       cacheDirective: .fetchAndAppend)
                 }
             } else {
                 self.playlists.value = playlists
@@ -239,52 +229,57 @@ final class PlaylistViewModel {
     
     func fetchPlaylist(offset: Int, limit: Int, cacheDirective: CacheDirective) {
         DDLogDebug("fetchPlaylist self.channelUuid: \(self.channelUuid)")
-
+        
         productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheDirective: cacheDirective)
             .observeOn(MainScheduler.instance)
             .subscribe(onSuccess: { (playlistResponse, playlists) in
-            DDLogDebug("fetchPlaylists: \(playlists)")
-            self.playlists.value.append(contentsOf: playlists)
-            self.totalEntries = playlistResponse.totalEntries
-            self.totalPages = playlistResponse.totalPages
-            self.pageSize = playlistResponse.pageSize
-            self.pageNumber = playlistResponse.pageNumber
-
-            self.lastOffset += 1
-            
-            self.emptyFetchResult.value = (playlists.count == 0)
-
-        }) { error in
-            
-            if let dbError: DatabaseError = error as? DatabaseError {
-                switch dbError.extendedResultCode {
-                case .SQLITE_CONSTRAINT:            // any constraint error
-                    DDLogDebug("SQLITE_CONSTRAINT error")
-                    // it is possible that we already have some or all the playlists
-                    // from a previous run and that the last fetch tried to
-                    // insert values that were already present. So increment
-                    // lastOffset by one so that eventually we will stop getting
-                    // errors
-//                    if self.playlists.value.count == limit && self.totalEntries == -1 {
-//                        self.lastOffset += 1
-//                    }
-                    
-                    // we got a SQLITE_CONSTRAINT error, assume that we at least have
-                    // `limit` number of items
-                    // this will stop the data service from continually calling the server
-                    // because of the fetchMorePlaylists() guards
-                    if self.playlists.value.count >= limit && self.totalEntries == -1 {
-                        self.totalEntries = self.playlists.value.count
+                DDLogDebug("fetchPlaylists: \(playlists)")
+                
+                if cacheDirective == .fetchAndReplace {
+                    self.playlists.value = playlists
+                } else {
+                    self.playlists.value.append(contentsOf: playlists)
+                }
+                self.totalEntries = playlistResponse.totalEntries
+                self.totalPages = playlistResponse.totalPages
+                self.pageSize = playlistResponse.pageSize
+                self.pageNumber = playlistResponse.pageNumber
+                
+                self.lastOffset += 1
+                
+                self.emptyFetchResult.value = (playlists.count == 0)
+                
+            }) { error in
+                
+                if let dbError: DatabaseError = error as? DatabaseError {
+                    switch dbError.extendedResultCode {
+                    case .SQLITE_CONSTRAINT:            // any constraint error
+                        DDLogDebug("SQLITE_CONSTRAINT error")
+                        // it is possible that we already have some or all the playlists
+                        // from a previous run and that the last fetch tried to
+                        // insert values that were already present. So increment
+                        // lastOffset by one so that eventually we will stop getting
+                        // errors
+                        //                    if self.playlists.value.count == limit && self.totalEntries == -1 {
+                        //                        self.lastOffset += 1
+                        //                    }
+                        
+                        // we got a SQLITE_CONSTRAINT error, assume that we at least have
+                        // `limit` number of items
+                        // this will stop the data service from continually calling the server
+                        // because of the fetchMorePlaylists() guards
+                        if self.playlists.value.count >= limit && self.totalEntries == -1 {
+                            self.totalEntries = self.playlists.value.count
+                        }
+                    default:                            // any other database error
+                        DDLogDebug("some db error: \(dbError)")
                     }
-                default:                            // any other database error
-                    DDLogDebug("some db error: \(dbError)")
+                    
+                } else {
+                    DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
                 }
                 
-            } else {
-                DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
-            }
-            
-            
+                
         }.disposed(by: self.bag)
     }
     
@@ -293,7 +288,6 @@ final class PlaylistViewModel {
             self.reachability.startNotifier().asObservable()
                 .subscribe(onNext: { networkStatus in
                     self.networkStatus.value = networkStatus
-//                    single(.success(()))
                     switch networkStatus {
                     case .unknown:
                         DDLogDebug("PlaylistViewModel \(self.reachability.status.value)")
@@ -303,8 +297,5 @@ final class PlaylistViewModel {
                         DDLogDebug("PlaylistViewModel \(self.reachability.status.value)")
                     }
                 }).disposed(by: self.bag)
-            
-//            return Disposables.create { }
-//        }
     }
 }
