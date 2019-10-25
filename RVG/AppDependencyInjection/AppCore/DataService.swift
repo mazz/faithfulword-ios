@@ -901,57 +901,19 @@ extension DataService: ProductDataServicing {
     }
 
     public func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]> {
-        var languageResponse: LanguagesSupportedResponse!
-        var previousOffset = 0
-        var totalEntries = -1
-        var loadedSoFar = -1
-        var fetchState: FetchState = .hasNotFetched
-        
-        if let cachedResponse: Response = self._responseMap["languagesResponse"] {
-            do {
-                fetchState = .hasFetched
-                
-                languageResponse = try cachedResponse.map(LanguagesSupportedResponse.self)
-                totalEntries = languageResponse.totalEntries
-                let cachedPageNumber: Int = languageResponse.pageNumber
-                let cachedPageSize: Int = languageResponse.pageSize
-                
-                loadedSoFar = cachedPageNumber * cachedPageSize
-                previousOffset = cachedPageNumber
-                
-                if loadedSoFar >= totalEntries {
-                    DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
-                    return Single.error(DataServiceError.offsetOutofRange)
+        return self.networkingApi.rx.request(.languagesSupported(offset: 0, limit: stride))
+            .map { response -> LanguagesSupportedResponse in
+                do {
+                    return try response.map(LanguagesSupportedResponse.self)
+                } catch {
+                    DDLogError("Moya decode error: \(error)")
+                    throw DataServiceError.decodeFailed
                 }
-            } catch {
-                DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
-            }
+        }.flatMap { languagesSupportedResponse -> Single<[LanguageIdentifier]> in
+            DDLogDebug("languagesSupportedResponse.result: \(languagesSupportedResponse.result)")
+            return Single.just(languagesSupportedResponse.result)
         }
-        
-        
-        switch self.networkStatus.value {
-        case .unknown:
-            return dataStore.fetchBibleLanguages()
-        case .notReachable:
-            return dataStore.fetchBibleLanguages()
-        case .reachable(_):
-            //        var categoryListing: Single<[LanguageIdentifier]> = Single.just([])
-            return self.networkingApi.rx.request(.languagesSupported(offset: previousOffset + 1, limit: stride))
-                .map { response -> LanguagesSupportedResponse in
-                    do {
-                        // cache response for the next call
-                        self._responseMap["languagesResponse"] = response
-                        return try response.map(LanguagesSupportedResponse.self)
-                    } catch {
-                        DDLogError("Moya decode error: \(error)")
-                        throw DataServiceError.decodeFailed
-                    }
-                }.flatMap { languagesSupportedResponse -> Single<[LanguageIdentifier]> in
-                    DDLogDebug("languagesSupportedResponse.result: \(languagesSupportedResponse.result)")
-                    return Single.just(languagesSupportedResponse.result)
-                }
-                .flatMap { [unowned self] in self.replacePersistedBibleLanguages(bibleLanguages: $0) }
-        }
+        .flatMap { [unowned self] in self.replacePersistedBibleLanguages(bibleLanguages: $0) }
     }
 
     public func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]> {
