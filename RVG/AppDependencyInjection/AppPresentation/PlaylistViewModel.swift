@@ -235,6 +235,7 @@ final class PlaylistViewModel {
             .subscribe(onSuccess: { (playlistResponse, playlists) in
                 DDLogDebug("fetchPlaylists: \(playlists)")
                 
+                // sometimes we need to replace the sections, for instance when the user changed the language
                 if cacheDirective == .fetchAndReplace {
                     self.playlists.value = playlists
                 } else {

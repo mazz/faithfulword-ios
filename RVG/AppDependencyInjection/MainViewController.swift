@@ -131,7 +131,7 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
                             self.viewModelSections = sections
                             self.collectionView.reloadData()
                         }
-                    } else {                        
+                    } else {
                         let currentItemsCount: Int = self.viewModelSections[0].items.count
                         let appendCount: Int = sections[0].items.count - currentItemsCount
                         let newItems = Array(sections[0].items.suffix(appendCount))

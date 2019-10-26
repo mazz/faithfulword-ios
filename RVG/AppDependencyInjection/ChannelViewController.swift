@@ -109,7 +109,7 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
     private func reactToViewModel() {
         viewModel.sections.asObservable()
             .observeOn(MainScheduler.instance)
-            .filter{ $0[0].items.count > 0 }
+//            .filter{ $0[0].items.count > 0 }
             .next { [unowned self] sections in
                 // first time loading sections
                 if self.itemsUpdatedAtLeastOnce == false {
@@ -118,21 +118,45 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
                     self.itemsUpdatedAtLeastOnce = true
                 }
                 else {
-                    let currentItemsCount: Int = self.viewModelSections[0].items.count
-                    let appendCount: Int = sections[0].items.count - currentItemsCount
-                    let newItems = Array(sections[0].items.suffix(appendCount))
-                    DDLogDebug("newItems.count: \(newItems.count)")
-                    
-                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
-                    DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
-                    self.viewModelSections = sections
-                    
-                    DispatchQueue.main.async {
-                        self.collectionView.performBatchUpdates({
-                            self.collectionView.insertItems(at: insertIndexPaths)
-                        }, completion: { result in
+                    // if sections are empty, that means the viewmodels sections were
+                    // deleted(probably because the language was changed)
+                    // in this case just hard reloadData() similar to when
+                    // medialistingviewcontroller is filtering
+
+                    if sections.count == 0 || self.viewModelSections.count == 0 {
+                        DispatchQueue.main.async {
+                            self.viewModelSections = sections
                             self.collectionView.reloadData()
-                        })
+                        }
+                    } else {
+                        let currentItemsCount: Int = self.viewModelSections[0].items.count
+                        let appendCount: Int = sections[0].items.count - currentItemsCount
+                        
+                        // check if we're decreasing the list count, just hard reloadData()
+                        if appendCount <= 0 {
+                            DispatchQueue.main.async {
+                                UIView.performWithoutAnimation {
+                                    self.viewModelSections = sections
+                                    self.collectionView.reloadData()
+                                }
+                            }
+                        } else {
+                            let newItems = Array(sections[0].items.suffix(appendCount))
+                            DDLogDebug("newItems.count: \(newItems.count)")
+                            
+                            let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
+                            DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
+                            self.viewModelSections = sections
+                            
+                            DispatchQueue.main.async {
+                                self.collectionView.performBatchUpdates({
+                                    self.collectionView.insertItems(at: insertIndexPaths)
+                                }, completion: { result in
+                                    self.collectionView.reloadData()
+                                })
+                            }
+                        }
+                        
                     }
                 }
             }.disposed(by: bag)
