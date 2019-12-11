@@ -59,7 +59,7 @@ extension MediaDetailsCoordinator: NavigationCoordinating {
             //                let presenterName = playable.presenterName,
             if let thumbImage = UIImage(named: "creation") {
                 popupController.popupItem.title = playable.localizedname
-                popupController.popupItem.subtitle = playable.presenterName ?? "Unknown"
+                popupController.popupItem.subtitle = playable.presenter_name ?? "Unknown"
                 popupController.popupItem.image = thumbImage
                 //                popupController.albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
                 //                popupController.fullAlbumArtImageView.image = thumbImage

@@ -4,15 +4,15 @@ import GRDB
 public struct Org: Codable {
 //    var userId: Int64?
     public var uuid: String
-    public var orgId: Int
-    public var bannerPath: String?
+    public var org_id: Int
+    public var banner_path: String?
     public var basename: String
     public var shortname: String
-    public var insertedAt: TimeInterval
-    public var updatedAt: TimeInterval
-    public var largeThumbnailPath: String?
-    public var medThumbnailPath: String?
-    public var smallThumbnailPath: String?
+    public var inserted_at: String
+    public var updated_at: String
+    public var large_thumbnail_path: String?
+    public var med_thumbnail_path: String?
+    public var small_thumbnail_path: String?
 
     //
     // a Org is one-to-many to Channel
@@ -69,15 +69,15 @@ extension Org {
     enum Columns {
 //        static let userId = Column("userId")
         static let uuid = Column("uuid")
-        static let orgId = Column("orgId")
-        static let bannerPath = Column("bannerPath")
+        static let org_id = Column("org_id")
+        static let banner_path = Column("banner_path")
         static let basename = Column("basename")
         static let shortname = Column("shortname")
-        static let insertedAt = Column("insertedAt")
-        static let updatedAt = Column("updatedAt")
-        static let largeThumbnailPath = Column("largeThumbnailPath")
-        static let medThumbnailPath = Column("medThumbnailPath")
-        static let smallThumbnailPath = Column("smallThumbnailPath")
+        static let inserted_at = Column("inserted_at")
+        static let updated_at = Column("updated_at")
+        static let large_thumbnail_path = Column("large_thumbnail_path")
+        static let med_thumbnail_path = Column("med_thumbnail_path")
+        static let small_thumbnail_path = Column("small_thumbnail_path")
     }
 }
 

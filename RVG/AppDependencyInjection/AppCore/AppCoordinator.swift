@@ -400,7 +400,7 @@ extension AppCoordinator: NavigationCoordinating {
                         */
                         strongSelf.accountService.replaceAppUser(user: UserAppUser(userId: 0,
                                                                               uuid: NSUUID().uuidString,
-                                                                              orgId: org.orgId,
+                                                                              orgId: org.org_id,
                                                                               name: name,
                                                                               email: "\(faithfulWordAppIdx)@faithfulword.app",
                             session: "fake.\(NSUUID().uuidString)",

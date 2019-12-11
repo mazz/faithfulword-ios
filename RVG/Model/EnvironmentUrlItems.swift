@@ -17,7 +17,8 @@ extension EnvironmentUrlItemKey {
     static var LocalServerRootUrl: EnvironmentUrlItemKey {
         //
 //        return EnvironmentUrlItemKey(rawValue: "http://mhanna-mbp15.local:4000")
-        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.13:4000")
+        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.10:4000")
+//        return EnvironmentUrlItemKey(rawValue: "http://192.168.2.22:4000")
 //        return EnvironmentUrlItemKey(rawValue: "http://127.0.0.1:4000")
     }
     static var S3BaseUrl: EnvironmentUrlItemKey {

@@ -2,7 +2,7 @@ import Foundation
 import Moya
 
 private enum Constants {
-    static let versionPrefix: String = "/v1.3"
+    static let versionPrefix: String = "/api/v1.3"
 }
 
 public enum FwbcApiService {

@@ -81,14 +81,14 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                 let weakSelf = self {
                 // clear-out from interrupted items
                 weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
-                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
         notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
             DDLogDebug("notification: \(notification)")
             if let mediaItem: MediaItem = notification.object as? MediaItem,
                 let weakSelf = self {
-                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
 
@@ -120,16 +120,16 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                             // clear-out from interrupted items
                             weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
                             
-                            weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                            weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                         })) } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
                         actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                            weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                            weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                         }))
                     }
                     else {
                         actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                             //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
-                            weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                            weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                             
                         }))
                     }
@@ -214,8 +214,8 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
 
     private func bindDownloadListingViewModel() {
         
-        Observable.combineLatest(downloadListingViewModel.activeFileDownloads(viewModel.playable.playlistUuid).asObservable(),
-                                 downloadListingViewModel.storedFileDownloads(for: viewModel.playable.playlistUuid).asObservable())
+        Observable.combineLatest(downloadListingViewModel.activeFileDownloads(viewModel.playable.playlist_uuid).asObservable(),
+                                 downloadListingViewModel.storedFileDownloads(for: viewModel.playable.playlist_uuid).asObservable())
             .subscribe(onNext: { activeDownloads, fileDownloads in
                 DDLogDebug("activeDownloads: \(activeDownloads) fileDownloads: \(fileDownloads)")
                 
@@ -265,7 +265,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
 
         // the moment the viewmodel playlistuuid changes we
         // get the file downloads for that playlist
-        downloadListingViewModel.storedFileDownloads(for: viewModel.playable.playlistUuid)
+        downloadListingViewModel.storedFileDownloads(for: viewModel.playable.playlist_uuid)
             .asObservable()
             .subscribe(onNext: { fileDownloads in
                 
@@ -273,7 +273,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
                     self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
                 })
                 
-                DDLogDebug("viewModel.playlistUuid: \(self.viewModel.playable.playlistUuid) fileDownloads: \(fileDownloads)")
+                DDLogDebug("viewModel.playlistUuid: \(self.viewModel.playable.playlist_uuid) fileDownloads: \(fileDownloads)")
             })
             .disposed(by: bag)
         
@@ -399,7 +399,7 @@ class MediaDetailsViewController: UIViewController, UICollectionViewDataSource /
     @objc func handleUserDidTapCancelNotification(notification: Notification) {
         DDLogDebug("notification: \(notification)")
         if let mediaItem: MediaItem = notification.object as? MediaItem {
-            self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+            self.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
         }
         
         
@@ -702,7 +702,7 @@ extension MediaDetailsViewController: UICollectionViewDelegate {
 //            case .playable(let item):
                 let detailCell = collectionView.dequeueReusableCell(withReuseIdentifier: MediaItemDetailsCell.description(), for: indexPath) as! MediaItemDetailsCell
                 
-                detailCell.set(playable: playable, title: playable.localizedname, presenter: playable.presenterName ?? NSLocalizedString("Unknown Presenter", comment: "").l10n(), showBottomSeparator: showBottomSeparator, showTitle: false)
+                detailCell.set(playable: playable, title: playable.localizedname, presenter: playable.presenter_name ?? NSLocalizedString("Unknown Presenter", comment: "").l10n(), showBottomSeparator: showBottomSeparator, showTitle: false)
                 return detailCell
 //            }
         }

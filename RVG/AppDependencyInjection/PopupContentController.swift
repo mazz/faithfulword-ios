@@ -151,7 +151,7 @@ class PopupContentController: UIViewController {
                 guard let path: String = playable.path,
                     let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value,
                     let localizedName: String = playable.localizedname,
-                    let presenterName: String = playable.presenterName ?? "Unknown",
+                    let presenterName: String = playable.presenter_name ?? "Unknown",
                     let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                     let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) else { return }
 
@@ -162,8 +162,8 @@ class PopupContentController: UIViewController {
                 if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable {
 //                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
 //                    historyPlayable.mediaCategory == "preaching" {
-                    playbackPosition = historyPlayable.playbackPosition
-                    playableUuid = historyPlayable.playableUuid
+                    playbackPosition = historyPlayable.playback_position
+                    playableUuid = historyPlayable.playable_uuid
                 }
                 
                 var playbackRate: Float = 1.0
@@ -190,7 +190,7 @@ class PopupContentController: UIViewController {
                 // pretty sure we can depend on selectedPlayable to be ready
                 
                 if let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value {
-                    self.downloadingViewModel.downloadAssetPlaylistUuid.value = selectedPlayable.playlistUuid
+                    self.downloadingViewModel.downloadAssetPlaylistUuid.value = selectedPlayable.playlist_uuid
                 }
 
                 // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will

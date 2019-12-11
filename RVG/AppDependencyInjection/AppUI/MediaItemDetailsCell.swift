@@ -74,10 +74,9 @@ final class MediaItemDetailsCell: MagazineLayoutCollectionViewCell {
 
         presenterLabel.text = presenter
         if let mediaItem: MediaItem = playable as? MediaItem,
-            let presentedAt: TimeInterval = mediaItem.presentedAt {
-
-            let presentedDate: Date = Date(timeIntervalSince1970: presentedAt)
-            
+            let presentedAt: String = mediaItem.presented_at,
+            let presentedDate: Date = presentedAt.iso8601
+        {
             let dateFormat: DateFormatter = DateFormatter()
             dateFormat.timeStyle = .none
             dateFormat.dateStyle = .medium

@@ -4,20 +4,20 @@ import GRDB
 public struct Channel: Codable {
 //    var userId: Int64?
     var uuid: String
-    public var orgUuid: String
-    public var bannerPath: String?
+    public var org_uuid: String
+    public var banner_path: String?
     public var basename: String
     public var ordinal: Int?
-    public var insertedAt: TimeInterval
-    public var updatedAt: TimeInterval
-    public var largeThumbnailPath: String?
-    public var medThumbnailPath: String?
-    public var smallThumbnailPath: String?
+    public var inserted_at: String
+    public var updated_at: String
+    public var large_thumbnail_path: String?
+    public var med_thumbnail_path: String?
+    public var small_thumbnail_path: String?
 
     //
     // a Channel is many-to-one to Org
     //
-    static let channelForeignKey = ForeignKey([Columns.orgUuid])
+    static let channelForeignKey = ForeignKey([Columns.org_uuid])
     
     //
     // a Channel is one-to-many to Playlist
@@ -77,15 +77,15 @@ extension Channel {
     enum Columns {
 //        static let userId = Column("userId")
         static let uuid = Column("uuid")
-        static let orgUuid = Column("orgUuid")
-        static let bannerPath = Column("bannerPath")
+        static let org_uuid = Column("org_uuid")
+        static let banner_path = Column("banner_path")
         static let basename = Column("basename")
         static let ordinal = Column("ordinal")
-        static let insertedAt = Column("insertedAt")
-        static let updatedAt = Column("updatedAt")
-        static let largeThumbnailPath = Column("largeThumbnailPath")
-        static let medThumbnailPath = Column("medThumbnailPath")
-        static let smallThumbnailPath = Column("smallThumbnailPath")
+        static let inserted_at = Column("inserted_at")
+        static let update_at = Column("update_at")
+        static let large_thumbnail_path = Column("large_thumbnail_path")
+        static let med_thumbnail_path = Column("med_thumbnail_path")
+        static let small_thumbnail_path = Column("small_thumbnail_path")
     }
 }
 

@@ -201,7 +201,7 @@ internal final class HistoryPlaybackViewModel {
                     icon = "chapter"
                 }
                 var presenter: String = NSLocalizedString("Unknown Presenter", comment: "").l10n()
-                if let presenterName: String = $0.presenterName {
+                if let presenterName: String = $0.presenter_name {
                     presenter = presenterName
                 }
                 
@@ -245,7 +245,7 @@ internal final class HistoryPlaybackViewModel {
                     icon = "chapter"
                 }
                 var presenter: String = NSLocalizedString("Unknown Presenter", comment: "").l10n()
-                if let presenterName: String = $0.presenterName {
+                if let presenterName: String = $0.presenter_name {
                     presenter = presenterName
                 }
                 
@@ -325,11 +325,11 @@ internal final class HistoryPlaybackViewModel {
             
             self.filteredMedia.value = self.media.value
             
-            self.totalEntries = mediaItemResponse.totalEntries
-            self.totalPages = mediaItemResponse.totalPages
-            self.pageSize = mediaItemResponse.pageSize
-            self.pageNumber = mediaItemResponse.pageNumber
-            if let mediaCategoryString = mediaItems.first?.mediaCategory {
+            self.totalEntries = mediaItemResponse.total_entries
+            self.totalPages = mediaItemResponse.total_pages
+            self.pageSize = mediaItemResponse.page_size
+            self.pageNumber = mediaItemResponse.page_number
+            if let mediaCategoryString = mediaItems.first?.media_category {
                 self.mediaCategory = MediaCategory(rawValue: mediaCategoryString)
             }
             

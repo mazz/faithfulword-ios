@@ -135,7 +135,7 @@ final class PlaylistViewModel {
         self.playlists.asObservable()
             .map { $0.map {
                 var icon: String = "feetprint"
-                switch $0.mediaCategory {
+                switch $0.media_category {
                 case MediaCategory.bible.rawValue:
                     icon = "books-stack-of-three"
                 case MediaCategory.gospel.rawValue:
@@ -161,7 +161,7 @@ final class PlaylistViewModel {
                 default:
                     icon = "creation"
                 }
-                return PlaylistItemType.drillIn(type: .playlistItemType(item: $0, mediaCategory: $0.mediaCategory), iconName: icon, title: $0.localizedname, showBottomSeparator: true)
+                return PlaylistItemType.drillIn(type: .playlistItemType(item: $0, mediaCategory: $0.media_category), iconName: icon, title: $0.localizedname, showBottomSeparator: true)
                 }
             }
             .next { [unowned self] list in
@@ -241,10 +241,10 @@ final class PlaylistViewModel {
                 } else {
                     self.playlists.value.append(contentsOf: playlists)
                 }
-                self.totalEntries = playlistResponse.totalEntries
-                self.totalPages = playlistResponse.totalPages
-                self.pageSize = playlistResponse.pageSize
-                self.pageNumber = playlistResponse.pageNumber
+                self.totalEntries = playlistResponse.total_entries
+                self.totalPages = playlistResponse.total_pages
+                self.pageSize = playlistResponse.page_size
+                self.pageNumber = playlistResponse.page_number
                 
                 self.lastOffset += 1
                 

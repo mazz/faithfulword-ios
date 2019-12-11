@@ -1,11 +1,11 @@
 import Foundation
 
 public struct ChannelResponse: Codable {
-    public var pageSize: Int
-    public var pageNumber: Int
+    public var page_size: Int
+    public var page_number: Int
     public var result: [Channel]
     public var status: String
-    public var totalPages: Int
-    public var totalEntries: Int
+    public var total_pages: Int
+    public var total_entries: Int
     public var version: String
 }

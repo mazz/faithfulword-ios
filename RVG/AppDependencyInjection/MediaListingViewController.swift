@@ -132,7 +132,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 let weakSelf = self {
                 // clear-out from interrupted items
                 weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
-                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
         
@@ -141,7 +141,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("notification: \(notification)")
             if let mediaItem: MediaItem = notification.object as? MediaItem,
                 let weakSelf = self {
-                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
 
@@ -173,16 +173,16 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     // clear-out from interrupted items
                     weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
                     
-                    weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                    weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                 })) } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
                     actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                        weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                        weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                     }))
                 }
                 else {
                     actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                         //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
-                        weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                        weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                         
                     }))
                 }

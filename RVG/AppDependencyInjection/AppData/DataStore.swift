@@ -117,18 +117,18 @@ public final class DataStore {
             do {
                 try db.create(table: "org") { orgTable in
                     DDLogDebug("created: \(orgTable)")
-                    //                orgTable.column("chapterId", .integer).primaryKey()
+//                    orgTable.column("chapterId", .integer).primaryKey()
                     
                     orgTable.column("uuid", .text).primaryKey()
-                    orgTable.column("bannerPath", .text)
-                    orgTable.column("orgId", .integer)
+                    orgTable.column("banner_path", .text)
+                    orgTable.column("org_id", .integer)
                     orgTable.column("basename", .text)
                     orgTable.column("shortname", .text)
-                    orgTable.column("insertedAt", .double)
-                    orgTable.column("updatedAt", .double)
-                    orgTable.column("largeThumbnailPath", .text)
-                    orgTable.column("medThumbnailPath", .text)
-                    orgTable.column("smallThumbnailPath", .text)
+                    orgTable.column("inserted_at", .text)
+                    orgTable.column("updated_at", .text)
+                    orgTable.column("large_thumbnail_path", .text)
+                    orgTable.column("med_thumbnail_path", .text)
+                    orgTable.column("small_thumbnail_path", .text)
                 }
             }
             catch {
@@ -141,15 +141,15 @@ public final class DataStore {
                     //                orgTable.column("chapterId", .integer).primaryKey()
                     
                     channelTable.column("uuid", .text).primaryKey()
-                    channelTable.column("orgUuid", .text).references("org", onDelete: .cascade)
-                    channelTable.column("bannerPath", .text)
+                    channelTable.column("org_uuid", .text).references("org", onDelete: .cascade)
+                    channelTable.column("banner_path", .text)
                     channelTable.column("basename", .text)
                     channelTable.column("ordinal", .integer)
-                    channelTable.column("insertedAt", .double)
-                    channelTable.column("updatedAt", .double)
-                    channelTable.column("largeThumbnailPath", .text)
-                    channelTable.column("medThumbnailPath", .text)
-                    channelTable.column("smallThumbnailPath", .text)
+                    channelTable.column("inserted_at", .text)
+                    channelTable.column("updated_at", .text)
+                    channelTable.column("large_thumbnail_path", .text)
+                    channelTable.column("med_thumbnail_path", .text)
+                    channelTable.column("small_thumbnail_path", .text)
                 }
             }
             catch {
@@ -159,17 +159,17 @@ public final class DataStore {
                 try db.create(table: "playlist") { playlistTable in
                     DDLogDebug("created: \(playlistTable)")
                     playlistTable.column("uuid", .text).primaryKey()
-                    playlistTable.column("channelUuid", .text).references("channel", onDelete: .cascade)
-                    playlistTable.column("bannerPath", .text)
+                    playlistTable.column("channel_uuid", .text).references("channel", onDelete: .cascade)
+                    playlistTable.column("banner_path", .text)
                     playlistTable.column("localizedname", .text)
-                    playlistTable.column("languageId", .text)
-                    playlistTable.column("mediaCategory", .text)
+                    playlistTable.column("language_id", .text)
+                    playlistTable.column("media_category", .text)
                     playlistTable.column("ordinal", .integer)
-                    playlistTable.column("insertedAt", .double)
-                    playlistTable.column("updatedAt", .double)
-                    playlistTable.column("largeThumbnailPath", .text)
-                    playlistTable.column("medThumbnailPath", .text)
-                    playlistTable.column("smallThumbnailPath", .text)
+                    playlistTable.column("inserted_at", .text)
+                    playlistTable.column("updated_at", .text)
+                    playlistTable.column("large_thumbnail_path", .text)
+                    playlistTable.column("med_thumbnail_path", .text)
+                    playlistTable.column("small_thumbnail_path", .text)
                 }
             }
             catch {
@@ -178,29 +178,29 @@ public final class DataStore {
             do {
                 try db.create(table: "mediaitem") { mediaItemTable in
                     DDLogDebug("created: \(mediaItemTable)")
-                    mediaItemTable.column("contentProviderLink", .text)
+                    mediaItemTable.column("content_provider_link", .text)
                     mediaItemTable.column("duration", .double)
-                    mediaItemTable.column("hashId", .text)
-                    mediaItemTable.column("insertedAt", .double)
-                    mediaItemTable.column("ipfsLink", .text)
-                    mediaItemTable.column("languageId", .text)
+                    mediaItemTable.column("hash_id", .text)
+                    mediaItemTable.column("inserted_at", .text)
+                    mediaItemTable.column("ipfs_link", .text)
+                    mediaItemTable.column("language_id", .text)
                     mediaItemTable.column("localizedname", .text)
-                    mediaItemTable.column("largeThumbnailPath", .text)
-                    mediaItemTable.column("mediaCategory", .text)
+                    mediaItemTable.column("large_thumbnail_path", .text)
+                    mediaItemTable.column("media_category", .text)
                     mediaItemTable.column("medium", .text)
-                    mediaItemTable.column("medThumbnailPath", .text)
+                    mediaItemTable.column("med_thumbnail_path", .text)
                     mediaItemTable.column("multilanguage", .boolean)
                     mediaItemTable.column("ordinal", .integer)
                     mediaItemTable.column("path", .text)
-                    mediaItemTable.column("playlistUuid", .text).references("playlist", onDelete: .cascade)
-                    mediaItemTable.column("presentedAt", .double)
-                    mediaItemTable.column("presenterName", .text)
-                    mediaItemTable.column("publishedAt", .double)
-                    mediaItemTable.column("smallThumbnailPath", .text)
-                    mediaItemTable.column("sourceMaterial", .text)
+                    mediaItemTable.column("playlist_uuid", .text).references("playlist", onDelete: .cascade)
+                    mediaItemTable.column("presented_at", .text)
+                    mediaItemTable.column("presenter_name", .text)
+                    mediaItemTable.column("published_at", .text)
+                    mediaItemTable.column("small_thumbnail_path", .text)
+                    mediaItemTable.column("source_material", .text)
                     mediaItemTable.column("tags", .text)
-                    mediaItemTable.column("trackNumber", .integer)
-                    mediaItemTable.column("updatedAt", .double)
+                    mediaItemTable.column("track_number", .integer)
+                    mediaItemTable.column("updated_at", .text)
 
                     mediaItemTable.column("uuid", .text).primaryKey()
                 }
@@ -380,26 +380,26 @@ public final class DataStore {
                     userActionPlayableTable.column("downloaded", .boolean)
                     userActionPlayableTable.column("duration", .double)
                     userActionPlayableTable.column("hashId", .text)
-                    userActionPlayableTable.column("playableUuid", .text)
-                    userActionPlayableTable.column("playablePath", .text)
-                    userActionPlayableTable.column("playbackPosition", .double)
-                    userActionPlayableTable.column("updatedAt", .double)
+                    userActionPlayableTable.column("playable_uuid", .text)
+                    userActionPlayableTable.column("playable_path", .text)
+                    userActionPlayableTable.column("playback_position", .double)
+                    userActionPlayableTable.column("updated_at", .text)
 //                    userActionPlayableTable.column("userActionPlayableId", .integer)
                     userActionPlayableTable.column("uuid", .text).primaryKey()
 
                     // Playable
-                    userActionPlayableTable.column("insertedAt", .double)
-                    userActionPlayableTable.column("largeThumbnailPath", .text)
+                    userActionPlayableTable.column("inserted_at", .text)
+                    userActionPlayableTable.column("large_thumbnail_path", .text)
                     userActionPlayableTable.column("localizedname", .text)
-                    userActionPlayableTable.column("mediaCategory", .text)
-                    userActionPlayableTable.column("medThumbnailPath", .text)
+                    userActionPlayableTable.column("media_category", .text)
+                    userActionPlayableTable.column("med_thumbnail_path", .text)
                     userActionPlayableTable.column("multilanguage", .boolean)
                     userActionPlayableTable.column("path", .text)
-                    userActionPlayableTable.column("playlistUuid", .text)
-                    userActionPlayableTable.column("presenterName", .text)
-                    userActionPlayableTable.column("sourceMaterial", .text)
-                    userActionPlayableTable.column("smallThumbnailPath", .text)
-                    userActionPlayableTable.column("trackNumber", .integer)
+                    userActionPlayableTable.column("playlist_uuid", .text)
+                    userActionPlayableTable.column("presenter_name", .text)
+                    userActionPlayableTable.column("source_material", .text)
+                    userActionPlayableTable.column("small_thumbnail_path", .text)
+                    userActionPlayableTable.column("track_number", .integer)
                 }
             }
             catch {
@@ -1468,7 +1468,7 @@ extension DataStore: DataStoring {
                             // reset progress if there is less than 10 seconds left to play
                             var storePosition: Float = position
 
-                            if let category = MediaCategory(rawValue: storeAction.mediaCategory) {
+                            if let category = MediaCategory(rawValue: storeAction.media_category) {
                                 if duration > 0 {
                                     let timeToEnd: Float = duration - position
                                     
@@ -1479,12 +1479,12 @@ extension DataStore: DataStoring {
                                 }
                                 // if we are currently playing .preaching then store actual playback position because
                                 // preaching content is typically long duration
-                                storeAction.playbackPosition = (storePlayableDuration.contains(category)) ? Double(storePosition) : Double(0)
+                                storeAction.playback_position = (storePlayableDuration.contains(category)) ? Double(storePosition) : Double(0)
                             } else {
-                                storeAction.playbackPosition = Double(0)
+                                storeAction.playback_position = Double(0)
                             }
                             
-                            storeAction.updatedAt = Date().timeIntervalSince1970
+                            storeAction.updated_at = Date().iso8601
                             storeAction.downloaded = downloaded
                             try storeAction.update(db)
                         }
@@ -1508,24 +1508,24 @@ extension DataStore: DataStoring {
                             let newAction: UserActionPlayable =
                                 UserActionPlayable(downloaded: downloaded,
                                                    duration: playable.duration,
-                                                   hashId: playable.hashId,
-                                                   playableUuid: playable.uuid,
-                                                   playablePath: playable.path ?? nil,
-                                                   playbackPosition: Double(0),
-                                                   updatedAt: playable.updatedAt ?? nil,
+                                                   hash_id: playable.hash_id,
+                                                   playable_uuid: playable.uuid,
+                                                   playable_path: playable.path ?? nil,
+                                                   playback_position: Double(0),
+                                                   updated_at: playable.updated_at ?? nil,
                                                    uuid: UUID().uuidString,
-                                                   insertedAt: playable.insertedAt,
-                                                   largeThumbnailPath: playable.largeThumbnailPath ?? nil,
+                                                   inserted_at: playable.inserted_at,
+                                                   large_thumbnail_path: playable.large_thumbnail_path ?? nil,
                                                    localizedname: playable.localizedname,
-                                                   mediaCategory: playable.mediaCategory,
+                                                   media_category: playable.media_category,
                                                    multilanguage: playable.multilanguage,
                                                    path: playablePath,
-                                                   playlistUuid: playable.playlistUuid,
-                                                   presenterName: playable.presenterName ?? nil,
-                                                   smallThumbnailPath: playable.smallThumbnailPath ?? nil,
-                                                   medThumbnailPath: playable.medThumbnailPath ?? nil,
-                                                   sourceMaterial: playable.sourceMaterial ?? nil,
-                                                   trackNumber: playable.trackNumber ?? nil)
+                                                   playlist_uuid: playable.playlist_uuid,
+                                                   presenter_name: playable.presenter_name ?? nil,
+                                                   small_thumbnail_path: playable.small_thumbnail_path ?? nil,
+                                                   med_thumbnail_path: playable.med_thumbnail_path ?? nil,
+                                                   source_material: playable.source_material ?? nil,
+                                                   track_number: playable.track_number ?? nil)
                             try newAction.insert(db)
                         }
                         

@@ -2,20 +2,28 @@ import Foundation
 import GRDB
 
 public struct MediaMusic: Codable, Playable {
-
-    //    var bookId: Int64?
-    //    var userId: Int64?
-//    public var uuid: String
-//    public var localizedName: String?
-//    public var path: String?
-//    public var presenterName: String?
-//    public var sourceMaterial: String?
-//    public var categoryUuid: String?
-//    public var trackNumber: Int?
-//    public var createdAt: Double?
-//    public var updatedAt: Double?
-//    public var largeThumbnailPath: String?
-//    public var smallThumbnailPath: String?
+    public var hash_id: String
+    
+    public var inserted_at: String
+    
+    public var large_thumbnail_path: String?
+    
+    public var media_category: String
+    
+    public var med_thumbnail_path: String?
+    
+    public var presenter_name: String?
+    
+    public var playlist_uuid: String
+    
+    public var small_thumbnail_path: String?
+    
+    public var source_material: String?
+    
+    public var track_number: Int?
+    
+    public var updated_at: String?
+    
 
     public var createdAt: Double?
     
@@ -23,28 +31,25 @@ public struct MediaMusic: Codable, Playable {
     //    public var createdAt: Double?
     public var contentProviderLink: String?
     public var duration: TimeInterval
-    public var hashId: String
-    public var insertedAt: TimeInterval
+
+
     public var ipfsLink: String?
     public var languageId: String
-    public var largeThumbnailPath: String?
+    
     public var localizedname: String
     //    public var localizedName: String?
-    public var medThumbnailPath: String?
-    public var mediaCategory: String
+
     public var medium: String
     public var multilanguage: Bool
     public var ordinal: Int?
     public var path: String?
-    public var playlistUuid: String
+
     public var presentedAt: TimeInterval?
-    public var presenterName: String?
+
     public var publishedAt: TimeInterval?
-    public var smallThumbnailPath: String?
-    public var sourceMaterial: String?
+
     public var tags: String
-    public var trackNumber: Int?
-    public var updatedAt: TimeInterval?
+
     public var uuid: String
 
 }
@@ -57,14 +62,14 @@ extension MediaMusic {
         static let localizedName = Column("localizedName")
         static let path = Column("path")
         static let duration = Column("duration")
-        static let presenterName = Column("presenterName")
-        static let sourceMaterial = Column("sourceMaterial")
+        static let presenter_name = Column("presenter_name")
+        static let source_material = Column("source_material")
         static let categoryUuid = Column("categoryUuid")
-        static let trackNumber = Column("trackNumber")
+        static let track_number = Column("track_number")
         static let createdAt = Column("createdAt")
-        static let updatedAt = Column("updatedAt")
-        static let largeThumbnailPath = Column("largeThumbnailPath")
-        static let smallThumbnailPath = Column("smallThumbnailPath")
+        static let updated_at = Column("updated_at")
+        static let large_thumbnail_path = Column("large_thumbnail_path")
+        static let small_thumbnail_path = Column("small_thumbnail_path")
         static let multilanguage = Column("multilanguage")
     }
 }

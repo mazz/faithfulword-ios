@@ -10,6 +10,10 @@
 		4C01A261231CAD7000617FEC /* MediaItemSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C01A25F231CAD6E00617FEC /* MediaItemSearchResults.swift */; };
 		4C01A262231CAD7000617FEC /* MediaItemSearchResultsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */; };
 		4C01A266231E0B1C00617FEC /* MediaDetailsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C01A265231E0B1C00617FEC /* MediaDetailsCoordinator.swift */; };
+		4C04560423A09ADD00887BF8 /* Formatter+iso8601Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C04560023A09AD900887BF8 /* Formatter+iso8601Date.swift */; };
+		4C04560523A09ADD00887BF8 /* String+iso8601.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C04560123A09ADA00887BF8 /* String+iso8601.swift */; };
+		4C04560623A09ADD00887BF8 /* Date+iso8601.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C04560223A09ADB00887BF8 /* Date+iso8601.swift */; };
+		4C04560723A09ADD00887BF8 /* ISO8601DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C04560323A09ADC00887BF8 /* ISO8601DateFormatter.swift */; };
 		4C0801AC231F3DE7002FBE0E /* MediaDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0801AB231F3DE7002FBE0E /* MediaDetailsViewModel.swift */; };
 		4C0801AE2321E827002FBE0E /* MediaDetailsSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0801AD2321E827002FBE0E /* MediaDetailsSectionViewModel.swift */; };
 		4C0801B22322BF4C002FBE0E /* MediaItemDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0801B02322BF4C002FBE0E /* MediaItemDetailsCell.swift */; };
@@ -250,6 +254,10 @@
 		4C01A25F231CAD6E00617FEC /* MediaItemSearchResults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaItemSearchResults.swift; sourceTree = "<group>"; };
 		4C01A260231CAD6F00617FEC /* MediaItemSearchResultsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaItemSearchResultsCell.xib; sourceTree = "<group>"; };
 		4C01A265231E0B1C00617FEC /* MediaDetailsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailsCoordinator.swift; sourceTree = "<group>"; };
+		4C04560023A09AD900887BF8 /* Formatter+iso8601Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Formatter+iso8601Date.swift"; sourceTree = "<group>"; };
+		4C04560123A09ADA00887BF8 /* String+iso8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+iso8601.swift"; sourceTree = "<group>"; };
+		4C04560223A09ADB00887BF8 /* Date+iso8601.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+iso8601.swift"; sourceTree = "<group>"; };
+		4C04560323A09ADC00887BF8 /* ISO8601DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ISO8601DateFormatter.swift; sourceTree = "<group>"; };
 		4C0801AB231F3DE7002FBE0E /* MediaDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailsViewModel.swift; sourceTree = "<group>"; };
 		4C0801AD2321E827002FBE0E /* MediaDetailsSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailsSectionViewModel.swift; sourceTree = "<group>"; };
 		4C0801B02322BF4C002FBE0E /* MediaItemDetailsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaItemDetailsCell.swift; sourceTree = "<group>"; };
@@ -666,6 +674,10 @@
 				4CBE0F752161747100646F76 /* Color+Image.swift */,
 				4C250393216868120069AB49 /* String+Hashing.swift */,
 				4CAABC052336DDE40026A1D2 /* Int64+NumberFormatting.swift */,
+				4C04560223A09ADB00887BF8 /* Date+iso8601.swift */,
+				4C04560023A09AD900887BF8 /* Formatter+iso8601Date.swift */,
+				4C04560323A09ADC00887BF8 /* ISO8601DateFormatter.swift */,
+				4C04560123A09ADA00887BF8 /* String+iso8601.swift */,
 				4C2503992169A1760069AB49 /* AnyObserverMaking.swift */,
 			);
 			path = AppUtilities;
@@ -1344,7 +1356,9 @@
 				4CFB85022005B66300FEBB53 /* CellContentLayoutStyle.swift in Sources */,
 				4CD5C1BA20242A96007BFC1B /* VerseCell.swift in Sources */,
 				4C7D5469200EF7E70038B265 /* AccountService.swift in Sources */,
+				4C04560523A09ADD00887BF8 /* String+iso8601.swift in Sources */,
 				4C9FA0432318851C00F7A237 /* Product.swift in Sources */,
+				4C04560423A09ADD00887BF8 /* Formatter+iso8601Date.swift in Sources */,
 				4C6D8E5122AC6FEE0025DA28 /* ChannelViewController.swift in Sources */,
 				4CDD655B1EEB3DA400C59DD5 /* LoopView.swift in Sources */,
 				4C7EB885228B8EA8000E8DAB /* Org.swift in Sources */,
@@ -1358,6 +1372,7 @@
 				4C6FCD6C231B190E0025C1A3 /* MediaSearchResultsViewController.swift in Sources */,
 				4C3998FC20201942008E76E8 /* SideMenuViewController.swift in Sources */,
 				4CFB85002005B5FA00FEBB53 /* UICollectionView+UIViewManaging.swift in Sources */,
+				4C04560723A09ADD00887BF8 /* ISO8601DateFormatter.swift in Sources */,
 				4C4A2CD422D01F2F008BB79A /* ActionData.swift in Sources */,
 				4C7EB854228B8BBD000E8DAB /* PlaylistSectionViewModel.swift in Sources */,
 				4C0801AE2321E827002FBE0E /* MediaDetailsSectionViewModel.swift in Sources */,
@@ -1380,6 +1395,7 @@
 				4C7EB890228B8EA8000E8DAB /* OrgResponse.swift in Sources */,
 				4C5FAD7B2037BD3300397BFF /* LanguageViewModel.swift in Sources */,
 				4CCE8C831FF4B7C600AFBAF2 /* BooksViewModel.swift in Sources */,
+				4C04560623A09ADD00887BF8 /* Date+iso8601.swift in Sources */,
 				4CCE8CA41FF569E600AFBAF2 /* SplashScreenViewController.swift in Sources */,
 				4C0801B22322BF4C002FBE0E /* MediaItemDetailsCell.swift in Sources */,
 				4C7EB87F228B8EA8000E8DAB /* EnvironmentUrlItems.swift in Sources */,
