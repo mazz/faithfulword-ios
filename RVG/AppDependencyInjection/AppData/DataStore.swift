@@ -528,7 +528,7 @@ extension DataStore: DataStoring {
             do {
                 var fetched: [Channel] = []
                 try dbPool.read { db in
-                    fetched = try Channel.filter(Column("orgUuid") == orgUuid).fetchAll(db)
+                    fetched = try Channel.filter(Column("org_uuid") == orgUuid).fetchAll(db)
                 }
                 single(.success(fetched))
             } catch {
@@ -586,7 +586,7 @@ extension DataStore: DataStoring {
             do {
                 var fetched: [Playlist] = []
                 try dbPool.read { db in
-                    fetched = try Playlist.filter(Column("channelUuid") == channelUuid).fetchAll(db)
+                    fetched = try Playlist.filter(Column("channel_uuid") == channelUuid).fetchAll(db)
                 }
                 single(.success(fetched))
             } catch {
@@ -641,7 +641,7 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 try dbPool.writeInTransaction { db in
-                    try Playlist.filter(Column("channelUuid") == forChannelUuid).deleteAll(db)
+                    try Playlist.filter(Column("channel_uuid") == forChannelUuid).deleteAll(db)
                     return .commit
                 }
                 single(.success(()))
@@ -659,7 +659,7 @@ extension DataStore: DataStoring {
             do {
                 var fetched: [MediaItem] = []
                 try dbPool.read { db in
-                    fetched = try MediaItem.filter(Column("playlistUuid") == playlistUuid).fetchAll(db)
+                    fetched = try MediaItem.filter(Column("playlist_uuid") == playlistUuid).fetchAll(db)
                 }
                 single(.success(fetched))
             } catch {
@@ -1070,7 +1070,7 @@ extension DataStore: DataStoring {
             do {
                 try dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
-                    if let book = try Book.filter(Column("categoryUuid") == bookUuid).fetchOne(db) {
+                    if let book = try Book.filter(Column("category_uuid") == bookUuid).fetchOne(db) {
                         DDLogDebug("found chapter book: \(book)")
 //                        for chapter in chapters {
 //                            var mediaChapter = MediaChapter(uuid: chapter.uuid,
