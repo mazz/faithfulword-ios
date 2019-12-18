@@ -147,6 +147,8 @@
 		4C958E9D2090242100A71C59 /* PopupContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C958E9C2090242000A71C59 /* PopupContentController.swift */; };
 		4C999C33215F160E002EF2F4 /* AssetPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0003209D6EDC00938C30 /* AssetPlaybackManager.swift */; };
 		4C999C34215F1614002EF2F4 /* RemoteCommandManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C1F0007209D6FB800938C30 /* RemoteCommandManager.swift */; };
+		4C9C589523A0B40300AA89B9 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9C589423A0B40300AA89B9 /* NotificationService.swift */; };
+		4C9C589923A0B40300AA89B9 /* ImageServiceNotificationExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4C9C589223A0B40300AA89B9 /* ImageServiceNotificationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4C9FA0432318851C00F7A237 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9FA0422318851B00F7A237 /* Product.swift */; };
 		4CA03C43231810BE003F676F /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA03C42231810BE003F676F /* SearchService.swift */; };
 		4CA31F8C2008567000A94101 /* UIImage+AssetInflating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */; };
@@ -246,6 +248,30 @@
 		70CD20A71E6486CC00AF619F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD20A61E6486CC00AF619F /* Constants.swift */; };
 		97769D88BA86A46CCEE3EC52 /* Pods_FaithfulWord.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE01C3698E5471BCABAB308B /* Pods_FaithfulWord.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4C9C589723A0B40300AA89B9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70CD20561E6479A800AF619F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C9C589123A0B40300AA89B9;
+			remoteInfo = ImageServiceNotificationExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4C9C589A23A0B40300AA89B9 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4C9C589923A0B40300AA89B9 /* ImageServiceNotificationExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0B104C10C7CBFD5DB559A79C /* Pods_FWBC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FWBC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -392,6 +418,9 @@
 		4C8EE8C31FF6010F003F483A /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		4C958E98208D3D6500A71C59 /* LNPopupController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LNPopupController.framework; path = Carthage/Build/iOS/LNPopupController.framework; sourceTree = "<group>"; };
 		4C958E9C2090242000A71C59 /* PopupContentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupContentController.swift; sourceTree = "<group>"; };
+		4C9C589223A0B40300AA89B9 /* ImageServiceNotificationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ImageServiceNotificationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C9C589423A0B40300AA89B9 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		4C9C589623A0B40300AA89B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C9FA0422318851B00F7A237 /* Product.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		4CA03C42231810BE003F676F /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
 		4CA31F8B2008567000A94101 /* UIImage+AssetInflating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetInflating.swift"; sourceTree = "<group>"; };
@@ -535,6 +564,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4C9C588F23A0B40300AA89B9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70CD205B1E6479A800AF619F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -751,6 +787,15 @@
 			path = Account;
 			sourceTree = "<group>";
 		};
+		4C9C589323A0B40300AA89B9 /* ImageServiceNotificationExtension */ = {
+			isa = PBXGroup;
+			children = (
+				4C9C589423A0B40300AA89B9 /* NotificationService.swift */,
+				4C9C589623A0B40300AA89B9 /* Info.plist */,
+			);
+			path = ImageServiceNotificationExtension;
+			sourceTree = "<group>";
+		};
 		4C9FA03D2318846700F7A237 /* Searching */ = {
 			isa = PBXGroup;
 			children = (
@@ -887,6 +932,7 @@
 				70CD20601E6479A800AF619F /* RVG */,
 				70CD20751E6479A800AF619F /* RVGTests */,
 				70CD20801E6479A800AF619F /* RVGUITests */,
+				4C9C589323A0B40300AA89B9 /* ImageServiceNotificationExtension */,
 				70CD205F1E6479A800AF619F /* Products */,
 				ECD8BE2A9332D5FFAA15DA3A /* Pods */,
 				1B0B08D6C53FEED03CFF156F /* Frameworks */,
@@ -897,6 +943,7 @@
 			isa = PBXGroup;
 			children = (
 				70CD205E1E6479A800AF619F /* Faithful Word.app */,
+				4C9C589223A0B40300AA89B9 /* ImageServiceNotificationExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1048,6 +1095,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4C9C589123A0B40300AA89B9 /* ImageServiceNotificationExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C9C589D23A0B40300AA89B9 /* Build configuration list for PBXNativeTarget "ImageServiceNotificationExtension" */;
+			buildPhases = (
+				4C9C588E23A0B40300AA89B9 /* Sources */,
+				4C9C588F23A0B40300AA89B9 /* Frameworks */,
+				4C9C589023A0B40300AA89B9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ImageServiceNotificationExtension;
+			productName = ImageServiceNotificationExtension;
+			productReference = 4C9C589223A0B40300AA89B9 /* ImageServiceNotificationExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		70CD205D1E6479A800AF619F /* FaithfulWord */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70CD20861E6479A900AF619F /* Build configuration list for PBXNativeTarget "FaithfulWord" */;
@@ -1060,10 +1124,12 @@
 				4C1C4803206C9AEF00A92EFD /* Run Crashlytics Script */,
 				4C958E9A208D3D9700A71C59 /* Run Carthage Copy Frameworks */,
 				4C2F8028218D473700EBA81A /* swiftlint */,
+				4C9C589A23A0B40300AA89B9 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4C9C589823A0B40300AA89B9 /* PBXTargetDependency */,
 			);
 			name = FaithfulWord;
 			productName = RVG;
@@ -1076,10 +1142,14 @@
 		70CD20561E6479A800AF619F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0800;
+				LastSwiftUpdateCheck = 1110;
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = KJVRVG;
 				TargetAttributes = {
+					4C9C589123A0B40300AA89B9 = {
+						CreatedOnToolsVersion = 11.1;
+						ProvisioningStyle = Automatic;
+					};
 					70CD205D1E6479A800AF619F = {
 						CreatedOnToolsVersion = 8.0;
 						LastSwiftMigration = 1030;
@@ -1125,11 +1195,19 @@
 			projectRoot = "";
 			targets = (
 				70CD205D1E6479A800AF619F /* FaithfulWord */,
+				4C9C589123A0B40300AA89B9 /* ImageServiceNotificationExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4C9C589023A0B40300AA89B9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70CD205C1E6479A800AF619F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1309,6 +1387,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4C9C588E23A0B40300AA89B9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C9C589523A0B40300AA89B9 /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70CD205A1E6479A800AF619F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1512,6 +1598,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4C9C589823A0B40300AA89B9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C9C589123A0B40300AA89B9 /* ImageServiceNotificationExtension */;
+			targetProxy = 4C9C589723A0B40300AA89B9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		687BF6CD1EC00AE3002EDCC3 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -1570,6 +1664,55 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4C9C589B23A0B40300AA89B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AW22Z53SAJ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ImageServiceNotificationExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = fwsaved.ImageServiceNotificationExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4C9C589C23A0B40300AA89B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AW22Z53SAJ;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ImageServiceNotificationExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = fwsaved.ImageServiceNotificationExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		70CD20841E6479A900AF619F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1686,6 +1829,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 90A03204187BF6ACC5EE5AFF /* Pods-FaithfulWord.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = KJVRVG.entitlements;
@@ -1714,6 +1858,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1D6F9AF1A54B3526327D3A3 /* Pods-FaithfulWord.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = KJVRVG.entitlements;
@@ -1740,6 +1885,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4C9C589D23A0B40300AA89B9 /* Build configuration list for PBXNativeTarget "ImageServiceNotificationExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C9C589B23A0B40300AA89B9 /* Debug */,
+				4C9C589C23A0B40300AA89B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		70CD20591E6479A800AF619F /* Build configuration list for PBXProject "RVG" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
