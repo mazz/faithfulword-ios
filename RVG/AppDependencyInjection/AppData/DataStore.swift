@@ -366,8 +366,8 @@ public final class DataStore {
                 try db.create(table: "languageidentifier") { langTable in
                     DDLogDebug("created: \(langTable)")
                     langTable.column("uuid", .text).primaryKey()
-                    langTable.column("sourceMaterial", .text)
-                    langTable.column("languageIdentifier", .text)
+                    langTable.column("source_material", .text)
+                    langTable.column("language_identifier", .text)
                     langTable.column("supported", .boolean)
                 }
             }

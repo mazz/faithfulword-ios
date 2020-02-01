@@ -73,7 +73,7 @@ internal final class LanguageViewModel: RadioListViewModeling {
     private func setupDatasource() {
         productService.fetchBibleLanguages(stride: 100).asObservable()
             .map { $0.map {
-                (RadioListItemType.selectable(header: String("\($0.sourceMaterial) (\(self.localizedString(identifier: $0.languageIdentifier))) "), isSelected: false), $0.languageIdentifier)
+                (RadioListItemType.selectable(header: String("\($0.source_material) (\(self.localizedString(identifier: $0.language_identifier))) "), isSelected: false), $0.language_identifier)
                 }
             }
             .next({ tuples in

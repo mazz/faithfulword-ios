@@ -12,7 +12,9 @@ extension EnvironmentUrlItemKey {
         return EnvironmentUrlItemKey(rawValue: "https://d2v5mbm9qwqitj.cloudfront.net")
     }
     static var DevelopmentServerRootUrl: EnvironmentUrlItemKey {
-        return EnvironmentUrlItemKey(rawValue: "https://api.faithfulword.app")
+        return EnvironmentUrlItemKey(rawValue: "https://faithfulword.app")
+//        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.10")
+        //192.168.0.10
     }
     static var LocalServerRootUrl: EnvironmentUrlItemKey {
         //
