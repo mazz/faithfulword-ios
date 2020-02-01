@@ -7,7 +7,7 @@ private enum Constants {
 
 public enum FwbcApiService {
     case appVersions(offset: Int, limit: Int)
-    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String, userUuid: String)
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String, userUuid: String, orgId: Int)
     // v1.1/languages/supported
     // v1.2/languages/supported
     // v1.3/languages/supported?offset=1&limit=50
@@ -77,7 +77,7 @@ extension FwbcApiService: TargetType {
         public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)")! }
     public var path: String {
         switch self {
-        case .pushTokenUpdate(_, _, _, _, _, _):
+        case .pushTokenUpdate(_, _, _, _, _, _, _):
             return String(describing: "\(Constants.versionPrefix)/device/pushtoken/update")
         case .appVersions(_, _):
             return String(describing: "\(Constants.versionPrefix)/app/versions")
@@ -174,13 +174,15 @@ extension FwbcApiService: TargetType {
                               let preferredLanguage,
                               let userAgent,
                               let userVersion,
-                              let userUuid):
+                              let userUuid,
+                              let orgId):
             return ["fcmToken": fcmToken,
                     "apnsToken": apnsToken,
                     "preferredLanguage": preferredLanguage,
                     "userAgent": userAgent,
                     "userVersion": userVersion,
-                    "userUuid": userUuid]
+                    "userUuid": userUuid,
+                    "orgId": orgId]
         case .languagesSupported(let offset, let limit):
             return ["offset": offset,
                     "limit": limit]
@@ -292,15 +294,17 @@ extension FwbcApiService: TargetType {
                               let preferredLanguage,
                               let userAgent,
                               let userVersion,
-                              let userUuid):
+                              let userUuid,
+                              let orgId):
             let pushTokenJson = [
                 "fcmToken": fcmToken,
                 "apnsToken": apnsToken,
                 "preferredLanguage": preferredLanguage,
                 "userAgent": userAgent,
                 "userVersion": userVersion,
-                "userUuid": userUuid
-            ]
+                "userUuid": userUuid,
+                "orgId": orgId
+                ] as [String : Any]
             return jsonSerializedUTF8(json: pushTokenJson)
         case .languagesSupported(let offset, let limit):
             return "{\"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
@@ -355,13 +359,14 @@ extension FwbcApiService: TargetType {
             return .requestParameters(parameters:  ["offset": offset,
                                                     "limit": limit],
                                       encoding: URLEncoding.default)
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion, let userUuid):
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion, let userUuid, let orgId):
             return .requestParameters(parameters:  ["fcmToken": fcmToken,
                                                     "apnsToken": apnsToken,
                                                     "preferredLanguage": preferredLanguage,
                                                     "userAgent": userAgent,
                                                     "userVersion": userVersion,
-                                                    "userUuid": userUuid],
+                                                    "userUuid": userUuid,
+                                                    "orgId": orgId],
                                       encoding: JSONEncoding.default)
         case .languagesSupported(let offset, let limit):
             return .requestParameters(parameters:  ["offset": offset,

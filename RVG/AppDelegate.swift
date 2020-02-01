@@ -166,7 +166,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         provider.request(.pushTokenUpdate(fcmToken: fcmToken,
                                           apnsToken: apnsToken,
                                           preferredLanguage: preferredLanguage,
-                                          userAgent: userAgent, userVersion: userVersion, userUuid: userUuid)) { result in
+                                          userAgent: userAgent, userVersion: userVersion, userUuid: userUuid, orgId: 1)) { result in
                                             switch result {
                                             case let .success(moyaResponse):
                                                 do {
