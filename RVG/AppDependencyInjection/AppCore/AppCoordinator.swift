@@ -37,7 +37,6 @@ internal class AppCoordinator {
     var serverStatus: ServerConnectivityStatus = .none
     
     private let bag = DisposeBag()
-    
     private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
     // MARK: Dependencies
     
@@ -59,7 +58,6 @@ internal class AppCoordinator {
         resettableMainCoordinator: Resettable<MainCoordinator>,
         resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
         resettableNoResourceCoordinator: Resettable<NoResourceCoordinator>,
-        //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
         accountService: AccountServicing,
         productService: ProductServicing,
         languageService: LanguageServicing,
@@ -105,14 +103,6 @@ internal class AppCoordinator {
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(AppCoordinator.handleApplicationWillTerminate(notification:)), name: AppDelegate.applicationWillTerminate, object: nil)
-
-        
-//        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { notification in
-//
-//            DDLogDebug("try and update state of any possible downloads now, downloadService: \(self.downloadService) notification: \(notification)")
-//            self.downloadService.cancelAllDownloads()
-//            sleep(5)
-//        }
 
         reactToReachability()
         

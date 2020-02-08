@@ -34,6 +34,7 @@ public protocol ProductServicing {
                         offset: Int,
                         limit: Int,
                         cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
+    func fetchMediaItem(mediaItemUuid: String) -> Single<MediaItem>
 
     func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
     
@@ -82,7 +83,10 @@ public final class ProductService {
 
 // MARK: <ProductServicing>
 extension ProductService: ProductServicing {
-    
+    public func fetchMediaItem(mediaItemUuid: String) -> Single<MediaItem> {
+        return dataService.fetchMediaItem(mediaItemUuid: mediaItemUuid)
+    }
+
     public func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]> {
         return dataService.persistedMediaItems(for: playlistUuid)
     }

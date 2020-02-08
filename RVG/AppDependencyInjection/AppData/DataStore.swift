@@ -379,7 +379,7 @@ public final class DataStore {
                     DDLogDebug("created: \(userActionPlayableTable)")
                     userActionPlayableTable.column("downloaded", .boolean)
                     userActionPlayableTable.column("duration", .double)
-                    userActionPlayableTable.column("hashId", .text)
+                    userActionPlayableTable.column("hash_id", .text)
                     userActionPlayableTable.column("playable_uuid", .text)
                     userActionPlayableTable.column("playable_path", .text)
                     userActionPlayableTable.column("playback_position", .double)

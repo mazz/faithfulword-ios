@@ -25,7 +25,7 @@ public protocol UserDataServicing {
 
 public protocol UserActionsDataServicing {
     func updatePlaybackPosition(playable: Playable, position: Float, duration: Float) -> Single<Void>
-//    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
+    //    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
 }
 
 public protocol HistoryDataServicing {
@@ -57,22 +57,22 @@ public protocol SearchDataServicing {
                           offset: Int,
                           limit: Int,
                           cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
-
+    
 }
 // Provides account related data to the app
 public protocol AccountDataServicing {
-
+    
     /// Permanent observable providing session objects.
     var token: Observable<String?> { get }
     var loginUser: Observable<UserLoginUser?> { get }
-
+    
     func loginUser(email: String, password: String) -> Single<UserLoginResponse>
     func signupUser(user: [String: AnyHashable]) -> Single<UserSignupResponse>
     func addAppUser(user: UserAppUser) -> Single<Void>
-//    func addLoginUser(user: UserLoginUser) -> Single<Void>
+    //    func addLoginUser(user: UserLoginUser) -> Single<Void>
     func fetchAppUser() -> Single<UserAppUser?>
     func replacePersistedAppUser(user: UserAppUser) -> Single<UserAppUser>
-//    func fetchLoginUser() -> Single<UserLoginUser>
+    //    func fetchLoginUser() -> Single<UserLoginUser>
     func fetchLoginUser() -> Single<UserLoginUser?>
     func appendPersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser>
     func replacePersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser>
@@ -81,13 +81,14 @@ public protocol AccountDataServicing {
 
 /// Provides product related data to the app
 public protocol ProductDataServicing {
-
+    
     func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
+    func fetchMediaItem(mediaItemUuid: String) -> Single<MediaItem>
     func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
-
+    
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
     func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])>
-
+    
     func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
     
     func persistedChannels(for orgUuid: String) -> Single<[Channel]>
@@ -98,22 +99,22 @@ public protocol ProductDataServicing {
     func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]>
     func deletePersistedDefaultOrgs() -> Single<Void>
     func deletePersistedChannels() -> Single<Void>
-//    func orgs(offset: Int, limit: Int) -> Single<[Org]>
-
+    //    func orgs(offset: Int, limit: Int) -> Single<[Org]>
+    
     // ~~~~~~~~~~~
     
     var books: Observable<[Book]> { get }
     var orgs: Observable<[Org]> { get }
     var channels: Observable<[Channel]> { get }
-
+    
     func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]>
     func fetchAndObserveBooks(stride: Int) -> Single<[Book]>
     func deletePersistedBooks() -> Single<Void>
-
+    
     func mediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]>
     func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]>
     func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]>
-
+    
     func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]>
     
     // new-ish API for forthcoming org-channel-playlist changes
@@ -124,18 +125,18 @@ public protocol ProductDataServicing {
 }
 
 public final class DataService {
-
+    
     // MARK: Dependencies
-
+    
     private let dataStore: DataStoring
     private let networkingApi: MoyaProvider<FwbcApiService>!
     private let reachability: RxClassicReachable!
-
+    
     // MARK: Fields
-
+    
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     private let bag = DisposeBag()
-
+    
     // MARK: UserDataServicing
     private var _orgs = Field<[Org]>([])
     private var _channels = Field<[Channel]>([])
@@ -149,10 +150,10 @@ public final class DataService {
     private var _books = Field<[Book]>([])
     private var _categories = Field<[String: [Categorizable]]>([:])
     private var _media = Field<[String: [Playable]]>([:])
-
+    
     private var _responseMap: [String: Response] = [:]
     private var _persistedBooks = Field<[Book]>([])
-
+    
     internal init(
         dataStore: DataStoring,
         networkingApi: MoyaProvider<FwbcApiService>,
@@ -160,17 +161,17 @@ public final class DataService {
         self.dataStore = dataStore
         self.networkingApi = networkingApi
         self.reachability = reachability
-
+        
         reactToReachability()
-//        loadInMemoryCache()
+        //        loadInMemoryCache()
     }
-
+    
     // MARK: Helpers
-
+    
     private func loadInMemoryCache() {
         self.loadBooks()
             .subscribeAndDispose(by: bag)
-
+        
         self.loadCategory(for: .music)
             .do(onNext: { uuid in
                 self.dataStore.fetchMediaMusic(for: uuid)
@@ -178,10 +179,10 @@ public final class DataService {
                         var mediaMap: [String: [Playable]] = self._media.value
                         mediaMap[uuid] = playableArray
                         self._media.value = mediaMap
-                })
+                    })
             })
             .subscribeAndDispose(by: bag)
-
+        
         self.loadCategory(for: .gospel)
             .do(onNext: { uuid in
                 self.dataStore.fetchMediaGospel(for: uuid)
@@ -196,19 +197,19 @@ public final class DataService {
 }
 
 extension DataService: UserDataServicing {
-
+    
     public var languageIdentifier: Observable<String> { return _languageIdentifier.asObservable() }
-
+    
     public func updateUserLanguage(identifier: String) -> Single<String> {
-//        let updated: Single<String> =
+        //        let updated: Single<String> =
         return self.dataStore.updateUserLanguage(identifier: identifier)
-//        return Single.just(identifier)
-
-//            return updated.map { [unowned self] identifier in
-//                self._languageIdentifier.value = identifier }
-//            .toVoid()
+        //        return Single.just(identifier)
+        
+        //            return updated.map { [unowned self] identifier in
+        //                self._languageIdentifier.value = identifier }
+        //            .toVoid()
     }
-
+    
     public func fetchUserLanguage() -> Single<String> {
         return self.dataStore.fetchUserLanguage()
     }
@@ -216,15 +217,15 @@ extension DataService: UserDataServicing {
 
 extension DataService: UserActionsDataServicing {
     public func updatePlaybackPosition(playable: Playable, position: Float, duration: Float) -> Single<Void> {
-//        DDLogDebug("updatePlaybackPosition(playable: \(playable) position: \(position)")
+        //        DDLogDebug("updatePlaybackPosition(playable: \(playable) position: \(position)")
         return dataStore.updatePlayableHistory(playable: playable, position: position, duration: duration)
-//        return Single.just(())
+        //        return Single.just(())
     }
     
-//    public func fetchPlaybackPosition(playable: Playable) -> Single<Double> {
-//        DDLogDebug("fetchPlaybackPosition(playable: \(playable)")
-//        return Single.just(5.0)
-//    }
+    //    public func fetchPlaybackPosition(playable: Playable) -> Single<Double> {
+    //        DDLogDebug("fetchPlaybackPosition(playable: \(playable)")
+    //        return Single.just(5.0)
+    //    }
 }
 
 extension DataService: HistoryDataServicing {
@@ -253,8 +254,8 @@ extension DataService: FileDownloadDataServicing {
     func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void> {
         return dataStore.deleteFileDownloadFile(playableUuid: playableUuid, pathExtension: pathExtension)
     }
-
-
+    
+    
     public func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void> {
         return dataStore.updateFileDownloads(playableUuids: playableUuids, to: state)
     }
@@ -302,7 +303,7 @@ extension DataService: SearchDataServicing {
         }
         
         return response.flatMap { [unowned self] response -> Single<(MediaItemResponse, [MediaItem])> in
-//            let mediaItems: Single<[MediaItem]> = self.appendPersistedMediaItems(mediaItems: response.result)
+            //            let mediaItems: Single<[MediaItem]> = self.appendPersistedMediaItems(mediaItems: response.result)
             let mediaItems: Single<[MediaItem]> = Single.just(response.result)
             return mediaItems.map({ items -> (MediaItemResponse, [MediaItem]) in
                 let tuple: (MediaItemResponse, [MediaItem]) = (response, items)
@@ -328,11 +329,11 @@ extension DataService: AccountDataServicing {
                 throw DataServiceError.decodeFailed
             }
             
-            }
-            .do(onSuccess: { [unowned self] loginResponse in
-                self._token.value = loginResponse.token
-                self._user.value = loginResponse.user
-            })
+        }
+        .do(onSuccess: { [unowned self] loginResponse in
+            self._token.value = loginResponse.token
+            self._user.value = loginResponse.user
+        })
         return response
         
     }
@@ -350,10 +351,10 @@ extension DataService: AccountDataServicing {
             }
             
         }
-            .do(onSuccess: { [unowned self] signupResponse in
-                self._token.value = signupResponse.token
-                self._user.value = signupResponse.user
-            })
+        .do(onSuccess: { [unowned self] signupResponse in
+            self._token.value = signupResponse.token
+            self._user.value = signupResponse.user
+        })
         return response
     }
     
@@ -364,7 +365,7 @@ extension DataService: AccountDataServicing {
     
     public var token: Observable<String?> { return _token.asObservable() }
     public var loginUser: Observable<UserLoginUser?> { return _user.asObservable() }
-
+    
     // MARK: Helpers
     public func addAppUser(user: UserAppUser) -> Single<Void> {
         return self.dataStore.addAppUser(addingUser: user)
@@ -381,7 +382,7 @@ extension DataService: AccountDataServicing {
                 self.dataStore.addAppUser(addingUser: user)
         }
     }
-
+    
     public func appendPersistedLoginUser(user: UserLoginUser) -> Single<UserLoginUser> {
         return self.dataStore.addLoginUser(addingUser: user)
     }
@@ -429,13 +430,13 @@ extension DataService: ProductDataServicing {
     public func persistedDefaultOrg() -> Single<Org?> {
         return dataStore.fetchDefaultOrg()
     }
-
+    
     public func fetchAndObserveDefaultOrgs(offset: Int, limit: Int) -> Single<[Org]> {
         let moyaResponse = self.networkingApi.rx.request(.defaultOrgs(offset: offset, limit: limit))
         let response: Single<OrgResponse> = moyaResponse.map { response -> OrgResponse in
             do {
                 let jsonObj = try response.mapJSON()
-//                DDLogDebug("jsonObj: \(jsonObj)")
+                //                DDLogDebug("jsonObj: \(jsonObj)")
                 return try response.map(OrgResponse.self)
             } catch {
                 DDLogError("Moya decode error: \(error)")
@@ -443,12 +444,12 @@ extension DataService: ProductDataServicing {
             }
         }
         return response.flatMap { [unowned self] response -> Single<[Org]> in
-//            DDLogDebug("response.result: \(response.result)")
+            //            DDLogDebug("response.result: \(response.result)")
             return self.replacePersistedDefaultOrgs(orgs: response.result)
-            }
-            .do(onSuccess: { [unowned self] products in
-                self._orgs.value = products
-            })
+        }
+        .do(onSuccess: { [unowned self] products in
+            self._orgs.value = products
+        })
     }
     
     
@@ -458,12 +459,30 @@ extension DataService: ProductDataServicing {
         return dataStore.fetchMediaItems(for: playlistUuid)
     }
     
+    public func fetchMediaItem(mediaItemUuid: String) -> Single<MediaItem> {
+        let moyaResponse = self.networkingApi.rx.request(.mediaItem(uuid: mediaItemUuid))
+        let response: Single<MediaItemRouteResponse> = moyaResponse.map { response -> MediaItemRouteResponse in
+            do {
+                let jsonObj = try response.mapJSON()
+                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(MediaItemRouteResponse.self)
+            } catch {
+                DDLogError("Moya decode error: \(error)")
+                throw DataServiceError.decodeFailed
+            }
+        }
+        let mediaItem = response.map { mediaItemRouteResponse -> MediaItem in
+            return mediaItemRouteResponse.result
+        }
+        return mediaItem
+    }
+    
     public func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])> {
         let moyaResponse = self.networkingApi.rx.request(.mediaItems(uuid: playlistUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
         let response: Single<MediaItemResponse> = moyaResponse.map { response -> MediaItemResponse in
             do {
-                                let jsonObj = try response.mapJSON()
-                                DDLogDebug("jsonObj: \(jsonObj)")
+                let jsonObj = try response.mapJSON()
+                DDLogDebug("jsonObj: \(jsonObj)")
                 return try response.map(MediaItemResponse.self)
             } catch {
                 DDLogError("Moya decode error: \(error)")
@@ -478,7 +497,6 @@ extension DataService: ProductDataServicing {
                 return tuple
             })
         }
-
     }
     
     // MARK: Playlists
@@ -486,16 +504,16 @@ extension DataService: ProductDataServicing {
     public func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]> {
         return dataStore.fetchPlaylists(for: channelUuid)
     }
-
+    
     public func fetchAndObservePlaylists(for channelUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(PlaylistResponse, [Playlist])> {
-
+        
         // if the cacheDirective is .fetchAndReplace then also fetch
         // if the persisted channel is older than the
         let moyaResponse = self.networkingApi.rx.request(.playlists(uuid: channelUuid, languageId: L10n.shared.language, offset: offset, limit: limit))
         let response: Single<PlaylistResponse> = moyaResponse.map { response -> PlaylistResponse in
             do {
-//                let jsonObj = try response.mapJSON()
-//                DDLogDebug("jsonObj: \(jsonObj)")
+                //                let jsonObj = try response.mapJSON()
+                //                DDLogDebug("jsonObj: \(jsonObj)")
                 return try response.map(PlaylistResponse.self)
             } catch {
                 DDLogError("Moya decode error: \(error)")
@@ -515,7 +533,7 @@ extension DataService: ProductDataServicing {
     public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
         return dataStore.deletePlaylists(forChannelUuid)
     }
-
+    
     // MARK: Channels
     
     public var channels: Observable<[Channel]> {
@@ -531,20 +549,20 @@ extension DataService: ProductDataServicing {
             return _channels.asObservable()
         }
     }
-
+    
     public func persistedChannels(for orgUuid: String) -> Single<[Channel]> {
         return dataStore.fetchChannels(for: orgUuid)
             .do(onSuccess: { [unowned self] channels in
                 self._channels.value = channels
             })
     }
-
+    
     public func fetchAndObserveChannels(for orgUuid: String, offset: Int, limit: Int) -> Single<[Channel]> {
         let moyaResponse = self.networkingApi.rx.request(.channels(uuid: orgUuid, offset: offset, limit: limit))
         let response: Single<ChannelResponse> = moyaResponse.map { response -> ChannelResponse in
             do {
                 let jsonObj = try response.mapJSON()
-//                DDLogDebug("jsonObj: \(jsonObj)")
+                //                DDLogDebug("jsonObj: \(jsonObj)")
                 return try response.map(ChannelResponse.self)
             } catch {
                 DDLogError("Moya decode error: \(error)")
@@ -552,14 +570,14 @@ extension DataService: ProductDataServicing {
             }
         }
         return response.flatMap { [unowned self] response -> Single<[Channel]> in
-//            DDLogDebug("response.result: \(response.result)")
+            //            DDLogDebug("response.result: \(response.result)")
             return self.replacePersistedChannels(channels: response.result)
-            }
-            .do(onSuccess: { [unowned self] products in
-                self._channels.value = products
-            })
+        }
+        .do(onSuccess: { [unowned self] products in
+            self._channels.value = products
+        })
     }
-
+    
     public var books: Observable<[Book]> {
         switch self.networkStatus.value {
         case .notReachable:
@@ -573,7 +591,7 @@ extension DataService: ProductDataServicing {
             return _books.asObservable()
         }
     }
-
+    
     public func chapters(for bookUuid: String, stride: Int) -> Single<[Playable]> {
         
         var mediaChapterResponse: MediaChapterResponse!
@@ -602,15 +620,15 @@ extension DataService: ProductDataServicing {
             }
         }
         
-//        DDLogDebug("chapters offset \(offset) limit \(limit)")
+        //        DDLogDebug("chapters offset \(offset) limit \(limit)")
         switch self.networkStatus.value {
         case .notReachable:
             return dataStore.fetchChapters(for: bookUuid)
         case .reachable(_):
-//            let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
-//            let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
-//            DDLogDebug("self._responseMap: \(self._responseMap)")
-
+            //            let request: KJVRVGService = .books(languageId: L10n.shared.language, offset: offset, limit: limit)
+            //            let requestKey: String = String(describing: request).components(separatedBy: " ")[0]
+            //            DDLogDebug("self._responseMap: \(self._responseMap)")
+            
             let moyaResponse = self.networkingApi.rx.request(.booksChapterMedia(uuid: bookUuid, languageId: L10n.shared.language, offset: previousOffset + 1, limit: stride))
             let mediaChapterResponse: Single<MediaChapterResponse> = moyaResponse.map { response -> MediaChapterResponse in
                 do {
@@ -629,7 +647,7 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchChapters(for: bookUuid)
         }
     }
-
+    
     public func fetchAndObserveBooks(stride: Int) -> Single<[Book]> {
         var bookResponse: BookResponse!
         var previousOffset = 0
@@ -637,9 +655,9 @@ extension DataService: ProductDataServicing {
         var loadedSoFar = -1
         var fetchState: FetchState = .hasNotFetched
         
-//        let books: [Book] = self._books.value
-//        DDLogDebug("books.count: \(books.count)")
-
+        //        let books: [Book] = self._books.value
+        //        DDLogDebug("books.count: \(books.count)")
+        
         if let cachedResponse: Response = self._responseMap["booksResponse"] {
             do {
                 fetchState = .hasFetched
@@ -660,11 +678,11 @@ extension DataService: ProductDataServicing {
                 DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
             }
         }
-//        else {
-//            // we are making the first call to fetch books
-//            request = .books(languageId: L10n.shared.language, offset: 1, limit: stride)
-//        }
-
+        //        else {
+        //            // we are making the first call to fetch books
+        //            request = .books(languageId: L10n.shared.language, offset: 1, limit: stride)
+        //        }
+        
         /// if we got to this point we know there are more items to be fetched
         switch self.networkStatus.value {
         case .reachable(_):
@@ -681,29 +699,29 @@ extension DataService: ProductDataServicing {
                         } catch {
                             throw DataServiceError.decodeFailed
                         }
-                    }
-                    .flatMap { bookResponse -> Single<[Book]> in
-                        return Single.just(bookResponse.result)
-                    }
-                    .flatMap { [unowned self] in
-                        self.appendPersistedBooks($0)
-                    }
-                    .do(onSuccess: { [unowned self] products in
-                        self._books.value = products
-                        //            self._persistedBooks.value = products
-                    })
+                }
+                .flatMap { bookResponse -> Single<[Book]> in
+                    return Single.just(bookResponse.result)
+                }
+                .flatMap { [unowned self] in
+                    self.appendPersistedBooks($0)
+                }
+                .do(onSuccess: { [unowned self] products in
+                    self._books.value = products
+                    //            self._persistedBooks.value = products
+                })
             } else {
                 return Single.just(self._books.value) //dataStore.fetchBooks()
             }
-
-//                .asObservable()
+            
+        //                .asObservable()
         case .notReachable:
             return Single.just(self._books.value) //dataStore.fetchBooks()
         case .unknown:
             return Single.just(self._books.value) //dataStore.fetchBooks()
         }
     }
-
+    
     public func mediaGospel(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
         var mediaGospelResponse: MediaGospelResponse!
         var previousOffset = 0
@@ -714,7 +732,7 @@ extension DataService: ProductDataServicing {
         if let cachedResponse: Response = self._responseMap[categoryUuid] {
             do {
                 fetchState = .hasFetched
-
+                
                 mediaGospelResponse = try cachedResponse.map(MediaGospelResponse.self)
                 totalEntries = mediaGospelResponse.totalEntries
                 let cachedPageNumber: Int = mediaGospelResponse.pageNumber
@@ -724,13 +742,13 @@ extension DataService: ProductDataServicing {
                 previousOffset = cachedPageNumber
                 
                 // assume we've loaded at least once, so return the local db instead
-//                if loadedSoFar == stride {
-//                    return self.dataStore.fetchMediaGospel(for: categoryUuid)
-//                }
+                //                if loadedSoFar == stride {
+                //                    return self.dataStore.fetchMediaGospel(for: categoryUuid)
+                //                }
                 if loadedSoFar >= totalEntries {
                     DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
                     return dataStore.fetchMediaGospel(for: categoryUuid)
-//                    return Single.error(DataServiceError.offsetOutofRange)
+                    //                    return Single.error(DataServiceError.offsetOutofRange)
                 }
             } catch {
                 DDLogDebug("DataServiceError.decodeFailed: \(DataServiceError.decodeFailed)")
@@ -739,7 +757,7 @@ extension DataService: ProductDataServicing {
         
         switch self.networkStatus.value {
         case .notReachable:
-
+            
             return dataStore.fetchMediaGospel(for: categoryUuid)
         case .reachable(_):
             var cachedMedia: [Playable]!
@@ -751,8 +769,8 @@ extension DataService: ProductDataServicing {
             } else {
                 cachedMedia = []
             }
-
-
+            
+            
             // we should try to determine if we need to fetch more items
             // AND if we should then determine the next page offset should be fetched
             
@@ -766,7 +784,7 @@ extension DataService: ProductDataServicing {
             if modulo == 0 {
                 previousOffset = (cachedMedia.count / stride)
             }
-
+            
             if (loadedSoFar < totalEntries) || (fetchState == .hasNotFetched) && (cachedMedia.count == 0 || modulo == 0) {
                 let moyaResponse = self.networkingApi.rx.request(.gospelsMedia(uuid: categoryUuid, offset: previousOffset + 1, limit: stride)) //(.booksChapterMedia(uuid: categoryUuid, languageId: L10n.shared.language))
                 let mediaGospelResponse: Single<MediaGospelResponse> = moyaResponse.map { response -> MediaGospelResponse in
@@ -801,7 +819,7 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchMediaGospel(for: categoryUuid)
         }
     }
-
+    
     public func mediaMusic(for categoryUuid: String, stride: Int) -> Single<[Playable]> {
         var mediaMusicResponse: MediaMusicResponse!
         var previousOffset = 0
@@ -877,12 +895,12 @@ extension DataService: ProductDataServicing {
                 }
                 let storedMediaMusic: Single<[Playable]> = mediaMusicResponse.flatMap { [unowned self] mediaMusicResponse -> Single<[Playable]> in
                     self.appendPersistedMediaMusic(mediaMusic: mediaMusicResponse.result, for: categoryUuid)
-                    }
-                    .do(onSuccess: { [unowned self] playble in
-                        var mediaMap: [String: [Playable]] = self._media.value
-                        mediaMap[categoryUuid] = playble
-                        self._media.value = mediaMap
-                    })
+                }
+                .do(onSuccess: { [unowned self] playble in
+                    var mediaMap: [String: [Playable]] = self._media.value
+                    mediaMap[categoryUuid] = playble
+                    self._media.value = mediaMap
+                })
                 return storedMediaMusic
             } else {
                 // return back cached music media array
@@ -899,7 +917,7 @@ extension DataService: ProductDataServicing {
             return dataStore.fetchMediaMusic(for: categoryUuid)
         }
     }
-
+    
     public func bibleLanguages(stride: Int) -> Single<[LanguageIdentifier]> {
         return self.networkingApi.rx.request(.languagesSupported(offset: 0, limit: stride))
             .map { response -> LanguagesSupportedResponse in
@@ -915,7 +933,7 @@ extension DataService: ProductDataServicing {
         }
         .flatMap { [unowned self] in self.replacePersistedBibleLanguages(bibleLanguages: $0) }
     }
-
+    
     public func categoryListing(for categoryType: CategoryListingType, stride: Int) -> Single<[Categorizable]> {
         var categoryListing: Single<[Categorizable]> = Single.just([])
         var musicResponse: MusicResponse!
@@ -938,7 +956,7 @@ extension DataService: ProductDataServicing {
                 switch categoryType {
                 case .gospel:
                     gospelFetchState = .hasFetched
-
+                    
                     gospelResponse = try cachedResponse.map(GospelResponse.self)
                     gospelTotalEntries = gospelResponse.totalEntries
                     let cachedPageNumber: Int = gospelResponse.pageNumber
@@ -953,12 +971,12 @@ extension DataService: ProductDataServicing {
                     
                     if gospelLoadedSoFar >= gospelTotalEntries {
                         DDLogDebug("DataServiceError.offsetOutofRange: \(DataServiceError.offsetOutofRange)")
-//                        return Single.error(DataServiceError.offsetOutofRange)
+                        //                        return Single.error(DataServiceError.offsetOutofRange)
                         return dataStore.fetchCategoryList(for: categoryType)
                     }
                 case .music:
                     musicFetchState = .hasFetched
-
+                    
                     musicResponse = try cachedResponse.map(MusicResponse.self)
                     musicTotalEntries = musicResponse.totalEntries
                     let cachedPageNumber: Int = musicResponse.pageNumber
@@ -999,7 +1017,7 @@ extension DataService: ProductDataServicing {
                 } else {
                     cachedGospelItems = []
                 }
-
+                
                 // we should try to determine if we need to fetch more items
                 // AND if we should then determine the next page offset should be fetched
                 
@@ -1013,7 +1031,7 @@ extension DataService: ProductDataServicing {
                 if modulo == 0 {
                     gospelPreviousOffset = (cachedGospelItems.count / stride)
                 }
-
+                
                 if (gospelLoadedSoFar < gospelTotalEntries || gospelFetchState == .hasNotFetched) && (cachedGospelItems.count == 0 || modulo == 0) {
                     DDLogDebug("reachable")
                     categoryListing = self.networkingApi.rx.request(.gospels(languageId: L10n.shared.language, offset: gospelPreviousOffset + 1, limit: stride))
@@ -1025,21 +1043,21 @@ extension DataService: ProductDataServicing {
                             } catch {
                                 throw DataServiceError.decodeFailed
                             }
-                        }.flatMap { gospelResponse -> Single<[Categorizable]> in
-                            DDLogDebug("gospelResponse.result: \(gospelResponse.result)")
-                            return Single.just(gospelResponse.result)
-                        }
-                        .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
-                        .do(onSuccess: { [unowned self] categorizable in
-                            var categorizableMap: [String: [Categorizable]] = self._categories.value
-                            categorizableMap[String(describing: categoryType)] = categorizable
-                            self._categories.value = categorizableMap
-                            //            self._persistedBooks.value = products
-                        })
+                    }.flatMap { gospelResponse -> Single<[Categorizable]> in
+                        DDLogDebug("gospelResponse.result: \(gospelResponse.result)")
+                        return Single.just(gospelResponse.result)
+                    }
+                    .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
+                    .do(onSuccess: { [unowned self] categorizable in
+                        var categorizableMap: [String: [Categorizable]] = self._categories.value
+                        categorizableMap[String(describing: categoryType)] = categorizable
+                        self._categories.value = categorizableMap
+                        //            self._persistedBooks.value = products
+                    })
                 } else {
                     // return back cached gospel array
                     let categorizableMap: [String: [Categorizable]] = self._categories.value
-//                    let gospelResult: [Categorizable]
+                    //                    let gospelResult: [Categorizable]
                     
                     if let gospelResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
                         categoryListing = Single.just(gospelResult) // dataStore.fetchCategoryList(for: categoryType)
@@ -1057,7 +1075,7 @@ extension DataService: ProductDataServicing {
                 categoryListing = dataStore.fetchCategoryList(for: categoryType)
             case .reachable(_):
                 var cachedMusicItems: [Categorizable]!
-
+                
                 // get cached music array
                 let categorizableMap: [String: [Categorizable]] = self._categories.value
                 if let musicResult: [Categorizable] = categorizableMap[String(describing: categoryType)] {
@@ -1090,17 +1108,17 @@ extension DataService: ProductDataServicing {
                             } catch {
                                 throw DataServiceError.decodeFailed
                             }
-                        }.flatMap { musicResponse -> Single<[Categorizable]> in
-                            DDLogDebug("musicResponse.result: \(musicResponse.result)")
-                            return Single.just(musicResponse.result)
-                        }
-                        .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
-                        .do(onSuccess: { [unowned self] categorizable in
-                            var categorizableMap: [String: [Categorizable]] = self._categories.value
-                            categorizableMap[String(describing: categoryType)] = categorizable
-                            self._categories.value = categorizableMap
-                            //            self._persistedBooks.value = products
-                        })
+                    }.flatMap { musicResponse -> Single<[Categorizable]> in
+                        DDLogDebug("musicResponse.result: \(musicResponse.result)")
+                        return Single.just(musicResponse.result)
+                    }
+                    .flatMap { [unowned self] in self.appendPersistedCategoryList(categoryList: $0, for: categoryType) }
+                    .do(onSuccess: { [unowned self] categorizable in
+                        var categorizableMap: [String: [Categorizable]] = self._categories.value
+                        categorizableMap[String(describing: categoryType)] = categorizable
+                        self._categories.value = categorizableMap
+                        //            self._persistedBooks.value = products
+                    })
                 } else {
                     // return back cached music category array
                     let categorizableMap: [String: [Categorizable]] = self._categories.value
@@ -1116,7 +1134,7 @@ extension DataService: ProductDataServicing {
         }
         return categoryListing
     }
-
+    
     // Orgs ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     private func replacePersistedDefaultOrgs(orgs: [Org]) -> Single<[Org]> {
@@ -1129,9 +1147,9 @@ extension DataService: ProductDataServicing {
     public func deletePersistedDefaultOrgs() -> Single<Void> {
         return self.dataStore.deleteDefaultOrgs()
     }
-
+    
     // Channels ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+    
     private func replacePersistedChannels(channels: [Channel]) -> Single<[Channel]> {
         return dataStore.deleteChannels()
             .flatMap { [unowned self] _ in
@@ -1142,7 +1160,7 @@ extension DataService: ProductDataServicing {
     public func deletePersistedChannels() -> Single<Void> {
         return self.dataStore.deleteChannels()
     }
-
+    
     // MediaItems ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     private func appendPersistedMediaItems(mediaItems: [MediaItem]) -> Single<[MediaItem]> {
@@ -1159,14 +1177,14 @@ extension DataService: ProductDataServicing {
     public func deletePersistedMediaItems() -> Single<Void> {
         return self.dataStore.deleteMediaItems()
     }
-
+    
     
     // Playlists ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     private func appendPersistedPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
         return self.dataStore.addPlaylists(playlists: playlists)
     }
-
+    
     private func replacePersistedPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
         return dataStore.deletePlaylists()
             .flatMap { [unowned self] _ in
@@ -1177,9 +1195,9 @@ extension DataService: ProductDataServicing {
     public func deletePersistedPlaylists() -> Single<Void> {
         return self.dataStore.deletePlaylists()
     }
-
+    
     // Books ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+    
     // MARK: Private helpers
     private func replacePersistedBooks(_ books: [Book]) -> Single<[Book]> {
         return dataStore.deleteAllBooks()
@@ -1188,9 +1206,9 @@ extension DataService: ProductDataServicing {
     
     private func appendPersistedBooks(_ books: [Book]) -> Single<[Book]> {
         return self.dataStore.addBooks(books: books)
-//            .do(onSuccess: { [unowned self] books in
-//                return self.dataStore.fetchBooks()
-//            })
+        //            .do(onSuccess: { [unowned self] books in
+        //                return self.dataStore.fetchBooks()
+        //            })
     }
     
     public func deletePersistedBooks() -> Single<Void> {
@@ -1223,25 +1241,25 @@ extension DataService: ProductDataServicing {
                     DDLogDebug("categorizable: \((categorizable))")
                     return categorizable.categoryUuid
                 }
-            }
-            .asObservable()
-            .flatMap { Observable.from($0) }
+        }
+        .asObservable()
+        .flatMap { Observable.from($0) }
     }
-
+    
     private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addChapters(chapters: chapters, for: bookUuid) }
     }
-
-//    private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
-//        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
-//    }
+    
+    //    private func replacePersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
+    //        return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
+    //    }
     
     private func appendPersistedChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
-//        let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
+        //        let deleted: Single<Void> = dataStore.deleteChapters(for: bookUuid)
         return self.dataStore.addChapters(chapters: chapters, for: bookUuid)
     }
-
+    
     private func replacePersistedMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteMediaGospel(for: categoryUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaGospel(mediaGospel: mediaGospel, for: categoryUuid) }
@@ -1250,23 +1268,23 @@ extension DataService: ProductDataServicing {
     private func appendPersistedMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         return self.dataStore.addMediaGospel(mediaGospel: mediaGospel, for: categoryUuid)
     }
-
+    
     private func replacePersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         let deleted: Single<Void> = dataStore.deleteMediaMusic(for: categoryUuid)
         return deleted.flatMap { [unowned self] _ in self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid) }
     }
-
+    
     private func appendPersistedMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
         return self.dataStore.addMediaMusic(mediaMusic: mediaMusic, for: categoryUuid)
     }
-
+    
     private func replacePersistedBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {
         return dataStore.deleteBibleLanguages()
             .flatMap { [unowned self] _ in
                 self.dataStore.addBibleLanguages(bibleLanguages: bibleLanguages)
         }
     }
-
+    
     private func replacePersistedCategoryList(categoryList: [Categorizable],
                                               for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
         let deleted: Single<Void> = dataStore.deleteCategoryList(for: categoryListType)
@@ -1274,12 +1292,12 @@ extension DataService: ProductDataServicing {
             categoryList: categoryList,
             for: categoryListType) }
     }
-
+    
     private func appendPersistedCategoryList(categoryList: [Categorizable],
-                                              for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
+                                             for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
         return self.dataStore.addCategory(categoryList: categoryList, for: categoryListType)
     }
-
+    
     private func reactToReachability() {
         reachability.startNotifier().asObservable()
             .subscribe(onNext: { networkStatus in

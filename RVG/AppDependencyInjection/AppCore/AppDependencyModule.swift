@@ -56,6 +56,10 @@ internal final class AppDependencyModule {
                                   dataService: resolver.resolve(DataService.self)!)
             //            return ProductService(dataService: resolver.resolve(DataService.self)!)
             }.inObjectScope(.container)
+        
+        container.register(MediaRouteHandling.self) { _ in
+            return MediaRouteHandler()
+        }.inObjectScope(.container)
 
         attachUtilityDependencies(to: container)
         attachAppLevelDependencies(to: container)
@@ -197,6 +201,16 @@ internal final class AppDependencyModule {
 
     private static func attachMainFlowDependencies(to container: Container) {
 
+        container.register(MediaRouteCoordinator.self) { resolver in
+            MediaRouteCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+//                                  mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
+                productService: resolver.resolve(ProductServicing.self)!,
+                                  resettablePlaybackCoordinator: Resettable {
+                resolver.resolve(PlaybackCoordinator.self)!
+                }
+            )
+        }
+
         container.register(MediaListingCoordinator.self) { resolver in
             MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!, resettablePlaybackCoordinator: Resettable {
                                         resolver.resolve(PlaybackCoordinator.self)!
@@ -260,7 +274,10 @@ internal final class AppDependencyModule {
                     resolver.resolve(BibleLanguageCoordinator.self)!
                 }, resettableHistoryCoordinator: Resettable {
                     resolver.resolve(HistoryCoordinator.self)!
+                }, resettableMediaRouteCoordinator: Resettable {
+                    resolver.resolve(MediaRouteCoordinator.self)!
                 },
+                   mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
                 productService: resolver.resolve(ProductServicing.self)!
             )
         }

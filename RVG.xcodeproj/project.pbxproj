@@ -138,6 +138,9 @@
 		4C7EB89E228FAA92000E8DAB /* MediaCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */; };
 		4C7EB8A0228FB240000E8DAB /* MediaItemResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */; };
 		4C7EB8A2228FB283000E8DAB /* MediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB8A1228FB283000E8DAB /* MediaItem.swift */; };
+		4C88EBE223EA49E000D5857A /* MediaRouteHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C88EBE123EA49E000D5857A /* MediaRouteHandling.swift */; };
+		4C88EBE423EA5B7600D5857A /* MediaRouteCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C88EBE323EA5B7600D5857A /* MediaRouteCoordinator.swift */; };
+		4C8BCCED23ED0B01001975AC /* MediaItemRouteResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8BCCEC23ED0B01001975AC /* MediaItemRouteResponse.swift */; };
 		4C8EE8B81FF5D0B0003F483A /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */; };
 		4C8EE8BE1FF5F506003F483A /* Single+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */; };
 		4C8EE8C01FF5F62B003F483A /* Data+Parsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */; };
@@ -411,6 +414,9 @@
 		4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaCategory.swift; path = Model/MediaCategory.swift; sourceTree = "<group>"; };
 		4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaItemResponse.swift; path = Model/MediaItemResponse.swift; sourceTree = "<group>"; };
 		4C7EB8A1228FB283000E8DAB /* MediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItem.swift; sourceTree = "<group>"; };
+		4C88EBE123EA49E000D5857A /* MediaRouteHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaRouteHandling.swift; sourceTree = "<group>"; };
+		4C88EBE323EA5B7600D5857A /* MediaRouteCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaRouteCoordinator.swift; sourceTree = "<group>"; };
+		4C8BCCEC23ED0B01001975AC /* MediaItemRouteResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MediaItemRouteResponse.swift; path = Model/MediaItemRouteResponse.swift; sourceTree = "<group>"; };
 		4C8EE8B71FF5D0B0003F483A /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SplashScreen.storyboard; sourceTree = "<group>"; };
 		4C8EE8BD1FF5F506003F483A /* Single+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Single+Utilities.swift"; sourceTree = "<group>"; };
 		4C8EE8BF1FF5F62B003F483A /* Data+Parsing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Parsing.swift"; sourceTree = "<group>"; };
@@ -661,6 +667,7 @@
 		4C21A72720161B19000F02CE /* AppCore */ = {
 			isa = PBXGroup;
 			children = (
+				4C88EBE023EA48C600D5857A /* Deeplinking */,
 				4C7D5465200EF7A90038B265 /* Account */,
 				4CCE8C7E1FF4B6D000AFBAF2 /* AppAnimations.swift */,
 				4CCE8C921FF4BC8200AFBAF2 /* AppConstants.swift */,
@@ -787,6 +794,14 @@
 			path = Account;
 			sourceTree = "<group>";
 		};
+		4C88EBE023EA48C600D5857A /* Deeplinking */ = {
+			isa = PBXGroup;
+			children = (
+				4C88EBE123EA49E000D5857A /* MediaRouteHandling.swift */,
+			);
+			path = Deeplinking;
+			sourceTree = "<group>";
+		};
 		4C9C589323A0B40300AA89B9 /* ImageServiceNotificationExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -843,6 +858,7 @@
 				4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */,
 				4C381D8D200839A100FD2DEA /* MainViewController.swift */,
 				4C01A265231E0B1C00617FEC /* MediaDetailsCoordinator.swift */,
+				4C88EBE323EA5B7600D5857A /* MediaRouteCoordinator.swift */,
 				4CA31F972009DF4800A94101 /* MediaListingCoordinator.swift */,
 				4C7D546C2013DB210038B265 /* MediaListingViewController.swift */,
 				4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */,
@@ -1057,6 +1073,7 @@
 				4C7EB863228B8EA7000E8DAB /* UserActionPlayable.swift */,
 				4C7EB89D228FAA92000E8DAB /* MediaCategory.swift */,
 				4C7EB89F228FB240000E8DAB /* MediaItemResponse.swift */,
+				4C8BCCEC23ED0B01001975AC /* MediaItemRouteResponse.swift */,
 				4C22F5A722FF83A80057DEBE /* UserLoginResponse.swift */,
 				4C6320402349A78200C1B709 /* UserSignupResponse.swift */,
 				4C22F5A922FF84100057DEBE /* UserLoginUser.swift */,
@@ -1430,6 +1447,7 @@
 				4C6D8E4F22AC6E010025DA28 /* Listable.swift in Sources */,
 				4CFB85042005B92E00FEBB53 /* UIView+Instantiating.swift in Sources */,
 				4C7EB88D228B8EA8000E8DAB /* Device.swift in Sources */,
+				4C8BCCED23ED0B01001975AC /* MediaItemRouteResponse.swift in Sources */,
 				4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */,
 				4C7EB896228B8EA8000E8DAB /* MediaMusicResponse.swift in Sources */,
 				4C5FAD772037AEE600397BFF /* RadioListViewController.swift in Sources */,
@@ -1488,6 +1506,7 @@
 				4CFB84FC2005AEB400FEBB53 /* SettingDrillInCell.swift in Sources */,
 				4C999C34215F1614002EF2F4 /* RemoteCommandManager.swift in Sources */,
 				4CCE8C731FF4B4A100AFBAF2 /* UIViewController+Transitioning.swift in Sources */,
+				4C88EBE223EA49E000D5857A /* MediaRouteHandling.swift in Sources */,
 				4C01A266231E0B1C00617FEC /* MediaDetailsCoordinator.swift in Sources */,
 				4C3E872A1FFDAFB00037C22E /* DataStore.swift in Sources */,
 				4C7EB886228B8EA8000E8DAB /* LanguageIdentifier.swift in Sources */,
@@ -1583,6 +1602,7 @@
 				4C7EB87C228B8EA8000E8DAB /* EnvironmentUrlItemKey.swift in Sources */,
 				4C8EE8C21FF60105003F483A /* ProductService.swift in Sources */,
 				4C7EB895228B8EA8000E8DAB /* LanguagesSupportedResponse.swift in Sources */,
+				4C88EBE423EA5B7600D5857A /* MediaRouteCoordinator.swift in Sources */,
 				4C4A2CDC22D2E23E008BB79A /* DownloadOperation.swift in Sources */,
 				4C6D8E4622A3180D0025DA28 /* DeviceInfoProviding.swift in Sources */,
 				4C0F486D2024AF8D00A8904F /* CategoryListingCoordinator.swift in Sources */,
