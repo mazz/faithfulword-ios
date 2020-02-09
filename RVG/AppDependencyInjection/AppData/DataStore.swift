@@ -463,12 +463,20 @@ extension DataStore: DataStoring {
                     //                    if let user = try User.fetchOne(db) {
                     for org in orgs {
                         DDLogDebug("org: \(org)")
-                        //            try! self.dbQueue.inDatabase { db in
-                        var storeOrg: Org = org
-                        //                            storeLang.userId = user.userId
-                        try storeOrg.insert(db)
+                        do {
+                            var storeOrg: Org = org
+                            try storeOrg.insert(db)
+                            
+                        } catch let error as DatabaseError where error.extendedResultCode == .SQLITE_CONSTRAINT_FOREIGNKEY {
+                            print("Org foreign key constraint error: \(error)")
+                        } catch let error as DatabaseError where error.resultCode == .SQLITE_CONSTRAINT {
+                            print("Org other constraint error: \(error)")
+                            // any other constraint error
+                        } catch let error as DatabaseError {
+                            print("Org other database error: \(error)")
+                            // any other database error
+                        }
                     }
-                    //                    }
                     return .commit
                 }
                 single(.success(orgs))
@@ -546,12 +554,19 @@ extension DataStore: DataStoring {
                     //                    if let user = try User.fetchOne(db) {
                     for channel in channels {
                         DDLogDebug("channel: \(channel)")
-                        //            try! self.dbQueue.inDatabase { db in
-                        var storeChannel: Channel = channel
-                        //                            storeLang.userId = user.userId
-                        try storeChannel.insert(db)
+                        do {
+                            let storeChannel: Channel = channel
+                            try storeChannel.insert(db)
+                        } catch let error as DatabaseError where error.extendedResultCode == .SQLITE_CONSTRAINT_FOREIGNKEY {
+                            print("Channel foreign key constraint error: \(error)")
+                        } catch let error as DatabaseError where error.resultCode == .SQLITE_CONSTRAINT {
+                            print("Channel other constraint error: \(error)")
+                            // any other constraint error
+                        } catch let error as DatabaseError {
+                            print("Channel other database error: \(error)")
+                            // any other database error
+                        }
                     }
-                    //                    }
                     return .commit
                 }
                 single(.success(channels))
@@ -601,15 +616,22 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 try dbPool.writeInTransaction { db in
-                    //                    if let user = try User.fetchOne(db) {
                     for playlist in playlists {
-                        DDLogDebug("playlist: \(playlist)")
-                        //            try! self.dbQueue.inDatabase { db in
-                        var storePlaylist: Playlist = playlist
-                        //                            storeLang.userId = user.userId
-                        try storePlaylist.insert(db)
+                        do {
+                            DDLogDebug("playlist: \(playlist)")
+                            let storePlaylist: Playlist = playlist
+                            try storePlaylist.insert(db)
+                        } catch let error as DatabaseError where error.extendedResultCode == .SQLITE_CONSTRAINT_FOREIGNKEY {
+                            print("Playlist foreign key constraint error: \(error)")
+                        } catch let error as DatabaseError where error.resultCode == .SQLITE_CONSTRAINT {
+                            print("Playlist other constraint error: \(error)")
+                            // any other constraint error
+                        } catch let error as DatabaseError {
+                            print("Playlist other database error: \(error)")
+                            // any other database error
+                        }
+                        
                     }
-                    //                    }
                     return .commit
                 }
                 single(.success(playlists))
@@ -674,15 +696,21 @@ extension DataStore: DataStoring {
         return Single.create { [unowned self] single in
             do {
                 try dbPool.writeInTransaction { db in
-                    //                    if let user = try User.fetchOne(db) {
                     for mediaItem in items {
                         DDLogDebug("mediaItem: \(mediaItem)")
-                        //            try! self.dbQueue.inDatabase { db in
-                        var storeMediaItem: MediaItem = mediaItem
-                        //                            storeLang.userId = user.userId
-                        try storeMediaItem.insert(db)
+                        do {
+                            var storeMediaItem: MediaItem = mediaItem
+                            try storeMediaItem.insert(db)
+                        } catch let error as DatabaseError where error.extendedResultCode == .SQLITE_CONSTRAINT_FOREIGNKEY {
+                            print("MediaItem foreign key constraint error: \(error)")
+                        } catch let error as DatabaseError where error.resultCode == .SQLITE_CONSTRAINT {
+                            print("MediaItem other constraint error: \(error)")
+                            // any other constraint error
+                        } catch let error as DatabaseError {
+                            print("MediaItem other database error: \(error)")
+                            // any other database error
+                        }
                     }
-                    //                    }
                     return .commit
                 }
                 single(.success(items))
@@ -728,7 +756,22 @@ extension DataStore: DataStoring {
 //                                        session: session,
 //                                        pushNotifications:false,
 //                                        language: L10n.shared.language) //(userId: nil, name: "john hancock", session: session, pushNotifications: false, language: L10n.shared.language)
-                        try resultUser.insert(db)
+//                        try resultUser.insert(db)
+                        do {
+//                            DDLogDebug("playlist: \(playlist)")
+//                            let storePlaylist: Playlist = playlist
+//                            try storePlaylist.insert(db)
+                            try resultUser.insert(db)
+
+                        } catch let error as DatabaseError where error.extendedResultCode == .SQLITE_CONSTRAINT_FOREIGNKEY {
+                            print("Playlist foreign key constraint error: \(error)")
+                        } catch let error as DatabaseError where error.resultCode == .SQLITE_CONSTRAINT {
+                            print("Playlist other constraint error: \(error)")
+                            // any other constraint error
+                        } catch let error as DatabaseError {
+                            print("Playlist other database error: \(error)")
+                            // any other database error
+                        }
 //                        resultUser = user.session
                     }
                     return .commit

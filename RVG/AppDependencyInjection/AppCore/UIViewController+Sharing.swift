@@ -12,7 +12,7 @@ import UIKit
 public extension UIViewController {
 
     func shareLink(mediaItem: MediaItem) {
-        if let hashLink: URL = URL(string: "https://api.faithfulword.app/m"),
+        if let hashLink: URL = URL(string: "https://faithfulword.app/m"),
             let presenterName: String = mediaItem.presenter_name ?? "Unknown Presenter",
             let shareUrl: URL = hashLink.appendingPathComponent(mediaItem.hash_id) {
             DDLogDebug("hashLink: \(shareUrl)")
