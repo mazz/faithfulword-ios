@@ -104,6 +104,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             if let url = userActivityUrl {
                 if let launched = launchedWithUserActivity {
                     if launched {
+                        // reset globals
+                        launchedWithUserActivity = false
+                        userActivityUrl = nil
+                        
                         self?.doMediaUniveralLinkRoute(url: url)
                     }
                 }

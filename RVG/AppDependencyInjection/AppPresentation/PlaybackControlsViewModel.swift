@@ -86,7 +86,7 @@ public final class PlaybackControlsViewModel {
                     
                 case .unknown:
                     self.pausePlayback()
-                    self.playDisabled.value = !fileExists
+                    self.playDisabled.value = false
                 case .notReachable:
                     if !fileExists {
                         self.pausePlayback()
@@ -248,7 +248,7 @@ public final class PlaybackControlsViewModel {
             
         case .unknown:
             self.pausePlayback()
-            self.playDisabled.value = !fileExists
+            self.playDisabled.value = false
         case .notReachable:
             if !fileExists {
                 self.pausePlayback()

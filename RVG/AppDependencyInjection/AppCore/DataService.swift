@@ -2,6 +2,7 @@ import RxSwift
 import Moya
 import L10n_swift
 import Alamofire
+import os.log
 
 public enum DataServiceError: Error {
     case noSession
@@ -483,10 +484,12 @@ extension DataService: ProductDataServicing {
         let response: Single<MediaItemRouteResponse> = moyaResponse.map { response -> MediaItemRouteResponse in
             do {
                 let jsonObj = try response.mapJSON()
-                DDLogDebug("jsonObj: \(jsonObj)")
+                os_log("jsonObj: %{public}@", log: OSLog.data, String(describing: jsonObj))
+
                 return try response.map(MediaItemRouteResponse.self)
             } catch {
-                DDLogError("Moya decode error: \(error)")
+                os_log("Moya decode error: %{public}@", log: OSLog.data, String(describing: error))
+
                 throw DataServiceError.decodeFailed
             }
         }
