@@ -151,6 +151,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 if launched {
                     userActivityUrl = url
                     return false
+                } else {
+                    doMediaUniveralLinkRoute(url: url)
+                    return true
                 }
             } else {
                 doMediaUniveralLinkRoute(url: url)
@@ -159,8 +162,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         } else {
             return false
         }
-
-        return false
 //        } else {
 //            print("Either album name or photo index missing")
 //            return false

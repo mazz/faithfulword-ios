@@ -28,8 +28,8 @@ internal final class MediaRouteCoordinator  {
     private var mediaListingFlowCompletion: FlowCompletion!
     private let bag = DisposeBag()
     internal init(uiFactory: AppUIMaking,
-        productService: ProductServicing,
-        resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>) {
+                  productService: ProductServicing,
+                  resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>) {
         self.uiFactory = uiFactory
         self.productService = productService
         self.resettablePlaybackCoordinator = resettablePlaybackCoordinator
@@ -41,12 +41,17 @@ extension MediaRouteCoordinator: NavigationCoordinating {
         if let mediaRoute = mediaRoute {
             productService.fetchMediaItem(mediaItemUuid: mediaRoute.uuid)
                 .subscribe(onSuccess: { [weak self] mediaItem in
-                    DDLogDebug("fetched mediaItem: \(mediaItem)")
+                    os_log("fetched mediaItem:: %{public}@", log: OSLog.data, String(describing: mediaItem))
+                    os_log("fetched mediaItem, mediaRoute.uuid %{public}@", log: OSLog.data, String(describing: mediaRoute.uuid))
                     self?.swapInPlaybackFlow(for: mediaItem)
-                    
                 }).disposed(by: bag)
         } else if let mediaUniversalLink = mediaUniversalLink {
-            
+            productService.fetchMediaItemForHashId(hashId: mediaUniversalLink.hashId)
+                .subscribe(onSuccess: { [weak self] mediaItem in
+                    os_log("fetched mediaItem: %{public}@", log: OSLog.data, String(describing: mediaItem))
+                    os_log("fetched mediaItem, mediaUniversalLink.hashId %{public}@", log: OSLog.data, String(describing: mediaUniversalLink.hashId))
+                    self?.swapInPlaybackFlow(for: mediaItem)
+                }).disposed(by: bag)
         }
     }
     

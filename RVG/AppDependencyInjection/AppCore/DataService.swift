@@ -84,6 +84,7 @@ public protocol ProductDataServicing {
     
     func persistedMediaItems(for playlistUuid: String) -> Single<[MediaItem]>
     func fetchMediaItem(mediaItemUuid: String) -> Single<MediaItem>
+    func fetchMediaItemForHashId(hashId: String) -> Single<MediaItem>
     func fetchAndObserveMediaItems(for playlistUuid: String, offset: Int, limit: Int, cacheDirective: CacheDirective) -> Single<(MediaItemResponse, [MediaItem])>
     
     func persistedPlaylists(for channelUuid: String) -> Single<[Playlist]>
@@ -461,6 +462,24 @@ extension DataService: ProductDataServicing {
     
     public func fetchMediaItem(mediaItemUuid: String) -> Single<MediaItem> {
         let moyaResponse = self.networkingApi.rx.request(.mediaItem(uuid: mediaItemUuid))
+        let response: Single<MediaItemRouteResponse> = moyaResponse.map { response -> MediaItemRouteResponse in
+            do {
+                let jsonObj = try response.mapJSON()
+                DDLogDebug("jsonObj: \(jsonObj)")
+                return try response.map(MediaItemRouteResponse.self)
+            } catch {
+                DDLogError("Moya decode error: \(error)")
+                throw DataServiceError.decodeFailed
+            }
+        }
+        let mediaItem = response.map { mediaItemRouteResponse -> MediaItem in
+            return mediaItemRouteResponse.result
+        }
+        return mediaItem
+    }
+    
+    public func fetchMediaItemForHashId(hashId: String) -> Single<MediaItem> {
+        let moyaResponse = self.networkingApi.rx.request(.mediaItemForHashId(hashId: hashId))
         let response: Single<MediaItemRouteResponse> = moyaResponse.map { response -> MediaItemRouteResponse in
             do {
                 let jsonObj = try response.mapJSON()
