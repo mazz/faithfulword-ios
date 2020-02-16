@@ -183,6 +183,7 @@ final class PlaylistViewModel {
                 
                 if let strongSelf = self {
                     if swappedLanguage != "none" {
+                        DDLogDebug("swappedLanguage strongSelf.channelUuid: \(swappedLanguage)")
                         strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
                             .flatMap({ _ -> Single<Void> in
                                 strongSelf.totalEntries = -1

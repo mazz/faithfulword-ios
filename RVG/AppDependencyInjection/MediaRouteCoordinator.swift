@@ -20,6 +20,7 @@ internal final class MediaRouteCoordinator  {
     
     // MARK: Fields
     internal var mediaRoute: MediaRoute?
+    internal var mediaUniversalLink: MediaUniversalLink?
     internal var playable: Playable?
     //    internal var mediaCategory: MediaCategory?
     internal var navigationController: UINavigationController?
@@ -40,13 +41,12 @@ extension MediaRouteCoordinator: NavigationCoordinating {
         if let mediaRoute = mediaRoute {
             productService.fetchMediaItem(mediaItemUuid: mediaRoute.uuid)
                 .subscribe(onSuccess: { [weak self] mediaItem in
-                    
-                    if let strongSelf = self {
-                        DDLogDebug("fetched mediaItem: \(mediaItem)")
-                        strongSelf.swapInPlaybackFlow(for: mediaItem)
-                    }
+                    DDLogDebug("fetched mediaItem: \(mediaItem)")
+                    self?.swapInPlaybackFlow(for: mediaItem)
                     
                 }).disposed(by: bag)
+        } else if let mediaUniversalLink = mediaUniversalLink {
+            
         }
     }
     

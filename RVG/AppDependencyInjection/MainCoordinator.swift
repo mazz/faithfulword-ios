@@ -25,7 +25,9 @@ internal final class MainCoordinator: NSObject {
     
     private let bag = DisposeBag()
     private var mediaRouteListenerBag = DisposeBag()
+    private var mediaUniversalLinkListenerBag = DisposeBag()
     private let mediaRouteHandler: MediaRouteHandling
+    private let mediaUniversalLinkHandler: MediaUniversalLinkHandling
     
     private var deviceContextBag = DisposeBag()
     private var mainFlowCompletion: FlowCompletion!
@@ -66,6 +68,7 @@ internal final class MainCoordinator: NSObject {
         resettableHistoryCoordinator: Resettable<HistoryCoordinator>,
         resettableMediaRouteCoordinator: Resettable<MediaRouteCoordinator>,
         mediaRouteHandler: MediaRouteHandling,
+        mediaUniversalLinkHandler: MediaUniversalLinkHandling,
         productService: ProductServicing
         
         //                  resettableDeviceNowPlayingCoordinator: Resettable<DeviceNowPlayingCoordinator>,
@@ -82,7 +85,8 @@ internal final class MainCoordinator: NSObject {
         self.resettableHistoryCoordinator = resettableHistoryCoordinator
         self.resettableMediaRouteCoordinator = resettableMediaRouteCoordinator
         self.mediaRouteHandler = mediaRouteHandler
-        
+        self.mediaUniversalLinkHandler = mediaUniversalLinkHandler
+
         self.productService = productService
         
         //        self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
@@ -135,6 +139,7 @@ extension MainCoordinator: NavigationCoordinating {
         handle(eventsFrom: mainViewController.viewModel)
         
         handleMediaRouteEvents()
+        handleMediaUniversalLinkEvents()
         
         setup(mainNavigationController)
         
@@ -320,7 +325,26 @@ extension MainCoordinator: NavigationCoordinating {
             
             }, context: .other)
     }
-    
+
+    private func swapInMediaUniversalLinkFlow(mediaUniversalLink: MediaUniversalLink) {
+        os_log("mediaUniversalLink: %{public}@", log: OSLog.data, String(describing: mediaUniversalLink))
+
+        //        resettableMainCoordinator.value.bibleChannelUuid = bibleChannelUuid
+        //
+        //        resettableMainCoordinator.value.gospelChannelUuid = gospelChannelUuid
+        //        resettableMainCoordinator.value.preachingChannelUuid = preachingChannelUuid
+        //        resettableMainCoordinator.value.musicChannelUuid = musicChannelUuid
+        resettableMediaRouteCoordinator.value.mediaUniversalLink = mediaUniversalLink
+        resettableMediaRouteCoordinator.value.navigationController = self.mainNavigationController
+        //        resettableMediaRouteCoordinator.value.navigationController = self.navi
+        //        resettableMediaRouteCoordinator.value.doMediaRoute()
+        
+        resettableMediaRouteCoordinator.value.flow(with: { viewController in
+            DDLogDebug("mediaroutecoordinator viewController: \(viewController)")
+        }, completion: { [weak self] _ in
+            
+            }, context: .other)
+    }
     
 }
 
@@ -481,5 +505,34 @@ extension MainCoordinator {
                 //                    self.handle(addServiceProgressViewModel: addServiceProgress.viewModel as! AddServiceProgressViewModel)
                 //                })
         }.disposed(by: mediaRouteListenerBag)
+    }
+    
+    func handleMediaUniversalLinkEvents() {
+        mediaUniversalLinkListenerBag = DisposeBag()
+        os_log("handleMediaUniversalLinkEvents mediaUniversalLinkListenerBag: %{public}@", log: OSLog.data, String(describing: mediaUniversalLinkListenerBag))
+
+        mediaUniversalLinkHandler.mediaUniversalLinkEvent
+//        mediaRouteHandler.mediaRouteEvent
+            //            .filter { $0.host == "success" }
+            .next { [weak self] mediaUniversalLink in
+                os_log("got mediaUniversalLink event: %{public}@", log: OSLog.data, String(describing: mediaUniversalLink))
+
+                if let strongSelf = self {
+                    strongSelf.swapInMediaUniversalLinkFlow(mediaUniversalLink: mediaUniversalLink)
+                }
+                
+                //                guard let queryItems = deeplink.queryItems,
+                //                    let musicServiceDeeplink = AddMusicServiceDeeplink(queryItems: queryItems) else {
+                //                        self.navigationController?.dismiss(animated: true, completion: nil)
+                //                        return
+                //                }
+                
+                //                let addServiceProgress = self.uiFactory.makeAddServiceProgress(succeeded: musicServiceDeeplink.success,
+                //                                                                               musicServiceName: musicServiceDescription.assets.name)
+                //                self.navigationController?.presentedViewController?.present(addServiceProgress, animated: true, completion: {
+                //                    //swiftlint:disable:next force_cast
+                //                    self.handle(addServiceProgressViewModel: addServiceProgress.viewModel as! AddServiceProgressViewModel)
+                //                })
+        }.disposed(by: mediaUniversalLinkListenerBag)
     }
 }

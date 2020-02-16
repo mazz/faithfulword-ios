@@ -208,6 +208,7 @@
 		4CE055FC231886800057BB2F /* TableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CE055FA231886800057BB2F /* TableCell.xib */; };
 		4CE056002319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */; };
 		4CE05604231ABE3C0057BB2F /* MediaSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE05603231ABE3C0057BB2F /* MediaSearchViewModel.swift */; };
+		4CE4402623F4F48400322EB4 /* MediaUniversalLinkHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE4402523F4F48400322EB4 /* MediaUniversalLinkHandling.swift */; };
 		4CEF753B2026CBA300C1BBF3 /* CategoryListingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */; };
 		4CF401E61ED3805700632272 /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */; };
 		4CF401E71ED3805700632272 /* BookCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */; };
@@ -483,6 +484,7 @@
 		4CE055FA231886800057BB2F /* TableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TableCell.xib; sourceTree = "<group>"; };
 		4CE055FF2319818D0057BB2F /* MediaListingViewController+UICollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaListingViewController+UICollectionViewDelegate.swift"; sourceTree = "<group>"; };
 		4CE05603231ABE3C0057BB2F /* MediaSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSearchViewModel.swift; sourceTree = "<group>"; };
+		4CE4402523F4F48400322EB4 /* MediaUniversalLinkHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUniversalLinkHandling.swift; sourceTree = "<group>"; };
 		4CEF753A2026CBA300C1BBF3 /* CategoryListingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryListingViewModel.swift; sourceTree = "<group>"; };
 		4CF401E41ED3805700632272 /* BookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookCollectionViewCell.swift; sourceTree = "<group>"; };
 		4CF401E51ED3805700632272 /* BookCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -798,6 +800,7 @@
 			isa = PBXGroup;
 			children = (
 				4C88EBE123EA49E000D5857A /* MediaRouteHandling.swift */,
+				4CE4402523F4F48400322EB4 /* MediaUniversalLinkHandling.swift */,
 			);
 			path = Deeplinking;
 			sourceTree = "<group>";
@@ -1566,6 +1569,7 @@
 				4C7EB878228B8EA8000E8DAB /* Environment.swift in Sources */,
 				681E117D1ED1141100B028DD /* EnvironmentService.swift in Sources */,
 				4C7EB88B228B8EA8000E8DAB /* Asset.swift in Sources */,
+				4CE4402623F4F48400322EB4 /* MediaUniversalLinkHandling.swift in Sources */,
 				4CA31FA4200B081000A94101 /* SuggestedNameCell.swift in Sources */,
 				4CCE8C6B1FF4B2A000AFBAF2 /* UIMaking.swift in Sources */,
 				689880541F15A9F900CC2BC5 /* MediaMusicTableViewCell.swift in Sources */,
@@ -1694,6 +1698,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ImageServiceNotificationExtension/Info.plist;
@@ -1719,6 +1724,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ImageServiceNotificationExtension/Info.plist;
@@ -1856,6 +1862,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1885,6 +1892,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = AW22Z53SAJ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

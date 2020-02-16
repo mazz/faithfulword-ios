@@ -61,6 +61,10 @@ internal final class AppDependencyModule {
             return MediaRouteHandler()
         }.inObjectScope(.container)
 
+        container.register(MediaUniversalLinkHandling.self) { _ in
+            return MediaUniversalLinkHandler()
+        }.inObjectScope(.container)
+
         attachUtilityDependencies(to: container)
         attachAppLevelDependencies(to: container)
         attachSideMenuFlowDependencies(to: container)
@@ -278,6 +282,7 @@ internal final class AppDependencyModule {
                     resolver.resolve(MediaRouteCoordinator.self)!
                 },
                    mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
+                   mediaUniversalLinkHandler: resolver.resolve(MediaUniversalLinkHandling.self)!,
                 productService: resolver.resolve(ProductServicing.self)!
             )
         }

@@ -7,9 +7,6 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:faithfulword.app</string>
-		<string>applinks:192.168.0.10:4000</string>
-		<string>applinks:192.168.2.22:4000</string>
-		<string>applinks:japheth.ca</string>
 	</array>
 </dict>
 </plist>

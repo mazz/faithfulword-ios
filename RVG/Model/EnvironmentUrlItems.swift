@@ -13,13 +13,20 @@ extension EnvironmentUrlItemKey {
     }
     static var DevelopmentServerRootUrl: EnvironmentUrlItemKey {
         return EnvironmentUrlItemKey(rawValue: "https://faithfulword.app")
+//        return EnvironmentUrlItemKey(rawValue: "https://japheth.ca")
+//        return EnvironmentUrlItemKey(rawValue: "https://markably.app")
 //        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.10")
         //192.168.0.10
     }
     static var LocalServerRootUrl: EnvironmentUrlItemKey {
         //
 //        return EnvironmentUrlItemKey(rawValue: "http://mhanna-mbp15.local:4000")
-        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.10:4000")
+//        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.10:4000")
+        return EnvironmentUrlItemKey(rawValue: "http://192.168.2.22:4000")
+//        return EnvironmentUrlItemKey(rawValue: "http://192.168.0.17:4000")
+//        192.168.2.22
+//        return EnvironmentUrlItemKey(rawValue: "http://172.20.10.2:4000")
+        
 //        return EnvironmentUrlItemKey(rawValue: "http://192.168.2.22:4000")
 //        return EnvironmentUrlItemKey(rawValue: "http://127.0.0.1:4000")
     }

@@ -23,7 +23,13 @@ extension OSLog {
 // The shared database pool
 var dbPool: DatabasePool!
 
+// store launch info if the app was launched via push/deeplink and
+// the main coordinator has not yet started handling media routes
 var launchUserinfo: [AnyHashable: Any]?
+// store url if the app was launched via push/deeplink and
+// the main coordinator has not yet started handling media universal links
+var userActivityUrl: URL?
+var launchedWithUserActivity: Bool?
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate /*, UNUserNotificationCenterDelegate, MessagingDelegate */ {
@@ -50,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         os_log("faithful os_log", log: OSLog.data, type: .debug)
         
         // check the launch options to see if the app was launched from a non-backgrounded state
-        // AND it was initiated by a push notification
+        // AND it was initiated by a push notification/deeplink
         //
         // STORE the push in launchUserinfo
         // once MainCoordinator has finished it's .flow(), it will post a .mainCoordinatorFlowDidCompleteNotification
@@ -64,6 +70,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 
                 launchUserinfo = userinfoDict
             }
+        }
+        
+        if let _ = launchOptions?[UIApplication.LaunchOptionsKey.userActivityDictionary] {
+            launchedWithUserActivity = true
+        } else {
+            launchedWithUserActivity = false
         }
         
         LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).marqueeScrollEnabled = true
@@ -85,13 +97,74 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         NotificationCenter.default.addObserver(forName: MainCoordinator.mainCoordinatorFlowDidCompleteNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
             DDLogDebug("notification: \(notification)")
-            if let userinfoDict = launchUserinfo,
-                let strongSelf = self {
-                strongSelf.doMediaRoute(userinfoDict: userinfoDict)
+            if let userinfoDict = launchUserinfo {
+                self?.doMediaRoute(userinfoDict: userinfoDict)
+            }
+            
+            if let url = userActivityUrl {
+                if let launched = launchedWithUserActivity {
+                    if launched {
+                        self?.doMediaUniveralLinkRoute(url: url)
+                    }
+                }
             }
         }
         
         return true
+    }
+    
+    func application(_ application: UIApplication, didUpdate userActivity: NSUserActivity) {
+        os_log("didUpdate", log: OSLog.data)
+        os_log("userActivity.webpageURL = %@", log: OSLog.data, String(describing: userActivity.webpageURL))
+        os_log("userActivity.userInfo = %@", log: OSLog.data, String(describing: userActivity.userInfo))
+
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        // Get URL components from the incoming user activity
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let incomingURL = userActivity.webpageURL,
+            let components = NSURLComponents(url: incomingURL, resolvingAgainstBaseURL: true) else {
+            return false
+        }
+
+        os_log("userActivity.webpageURL = %@", log: OSLog.data, String(describing: userActivity.webpageURL))
+
+        // Check for specific URL components that you need
+        guard let path = components.path else { return false }
+
+        os_log("path = %@", log: OSLog.data, String(describing: path))
+        
+        
+
+//        if let albumName = params.first(where: { $0.name == "albumname" } )?.value,
+//            let photoIndex = params.first(where: { $0.name == "index" })?.value {
+//            print("album = \(albumName)")
+//            print("photoIndex = \(photoIndex)")
+        
+        if let url = userActivity.webpageURL {
+            
+            // in case the app launched with userActivity
+            // store the URL and check back with an NSNotification
+            // that is initiated by the main coordinator
+            if let launched = launchedWithUserActivity {
+                if launched {
+                    userActivityUrl = url
+                    return false
+                }
+            } else {
+                doMediaUniveralLinkRoute(url: url)
+                return true
+            }
+        } else {
+            return false
+        }
+
+        return false
+//        } else {
+//            print("Either album name or photo index missing")
+//            return false
+//        }
     }
     
     private func doMediaRoute(userinfoDict: [AnyHashable: Any]) {
@@ -113,6 +186,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
     }
     
+    private func doMediaUniveralLinkRoute(url: URL) {
+        os_log("doMediaUniveralLinkRoute: %{public}@", log: OSLog.data, String(describing: url))
+
+        let urlString: String = url.absoluteString
+        var mediaUniversalLinkHandler = self.dependencyModule.resolver.resolve(MediaUniversalLinkHandling.self)!
+        
+        os_log("mediaUniversalLinkHandler = %{public}@", log: OSLog.data, String(describing: mediaUniversalLinkHandler))
+        mediaUniversalLinkHandler.emitMediaUniversalLinkEvent(for: urlString)
+
+    }
+
     private func setupDatabase(_ application: UIApplication) throws {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         let documentsDirectory = paths[0]
