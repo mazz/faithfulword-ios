@@ -3,6 +3,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import MagazineLayout
+import GRDB
 
 public final class ChannelViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -56,6 +57,8 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
     private var viewModelSections: [PlaylistSectionViewModel] = []
     private let bag = DisposeBag()
     
+    private var observer: TransactionObserver?
+
     // MARK: Lifecycle
     
     public override func viewDidLoad() {
@@ -107,6 +110,27 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
     //        }
     
     private func reactToViewModel() {
+        
+//                let request = Playlist
+////                    .filter(Column("orgUuid") == viewModel.orgUuid.value)
+//                    .filter(Column("archived") == false)
+//                    .order(Column("updatedAt").desc)
+//                
+//                let coursesObservation = ValueObservation.tracking { db in
+//                    try request.fetchAll(db)
+//                }
+//                
+//                //        do {
+//                observer = coursesObservation.start(in: dbPool, onError: { error in
+//                    print("CourseListController courses could not be fetched: \(error)")
+//                }, onChange: { [weak self] (mbyCourses: [Playlist]) in
+//                    print("CourseListController courses fetched: \(mbyCourses)")
+//                    self?.viewModel.courses.value = mbyCourses
+//        //            if let strongSelf = self {
+//        //                strongSelf.sections.value = strongSelf.coursesRefresh(refreshedCourses: mbyCourses)
+//        //            }
+//                })
+//        
         viewModel.sections.asObservable()
             .observeOn(MainScheduler.instance)
 //            .filter{ $0[0].items.count > 0 }
@@ -209,17 +233,17 @@ extension ChannelViewController: UIScrollViewDelegate {
             viewModel.fetchAppendPlaylists.onNext(true)
         }
     }
-    
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        
-        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
-        
-        if offsetDiff - collectionView.frame.size.height <= 20.0 {
-            DDLogDebug("fetch!")
-            viewModel.fetchAppendPlaylists.onNext(true)
-        }
-    }
+
+//    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//
+//        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+//        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+//
+//        if offsetDiff - collectionView.frame.size.height <= 20.0 {
+//            DDLogDebug("fetch!")
+//            viewModel.fetchAppendPlaylists.onNext(true)
+//        }
+//    }
 }
 
 

@@ -1,7 +1,9 @@
 import Foundation
 import RxSwift
 import GRDB
+import RxDataSources
 import L10n_swift
+import os.log
 
 protocol PlaylistViewModeling {
     func item(at indexPath: IndexPath) -> PlaylistItemType
@@ -31,6 +33,10 @@ final class PlaylistViewModel {
     // false - the network fetch succeeded and yielded a result > 0
     public var emptyFetchResult: Field<Bool> = Field<Bool>(false)
 
+    // db observation
+    private var observer: TransactionObserver?
+
+    
     public var drillInEvent: Observable<PlaylistDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent.filterMap { [unowned self] indexPath -> PlaylistDrillInType? in
@@ -106,6 +112,22 @@ final class PlaylistViewModel {
     }
     
     func setupDataSource() {
+        let playlistObservation = ValueObservation.tracking { db in
+            try Playlist.fetchAll(db)
+        }
+        
+        
+        
+        observer = playlistObservation.start(in: dbPool, onError: { error in
+            print("Playlist could not be fetched: \(error)")
+        }, onChange: { [weak self] (playlists: [Playlist]) in
+            print("Playlist fetched: \(playlists)")
+//            self?.rebindStudents()
+//            self?.rebindLastMarked()
+        })
+        
+        
+        
         reactToReachability()
 
         networkStatus.asObservable()
@@ -176,36 +198,67 @@ final class PlaylistViewModel {
                 self.fetchMorePlaylists()
             }.disposed(by: bag)
         
-        languageService.swappedUserLanguage
+//        languageService.fetchUserLanguage()
+        languageService.languageChangeEvent
             .asObservable()
-            .subscribe(onNext: { [weak self] swappedLanguage in
-                DDLogDebug("swappedLanguage user language: \(swappedLanguage) current language: \(L10n.shared.language) languageService user language: \(self?.languageService.userLanguage.value)")
-                
-                if let strongSelf = self {
-                    if swappedLanguage != "none" {
-                        DDLogDebug("swappedLanguage strongSelf.channelUuid: \(swappedLanguage)")
-                        strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
-                            .flatMap({ _ -> Single<Void> in
-                                strongSelf.totalEntries = -1
-                                strongSelf.totalPages = -1
-                                strongSelf.pageSize = -1
-                                strongSelf.pageNumber = -1
-                                strongSelf.lastOffset = 0
-                                
-                                strongSelf.sections.value = []
-                                strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
-                                                   limit: Constants.limit,
-                                                   cacheDirective: .fetchAndReplace)
-                                return Single.just(())
-                            })
-                            .asObservable()
-                            .subscribeAndDispose(by: strongSelf.bag)
-                    }
+            .next { [weak self] languageEvent in
+            os_log("languageEvent: %{public}@", log: OSLog.data, String(describing: languageEvent))
+            DDLogDebug("languageEvent user language: \(languageEvent) current language: \(L10n.shared.language) languageService user language: \(self?.languageService.userLanguage.value)")
+            
+            if let strongSelf = self {
+                if languageEvent != "none" {
+                    DDLogDebug("languageEvent strongSelf.channelUuid: \(languageEvent)")
+                    strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
+                        .flatMap({ _ -> Single<Void> in
+                            strongSelf.totalEntries = -1
+                            strongSelf.totalPages = -1
+                            strongSelf.pageSize = -1
+                            strongSelf.pageNumber = -1
+                            strongSelf.lastOffset = 0
+                            
+                            strongSelf.sections.value = []
+                            strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
+                                               limit: Constants.limit,
+                                               cacheDirective: .fetchAndAppend)
+                            return Single.just(())
+                        })
+                        .asObservable()
+                        .subscribeAndDispose(by: strongSelf.bag)
                 }
-            }, onError: { error in
-                DDLogError("error: \(error)")
-            })
-            .disposed(by: bag)
+            }
+        }.disposed(by: bag)
+        
+//        languageService.userLanguage
+//            .asObservable()
+//            .take(1)
+//            .subscribe(onNext: { [weak self] userLanguage in
+//                DDLogDebug("userLanguage user language: \(userLanguage) current language: \(L10n.shared.language) languageService user language: \(self?.languageService.userLanguage.value)")
+//
+//                if let strongSelf = self {
+//                    if userLanguage != "none" {
+//                        DDLogDebug("userLanguage strongSelf.channelUuid: \(userLanguage)")
+//                        strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
+//                            .flatMap({ _ -> Single<Void> in
+//                                strongSelf.totalEntries = -1
+//                                strongSelf.totalPages = -1
+//                                strongSelf.pageSize = -1
+//                                strongSelf.pageNumber = -1
+//                                strongSelf.lastOffset = 0
+//
+//                                strongSelf.sections.value = []
+//                                strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
+//                                                   limit: Constants.limit,
+//                                                   cacheDirective: .fetchAndReplace)
+//                                return Single.just(())
+//                            })
+//                            .asObservable()
+//                            .subscribeAndDispose(by: strongSelf.bag)
+//                    }
+//                }
+//            }, onError: { error in
+//                DDLogError("error: \(error)")
+//            })
+//            .disposed(by: bag)
     }
     
     func initialFetch() {
@@ -237,11 +290,11 @@ final class PlaylistViewModel {
                 DDLogDebug("fetchPlaylists: \(playlists)")
                 
                 // sometimes we need to replace the sections, for instance when the user changed the language
-                if cacheDirective == .fetchAndReplace {
-                    self.playlists.value = playlists
-                } else {
-                    self.playlists.value.append(contentsOf: playlists)
-                }
+//                if cacheDirective == .fetchAndReplace {
+//                    self.playlists.value = playlists
+//                } else {
+                self.playlists.value.append(contentsOf: playlists)
+//                }
                 self.totalEntries = playlistResponse.total_entries
                 self.totalPages = playlistResponse.total_pages
                 self.pageSize = playlistResponse.page_size

@@ -200,16 +200,16 @@ extension MainViewController: UIScrollViewDelegate {
         }
     }
     
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        
-        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
-        
-        if offsetDiff - collectionView.frame.size.height <= 20.0 {
-            DDLogDebug("fetch!")
-            viewModel.fetchAppendPlaylists.onNext(true)
-        }
-    }
+//    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//        
+//        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+//        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+//        
+//        if offsetDiff - collectionView.frame.size.height <= 20.0 {
+//            DDLogDebug("fetch!")
+//            viewModel.fetchAppendPlaylists.onNext(true)
+//        }
+//    }
 }
 
 

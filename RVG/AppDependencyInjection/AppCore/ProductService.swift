@@ -37,8 +37,9 @@ public protocol ProductServicing {
     func fetchMediaItem(mediaItemUuid: String) -> Single<MediaItem>
     func fetchMediaItemForHashId(hashId: String) -> Single<MediaItem>
 
+    func deletePlaylists() -> Single<Void>
     func deletePlaylists(_ forChannelUuid: String) -> Single<Void>
-    
+
     /// List of products registered to the user's Passport account
     var userBooks: Field<[Book]> { get }
     var defaultOrgs: Field<[Org]> { get }
@@ -104,6 +105,10 @@ extension ProductService: ProductServicing {
                                                     offset: offset,
                                                     limit: limit,
                                                     cacheDirective: cacheDirective)
+    }
+
+    public func deletePlaylists() -> Single<Void> {
+        return dataService.deletePlaylists()
     }
 
     public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {

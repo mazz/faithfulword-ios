@@ -96,11 +96,29 @@ internal final class LanguageViewModel: RadioListViewModeling {
         self.selectionEvent.next { [unowned self] event in
             let identifier: String = self.datasource.value[event.section].languageIdentifiers[event.row]
             L10n.shared.language = identifier
-            self.languageService.swappedUserLanguage.value = identifier
+//            self.languageService.swappedUserLanguage.value = identifier
+            
+            let deleted: Single<Void> = self.productService.deletePlaylists()
+            
+            deleted.flatMap { _ -> Single<String> in
+                return self.languageService.updateUserLanguage(languageIdentifier: identifier)
+            }
+            .asObservable()
+            .subscribeAndDispose(by: self.bag)
+//                .asObservable()
+//                .subscribeAndDispose(by: self.bag)
 
-            self.languageService.updateUserLanguage(languageIdentifier: identifier)
-                .asObservable()
-                .subscribeAndDispose(by: self.bag)
+//                .flatMap { _ -> Single<String> in
+//                return "test"
+//            }
+            
+            
+//            self.languageService.updateUserLanguage(languageIdentifier: identifier)
+//                .asObservable()
+//                .subscribe(onNext: { string in
+//
+//                }).disposed(by: self.bag)
+            
             }.disposed(by: bag)
     }
 
