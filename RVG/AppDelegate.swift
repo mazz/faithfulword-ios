@@ -49,8 +49,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         setupDeviceInfoCache()
         
-        DDLog.add(DDTTYLogger.sharedInstance)
-        DDTTYLogger.sharedInstance.colorsEnabled = true
+//        DDLog.add(DDTTYLogger.sharedInstance)
+//        DDTTYLogger.sharedInstance.colorsEnabled = true
         
         NSLog("faithful")
         os_log("faithful os_log", log: OSLog.data, type: .debug)
