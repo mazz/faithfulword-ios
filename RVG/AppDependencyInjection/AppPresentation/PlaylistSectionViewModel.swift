@@ -3,7 +3,7 @@ import RxDataSources
 
 internal struct PlaylistSectionViewModel {
     internal let type: PlaylistSectionType
-    internal let items: [PlaylistItemType]
+    internal var items: [PlaylistItemType]
 }
 
 internal enum PlaylistSectionType {

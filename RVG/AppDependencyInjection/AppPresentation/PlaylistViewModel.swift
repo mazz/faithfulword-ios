@@ -112,6 +112,14 @@ final class PlaylistViewModel {
     }
     
     func setupDataSource() {
+        
+        let request = Playlist
+            .filter(Column("channelUuid") == self.channelUuid)
+        
+//        let playlistObservation = ValueObservation.tracking { db in
+//            try request.fetchAll(db)
+//        }
+
         let playlistObservation = ValueObservation.tracking { db in
             try Playlist.fetchAll(db)
         }
@@ -121,9 +129,36 @@ final class PlaylistViewModel {
         observer = playlistObservation.start(in: dbPool, onError: { error in
             print("Playlist could not be fetched: \(error)")
         }, onChange: { [weak self] (playlists: [Playlist]) in
-            print("Playlist fetched: \(playlists)")
-//            self?.rebindStudents()
-//            self?.rebindLastMarked()
+//            print("Playlist fetched: \(playlists)")
+//            print("Playlist fetched, self?.channelUuid: \(self?.channelUuid)")
+            
+            let thisChannelPlaylists = playlists.filter { $0.channel_uuid == self?.channelUuid }
+            print("Playlist fetched, filtered: \(thisChannelPlaylists)")
+            print("Playlist fetched, filtered count: \(thisChannelPlaylists.count)")
+            
+            var ch: Channel?
+            do {
+                try dbPool.read { db in
+                    ch = try Channel
+                        .filter(Column("uuid") == self?.channelUuid)
+                        .fetchOne(db)
+                    print("channel fetched, channel basename: \(String(describing: ch?.basename))")
+                }
+            } catch {
+                print("error fetching channel: \(error)")
+            }
+            
+            if ch?.uuid == self?.self.channelUuid {
+                
+                if thisChannelPlaylists.count == 0 {
+                    self?.playlists.value = []
+                    self?.emptyFetchResult.value = true
+                } else if thisChannelPlaylists.count > 0 {
+                    self?.playlists.value = thisChannelPlaylists
+                    self?.emptyFetchResult.value = false
+                }
+            }
+            
         })
         
         
@@ -205,60 +240,30 @@ final class PlaylistViewModel {
             os_log("languageEvent: %{public}@", log: OSLog.data, String(describing: languageEvent))
             DDLogDebug("languageEvent user language: \(languageEvent) current language: \(L10n.shared.language) languageService user language: \(self?.languageService.userLanguage.value)")
             
-            if let strongSelf = self {
-                if languageEvent != "none" {
-                    DDLogDebug("languageEvent strongSelf.channelUuid: \(languageEvent)")
-                    strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
-                        .flatMap({ _ -> Single<Void> in
-                            strongSelf.totalEntries = -1
-                            strongSelf.totalPages = -1
-                            strongSelf.pageSize = -1
-                            strongSelf.pageNumber = -1
-                            strongSelf.lastOffset = 0
-                            
-                            strongSelf.sections.value = []
-                            strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
-                                               limit: Constants.limit,
-                                               cacheDirective: .fetchAndAppend)
-                            return Single.just(())
-                        })
-                        .asObservable()
-                        .subscribeAndDispose(by: strongSelf.bag)
-                }
-            }
-        }.disposed(by: bag)
-        
-//        languageService.userLanguage
-//            .asObservable()
-//            .take(1)
-//            .subscribe(onNext: { [weak self] userLanguage in
-//                DDLogDebug("userLanguage user language: \(userLanguage) current language: \(L10n.shared.language) languageService user language: \(self?.languageService.userLanguage.value)")
+                self?.totalEntries = -1
+                self?.totalPages = -1
+                self?.pageSize = -1
+                self?.pageNumber = -1
+                self?.lastOffset = 0
+
+                self?.emptyFetchResult.value = true
+//            if let strongSelf = self {
+//                if languageEvent != "none" {
+//                    DDLogDebug("languageEvent strongSelf.channelUuid: \(languageEvent)")
+//                    strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
+//                        .flatMap({ _ -> Single<Void> in
 //
-//                if let strongSelf = self {
-//                    if userLanguage != "none" {
-//                        DDLogDebug("userLanguage strongSelf.channelUuid: \(userLanguage)")
-//                        strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
-//                            .flatMap({ _ -> Single<Void> in
-//                                strongSelf.totalEntries = -1
-//                                strongSelf.totalPages = -1
-//                                strongSelf.pageSize = -1
-//                                strongSelf.pageNumber = -1
-//                                strongSelf.lastOffset = 0
-//
-//                                strongSelf.sections.value = []
-//                                strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
-//                                                   limit: Constants.limit,
-//                                                   cacheDirective: .fetchAndReplace)
-//                                return Single.just(())
-//                            })
-//                            .asObservable()
-//                            .subscribeAndDispose(by: strongSelf.bag)
-//                    }
+//                            strongSelf.sections.value = []
+//                            strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
+//                                               limit: Constants.limit,
+//                                               cacheDirective: .fetchAndAppend)
+//                            return Single.just(())
+//                        })
+//                        .asObservable()
+//                        .subscribeAndDispose(by: strongSelf.bag)
 //                }
-//            }, onError: { error in
-//                DDLogError("error: \(error)")
-//            })
-//            .disposed(by: bag)
+//            }
+        }.disposed(by: bag)
     }
     
     func initialFetch() {
@@ -273,7 +278,7 @@ final class PlaylistViewModel {
                                        cacheDirective: .fetchAndAppend)
                 }
             } else {
-                self.playlists.value = playlists
+//                self.playlists.value = playlists
                 self.lastOffset = Int(ceil(CGFloat(playlists.count / Constants.limit)))
             }
         }) { error in
@@ -293,12 +298,12 @@ final class PlaylistViewModel {
 //                if cacheDirective == .fetchAndReplace {
 //                    self.playlists.value = playlists
 //                } else {
-                self.playlists.value.append(contentsOf: playlists)
+//                self.playlists.value.append(contentsOf: playlists)
 //                }
                 self.totalEntries = playlistResponse.total_entries
-                self.totalPages = playlistResponse.total_pages
-                self.pageSize = playlistResponse.page_size
-                self.pageNumber = playlistResponse.page_number
+//                self.totalPages = playlistResponse.total_pages
+//                self.pageSize = playlistResponse.page_size
+//                self.pageNumber = playlistResponse.page_number
                 
                 self.lastOffset += 1
                 

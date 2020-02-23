@@ -94,6 +94,22 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
         reactToViewModel()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.viewModelSections.count > 0 && self.viewModelSections[0].items.count == 0 {
+            viewModel.fetchAppendPlaylists.onNext(true)
+        }
+//        self.collectionView.reloadData()
+
+//        self.view.setNeedsLayout()
+//        self.view.layoutIfNeeded()
+
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+    }
     // MARK: Private helpers
 
 //        private func reactToContentSizeChange() {
@@ -115,12 +131,16 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
 //            .filter{ $0[0].items.count > 0 }
             .next { [unowned self] sections in
                 // first time loading sections
-                if self.itemsUpdatedAtLeastOnce == false {
-                    self.viewModelSections = sections
-                    self.collectionView.reloadData()
-                    self.itemsUpdatedAtLeastOnce = true
-                }
-                else {
+//                if self.itemsUpdatedAtLeastOnce == false {
+//                    self.viewModelSections = sections
+//                    self.itemsUpdatedAtLeastOnce = true
+//                    DispatchQueue.main.async {
+//                        self.collectionView.reloadData()
+//                        self.view.setNeedsLayout()
+//                        self.view.layoutIfNeeded()
+//                    }
+//                }
+//                else {
                     // if sections are empty, that means the viewmodels sections were
                     // deleted(probably because the language was changed)
                     // in this case just hard reloadData() similar to when
@@ -130,32 +150,66 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
                         DispatchQueue.main.async {
                             self.viewModelSections = sections
                             self.collectionView.reloadData()
+//                            self.view.setNeedsLayout()
+//                            self.view.layoutIfNeeded()
                         }
                     } else {
                         let currentItemsCount: Int = self.viewModelSections[0].items.count
                         let appendCount: Int = sections[0].items.count - currentItemsCount
-                        let newItems = Array(sections[0].items.suffix(appendCount))
-                        DDLogDebug("newItems.count: \(newItems.count)")
                         
-                        let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
-                        DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
-                        self.viewModelSections = sections
-                        
-                        DispatchQueue.main.async {
-                            self.collectionView.performBatchUpdates({
-                                self.collectionView.insertItems(at: insertIndexPaths)
-                            }, completion: { result in
-                                self.collectionView.reloadData()
-                            })
+                        if appendCount > 0 {
+                            let newItems = Array(sections[0].items.suffix(appendCount))
+                            DDLogDebug("newItems.count: \(newItems.count)")
+                            
+                            let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
+                            DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
+                            self.viewModelSections = sections
+                            
+                            DispatchQueue.main.async {
+                                self.collectionView.performBatchUpdates({
+                                    self.collectionView.insertItems(at: insertIndexPaths)
+                                }, completion: { result in
+                                    self.collectionView.reloadData()
+//                                    self.view.setNeedsLayout()
+//                                    self.view.layoutIfNeeded()
+
+                                })
+                            }
+                        } else if appendCount < 0 { // deleting items
+                            let currentItemsCount: Int = self.viewModelSections[0].items.count
+                            var deleteCount: Int = abs(appendCount)
+                            
+                            let newArray = Array(sections[0].items.dropLast(deleteCount))
+                            
+                            DDLogDebug("newArray.count: \(newArray.count)")
+
+                            let deleteIndexPaths = Array(currentItemsCount - deleteCount ... (currentItemsCount-1)).map { IndexPath(item: $0, section: 0) }
+                            DDLogDebug("deleteIndexPaths: \(deleteIndexPaths)")
+                            self.viewModelSections[0].items = newArray
+
+                            DispatchQueue.main.async {
+                                self.collectionView.performBatchUpdates({
+                                    self.collectionView.deleteItems(at: deleteIndexPaths)
+                                }, completion: // nil
+                                    { result in
+                                    self.collectionView.reloadData()
+                                }
+                                )
+                            }
                         }
                     }
-                }
+//                }
             }.disposed(by: bag)
         
         viewModel.emptyFetchResult.asObservable()
             .observeOn(MainScheduler.instance)
             .next { [unowned self] emptyResult in
-                self.noResultLabel.isHidden = !emptyResult
+                DispatchQueue.main.async {
+                    self.noResultLabel.isHidden = !emptyResult
+                    self.collectionView.isHidden = emptyResult
+//                    self.view.setNeedsLayout()
+//                    self.view.layoutIfNeeded()
+                }
             }.disposed(by: bag)
     }
     
