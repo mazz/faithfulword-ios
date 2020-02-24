@@ -1,17 +1,17 @@
 import Foundation
 import RxDataSources
 
-internal struct MediaListingSectionViewModel {
-    internal let type: MediaListingSectionType
-    internal var items: [MediaListingItemType]
+public struct MediaListingSectionViewModel {
+    public let type: MediaListingSectionType
+    public var items: [MediaListingItemType]
 }
 
-internal enum MediaListingSectionType {
+public enum MediaListingSectionType {
     case media
     case debug
 }
 
-internal enum MediaListingItemType {
+public enum MediaListingItemType {
     //    case field(String, String)
     //    case option(SettingOptionType)
     //    case action(name: String)
@@ -23,13 +23,13 @@ public enum MediaListingDrillInType {
     case playable(item: Playable)
 }
 
-internal enum MediaListingActionType {
+public enum MediaListingActionType {
     case openMedia
 }
 
 extension MediaListingSectionViewModel: SectionModelType {
-    typealias Item = MediaListingItemType
-    init(original: MediaListingSectionViewModel, items: [Item]) {
+    public typealias Item = MediaListingItemType
+    public init(original: MediaListingSectionViewModel, items: [Item]) {
         self.type = original.type
         self.items = items
     }

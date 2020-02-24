@@ -117,15 +117,17 @@ final class PlaylistViewModel {
     
     func setupDataSource() {
         
-        let request = Playlist
-            .filter(Column("channelUuid") == self.channelUuid)
+//        let request = Playlist
+//            .filter(Column("channelUuid") == self.channelUuid)
         
 //        let playlistObservation = ValueObservation.tracking { db in
 //            try request.fetchAll(db)
 //        }
 
         let playlistObservation = ValueObservation.tracking { db in
-            try Playlist.fetchAll(db)
+            try Playlist
+                .filter(Column("channel_uuid") == self.channelUuid)
+                .fetchAll(db)
         }
         
         
@@ -133,36 +135,33 @@ final class PlaylistViewModel {
         observer = playlistObservation.start(in: dbPool, onError: { error in
             print("Playlist could not be fetched: \(error)")
         }, onChange: { [weak self] (playlists: [Playlist]) in
-//            print("Playlist fetched: \(playlists)")
-//            print("Playlist fetched, self?.channelUuid: \(self?.channelUuid)")
+//            let thisChannelPlaylists = playlists.filter { $0.channel_uuid == self?.channelUuid }
+//            print("Playlist fetched, filtered: \(thisChannelPlaylists)")
+//            print("Playlist fetched, filtered count: \(thisChannelPlaylists.count)")
             
-            let thisChannelPlaylists = playlists.filter { $0.channel_uuid == self?.channelUuid }
-            print("Playlist fetched, filtered: \(thisChannelPlaylists)")
-            print("Playlist fetched, filtered count: \(thisChannelPlaylists.count)")
+//            var ch: Channel?
+//            do {
+//                try dbPool.read { db in
+//                    ch = try Channel
+//                        .filter(Column("uuid") == self?.channelUuid)
+//                        .fetchOne(db)
+//                    print("channel fetched, channel basename: \(String(describing: ch?.basename))")
+//                }
+//            } catch {
+//                print("error fetching channel: \(error)")
+//            }
             
-            var ch: Channel?
-            do {
-                try dbPool.read { db in
-                    ch = try Channel
-                        .filter(Column("uuid") == self?.channelUuid)
-                        .fetchOne(db)
-                    print("channel fetched, channel basename: \(String(describing: ch?.basename))")
-                }
-            } catch {
-                print("error fetching channel: \(error)")
-            }
-            
-            if ch?.uuid == self?.self.channelUuid {
+//            if ch?.uuid == self?.self.channelUuid {
                 
-                if thisChannelPlaylists.count == 0 {
+                if playlists.count == 0 {
                     self?.playlists.value = []
                     self?.emptyFetchResult.value = true
-                } else if thisChannelPlaylists.count > 0 {
-                    self?.totalEntries = thisChannelPlaylists.count
-                    self?.playlists.value = thisChannelPlaylists
+                } else if playlists.count > 0 {
+                    self?.totalEntries = playlists.count
+                    self?.playlists.value = playlists
                     self?.emptyFetchResult.value = false
                 }
-            }
+//            }
             
         })
         

@@ -170,8 +170,10 @@
 		4CBA179E2325B75400023801 /* History.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CBA179D2325B75400023801 /* History.storyboard */; };
 		4CBA17A02325C27B00023801 /* HistoryPlaybackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA179F2325C27B00023801 /* HistoryPlaybackViewModel.swift */; };
 		4CBA17A22325C3C000023801 /* HistoryDownloadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17A12325C3C000023801 /* HistoryDownloadViewModel.swift */; };
-		4CBA17A42325CCFF00023801 /* MediaFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17A32325CCFF00023801 /* MediaFilterViewModel.swift */; };
 		4CBA17A72325CDFF00023801 /* MediaFilterResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA17A62325CDFF00023801 /* MediaFilterResultsViewController.swift */; };
+		4CBAE62A2404585100C51AF7 /* MediaHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBAE6292404585100C51AF7 /* MediaHistoryViewController.swift */; };
+		4CBAE62C2404593300C51AF7 /* MediaHistoryViewController+UICollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBAE62B2404593300C51AF7 /* MediaHistoryViewController+UICollectionViewDelegate.swift */; };
+		4CBAE62E2404719100C51AF7 /* HistoryMediaViewModeling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBAE62D2404719100C51AF7 /* HistoryMediaViewModeling.swift */; };
 		4CBE0F5221605CA500646F76 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CBE0F5121605CA400646F76 /* QuartzCore.framework */; };
 		4CBE0F742160932500646F76 /* SlimSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F732160932400646F76 /* SlimSlider.swift */; };
 		4CBE0F762161747200646F76 /* Color+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CBE0F752161747100646F76 /* Color+Image.swift */; };
@@ -447,8 +449,10 @@
 		4CBA179D2325B75400023801 /* History.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = History.storyboard; sourceTree = "<group>"; };
 		4CBA179F2325C27B00023801 /* HistoryPlaybackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryPlaybackViewModel.swift; sourceTree = "<group>"; };
 		4CBA17A12325C3C000023801 /* HistoryDownloadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryDownloadViewModel.swift; sourceTree = "<group>"; };
-		4CBA17A32325CCFF00023801 /* MediaFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFilterViewModel.swift; sourceTree = "<group>"; };
 		4CBA17A62325CDFF00023801 /* MediaFilterResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaFilterResultsViewController.swift; sourceTree = "<group>"; };
+		4CBAE6292404585100C51AF7 /* MediaHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaHistoryViewController.swift; sourceTree = "<group>"; };
+		4CBAE62B2404593300C51AF7 /* MediaHistoryViewController+UICollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MediaHistoryViewController+UICollectionViewDelegate.swift"; sourceTree = "<group>"; };
+		4CBAE62D2404719100C51AF7 /* HistoryMediaViewModeling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryMediaViewModeling.swift; sourceTree = "<group>"; };
 		4CBE0F5121605CA400646F76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4CBE0F732160932400646F76 /* SlimSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SlimSlider.swift; sourceTree = "<group>"; };
 		4CBE0F752161747100646F76 /* Color+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Image.swift"; sourceTree = "<group>"; };
@@ -834,11 +838,11 @@
 			isa = PBXGroup;
 			children = (
 				4CBA17A62325CDFF00023801 /* MediaFilterResultsViewController.swift */,
-				4CBA17A32325CCFF00023801 /* MediaFilterViewModel.swift */,
 				4C437AD32239F07000083197 /* HistoryService.swift */,
 				4CBA179F2325C27B00023801 /* HistoryPlaybackViewModel.swift */,
 				4CBA17A12325C3C000023801 /* HistoryDownloadViewModel.swift */,
 				4CBA17972325B6CB00023801 /* HistoryViewController.swift */,
+				4CBAE62D2404719100C51AF7 /* HistoryMediaViewModeling.swift */,
 				4CBA179B2325B70300023801 /* HistoryDownloadViewController.swift */,
 				4CBA17992325B6ED00023801 /* HistoryPlaybackViewController.swift */,
 				4CBA179D2325B75400023801 /* History.storyboard */,
@@ -860,6 +864,8 @@
 				4C6D8E4C22AC6B2E0025DA28 /* ChannelCoordinator.swift */,
 				4C6D8E5022AC6FED0025DA28 /* ChannelViewController.swift */,
 				4CBA17932325B43F00023801 /* HistoryCoordinator.swift */,
+				4CBAE6292404585100C51AF7 /* MediaHistoryViewController.swift */,
+				4CBAE62B2404593300C51AF7 /* MediaHistoryViewController+UICollectionViewDelegate.swift */,
 				4CCE8C821FF4B7C600AFBAF2 /* MainCoordinator.swift */,
 				4C5FAD5E2031D01D00397BFF /* MainCoordinator+SideMenuHandling.swift */,
 				4C381D8D200839A100FD2DEA /* MainViewController.swift */,
@@ -1432,6 +1438,8 @@
 				4CDD65631EEB433600C59DD5 /* QueuePlayerLooper.swift in Sources */,
 				4CCE8CA21FF5697200AFBAF2 /* SplashScreenCoordinator.swift in Sources */,
 				4CCE8C961FF4BCDC00AFBAF2 /* AppCoordinator.swift in Sources */,
+				4CBAE62A2404585100C51AF7 /* MediaHistoryViewController.swift in Sources */,
+				4CBAE62E2404719100C51AF7 /* HistoryMediaViewModeling.swift in Sources */,
 				4CAABC062336DDE40026A1D2 /* Int64+NumberFormatting.swift in Sources */,
 				4CBA17982325B6CC00023801 /* HistoryViewController.swift in Sources */,
 				4C7EB88A228B8EA8000E8DAB /* MediaChapterResponse.swift in Sources */,
@@ -1461,6 +1469,7 @@
 				4C5FAD772037AEE600397BFF /* RadioListViewController.swift in Sources */,
 				4CDD65611EEB42B600C59DD5 /* Looper.swift in Sources */,
 				4C7EB880228B8EA8000E8DAB /* AppVersion.swift in Sources */,
+				4CBAE62C2404593300C51AF7 /* MediaHistoryViewController+UICollectionViewDelegate.swift in Sources */,
 				4C39990220229E02008E76E8 /* SideMenuSectionViewModel.swift in Sources */,
 				4C7D546B200EF80F0038B265 /* ApplicationUser.swift in Sources */,
 				4C25039A2169A1760069AB49 /* AnyObserverMaking.swift in Sources */,
@@ -1597,7 +1606,6 @@
 				4C3EA137206A71D200310024 /* DeviceNowPlayingBarView.swift in Sources */,
 				4CE4402824032D3500322EB4 /* NotificationCenter+Observing.swift in Sources */,
 				4C2503982168691A0069AB49 /* DownloadService.swift in Sources */,
-				4CBA17A42325CCFF00023801 /* MediaFilterViewModel.swift in Sources */,
 				4C6D8E4D22AC6B310025DA28 /* ChannelCoordinator.swift in Sources */,
 				4C7EB852228B88E6000E8DAB /* PlaylistViewModel.swift in Sources */,
 				4C22F5A622EA8C630057DEBE /* DownloadStateItem.swift in Sources */,

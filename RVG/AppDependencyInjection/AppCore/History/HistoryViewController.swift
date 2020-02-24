@@ -13,25 +13,19 @@ class HistoryViewController: UIViewController {
     
     @IBOutlet weak var listingContainer: UIView!
     @IBOutlet weak var historySelectionControl: UISegmentedControl!
-    var historyPlaybackViewModel: MediaFilterViewModel!
-    var historyDownloadViewModel: MediaFilterViewModel!
+//    var historyPlaybackViewModel: MediaFilterViewModel!
+//    var historyDownloadViewModel: MediaFilterViewModel!
     
+    var playbackHistoryViewController: MediaHistoryViewController!
+    var downloadHistoryViewController: MediaHistoryViewController!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         historySelectionControl.setTitle(NSLocalizedString("Playback", comment: "").l10n(), forSegmentAt: 0)
         historySelectionControl.setTitle(NSLocalizedString("Download", comment: "").l10n(), forSegmentAt: 1)
-    }
-    
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        self.embed(playbackHistoryViewController, in: self.listingContainer)
     }
-    */
 
 }

@@ -14,7 +14,8 @@ private struct Constants {
     static let limit: Int = 100
 }
 
-internal final class HistoryDownloadViewModel {
+internal final class HistoryDownloadViewModel: HistoryMediaViewModeling {
+    
     // MARK: Fields
     
     public func section(at index: Int) -> MediaListingSectionViewModel {
@@ -38,6 +39,8 @@ internal final class HistoryDownloadViewModel {
     // false - the search for the current filterText yields a result > 0
     public var emptyFilteredResult: Field<Bool> = Field<Bool>(false)
     
+    public var emptyFetchResult: Field<Bool> = Field<Bool>(false)
+
     // media loaded on initial fetch
     public private(set) var media = Field<[Playable]>([])
     public private(set) var sections = Field<[MediaListingSectionViewModel]>([])
@@ -106,11 +109,9 @@ internal final class HistoryDownloadViewModel {
     }
     
     // MARK: Dependencies
-    public let playlistUuid: String!
-    public var mediaCategory: MediaCategory!
     public private(set) var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     
-    private let productService: ProductServicing!
+    private let historyService: HistoryServicing!
     private let assetPlaybackService: AssetPlaybackServicing!
     private let reachability: RxClassicReachable!
     
@@ -126,15 +127,12 @@ internal final class HistoryDownloadViewModel {
     
     private let bag = DisposeBag()
     
-    internal init(playlistUuid: String,
-                  mediaCategory: MediaCategory,
-                  productService: ProductServicing,
+    internal init(
+                  historyService: HistoryServicing,
                   assetPlaybackService: AssetPlaybackServicing,
                   reachability: RxClassicReachable)
     {
-        self.playlistUuid = playlistUuid
-        self.mediaCategory = mediaCategory
-        self.productService = productService
+        self.historyService = historyService
         self.reachability = reachability
         self.assetPlaybackService = assetPlaybackService
         
@@ -174,32 +172,32 @@ internal final class HistoryDownloadViewModel {
             .map { $0.map {
                 let icon: String!
                 
-                switch self.mediaCategory {
-                case .none:
-                    icon = "chapter"
-                case .some(.gospel):
+//                switch self.mediaCategory {
+//                case .none:
+//                    icon = "chapter"
+//                case .some(.gospel):
                     icon = "feet"
-                case .some(.livestream):
-                    icon = "disc_icon_white"
-                case .some(.motivation):
-                    icon = "feet"
-                case .some(.movie):
-                    icon = "disc_icon_white"
-                case .some(.music):
-                    icon = "disc_icon_white"
-                case .some(.podcast):
-                    icon = "disc_icon_white"
-                case .some(.preaching):
-                    icon = "feet"
-                case .some(.testimony):
-                    icon = "feet"
-                case .some(.tutorial):
-                    icon = "feet"
-                case .some(.conference):
-                    icon = "disc_icon_white"
-                case .some(.bible):
-                    icon = "chapter"
-                }
+//                case .some(.livestream):
+//                    icon = "disc_icon_white"
+//                case .some(.motivation):
+//                    icon = "feet"
+//                case .some(.movie):
+//                    icon = "disc_icon_white"
+//                case .some(.music):
+//                    icon = "disc_icon_white"
+//                case .some(.podcast):
+//                    icon = "disc_icon_white"
+//                case .some(.preaching):
+//                    icon = "feet"
+//                case .some(.testimony):
+//                    icon = "feet"
+//                case .some(.tutorial):
+//                    icon = "feet"
+//                case .some(.conference):
+//                    icon = "disc_icon_white"
+//                case .some(.bible):
+//                    icon = "chapter"
+//                }
                 var presenter: String = NSLocalizedString("Unknown Presenter", comment: "").l10n()
                 if let presenterName: String = $0.presenter_name {
                     presenter = presenterName
@@ -217,33 +215,33 @@ internal final class HistoryDownloadViewModel {
         self.filteredMedia.asObservable()
             .map { $0.map {
                 let icon: String!
-                
-                switch self.mediaCategory {
-                case .none:
-                    icon = "chapter"
-                case .some(.gospel):
+//
+//                switch self.mediaCategory {
+//                case .none:
+//                    icon = "chapter"
+//                case .some(.gospel):
                     icon = "feet"
-                case .some(.livestream):
-                    icon = "disc_icon_white"
-                case .some(.motivation):
-                    icon = "feet"
-                case .some(.movie):
-                    icon = "disc_icon_white"
-                case .some(.music):
-                    icon = "disc_icon_white"
-                case .some(.podcast):
-                    icon = "disc_icon_white"
-                case .some(.preaching):
-                    icon = "feet"
-                case .some(.testimony):
-                    icon = "feet"
-                case .some(.tutorial):
-                    icon = "feet"
-                case .some(.conference):
-                    icon = "disc_icon_white"
-                case .some(.bible):
-                    icon = "chapter"
-                }
+//                case .some(.livestream):
+//                    icon = "disc_icon_white"
+//                case .some(.motivation):
+//                    icon = "feet"
+//                case .some(.movie):
+//                    icon = "disc_icon_white"
+//                case .some(.music):
+//                    icon = "disc_icon_white"
+//                case .some(.podcast):
+//                    icon = "disc_icon_white"
+//                case .some(.preaching):
+//                    icon = "feet"
+//                case .some(.testimony):
+//                    icon = "feet"
+//                case .some(.tutorial):
+//                    icon = "feet"
+//                case .some(.conference):
+//                    icon = "disc_icon_white"
+//                case .some(.bible):
+//                    icon = "chapter"
+//                }
                 var presenter: String = NSLocalizedString("Unknown Presenter", comment: "").l10n()
                 if let presenterName: String = $0.presenter_name {
                     presenter = presenterName
@@ -293,81 +291,84 @@ internal final class HistoryDownloadViewModel {
     }
     
     func initialFetch() {
-        productService.persistedMediaItems(for: self.playlistUuid).subscribe(onSuccess: { [unowned self] persistedMediaItems in
-            if persistedMediaItems.count == 0 {
-                switch self.networkStatus.value {
-                case .unknown:
-                    DDLogError("⚠️ no persistedMediaItems and no network! should probably make the user aware somehow")
-                case .notReachable:
-                    DDLogError("⚠️ no persistedMediaItems and no network! should probably make the user aware somehow")
-                case .reachable(_):
-                    self.fetchMedia(offset: self.lastOffset + 1, limit: Constants.limit, cacheDirective: .fetchAndAppend)
-                }
-            } else {
-                self.media.value = persistedMediaItems
-                self.assetPlaybackService.playables.value = self.media.value
-                
-                // self.media is our source of truth
-                self.filteredMedia.value = self.media.value
-                
-                self.lastOffset = Int(ceil(CGFloat(persistedMediaItems.count / Constants.limit)))
-            }
-        }) { error in
-            DDLogDebug("error getting persistedMediaItems: \(error)")
-            
-            }.disposed(by: self.bag)
+        DDLogDebug("HistoryDownloadViewModel initialFetch")
+//        productService.persistedMediaItems(for: self.playlistUuid).subscribe(onSuccess: { [unowned self] persistedMediaItems in
+//            if persistedMediaItems.count == 0 {
+//                switch self.networkStatus.value {
+//                case .unknown:
+//                    DDLogError("⚠️ no persistedMediaItems and no network! should probably make the user aware somehow")
+//                case .notReachable:
+//                    DDLogError("⚠️ no persistedMediaItems and no network! should probably make the user aware somehow")
+//                case .reachable(_):
+//                    self.fetchMedia(offset: self.lastOffset + 1, limit: Constants.limit, cacheDirective: .fetchAndAppend)
+//                }
+//            } else {
+//                self.media.value = persistedMediaItems
+//                self.assetPlaybackService.playables.value = self.media.value
+//
+//                // self.media is our source of truth
+//                self.filteredMedia.value = self.media.value
+//
+//                self.lastOffset = Int(ceil(CGFloat(persistedMediaItems.count / Constants.limit)))
+//            }
+//        }) { error in
+//            DDLogDebug("error getting persistedMediaItems: \(error)")
+//
+//            }.disposed(by: self.bag)
     }
     
     func fetchMedia(offset: Int, limit: Int, cacheDirective: CacheDirective) {
-        productService.fetchMediaItems(for: playlistUuid, offset: offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (mediaItemResponse, mediaItems) in
-            //            DDLogDebug("fetchMediaItems: \(mediaItems)")
-            self.media.value.append(contentsOf: mediaItems)
-            
-            self.filteredMedia.value = self.media.value
-            
-            self.totalEntries = mediaItemResponse.total_entries
-            self.totalPages = mediaItemResponse.total_pages
-            self.pageSize = mediaItemResponse.page_size
-            self.pageNumber = mediaItemResponse.page_number
-            if let mediaCategoryString = mediaItems.first?.media_category {
-                self.mediaCategory = MediaCategory(rawValue: mediaCategoryString)
-            }
-            
-            self.lastOffset += 1
-            
-            self.assetPlaybackService.playables.value = self.media.value
-        }) { error in
-            
-            if let dbError: DatabaseError = error as? DatabaseError {
-                switch dbError.extendedResultCode {
-                case .SQLITE_CONSTRAINT:            // any constraint error
-                    DDLogDebug("SQLITE_CONSTRAINT error")
-                    // it is possible that we already have some or all the media
-                    // from a previous run and that the last fetch tried to
-                    // insert values that were already present. So increment
-                    // lastOffset by one so that eventually we will stop getting
-                    // errors
-                    //                    if self.media.value.count == limit && self.totalEntries == -1 {
-                    //                        self.lastOffset += 1
-                    //                    }
-                    
-                    // we got a SQLITE_CONSTRAINT error, assume that we at least have
-                    // `limit` number of items
-                    // this will stop the data service from continually calling the server
-                    // because of the fetchMoreMedia() guards
-                    if self.media.value.count >= limit && self.totalEntries == -1 {
-                        self.totalEntries = self.media.value.count
-                    }
-                default:                            // any other database error
-                    DDLogDebug("some db error: \(dbError)")
-                }
-                
-            } else {
-                DDLogDebug("fetchMedia failed with error: \(error.localizedDescription)")
-            }
-            
-            
-            }.disposed(by: self.bag)
+        DDLogDebug("HistoryDownloadViewModel fetchMedia")
+
+//        productService.fetchMediaItems(for: playlistUuid, offset: offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (mediaItemResponse, mediaItems) in
+//            //            DDLogDebug("fetchMediaItems: \(mediaItems)")
+//            self.media.value.append(contentsOf: mediaItems)
+//
+//            self.filteredMedia.value = self.media.value
+//
+//            self.totalEntries = mediaItemResponse.total_entries
+//            self.totalPages = mediaItemResponse.total_pages
+//            self.pageSize = mediaItemResponse.page_size
+//            self.pageNumber = mediaItemResponse.page_number
+//            if let mediaCategoryString = mediaItems.first?.media_category {
+//                self.mediaCategory = MediaCategory(rawValue: mediaCategoryString)
+//            }
+//
+//            self.lastOffset += 1
+//
+//            self.assetPlaybackService.playables.value = self.media.value
+//        }) { error in
+//
+//            if let dbError: DatabaseError = error as? DatabaseError {
+//                switch dbError.extendedResultCode {
+//                case .SQLITE_CONSTRAINT:            // any constraint error
+//                    DDLogDebug("SQLITE_CONSTRAINT error")
+//                    // it is possible that we already have some or all the media
+//                    // from a previous run and that the last fetch tried to
+//                    // insert values that were already present. So increment
+//                    // lastOffset by one so that eventually we will stop getting
+//                    // errors
+//                    //                    if self.media.value.count == limit && self.totalEntries == -1 {
+//                    //                        self.lastOffset += 1
+//                    //                    }
+//
+//                    // we got a SQLITE_CONSTRAINT error, assume that we at least have
+//                    // `limit` number of items
+//                    // this will stop the data service from continually calling the server
+//                    // because of the fetchMoreMedia() guards
+//                    if self.media.value.count >= limit && self.totalEntries == -1 {
+//                        self.totalEntries = self.media.value.count
+//                    }
+//                default:                            // any other database error
+//                    DDLogDebug("some db error: \(dbError)")
+//                }
+//
+//            } else {
+//                DDLogDebug("fetchMedia failed with error: \(error.localizedDescription)")
+//            }
+//
+//
+//            }.disposed(by: self.bag)
     }
     
     private func reactToReachability() {

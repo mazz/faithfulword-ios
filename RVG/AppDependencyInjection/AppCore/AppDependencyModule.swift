@@ -369,40 +369,23 @@ internal final class AppDependencyModule {
             DownloadListingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
             }.inObjectScope(.transient)
         
-//        container.register(HistoryPlaybackViewModel.self) { resolver, playlistId, mediaCategory in
-//            HistoryPlaybackViewModel(
-//                playlistUuid: playlistId,
-//                mediaCategory: mediaCategory,
-//                productService: resolver.resolve(ProductServicing.self)!,
-//                //                searchService: resolver.resolve(SearchServicing.self)!,
-//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
-//                reachability: resolver.resolve(RxClassicReachable.self)!
-//            )
-//            }.inObjectScope(.container)
-//
-//        container.register(HistoryDownloadViewModel.self) { resolver, playlistId, mediaCategory in
-//            HistoryDownloadViewModel(
-//                playlistUuid: playlistId,
-//                mediaCategory: mediaCategory,
-//                productService: resolver.resolve(ProductServicing.self)!,
-//                //                searchService: resolver.resolve(SearchServicing.self)!,
-//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
-//                reachability: resolver.resolve(RxClassicReachable.self)!
-//            )
-//            }.inObjectScope(.container)
-        
-        container.register(MediaFilterViewModel.self) { resolver, playlistId, mediaCategory in
-            MediaFilterViewModel(
-                playlistUuid: playlistId,
-                mediaCategory: mediaCategory,
-                productService: resolver.resolve(ProductServicing.self)!,
+        container.register(HistoryPlaybackViewModel.self) { resolver in
+            HistoryPlaybackViewModel(
+                historyService: resolver.resolve(HistoryServicing.self)!,
                 //                searchService: resolver.resolve(SearchServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
-
+        container.register(HistoryDownloadViewModel.self) { resolver in
+            HistoryDownloadViewModel(
+                historyService: resolver.resolve(HistoryServicing.self)!,
+                //                searchService: resolver.resolve(SearchServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
+            )
+            }.inObjectScope(.container)
     }
 
     private static func attachSplashScreenFlowDependencies(to container: Container) {

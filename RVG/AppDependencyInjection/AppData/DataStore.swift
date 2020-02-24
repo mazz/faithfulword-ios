@@ -67,7 +67,7 @@ public protocol DataStoring {
     // MARK: history
     
     func updatePlayableHistory(playable: Playable, position: Float, duration: Float) -> Single<Void>
-    func fetchPlayableHistory() -> Single<[Playable]>
+    func playableHistory() -> Single<[Playable]>
     func fetchLastUserActionPlayableState(playableUuid: String) -> Single<UserActionPlayable?>
     
     // MARK: FileDownload
@@ -1482,7 +1482,7 @@ extension DataStore: DataStoring {
                 try dbPool.writeInTransaction { db in
                     // update
                     DDLogDebug("try action update playable.uuid: \(playable.uuid)")
-                    if let action = try UserActionPlayable.filter(Column("playableUuid") == playable.uuid).fetchOne(db) {
+                    if let action = try UserActionPlayable.filter(Column("playable_uuid") == playable.uuid).fetchOne(db) {
                         // update existing action
                         
 //                        DDLogDebug("action found: \(action) playable.uuid: \(playable.uuid)")
@@ -1585,12 +1585,12 @@ extension DataStore: DataStoring {
         //        return Single.just(())
     }
 
-    public func fetchPlayableHistory() -> Single<[Playable]> {
+    public func playableHistory() -> Single<[Playable]> {
         return Single.create { [unowned self] single in
             do {
                 var fetchPlayableHistory: [Playable] = []
                 try dbPool.read { db in
-                    let updatedAt = Column("updatedAt")
+                    let updatedAt = Column("updated_at")
                     fetchPlayableHistory = try UserActionPlayable.order(updatedAt.desc).fetchAll(db)
                 }
                 single(.success(fetchPlayableHistory))
@@ -1608,7 +1608,7 @@ extension DataStore: DataStoring {
                 var playable: UserActionPlayable!
                 
                 try dbPool.read { db in
-                    playable = try UserActionPlayable.filter(Column("playableUuid") == playableUuid).fetchOne(db)
+                    playable = try UserActionPlayable.filter(Column("playable_uuid") == playableUuid).fetchOne(db)
                 }
                 single(.success(playable))
             } catch {

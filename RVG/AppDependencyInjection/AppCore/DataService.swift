@@ -30,7 +30,7 @@ public protocol UserActionsDataServicing {
 }
 
 public protocol HistoryDataServicing {
-    func fetchPlayableHistory() -> Single<[Playable]>
+    func playableHistory() -> Single<[Playable]>
     func fetchLastUserActionPlayableState(for playableUuid: String) -> Single<UserActionPlayable?>
     //    func fetchPlaybackPosition(playable: Playable) -> Single<Double>
 }
@@ -232,8 +232,8 @@ extension DataService: UserActionsDataServicing {
 }
 
 extension DataService: HistoryDataServicing {
-    public func fetchPlayableHistory() -> Single<[Playable]> {
-        return dataStore.fetchPlayableHistory()
+    public func playableHistory() -> Single<[Playable]> {
+        return dataStore.playableHistory()
     }
     
     public func fetchLastUserActionPlayableState(for playableUuid: String) -> Single<UserActionPlayable?> {

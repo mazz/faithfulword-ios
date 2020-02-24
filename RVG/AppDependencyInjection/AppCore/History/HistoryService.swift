@@ -23,7 +23,7 @@ public final class HistoryService: HistoryServicing {
     }
     
     public func fetchPlaybackHistory() -> Single<[Playable]> {
-        return dataService.fetchPlayableHistory()
+        return dataService.playableHistory()
             .do(onSuccess: { playables in
 //                DDLogDebug("playables history: \(playables)")
             })
