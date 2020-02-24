@@ -150,8 +150,6 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
                         DispatchQueue.main.async {
                             self.viewModelSections = sections
                             self.collectionView.reloadData()
-//                            self.view.setNeedsLayout()
-//                            self.view.layoutIfNeeded()
                         }
                     } else {
                         let currentItemsCount: Int = self.viewModelSections[0].items.count
@@ -205,12 +203,26 @@ public final class MainViewController: UIViewController, UICollectionViewDataSou
             .observeOn(MainScheduler.instance)
             .next { [unowned self] emptyResult in
                 DispatchQueue.main.async {
+                    self.noResultLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
                     self.noResultLabel.isHidden = !emptyResult
                     self.collectionView.isHidden = emptyResult
 //                    self.view.setNeedsLayout()
 //                    self.view.layoutIfNeeded()
                 }
             }.disposed(by: bag)
+
+        viewModel.fetchingPlaylists.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] fetchingResult in
+                DispatchQueue.main.async {
+                    self.noResultLabel.text = NSLocalizedString("Loading ...", comment: "").l10n()
+                    self.noResultLabel.isHidden = !fetchingResult
+                    self.collectionView.isHidden = fetchingResult
+        //                    self.view.setNeedsLayout()
+        //                    self.view.layoutIfNeeded()
+                }
+            }.disposed(by: bag)
+
     }
     
 }

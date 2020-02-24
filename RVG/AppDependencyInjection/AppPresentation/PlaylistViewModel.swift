@@ -10,7 +10,7 @@ protocol PlaylistViewModeling {
 }
 
 private struct Constants {
-    static let limit: Int = 100
+    static let limit: Int = 500
 }
 
 final class PlaylistViewModel {
@@ -32,6 +32,9 @@ final class PlaylistViewModel {
     // true - the network fetch succeeded but yielded no results
     // false - the network fetch succeeded and yielded a result > 0
     public var emptyFetchResult: Field<Bool> = Field<Bool>(false)
+
+
+    public var fetchingPlaylists: Field<Bool> = Field<Bool>(false)
 
     // db observation
     private var observer: TransactionObserver?
@@ -67,6 +70,7 @@ final class PlaylistViewModel {
             // possibly show an error to user
         case .reachable(_):
             
+            self.fetchingPlaylists.value = true
             // we can get playlists from server, so get them
             DDLogDebug("PlaylistViewModel reachability.reachable")
             self.fetchPlaylist(offset: lastOffset + 1,
@@ -154,6 +158,7 @@ final class PlaylistViewModel {
                     self?.playlists.value = []
                     self?.emptyFetchResult.value = true
                 } else if thisChannelPlaylists.count > 0 {
+                    self?.totalEntries = thisChannelPlaylists.count
                     self?.playlists.value = thisChannelPlaylists
                     self?.emptyFetchResult.value = false
                 }
@@ -301,12 +306,13 @@ final class PlaylistViewModel {
 //                self.playlists.value.append(contentsOf: playlists)
 //                }
                 self.totalEntries = playlistResponse.total_entries
-//                self.totalPages = playlistResponse.total_pages
-//                self.pageSize = playlistResponse.page_size
-//                self.pageNumber = playlistResponse.page_number
+                self.totalPages = playlistResponse.total_pages
+                self.pageSize = playlistResponse.page_size
+                self.pageNumber = playlistResponse.page_number
                 
                 self.lastOffset += 1
                 
+                self.fetchingPlaylists.value = false
                 self.emptyFetchResult.value = (playlists.count == 0)
                 
             }) { error in

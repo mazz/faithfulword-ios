@@ -3,7 +3,7 @@ import RxDataSources
 
 internal struct MediaListingSectionViewModel {
     internal let type: MediaListingSectionType
-    internal let items: [MediaListingItemType]
+    internal var items: [MediaListingItemType]
 }
 
 internal enum MediaListingSectionType {

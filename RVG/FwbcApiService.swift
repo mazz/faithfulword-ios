@@ -78,8 +78,8 @@ public enum FwbcApiService {
 // MARK: - TargetType Protocol Implementation
 extension FwbcApiService: TargetType {
     
-//    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)")! }
-        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)")! }
+    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)")! }
+//        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)")! }
     public var path: String {
         switch self {
         case .pushTokenUpdate(_, _, _, _, _, _, _):
