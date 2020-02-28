@@ -17,9 +17,11 @@ public protocol HistoryMediaViewModeling {
     var filterText: PublishSubject<String> { get }
     
     var selectItemEvent: PublishSubject<IndexPath> { get }
+    var drillInEvent: Observable<MediaListingDrillInType> { get }
     var emptyFilteredResult: Field<Bool> { get }
     var emptyFetchResult: Field<Bool> { get }
 
+    var fetchAppendMedia: PublishSubject<Bool> { get }
     
     var networkStatus: Field<ClassicReachability.NetworkStatus> { get }
     

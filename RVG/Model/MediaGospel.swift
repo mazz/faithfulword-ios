@@ -15,6 +15,14 @@ import GRDB
  */
 
 public struct MediaGospel: Codable, Playable {
+    public var language_id: String?
+    
+    public var presented_at: String?
+    
+    public var published_at: String?
+    
+    public var tags: [String]?
+    
     public var hash_id: String
     
     public var inserted_at: String
@@ -61,7 +69,7 @@ public struct MediaGospel: Codable, Playable {
     public var publishedAt: TimeInterval?
 
 
-    public var tags: String
+//    public var tags: String
 
     public var uuid: String
 
@@ -85,6 +93,12 @@ extension MediaGospel {
         static let large_thumbnail_path = Column("large_thumbnail_path")
         static let small_thumbnail_path = Column("small_thumbnail_path")
         static let multilanguage = Column("multilanguage")
+        
+        // Playable hack
+        static let language_id = Column("language_id")
+        static let presented_at = Column("presented_at")
+        static let published_at = Column("published_at")
+        static let tags = Column("tags")
     }
 }
 

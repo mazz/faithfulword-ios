@@ -114,18 +114,18 @@ internal class AppCoordinator {
                     let rootViewController = strongSelf.rootViewController,
                     let serverStatus = self?.serverStatus {
                     
-                    var toastMessage: String = NSLocalizedString("Connecting …", comment: "").l10n()
-                    switch serverStatus {
-                    case .none, .notConnected, .connected:
-                        toastMessage = NSLocalizedString("Connecting …", comment: "").l10n()
-                        Loaf(toastMessage,
-                             state: .info,
-                             location: .bottom,
-                             presentingDirection: .vertical,
-                             dismissingDirection: .vertical,
-                             sender: rootViewController)
-                            .show()
-                    }
+//                    var toastMessage: String = NSLocalizedString("Connecting …", comment: "").l10n()
+//                    switch serverStatus {
+//                    case .none, .notConnected, .connected:
+//                        toastMessage = NSLocalizedString("Connecting …", comment: "").l10n()
+//                        Loaf(toastMessage,
+//                             state: .info,
+//                             location: .bottom,
+//                             presentingDirection: .vertical,
+//                             dismissingDirection: .vertical,
+//                             sender: rootViewController)
+//                            .show()
+//                    }
                     
                     switch flowStatus {
                     case .none:
@@ -284,13 +284,13 @@ extension AppCoordinator: NavigationCoordinating {
                         }
                     }
                 case .reachable(_):
-                    Loaf(NSLocalizedString("Connecting …", comment: "").l10n(),
-                         state: .info,
-                         location: .bottom,
-                         presentingDirection: .vertical,
-                         dismissingDirection: .vertical,
-                         sender: rootViewController)
-                        .show()
+//                    Loaf(NSLocalizedString("Connecting …", comment: "").l10n(),
+//                         state: .info,
+//                         location: .bottom,
+//                         presentingDirection: .vertical,
+//                         dismissingDirection: .vertical,
+//                         sender: rootViewController)
+//                        .show()
                     
                     if persisted.count == 0 {
                         strongSelf.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [weak self] fetchedOrgs in

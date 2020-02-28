@@ -253,7 +253,9 @@ internal final class AppDependencyModule {
         }
 
         container.register(HistoryCoordinator.self) { resolver in
-            HistoryCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
+            HistoryCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!, resettablePlaybackCoordinator: Resettable {
+                                    resolver.resolve(PlaybackCoordinator.self)!
+            }
             )
         }
 

@@ -263,6 +263,8 @@ extension MainCoordinator: NavigationCoordinating {
     
     func goToHistoryFlow() {
         self.mainNavigationController.dismiss(animated: true, completion: {
+            self.resettableHistoryCoordinator.value.navigationController = self.mainNavigationController
+            
             self.resettableHistoryCoordinator.value.flow(with: { viewController in
                 
                 self.mainNavigationController.pushViewController(

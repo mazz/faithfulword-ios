@@ -1,7 +1,7 @@
 import Foundation
 import GRDB
 
-public struct MediaItem: Codable, Playable {
+public struct MediaItem: Codable, Playable {    
 //    public var createdAt: Double?
 //
 //    public var categoryUuid: String?
@@ -11,7 +11,7 @@ public struct MediaItem: Codable, Playable {
     public var hash_id: String
     public var inserted_at: String
     public var ipfs_link: String?
-    public var language_id: String
+    public var language_id: String?
     public var large_thumbnail_path: String?
     public var localizedname: String
 //    public var localizedName: String?
@@ -27,7 +27,7 @@ public struct MediaItem: Codable, Playable {
     public var published_at: String?
     public var small_thumbnail_path: String?
     public var source_material: String?
-    public var tags: [String]
+    public var tags: [String]?
     public var track_number: Int?
     public var updated_at: String?
     public var uuid: String

@@ -19,6 +19,8 @@ internal protocol AppUIMaking {
 //    func makeBibleLanguagePage() -> BibleLanguageViewController
     func makeBibleLanguagePage() -> RadioListViewController
     func makeHistoryPage() -> HistoryViewController
+    func makePlaybackHistory() -> MediaHistoryViewController
+    func makeDownloadHistory() -> MediaHistoryViewController
     func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController
     func makeMediaSearching(playlistId: String, mediaCategory: MediaCategory) -> MediaSearchResultsViewController
     func makeMediaDetails(playable: Playable) -> MediaDetailsViewController

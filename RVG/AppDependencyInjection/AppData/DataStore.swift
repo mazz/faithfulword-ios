@@ -1,6 +1,7 @@
 import RxSwift
 import GRDB
 import L10n_swift
+import os.log
 
 /// Protocol for storing and retrieving data from Realm database
 public protocol DataStoring {
@@ -282,6 +283,12 @@ public final class DataStore {
                     chapterTable.column("smallThumbnailPath", .text)
                     chapterTable.column("multilanguage", .boolean)
                     chapterTable.column("categoryUuid", .text).references("book", onDelete: .cascade)
+                    
+                    // forward compatibility hack
+                    chapterTable.column("language_id", .text)
+                    chapterTable.column("presented_at", .text)
+                    chapterTable.column("published_at", .text)
+                    chapterTable.column("tags", .text)
                 }
             }
             catch {
@@ -319,6 +326,13 @@ public final class DataStore {
                     gospelTable.column("smallThumbnailPath", .text)
                     gospelTable.column("multilanguage", .boolean)
                     gospelTable.column("categoryUuid", .text).references("gospel", onDelete: .cascade)
+                    
+                    // forward compatibility hack
+                    gospelTable.column("language_id", .text)
+                    gospelTable.column("presented_at", .text)
+                    gospelTable.column("published_at", .text)
+                    gospelTable.column("tags", .text)
+
                 }
             }
             catch {
@@ -356,6 +370,13 @@ public final class DataStore {
                     musicTable.column("smallThumbnailPath", .text)
                     musicTable.column("multilanguage", .boolean)
                     musicTable.column("categoryUuid", .text).references("music", onDelete: .cascade)
+                    
+                    // forward compatibility hack
+                    musicTable.column("language_id", .text)
+                    musicTable.column("presented_at", .text)
+                    musicTable.column("published_at", .text)
+                    musicTable.column("tags", .text)
+
                 }
             }
             catch {
@@ -383,7 +404,6 @@ public final class DataStore {
                     userActionPlayableTable.column("playable_uuid", .text)
                     userActionPlayableTable.column("playable_path", .text)
                     userActionPlayableTable.column("playback_position", .double)
-                    userActionPlayableTable.column("updated_at", .text)
 //                    userActionPlayableTable.column("userActionPlayableId", .integer)
                     userActionPlayableTable.column("uuid", .text).primaryKey()
 
@@ -391,15 +411,22 @@ public final class DataStore {
                     userActionPlayableTable.column("inserted_at", .text)
                     userActionPlayableTable.column("large_thumbnail_path", .text)
                     userActionPlayableTable.column("localizedname", .text)
+                    userActionPlayableTable.column("language_id", .text)
                     userActionPlayableTable.column("media_category", .text)
                     userActionPlayableTable.column("med_thumbnail_path", .text)
                     userActionPlayableTable.column("multilanguage", .boolean)
+                    userActionPlayableTable.column("ordinal", .integer)
                     userActionPlayableTable.column("path", .text)
                     userActionPlayableTable.column("playlist_uuid", .text)
+                    userActionPlayableTable.column("presented_at", .text)
                     userActionPlayableTable.column("presenter_name", .text)
+                    userActionPlayableTable.column("published_at", .text)
                     userActionPlayableTable.column("source_material", .text)
                     userActionPlayableTable.column("small_thumbnail_path", .text)
+                    userActionPlayableTable.column("tags", .text)
                     userActionPlayableTable.column("track_number", .integer)
+                    userActionPlayableTable.column("updated_at", .text)
+
                 }
             }
             catch {
@@ -448,7 +475,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchOrgs))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -481,7 +508,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(orgs))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -497,7 +524,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -540,7 +567,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetched))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -571,7 +598,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(channels))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -587,7 +614,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -605,7 +632,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetched))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -636,7 +663,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(playlists))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -652,7 +679,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -668,7 +695,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -685,7 +712,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetched))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -715,7 +742,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(items))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -731,7 +758,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -778,7 +805,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(resultUser))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -796,7 +823,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchUser))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -812,7 +839,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -832,7 +859,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(resultUser))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -848,7 +875,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -865,7 +892,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchUser))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -893,7 +920,7 @@ extension DataStore: DataStoring {
 //                }
 //                single(.success(resultSession))
 //            } catch {
-//                DDLogDebug("error: \(error)")
+//                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
 //                single(.error(error))
 //            }
 //            return Disposables.create {}
@@ -919,7 +946,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(updatingUser))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -941,7 +968,7 @@ extension DataStore: DataStoring {
 //                }
 //                single(.success(identifier))
 //            } catch {
-//                DDLogDebug("error: \(error)")
+//                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
 //                single(.error(error))
 //            }
 //            return Disposables.create {}
@@ -958,7 +985,7 @@ extension DataStore: DataStoring {
 ////                }
 ////                single(.success(identifier))
 ////            } catch {
-////                DDLogDebug("error: \(error)")
+////                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
 ////                single(.error(error))
 ////            }
 ////            return Disposables.create {}
@@ -980,7 +1007,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(identifier))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -998,7 +1025,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(language))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1049,7 +1076,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchCategoryList))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1074,7 +1101,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -1099,7 +1126,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchCategoryList))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1141,7 +1168,7 @@ extension DataStore: DataStoring {
                 single(.success(fetchChapters))
                 //                single(.success(chapters))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1160,7 +1187,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchChapters))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1180,7 +1207,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -1223,7 +1250,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchMediaGospel))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1239,7 +1266,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchMediaGospel))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1258,7 +1285,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -1304,7 +1331,7 @@ extension DataStore: DataStoring {
                 //
                 //                single(.success(mediaMusic))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1320,7 +1347,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchMediaMusic))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1339,7 +1366,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -1366,7 +1393,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(bibleLanguages))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1383,7 +1410,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(languages))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1399,7 +1426,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -1430,7 +1457,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchBooks))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1446,7 +1473,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchBooks))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1466,7 +1493,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -1481,7 +1508,7 @@ extension DataStore: DataStoring {
             do {
                 try dbPool.writeInTransaction { db in
                     // update
-                    DDLogDebug("try action update playable.uuid: \(playable.uuid)")
+                    os_log("try action update playable.uuid: %{public}@", log: OSLog.data, String(describing: playable.uuid))
                     if let action = try UserActionPlayable.filter(Column("playable_uuid") == playable.uuid).fetchOne(db) {
                         // update existing action
                         
@@ -1497,7 +1524,8 @@ extension DataStore: DataStoring {
                             let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
                             
 //                            playable.duration = TimeInterval(duration)
-                            DDLogDebug("file there update? \(downloaded)")
+
+                            os_log("file there update? %{public}@", log: OSLog.data, String(describing: downloaded))
                             
                             // back up 5 seconds to help the user remember the context, unless < 0
 //                            var newPosition: Double = Double(position)
@@ -1534,14 +1562,15 @@ extension DataStore: DataStoring {
                         
                     } else {
                         // insert new action
-                        DDLogDebug("action not found, playable.uuid: \(playable.uuid)")
+                        os_log("action not found, playable.uuid: %{public}@", log: OSLog.data, String(describing: playable.uuid))
+                        
                         if let playablePath = playable.path,
                             let prodUrl: URL = URL(string: playablePath)
                         {
                             let pathExtension: String = prodUrl.pathExtension
                             let fileUrl: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(pathExtension)"))).path)
                             let downloaded: Bool = FileManager.default.fileExists(atPath: fileUrl.path)
-                            DDLogDebug("file there insert? \(downloaded)")
+                            os_log("file there insert? %{public}@", log: OSLog.data, String(describing: downloaded))
                             
                             // back up 5 seconds to help the user remember the context, unless < 0
 //                            var newPosition: Double = Double(position)
@@ -1549,7 +1578,10 @@ extension DataStore: DataStoring {
 //                            if newPosition < Double(0) { newPosition = Double(0) }
                             
                             let newAction: UserActionPlayable =
-                                UserActionPlayable(downloaded: downloaded,
+                                UserActionPlayable(language_id: playable.language_id ?? nil,
+                                                   ordinal: playable.ordinal ?? nil,
+                                                   tags: playable.tags ?? nil,
+                                                   downloaded: downloaded,
                                                    duration: playable.duration,
                                                    hash_id: playable.hash_id,
                                                    playable_uuid: playable.uuid,
@@ -1557,14 +1589,16 @@ extension DataStore: DataStoring {
                                                    playback_position: Double(0),
                                                    updated_at: playable.updated_at ?? nil,
                                                    uuid: UUID().uuidString,
+                                                   localizedname: playable.localizedname,
                                                    inserted_at: playable.inserted_at,
                                                    large_thumbnail_path: playable.large_thumbnail_path ?? nil,
-                                                   localizedname: playable.localizedname,
                                                    media_category: playable.media_category,
                                                    multilanguage: playable.multilanguage,
                                                    path: playablePath,
                                                    playlist_uuid: playable.playlist_uuid,
+                                                   presented_at: playable.presented_at ?? nil,
                                                    presenter_name: playable.presenter_name ?? nil,
+                                                   published_at: playable.published_at ?? nil,
                                                    small_thumbnail_path: playable.small_thumbnail_path ?? nil,
                                                    med_thumbnail_path: playable.med_thumbnail_path ?? nil,
                                                    source_material: playable.source_material ?? nil,
@@ -1577,7 +1611,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create { }
@@ -1595,7 +1629,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchPlayableHistory))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1612,7 +1646,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(playable))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1626,7 +1660,7 @@ extension DataStore: DataStoring {
             do {
                 try dbPool.writeInTransaction { db in
                     // update
-                    DDLogDebug("try fileDownload update playable.uuid: \(fileDownload.uuid)")
+                    os_log("try fileDownload update playable.uuid: %{public}@", log: OSLog.data, String(describing: fileDownload.uuid))
                     if let download = try FileDownload.filter(Column("playableUuid") == fileDownload.playableUuid).fetchOne(db) {
                         // update existing download
                         var storeDownload: FileDownload = download
@@ -1641,7 +1675,7 @@ extension DataStore: DataStoring {
                         
                     } else {
                         // insert new action
-                        DDLogDebug("fileDownload not found, fileDownload.playableUuid: \(fileDownload.playableUuid)")
+                        os_log("fileDownload not found, fileDownload.playableUuid: %{public}@", log: OSLog.data, String(describing: fileDownload.playableUuid))
                         var newFileDownload: FileDownload =
                             FileDownload(url: fileDownload.url,
                                          uuid: fileDownload.uuid,
@@ -1664,7 +1698,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create { }
@@ -1695,7 +1729,7 @@ extension DataStore: DataStoring {
                             }
                         })
 //                    } catch {
-//                        DDLogDebug("error: \(error)")
+//                        os_log("error: %{public}@", log: OSLog.data, String(describing: error))
 //                        single(.error(error))
 //                    }
                     
@@ -1703,7 +1737,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create { }
@@ -1722,7 +1756,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(playable))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1739,7 +1773,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(()))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create()
@@ -1776,7 +1810,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(fetchFileDownloads))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1803,7 +1837,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(interrupted))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
@@ -1845,7 +1879,7 @@ extension DataStore: DataStoring {
                 }
                 single(.success(playables))
             } catch {
-                DDLogDebug("error: \(error)")
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
                 single(.error(error))
             }
             return Disposables.create {}
