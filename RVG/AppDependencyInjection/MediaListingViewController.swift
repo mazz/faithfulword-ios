@@ -485,6 +485,9 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     //                    self.searchController = UISearchController(searchResultsController: nil)
                     //                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
                     DispatchQueue.main.async {
+                        self.searchController.isActive = false
+                        self.filterController.isActive = true
+
                         self.navigationItem.searchController = self.filterController
                     }
                     
@@ -493,6 +496,9 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     //                    self.searchController = UISearchController(searchResultsController: nil)
                     //                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
                     DispatchQueue.main.async {
+                        self.searchController.isActive = false
+                        self.filterController.isActive = true
+
                         self.navigationItem.searchController = self.filterController
                     }
                     
@@ -502,6 +508,9 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     //                    self.searchController = UISearchController(searchResultsController: self.mediaSearchResultsViewController)
                     //                    self.searchController.searchBar.placeholder = NSLocalizedString("Search", comment: "").l10n()
                     DispatchQueue.main.async {
+                        self.searchController.isActive = true
+                        self.filterController.isActive = false
+//                        self.navigationItem.searchController?.isActive = true
                         self.navigationItem.searchController = self.searchController
                     }
                 }
