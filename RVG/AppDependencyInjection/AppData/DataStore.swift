@@ -1509,7 +1509,19 @@ extension DataStore: DataStoring {
                 try dbPool.writeInTransaction { db in
                     // update
                     os_log("try action update playable.uuid: %{public}@", log: OSLog.data, String(describing: playable.uuid))
-                    if let action = try UserActionPlayable.filter(Column("playable_uuid") == playable.uuid).fetchOne(db) {
+                    
+                    var playableUuid: String?
+                    if let aMediaItem = playable as? MediaItem {
+                        playableUuid = aMediaItem.uuid
+                    }
+                    
+                    // if we are about store a UserActionPlayable
+                    // make sure we check the playable_uuid
+                    if let anActionPlayable = playable as? UserActionPlayable {
+                        playableUuid = anActionPlayable.playable_uuid
+                    }
+                    
+                    if let action = try UserActionPlayable.filter(Column("playable_uuid") == playableUuid).fetchOne(db) {
                         // update existing action
                         
 //                        DDLogDebug("action found: \(action) playable.uuid: \(playable.uuid)")
