@@ -95,6 +95,7 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
     private var keyboardBag = DisposeBag()
     private let keyboardDismissTapGestureRecognizer = UITapGestureRecognizer()
     private var userTappedDoneWhileFiltering: Bool = false
+    private var networkUnreachable: Bool = false
     
     // MARK: Lifecycle
     
@@ -573,6 +574,7 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
                     }
                     
                 case .notReachable:
+                    self.networkUnreachable = true
                     os_log("MediaHistoryViewController networkStatus: %{public}@", log: OSLog.data, String(describing: networkStatus))
                     //                    self.searchController = UISearchController(searchResultsController: nil)
                     //                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
@@ -586,7 +588,14 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
                     //                    self.searchController = UISearchController(searchResultsController: self.mediaSearchResultsViewController)
                     //                    self.searchController.searchBar.placeholder = NSLocalizedString("Search", comment: "").l10n()
                     DispatchQueue.main.async {
+                        if self.networkUnreachable == true {
+                            self.searchController.isActive = true
+                            self.filterController.isActive = false
+                        }
                         self.navigationItem.searchController = self.searchController
+                        
+                        self.networkUnreachable = false
+                        //                        self.navigationItem.searchController?.isActive = true
                     }
                 }
         }.disposed(by: bag)
