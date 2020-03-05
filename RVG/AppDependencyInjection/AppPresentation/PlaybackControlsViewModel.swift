@@ -4,7 +4,7 @@ import RxSwift
 
 public final class PlaybackControlsViewModel {
     // MARK: Fields
-    public let assetPlaybackService: AssetPlaybackServicing
+    public var assetPlaybackService: AssetPlaybackServicing
     private let historyService: HistoryServicing
     private let reachability: RxClassicReachable
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
@@ -121,6 +121,10 @@ public final class PlaybackControlsViewModel {
                     .disposed(by: self.bag)
             }
             .disposed(by: bag)
+    }
+    
+    func shouldAutoStartPlayback(should: Bool) {
+        self.assetPlaybackService.shouldAutostart = should
     }
     
     func playPlayback() {

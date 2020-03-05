@@ -44,6 +44,7 @@ protocol FileDownloadDataServicing {
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     // list
     func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func allFileDownloads() -> Single<[FileDownload]>
     func fetchInterruptedDownloads(_ playlistUuid: String?) -> Single<[FileDownload]>
 }
 
@@ -265,6 +266,10 @@ extension DataService: FileDownloadDataServicing {
     
     public func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
         return dataStore.fileDownloads(for: playlistUuid)
+    }
+    
+    public func allFileDownloads() -> Single<[FileDownload]> {
+        return dataStore.allFileDownloads()
     }
     
     public func fetchInterruptedDownloads(_ playlistUuid: String? = nil) -> Single<[FileDownload]> {

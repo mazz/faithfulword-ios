@@ -31,7 +31,9 @@ protocol DownloadServicing {
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     
     func fetchStoredFileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func fetchStoredFileDownloads() -> Single<[FileDownload]>
     func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]>
+    func activeFileDownloads() -> Single<[FileDownload]>
 }
 
 extension DownloadService: HWIFileDownloadDelegate {
@@ -312,13 +314,25 @@ extension DownloadService: DownloadServicing {
     func fetchStoredFileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
         return self.dataService.fileDownloads(for: playlistUuid)
     }
-    
+
+    func fetchStoredFileDownloads() -> Single<[FileDownload]> {
+        return self.dataService.allFileDownloads()
+    }
+
     func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]> {
         return Single.create { [unowned self] single in
             var values = Array(self.fileDownloads.values)
             
             values = values.filter { $0.playlistUuid == playlistUuid }
             
+            single(.success(values))
+            return Disposables.create {}
+        }
+    }
+    
+    func activeFileDownloads() -> Single<[FileDownload]> {
+        return Single.create { [unowned self] single in
+            let values = Array(self.fileDownloads.values)
             single(.success(values))
             return Disposables.create {}
         }

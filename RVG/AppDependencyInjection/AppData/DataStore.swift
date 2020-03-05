@@ -82,6 +82,7 @@ public protocol DataStoring {
     
     // MARK: FileDownload list
     func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func allFileDownloads() -> Single<[FileDownload]>
     func fetchInterruptedDownloads(_ playlistUuid: String?) -> Single<[FileDownload]>
     
     // MARK: Playlist
@@ -463,10 +464,11 @@ public final class DataStore {
 
 // MARK: <DataStoring>
 extension DataStore: DataStoring {
+    
     // MARK: Org
     
     public func fetchDefaultOrgs() -> Single<[Org]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchOrgs: [Org] = []
                 //                let chapters: [Org]!
@@ -484,7 +486,7 @@ extension DataStore: DataStoring {
 
     
     public func addDefaultOrgs(orgs: [Org]) -> Single<[Org]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
@@ -516,7 +518,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteDefaultOrgs() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try Org.deleteAll(db)
@@ -532,7 +534,7 @@ extension DataStore: DataStoring {
     }
 
     public func fetchDefaultOrg() -> Single<Org?> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchOrg: Org?
                 var fetchOrgs: [Org] = []
@@ -559,7 +561,7 @@ extension DataStore: DataStoring {
     //MARK: Channel
     
     public func fetchChannels(for orgUuid: String) -> Single<[Channel]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetched: [Channel] = []
                 try dbPool.read { db in
@@ -575,7 +577,7 @@ extension DataStore: DataStoring {
     }
     
     public func addChannels(channels: [Channel]) -> Single<[Channel]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
@@ -606,7 +608,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteChannels() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try Channel.deleteAll(db)
@@ -624,7 +626,7 @@ extension DataStore: DataStoring {
     //MARK: Playlist
     
     public func fetchPlaylists(for channelUuid: String) -> Single<[Playlist]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetched: [Playlist] = []
                 try dbPool.read { db in
@@ -640,7 +642,7 @@ extension DataStore: DataStoring {
     }
     
     public func addPlaylists(playlists: [Playlist]) -> Single<[Playlist]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     for playlist in playlists {
@@ -671,7 +673,7 @@ extension DataStore: DataStoring {
     }
     
     public func deletePlaylists() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try Playlist.deleteAll(db)
@@ -687,7 +689,7 @@ extension DataStore: DataStoring {
     }
     
     public func deletePlaylists(_ forChannelUuid: String) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try Playlist.filter(Column("channel_uuid") == forChannelUuid).deleteAll(db)
@@ -704,7 +706,7 @@ extension DataStore: DataStoring {
     
     // MARK: MediaItems
     public func fetchMediaItems(for playlistUuid: String) -> Single<[MediaItem]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetched: [MediaItem] = []
                 try dbPool.read { db in
@@ -720,7 +722,7 @@ extension DataStore: DataStoring {
     }
 
     public func addMediaItems(items: [MediaItem]) -> Single<[MediaItem]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     for mediaItem in items {
@@ -750,7 +752,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteMediaItems() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try MediaItem.deleteAll(db)
@@ -770,7 +772,7 @@ extension DataStore: DataStoring {
     // will error if there is already one user because for now
     // this is a single-user app
     public func addAppUser(addingUser: UserAppUser) -> Single<UserAppUser> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             var resultUser: UserAppUser = addingUser
             do {
                 try dbPool.writeInTransaction { db in
@@ -814,7 +816,7 @@ extension DataStore: DataStoring {
     }
 
     public func fetchAppUser() -> Single<UserAppUser?> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchUser: UserAppUser?
                 try dbPool.read { db in
@@ -831,7 +833,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteAppUser() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try UserAppUser.deleteAll(db)
@@ -848,7 +850,7 @@ extension DataStore: DataStoring {
 
     
     public func addLoginUser(addingUser: UserLoginUser) -> Single<UserLoginUser> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             var resultUser: UserLoginUser = addingUser
             do {
                 try dbPool.writeInTransaction { db in
@@ -867,7 +869,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteLoginUser() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try UserLoginUser.deleteAll(db)
@@ -883,7 +885,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchLoginUser() -> Single<UserLoginUser?> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchUser: UserLoginUser?
                 try dbPool.read { db in
@@ -931,7 +933,7 @@ extension DataStore: DataStoring {
     // MARK: User Update
     
     public func updateUser(updatingUser: UserAppUser) -> Single<UserAppUser> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.filter(Column("uuid") == updatingUser.uuid).fetchOne(db) {
@@ -995,7 +997,7 @@ extension DataStore: DataStoring {
     // MARK: -- User Language
     
     public func updateUserLanguage(identifier: String) -> Single<String> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.fetchOne(db) {
@@ -1015,7 +1017,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchUserLanguage() -> Single<String> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var language: String = ""
                 try dbPool.read { db in
@@ -1036,7 +1038,7 @@ extension DataStore: DataStoring {
     
     public func addCategory(categoryList: [Categorizable],
                             for categoryListType: CategoryListingType) -> Single<[Categorizable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.fetchOne(db) {
@@ -1084,7 +1086,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteCategoryList(for categoryListingType: CategoryListingType) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     switch categoryListingType {
@@ -1109,7 +1111,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchCategoryList(for categoryListingType: CategoryListingType) -> Single<[Categorizable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchCategoryList: [Categorizable] = []
                 try dbPool.read { db in
@@ -1136,7 +1138,7 @@ extension DataStore: DataStoring {
     // MARK: Chapters
     
     public func addChapters(chapters: [Playable], for bookUuid: String) -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
@@ -1178,7 +1180,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchChapters(for bookUuid: String) -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchChapters: [Playable] = []
                 //                let chapters: [Playable]!
@@ -1195,7 +1197,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteChapters(for bookUuid: String) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     
@@ -1218,7 +1220,7 @@ extension DataStore: DataStoring {
     // MARK: MediaGospel
     
     public func addMediaGospel(mediaGospel: [Playable], for categoryUuid: String) -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
@@ -1258,7 +1260,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchMediaGospel(for categoryUuid: String) -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchMediaGospel: [Playable] = []
                 try dbPool.read { db in
@@ -1274,7 +1276,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteMediaGospel(for categoryUuid: String) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
@@ -1297,7 +1299,7 @@ extension DataStore: DataStoring {
     // MARK: MediaMusic
     
     public func addMediaMusic(mediaMusic: [Playable], for categoryUuid: String) -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    let statement = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
@@ -1339,7 +1341,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchMediaMusic(for categoryUuid: String) -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchMediaMusic: [Playable] = []
                 try dbPool.read { db in
@@ -1355,7 +1357,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteMediaMusic(for categoryUuid: String) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
@@ -1377,7 +1379,7 @@ extension DataStore: DataStoring {
     // MARK: Bible Languages
     
     public func addBibleLanguages(bibleLanguages: [LanguageIdentifier]) -> Single<[LanguageIdentifier]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    if let user = try User.fetchOne(db) {
@@ -1401,7 +1403,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchBibleLanguages() -> Single<[LanguageIdentifier]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 
                 var languages: [LanguageIdentifier] = []
@@ -1418,7 +1420,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteBibleLanguages() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     try LanguageIdentifier.deleteAll(db)
@@ -1437,7 +1439,7 @@ extension DataStore: DataStoring {
     
     // always return ALL books, even when appending
     public func addBooks(books: [Book]) -> Single<[Book]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     if let user = try UserAppUser.fetchOne(db) {
@@ -1465,7 +1467,7 @@ extension DataStore: DataStoring {
     }
     
     public func fetchBooks() -> Single<[Book]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchBooks: [Book] = []
                 try dbPool.read { db in
@@ -1482,7 +1484,7 @@ extension DataStore: DataStoring {
     
     
     public func deleteAllBooks() -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     let books = try Book.fetchAll(db)
@@ -1504,7 +1506,7 @@ extension DataStore: DataStoring {
     
     public func updatePlayableHistory(playable: Playable, position: Float, duration: Float) -> Single<Void> {
         // let update: Single<Void> =
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     // update
@@ -1632,7 +1634,7 @@ extension DataStore: DataStoring {
     }
 
     public func playableHistory() -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchPlayableHistory: [Playable] = []
                 try dbPool.read { db in
@@ -1649,7 +1651,7 @@ extension DataStore: DataStoring {
     }
 
     public func fetchLastUserActionPlayableState(playableUuid: String) -> Single<UserActionPlayable?> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var playable: UserActionPlayable!
                 
@@ -1668,7 +1670,7 @@ extension DataStore: DataStoring {
     // MARK: FileDownload
     
     public func updateFileDownloadHistory(fileDownload: FileDownload) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     // update
@@ -1718,7 +1720,7 @@ extension DataStore: DataStoring {
     }
     
     public func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     // update
@@ -1759,7 +1761,7 @@ extension DataStore: DataStoring {
 
     
     public func fetchLastFileDownloadHistory(playableUuid: String) -> Single<FileDownload?> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var playable: FileDownload!
                 
@@ -1776,7 +1778,7 @@ extension DataStore: DataStoring {
     }
 
     public func deleteLastFileDownloadHistory(playableUuid: String) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 try dbPool.writeInTransaction { db in
                     //                    let selectBook = try db.makeSelectStatement("SELECT * FROM book WHERE bid = ?")
@@ -1794,7 +1796,7 @@ extension DataStore: DataStoring {
     }
     
     public func deleteFileDownloadFile(playableUuid: String, pathExtension: String) -> Single<Void> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playableUuid.appending(String(describing: ".\(pathExtension)"))).path)
                 let fileManager = FileManager.default
@@ -1814,7 +1816,7 @@ extension DataStore: DataStoring {
     }
     
     public func fileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
-        return Single.create { [unowned self] single in
+        return Single.create {  single in
             do {
                 var fetchFileDownloads: [FileDownload] = []
                 try dbPool.read { db in
@@ -1829,8 +1831,25 @@ extension DataStore: DataStoring {
         }
     }
     
+    public func allFileDownloads() -> Single<[FileDownload]> {
+        return Single.create { single in
+            do {
+                var fetchFileDownloads: [FileDownload] = []
+                try dbPool.read { db in
+                    fetchFileDownloads = try FileDownload
+                        .fetchAll(db)
+                }
+                single(.success(fetchFileDownloads))
+            } catch {
+                os_log("error: %{public}@", log: OSLog.data, String(describing: error))
+                single(.error(error))
+            }
+            return Disposables.create {}
+        }
+    }
+    
     public func fetchInterruptedDownloads(_ playlistUuid: String? = nil) -> Single<[FileDownload]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var fetchFileDownloads: [FileDownload]?
                 var interrupted: [FileDownload] = []
@@ -1857,7 +1876,7 @@ extension DataStore: DataStoring {
     }
 
     public func fetchPlayables(for categoryUuid: String) -> Single<[Playable]> {
-        return Single.create { [unowned self] single in
+        return Single.create { single in
             do {
                 var playables: [UserActionPlayable]!
                 

@@ -142,89 +142,31 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
         notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
 
             os_log("notification: %{public}@", log: OSLog.data, String(describing: notification))
-            if let mediaItem: MediaItem = notification.object as? MediaItem,
-                let weakSelf = self {
+            
+            if let uap: UserActionPlayable = notification.object as? UserActionPlayable,
+                let mediaItem: MediaItem = self?.makeMediaItem(for: uap) {
                 // clear-out from interrupted items
-                weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
-                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
+                self?.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
+                self?.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
         
         notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
             
             os_log("notification: %{public}@", log: OSLog.data, String(describing: notification))
-            if let mediaItem: MediaItem = notification.object as? MediaItem,
-                let weakSelf = self {
-                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
+            
+            if let uap: UserActionPlayable = notification.object as? UserActionPlayable,
+                let mediaItem: MediaItem = self?.makeMediaItem(for: uap) {
+                self?.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
         
         notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
             os_log("notification: %{public}@", log: OSLog.data, String(describing: notification))
-            /*
-             - some : Faithful_Word.MediaItem(contentProviderLink: nil, duration: 0.0, hashId: "gqRj", insertedAt: 1565925286.0, ipfsLink: nil, languageId: "en", largeThumbnailPath: nil, localizedname: "Matthew 1", medThumbnailPath: nil, mediaCategory: "bible", medium: "audio", ordinal: Optional(1), path: Optional("bible/en/0040-0001-Matthew-en.mp3"), playlistUuid: "8e06e658-9cdf-4ca0-8aa5-a3e958e6b035", presentedAt: nil, presenterName: Optional("Eli Lambert"), publishedAt: nil, smallThumbnailPath: nil, sourceMaterial: Optional("King James Bible (KJV)"), tags: [], trackNumber: Optional(1), updatedAt: Optional(1565925318.0), uuid: "39be7a9d-fbe8-49a3-a5d4-16c3e10b0c2d")
-             */
             
-            /*
-             ▿ Optional<UserActionPlayable>
-             ▿ some : UserActionPlayable
-               - downloaded : false
-               - duration : 0.0
-               - hash_id : "dy8X"
-               - playable_uuid : "93FA8305-BEF1-40B0-8A05-4C2339131F99"
-               ▿ playable_path : Optional<String>
-                 - some : "music/singthekjv/Psalm-0002-0185-Deuteronomy32-en.mp3"
-               - playback_position : 0.0
-               ▿ updated_at : Optional<String>
-                 - some : "2020-02-25T01:55:54Z"
-               - uuid : "497F7B8C-9B22-4F46-94BA-DD3C7C5FE246"
-               - inserted_at : "2020-02-02T11:11:54Z"
-               - large_thumbnail_path : nil
-               - localizedname : "Deuteronomy 32"
-               - media_category : "music"
-               - multilanguage : false
-               ▿ path : Optional<String>
-                 - some : "music/singthekjv/Psalm-0002-0185-Deuteronomy32-en.mp3"
-               - playlist_uuid : "0ac17499-18bf-487d-9c5e-4101a58cccec"
-               - presenter_name : nil
-               - small_thumbnail_path : nil
-               - med_thumbnail_path : nil
-               ▿ source_material : Optional<String>
-                 - some : "Sing the KJV"
-               ▿ track_number : Optional<Int>
-                 - some : 185
-
-
-             */
-            
-            if let uap: UserActionPlayable = notification.object as? UserActionPlayable {
-                
-                let mediaItem: MediaItem = MediaItem(content_provider_link: nil,
-                                              duration: uap.duration,
-                                              hash_id: uap.hash_id,
-                                              inserted_at: uap.inserted_at,
-                                              ipfs_link: nil,
-                                              language_id: uap.language_id,
-                                              large_thumbnail_path: uap.large_thumbnail_path,
-                                              localizedname: uap.localizedname,
-                                              med_thumbnail_path: uap.med_thumbnail_path,
-                                              media_category: uap.media_category,
-                                              medium: "audio",
-                                              multilanguage: uap.multilanguage,
-                                              ordinal: uap.ordinal,
-                                              path: uap.path,
-                                              playlist_uuid: uap.playlist_uuid,
-                                              presented_at: uap.presented_at,
-                                              presenter_name: uap.presenter_name,
-                                              published_at: uap.published_at,
-                                              small_thumbnail_path: uap.small_thumbnail_path,
-                                              source_material: uap.source_material,
-                                              tags: uap.tags,
-                                              track_number: uap.track_number,
-                                              updated_at: uap.updated_at,
-                                              uuid: uap.playable_uuid)
-                
-                    if let weakSelf = self,
+            if let uap: UserActionPlayable = notification.object as? UserActionPlayable,
+                let mediaItem: MediaItem = self?.makeMediaItem(for: uap) {
+                if let weakSelf = self,
                     let path: String = mediaItem.path,
                     let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                     let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {
@@ -395,6 +337,34 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
     }
     
     // MARK: Private helpers
+    
+    func makeMediaItem(for userActionPlayable: UserActionPlayable) -> MediaItem {
+        return MediaItem(content_provider_link: nil,
+                         duration: userActionPlayable.duration,
+                         hash_id: userActionPlayable.hash_id,
+                         inserted_at: userActionPlayable.inserted_at,
+                         ipfs_link: nil,
+                         language_id: userActionPlayable.language_id,
+                         large_thumbnail_path: userActionPlayable.large_thumbnail_path,
+                         localizedname: userActionPlayable.localizedname,
+                         med_thumbnail_path: userActionPlayable.med_thumbnail_path,
+                         media_category: userActionPlayable.media_category,
+                         medium: "audio",
+                         multilanguage: userActionPlayable.multilanguage,
+                         ordinal: userActionPlayable.ordinal,
+                         path: userActionPlayable.path,
+                         playlist_uuid: userActionPlayable.playlist_uuid,
+                         presented_at: userActionPlayable.presented_at,
+                         presenter_name: userActionPlayable.presenter_name,
+                         published_at: userActionPlayable.published_at,
+                         small_thumbnail_path: userActionPlayable.small_thumbnail_path,
+                         source_material: userActionPlayable.source_material,
+                         tags: userActionPlayable.tags,
+                         track_number: userActionPlayable.track_number,
+                         updated_at: userActionPlayable.updated_at,
+                         uuid: userActionPlayable.playable_uuid)
+        
+    }
     
     private func setupKeyboardHandling() {
         NotificationCenter.default.keyboardEvents
@@ -636,14 +606,16 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
             .next { [unowned self] playable in
                 guard let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value else { return }
                 
-                self.previousSelectedPlayable.value = self.selectedPlayable.value
-                self.selectedPlayable.value = selectedPlayable
-                
-                if let selected: Playable = self.selectedPlayable.value,
-                    let indexPath: IndexPath = self.indexOfPlayableInViewModel(playable: selected) {
-                    if indexPath.row >= 0 {
-                        UIView.performWithoutAnimation {
-                            self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                if selectedPlayable is UserActionPlayable {
+                    self.previousSelectedPlayable.value = self.selectedPlayable.value
+                    self.selectedPlayable.value = selectedPlayable
+                    
+                    if let selected: Playable = self.selectedPlayable.value,
+                        let indexPath: IndexPath = self.indexOfPlayableInViewModel(playable: selected) {
+                        if indexPath.row >= 0 {
+                            UIView.performWithoutAnimation {
+                                self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
+                            }
                         }
                     }
                 }
@@ -653,54 +625,55 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
     }
     
     private func bindDownloadListingViewModel() {
-//        Observable.combineLatest(downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid).asObservable(),
-//                                 downloadListingViewModel.storedFileDownloads(for: viewModel.playlistUuid).asObservable())
-//            .subscribe(onNext: { activeDownloads, fileDownloads in
-//                DDLogDebug("activeDownloads: \(activeDownloads) fileDownloads: \(fileDownloads)")
-//
-//                // put activeDownloads in downloading
-//                activeDownloads.forEach({ [unowned self] fileDownload in
-//                    self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
-//                })
-//
-//                // put .complete in downloaded
-//                var notCompleted: [FileDownload] = []
-//                // put anything that is not .complete in downloadingItems
-//                fileDownloads.forEach({ [unowned self] fileDownload in
-//                    if fileDownload.state != .complete {
-//                        notCompleted.append(fileDownload)
-//                    } else {
-//                        self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
-//                        DDLogDebug("completedDownload: \(fileDownload)")
-//                    }
-//                })
-//
-//                // put interrupted in downloaded, to allow the user the option of restarting
-//                // by tapping the restart button
-//                var interruptedDownloads: [FileDownload] = []
-//                notCompleted.forEach({ [unowned self] notCompletedDownload in
-//                    //                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
-//
-//                    let notCompletePresentInActive: Bool = activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid }
-//
-//                    if notCompletePresentInActive == false {
-//                        // interrupted
-//                        interruptedDownloads.append(notCompletedDownload)
-//                    }
-//
-//                    //                let interruptedDownloads: [FileDownload] = notCompleted.filter({ notCompletedDownload -> Bool in
-//                    //                    activeDownloads.contains(where: { activeDownload -> Bool in
-//                    //                        activeDownload.playlistUuid != notCompletedDownload.playlistUuid
-//                    //                    })
-//                })
-//
-//                interruptedDownloads.forEach({ [unowned self] fileDownload in
-//                    self.downloadListingViewModel.downloadInterruptedItems[fileDownload.playableUuid] = fileDownload
-//                })
-//
-//                DDLogDebug("interruptedDownloads: \(interruptedDownloads)")
-//
-//            }).disposed(by: bag)
+        Observable.combineLatest(downloadListingViewModel.activeFileDownloads().asObservable(),
+                                 downloadListingViewModel.storedFileDownloads().asObservable())
+            .subscribe(onNext: { activeDownloads, fileDownloads in
+                os_log("activeDownloads: %{public}@", log: OSLog.data, String(describing: activeDownloads))
+                os_log("fileDownloads: %{public}@", log: OSLog.data, String(describing: fileDownloads))
+                
+
+                // put activeDownloads in downloading
+                activeDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+                })
+
+                // put .complete in downloaded
+                var notCompleted: [FileDownload] = []
+                // put anything that is not .complete in downloadingItems
+                fileDownloads.forEach({ [unowned self] fileDownload in
+                    if fileDownload.state != .complete {
+                        notCompleted.append(fileDownload)
+                    } else {
+                        self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
+                        os_log("fileDownload: %{public}@", log: OSLog.data, String(describing: fileDownload))
+                    }
+                })
+
+                // put interrupted in downloaded, to allow the user the option of restarting
+                // by tapping the restart button
+                var interruptedDownloads: [FileDownload] = []
+                notCompleted.forEach({ [unowned self] notCompletedDownload in
+                    //                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
+
+                    let notCompletePresentInActive: Bool = activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid }
+
+                    if notCompletePresentInActive == false {
+                        // interrupted
+                        interruptedDownloads.append(notCompletedDownload)
+                    }
+
+                    //                let interruptedDownloads: [FileDownload] = notCompleted.filter({ notCompletedDownload -> Bool in
+                    //                    activeDownloads.contains(where: { activeDownload -> Bool in
+                    //                        activeDownload.playlistUuid != notCompletedDownload.playlistUuid
+                    //                    })
+                })
+
+                interruptedDownloads.forEach({ [unowned self] fileDownload in
+                    self.downloadListingViewModel.downloadInterruptedItems[fileDownload.playableUuid] = fileDownload
+                })
+                os_log("interruptedDownloads: %{public}@", log: OSLog.data, String(describing: interruptedDownloads))
+
+            }).disposed(by: bag)
         
         // the moment the viewmodel playlistuuid changes we
         // get the file downloads for that playlist
@@ -753,7 +726,9 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
             .asObservable()
             .observeOn(MainScheduler.instance)
             .subscribe(onNext: { [unowned self] fileDownload in
+                os_log("=== fileDownloadDirty fileDownload: %{public}@", log: OSLog.data, String(describing: fileDownload))
                 let indexPath: IndexPath = self.indexOfFileDownloadInViewModel(fileDownload: fileDownload)
+                os_log("=== fileDownloadDirty indexPath: %{public}@", log: OSLog.data, String(describing: indexPath))
                 if indexPath.row != -1 {
                     self.lastProgressChangedUpdate.onNext(indexPath)
                 }
@@ -807,7 +782,12 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
                         switch enumPlayable {
                             
                         case .playable(let item):
-                            return item.uuid == fileDownload.playableUuid
+                            if item is UserActionPlayable {
+                                let actionPlayableItem: UserActionPlayable = item as! UserActionPlayable
+                                return actionPlayableItem.playable_uuid == fileDownload.playableUuid
+                            } else {
+                                return item.uuid == fileDownload.playableUuid
+                            }
                         }
                     }
                     

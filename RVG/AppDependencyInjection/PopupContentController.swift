@@ -53,7 +53,12 @@ class PopupContentController: UIViewController {
     
     var scrubbing: Bool = false
     var playingWhileScrubbing: Bool = false
-    
+    var shouldAutostartPlayback: Bool = true {
+        didSet {
+            playbackViewModel.shouldAutoStartPlayback(should: shouldAutostartPlayback)
+        }
+    }
+
     public var playbackViewModel: PlaybackControlsViewModel!
     public var downloadingViewModel: DownloadViewModel!
     public var userActionsViewModel: UserActionsViewModel!
@@ -84,7 +89,6 @@ class PopupContentController: UIViewController {
         nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "").l10n()
         
         popupItem.rightBarButtonItems = [ playPauseButton, nextButton ]
-        
     }
     
     func bindPlaybackViewModel() {
@@ -512,7 +516,7 @@ class PopupContentController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         resetViewModelsBag()
 
         bindPlaybackViewModel()

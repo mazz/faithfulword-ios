@@ -63,7 +63,8 @@ public class AssetPlaybackManager: NSObject {
     /// The state that the internal `AVPlayer` is in.
     var state: AssetPlaybackManager.playbackState = .initial
     var repeatState: RepeatSetting = .repeatOff
-    
+    var shouldAutostart: Bool = true
+
     /// A Bool for tracking if playback should be resumed after an interruption.  See README.md for more information.
     private var shouldResumePlaybackAfterInterruption = true
     
@@ -95,6 +96,7 @@ public class AssetPlaybackManager: NSObject {
             if asset != nil {
                 DDLogDebug("asset didSet: \(String(describing: asset))")
                 asset.urlAsset.addObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), options: [.initial, .new], context: nil)
+                NotificationCenter.default.post(name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
             }
             else {
                 // Unload currentItem so that the state is updated globally.
@@ -102,7 +104,6 @@ public class AssetPlaybackManager: NSObject {
                 player.replaceCurrentItem(with: nil)
             }
 
-            NotificationCenter.default.post(name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
         }
     }
 
@@ -395,9 +396,14 @@ public class AssetPlaybackManager: NSObject {
         }
         else if keyPath == #keyPath(AVPlayerItem.status) {
             if playerItem.status == .readyToPlay {
-                self.seekTo(asset.playbackPosition)
-                player.play()
-                self.playbackRate(asset.playbackRate)
+//                self.seekTo(asset.playbackPosition)
+//                player.play()
+//                self.playbackRate(asset.playbackRate)
+                if shouldAutostart {
+                    self.seekTo(asset.playbackPosition)
+                    player.play()
+                    self.playbackRate(asset.playbackRate)
+                }
             }
         }
         else if keyPath == #keyPath(AVPlayer.currentItem) {

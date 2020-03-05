@@ -35,6 +35,7 @@ internal final class DownloadListingViewModel {
     public var downloadingItems: [String: FileDownload] = [:]
     public var downloadedItems: [String: FileDownload] = [:]
     public var downloadInterruptedItems: [String: FileDownload] = [:]
+    public var storedDownloads: [String: FileDownload] = [:]
 
     
     
@@ -81,11 +82,19 @@ internal final class DownloadListingViewModel {
     public func storedFileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
         return self.downloadService.fetchStoredFileDownloads(for: playlistUuid)
     }
-    
+
+    public func storedFileDownloads() -> Single<[FileDownload]> {
+        return self.downloadService.fetchStoredFileDownloads()
+    }
+
     public func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]> {
         return self.downloadService.activeFileDownloads(playlistUuid)
     }
-    
+
+    public func activeFileDownloads() -> Single<[FileDownload]> {
+        return self.downloadService.activeFileDownloads()
+    }
+
     public func updateFileDownloadHistory(for fileDownload: FileDownload) {
         self.downloadService.updateFileDownloadHistory(fileDownload: fileDownload)
             .asObservable()
