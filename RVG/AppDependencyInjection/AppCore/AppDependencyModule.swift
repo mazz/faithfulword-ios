@@ -129,6 +129,9 @@ internal final class AppDependencyModule {
                 resettableNoResourceCoordinator: Resettable {
                     resolver.resolve(NoResourceCoordinator.self)!
                 },
+//                resettablePlaybackCoordinator: Resettable {
+//                    resolver.resolve(PlaybackCoordinator.self)!
+//                },
                 //                resettableAccountSetupCoordinator: Resettable {
                 //                    resolver.resolve(AccountSetupCoordinator.self)!
                 //                },
@@ -137,9 +140,10 @@ internal final class AppDependencyModule {
                 languageService: resolver.resolve(LanguageServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 downloadService: resolver.resolve(DownloadServicing.self)!,
+//                historyService: resolver.resolve(HistoryServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-        }
+        }//.inObjectScope(.container)
 
         container.register(AppUIMaking.self) { resolver in
             UIFactory(resolver: resolver)
@@ -282,12 +286,15 @@ internal final class AppDependencyModule {
                     resolver.resolve(HistoryCoordinator.self)!
                 }, resettableMediaRouteCoordinator: Resettable {
                     resolver.resolve(MediaRouteCoordinator.self)!
+                }, resettablePlaybackCoordinator: Resettable {
+                    resolver.resolve(PlaybackCoordinator.self)!
                 },
                    mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
                    mediaUniversalLinkHandler: resolver.resolve(MediaUniversalLinkHandling.self)!,
-                productService: resolver.resolve(ProductServicing.self)!
+                   productService: resolver.resolve(ProductServicing.self)!,
+                   historyService: resolver.resolve(HistoryServicing.self)!
             )
-        }
+        }.inObjectScope(.container)
         
         /**
          view models should be stored as transient, otherwise they will
@@ -387,7 +394,7 @@ internal final class AppDependencyModule {
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.container)
+            }.inObjectScope(.container)        
     }
 
     private static func attachSplashScreenFlowDependencies(to container: Container) {

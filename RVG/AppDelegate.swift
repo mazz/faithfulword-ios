@@ -22,6 +22,8 @@ extension OSLog {
 
 // The shared database pool
 var dbPool: DatabasePool!
+// The shared app dependency module
+var dependencyModule: AppDependencyModule = AppDependencyModule()
 
 // store launch info if the app was launched via push/deeplink and
 // the main coordinator has not yet started handling media routes
@@ -39,9 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     private static var lastPushNotificationCheck = "lastPushNotificationCheck"
     let gcmMessageIDKey = "gcm.message_id"
     
-    private let dependencyModule = AppDependencyModule()
+//    private let dependencyModule = AppDependencyModule()
     private lazy var appCoordinator: AppCoordinator = { [unowned self] in
-        self.dependencyModule.resolver.resolve(AppCoordinator.self)!
+        dependencyModule.resolver.resolve(AppCoordinator.self)!
         }()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -183,7 +185,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             os_log("mediaUuid = %@", log: OSLog.data, mediaUuid)
             
             if mediaType == "media_item" {
-                var mediaRouteHandler = self.dependencyModule.resolver.resolve(MediaRouteHandling.self)!
+                var mediaRouteHandler = dependencyModule.resolver.resolve(MediaRouteHandling.self)!
                 
                 os_log("mediaRouteHandler = %{public}@", log: OSLog.data, String(describing: mediaRouteHandler))
                 mediaRouteHandler.emitMediaRouteEvent(for: deeplinkRoute)
@@ -195,7 +197,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         os_log("doMediaUniveralLinkRoute: %{public}@", log: OSLog.data, String(describing: url))
 
         let urlString: String = url.absoluteString
-        var mediaUniversalLinkHandler = self.dependencyModule.resolver.resolve(MediaUniversalLinkHandling.self)!
+        var mediaUniversalLinkHandler = dependencyModule.resolver.resolve(MediaUniversalLinkHandling.self)!
         
         os_log("mediaUniversalLinkHandler = %{public}@", log: OSLog.data, String(describing: mediaUniversalLinkHandler))
         mediaUniversalLinkHandler.emitMediaUniversalLinkEvent(for: urlString)

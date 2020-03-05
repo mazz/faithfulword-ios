@@ -5,6 +5,7 @@ import L10n_swift
 import Alamofire
 import Loaf
 import SwiftKeychainWrapper
+import os.log
 
 /// Coordinator in charge of navigating between the two main states of the app.
 /// Operates on the level of the rootViewController and switches between the
@@ -30,11 +31,12 @@ internal class AppCoordinator {
     
     // MARK: Fields
     
-    private var rootViewController: RootViewController!
     private var sideMenuViewController: SideMenuViewController!
+    private var rootViewController: RootViewController!
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     var appFlowStatus: AppFlowStatus = .login
     var serverStatus: ServerConnectivityStatus = .none
+    
     
     private let bag = DisposeBag()
     private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
@@ -45,12 +47,15 @@ internal class AppCoordinator {
     private let resettableNoResourceCoordinator: Resettable<NoResourceCoordinator>
     private let resettableMainCoordinator: Resettable<MainCoordinator>
     private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
+//    private let resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>
+
     //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
     private let accountService: AccountServicing
     private let productService: ProductServicing
     private let languageService: LanguageServicing
     private let assetPlaybackService: AssetPlaybackServicing
     private let downloadService: DownloadServicing
+//    private let historyService: HistoryServicing
     private let reachability: RxClassicReachable
     
     internal init(uiFactory: AppUIMaking,
@@ -58,11 +63,13 @@ internal class AppCoordinator {
         resettableMainCoordinator: Resettable<MainCoordinator>,
         resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
         resettableNoResourceCoordinator: Resettable<NoResourceCoordinator>,
+//        resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>,
         accountService: AccountServicing,
         productService: ProductServicing,
         languageService: LanguageServicing,
         assetPlaybackService: AssetPlaybackServicing,
         downloadService: DownloadServicing,
+//        historyService: HistoryServicing,
         reachability: RxClassicReachable
         ) {
         self.uiFactory = uiFactory
@@ -70,12 +77,14 @@ internal class AppCoordinator {
         self.resettableMainCoordinator = resettableMainCoordinator
         self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
         self.resettableNoResourceCoordinator = resettableNoResourceCoordinator
+//        self.resettablePlaybackCoordinator = resettablePlaybackCoordinator
         //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
         self.accountService = accountService
         self.productService = productService
         self.languageService = languageService
         self.assetPlaybackService = assetPlaybackService
         self.downloadService = downloadService
+//        self.historyService = historyService
         self.reachability = reachability
         
         
@@ -187,9 +196,52 @@ extension AppCoordinator: NavigationCoordinating {
         swapInSplashScreenFlow()
     }
     
-    private func startHandlingAssetPlaybackEvents() {
-        //        assetPlaybackService.start()
-    }
+//    private func startHandlingAssetPlaybackEvents() {
+//                    self.resettablePlaybackCoordinator.value.flow(with: { playbackViewController in
+//                        // do nothing because the bottom popup should appear
+//                        // when the playbackViewController loads
+//
+//
+//                        // get the playback history
+//                        if let popupController: PopupContentController = playbackViewController as? PopupContentController {
+//                            self.popupController = popupController
+//
+//                            self.historyService.fetchPlaybackHistory()
+//                                .subscribe(onSuccess: { playables in
+//                                    // this assignment is meant to initiate the entire playbackAsset to assetPlaybackManager
+//                                    // assignment and loading of the historyPlayable
+//
+//                                    if let playable = playables.first {
+//                                        popupController.shouldAutostartPlayback = false
+//                                        self.popupController?.playbackViewModel.selectedPlayable.value = playable
+//
+//                                        if let thumbImage = UIImage(named: "creation") {
+//                                            self.popupController?.popupItem.title = playable.localizedname
+//                                            self.popupController?.popupItem.subtitle = playable.presenter_name ?? "Unknown"
+//                                            self.popupController?.popupItem.image = thumbImage
+//                                            //                popupController.albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
+//                                            //                popupController.fullAlbumArtImageView.image = thumbImage
+//                                            self.popupController?.popupItem.accessibilityHint = NSLocalizedString("Tap to Expand the Mini Player", comment: "").l10n()
+//
+//                                            if let viewController = self.rootViewController {
+//                                                viewController.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "").l10n()
+//                                                viewController.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
+//                                                viewController.popupBar.imageView.layer.cornerRadius = 5
+//
+//                                                if viewController.popupContent == nil {
+//                                                    os_log("AppCoordinator viewController.popupContent: %{public}@", log: OSLog.data, String(describing: viewController.popupContent))
+//                                                    viewController.presentPopupBar(withContentViewController: popupController, animated: true, completion: nil)
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                })
+//                                .disposed(by: bag)
+//                        }
+//                    }, completion: { _ in
+//                        self.resettablePlaybackCoordinator.reset()
+//                    }, context: .other)
+//        }
     
     private func startHandlingAuthEvents() {
         
@@ -524,7 +576,7 @@ extension AppCoordinator: NavigationCoordinating {
         resettableSplashScreenCoordinator.value.flow(with: { [unowned self] splashScreenFlowViewController in
             self.rootViewController.plant(splashScreenFlowViewController)
             }, completion: { [unowned self] _ in
-                self.startHandlingAssetPlaybackEvents()
+//                self.startHandlingAssetPlaybackEvents()
                 self.startHandlingAuthEvents()
                 self.accountService.start()
                 

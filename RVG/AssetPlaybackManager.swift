@@ -399,8 +399,8 @@ public class AssetPlaybackManager: NSObject {
 //                self.seekTo(asset.playbackPosition)
 //                player.play()
 //                self.playbackRate(asset.playbackRate)
+                self.seekTo(asset.playbackPosition)
                 if shouldAutostart {
-                    self.seekTo(asset.playbackPosition)
                     player.play()
                     self.playbackRate(asset.playbackRate)
                 }

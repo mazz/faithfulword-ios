@@ -54,6 +54,7 @@ extension HistoryCoordinator: NavigationCoordinating {
             
             //                let presenterName = playable.presenterName,
             if let thumbImage = UIImage(named: "creation") {
+                popupController.shouldAutostartPlayback = true
                 popupController.popupItem.title = playable.localizedname
                 popupController.popupItem.subtitle = playable.presenter_name ?? "Unknown"
                 popupController.popupItem.image = thumbImage
