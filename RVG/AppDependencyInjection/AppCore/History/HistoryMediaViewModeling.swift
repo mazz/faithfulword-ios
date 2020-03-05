@@ -12,6 +12,7 @@ import RxSwift
 public protocol HistoryMediaViewModeling {
     var media: Field<[Playable]> { get }
     var sections: Field<[MediaListingSectionViewModel]> { get }
+    var historyHorizon: Int { get }
 
     var filteredSections: Field<[MediaListingSectionViewModel]> { get }
     var filterText: PublishSubject<String> { get }

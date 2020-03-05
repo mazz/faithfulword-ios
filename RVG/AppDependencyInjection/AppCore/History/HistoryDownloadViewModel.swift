@@ -12,9 +12,11 @@ import GRDB
 
 private struct Constants {
     static let limit: Int = 100
+    static let historyHorizon: Int = 2500
 }
 
 internal final class HistoryDownloadViewModel: HistoryMediaViewModeling {
+    var historyHorizon: Int = Constants.historyHorizon
     
     // MARK: Fields
     

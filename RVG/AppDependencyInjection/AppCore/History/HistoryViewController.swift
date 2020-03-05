@@ -28,4 +28,15 @@ class HistoryViewController: UIViewController {
         self.embed(playbackHistoryViewController, in: self.listingContainer)
     }
 
+    @IBAction func tappedSegmentedControl(_ sender: Any) {
+        if let control: UISegmentedControl = sender as? UISegmentedControl {
+            if control.selectedSegmentIndex == 0 {
+                self.remove(downloadHistoryViewController)
+                self.embed(playbackHistoryViewController, in: self.listingContainer)
+            } else if control.selectedSegmentIndex == 1 {
+                self.remove(playbackHistoryViewController)
+                self.embed(downloadHistoryViewController, in: self.listingContainer)
+            }
+        }
+    }
 }

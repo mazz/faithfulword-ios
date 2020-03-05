@@ -207,7 +207,7 @@ extension MainCoordinator: NavigationCoordinating {
                     if let popupController: PopupContentController = playbackViewController as? PopupContentController {
                         self.popupController = popupController
                         
-                        self.historyService.fetchPlaybackHistory()
+                        self.historyService.fetchPlaybackHistory(limit: 1)
                             .subscribe(onSuccess: { playables in
                                 // this assignment is meant to initiate the entire playbackAsset to assetPlaybackManager
                                 // assignment and loading of the historyPlayable

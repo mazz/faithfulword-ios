@@ -68,7 +68,7 @@ public protocol DataStoring {
     // MARK: history
     
     func updatePlayableHistory(playable: Playable, position: Float, duration: Float) -> Single<Void>
-    func playableHistory() -> Single<[Playable]>
+    func playableHistory(limit: Int) -> Single<[Playable]>
     func fetchLastUserActionPlayableState(playableUuid: String) -> Single<UserActionPlayable?>
     
     // MARK: FileDownload
@@ -1633,13 +1633,22 @@ extension DataStore: DataStoring {
         //        return Single.just(())
     }
 
-    public func playableHistory() -> Single<[Playable]> {
+    public func playableHistory(limit: Int) -> Single<[Playable]> {
         return Single.create { single in
             do {
                 var fetchPlayableHistory: [Playable] = []
                 try dbPool.read { db in
                     let updatedAt = Column("updated_at")
-                    fetchPlayableHistory = try UserActionPlayable.order(updatedAt.desc).fetchAll(db)
+                    if limit > 0 {
+                        fetchPlayableHistory = try UserActionPlayable
+                            .limit(limit)
+                            .order(updatedAt.desc)
+                            .fetchAll(db)
+                    } else {
+                        fetchPlayableHistory = try UserActionPlayable
+                            .order(updatedAt.desc)
+                            .fetchAll(db)
+                    }
                 }
                 single(.success(fetchPlayableHistory))
             } catch {

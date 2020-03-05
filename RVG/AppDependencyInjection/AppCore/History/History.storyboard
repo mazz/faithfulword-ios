@@ -22,6 +22,9 @@
                                     <segment title="First"/>
                                     <segment title="Second"/>
                                 </segments>
+                                <connections>
+                                    <action selector="tappedSegmentedControl:" destination="fXb-DK-LUo" eventType="valueChanged" id="2w8-YC-MwL"/>
+                                </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dfd-uQ-iAC">
                                 <rect key="frame" x="0.0" y="91" width="414" height="771"/>

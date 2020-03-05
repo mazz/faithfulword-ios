@@ -457,7 +457,13 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
                         // only update this list while view controller is visible
                         if myselfInTopViewController == true {
                             let currentItemsCount: Int = self.viewModelSections[Constants.mediaSection].items.count
-                            let appendCount: Int = sections[Constants.mediaSection].items.count - currentItemsCount
+                            
+                            var appendCount: Int = sections[Constants.mediaSection].items.count - currentItemsCount
+                            
+                            if sections[Constants.mediaSection].items.count >= self.viewModel.historyHorizon {
+                                appendCount = 0
+                            }
+                            
                             os_log("currentItemsCount: %{public}@", log: OSLog.data, String(describing: currentItemsCount))
                             os_log("appendCount: %{public}@", log: OSLog.data, String(describing: appendCount))
                             

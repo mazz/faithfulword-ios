@@ -13,9 +13,12 @@ import os.log
 
 private struct Constants {
     static let limit: Int = 100
+    static let historyHorizon: Int = 2500
 }
 
 internal final class HistoryPlaybackViewModel: HistoryMediaViewModeling {
+    var historyHorizon: Int = Constants.historyHorizon
+    
     // MARK: Fields
     
     public func section(at index: Int) -> MediaListingSectionViewModel {
@@ -108,7 +111,7 @@ internal final class HistoryPlaybackViewModel: HistoryMediaViewModeling {
             // we can get media from server, so get them
             os_log("MediaListingViewModel reachability.reachable", log: OSLog.data)
             self.fetchMedia(offset: self.lastOffset + 1,
-                            limit: Constants.limit,
+                            limit: Constants.historyHorizon,
                             cacheDirective: .fetchAndAppend)
         case .unknown:
             os_log("MediaListingViewModel reachability.unknown", log: OSLog.data)
@@ -152,8 +155,13 @@ internal final class HistoryPlaybackViewModel: HistoryMediaViewModeling {
     private func setupDatasource() {
         reactToReachability()
         
+        //      let request = Player.limit(10)
+        //      let count = try request.fetchCount(db)
+        //
+
         let playlistObservation = ValueObservation.tracking { db in
             try UserActionPlayable
+                .limit(Constants.historyHorizon)
                 .order(Column("updated_at").desc)
                 .fetchAll(db)
         }
@@ -333,7 +341,7 @@ internal final class HistoryPlaybackViewModel: HistoryMediaViewModeling {
     func initialFetch() {
         DDLogDebug("HistoryPlaybackViewModel initialFetch")
 
-        historyService.fetchPlaybackHistory()
+        historyService.fetchPlaybackHistory(limit: Constants.historyHorizon)
         .asObservable()
             .next { playables in
                 os_log("history: %{public}@", log: OSLog.data, String(describing: playables))
