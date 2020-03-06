@@ -362,8 +362,21 @@ extension PlaybackControlsViewModel {
             let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded))
             else { return false }
         
-        let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
-        return FileManager.default.fileExists(atPath: url.path)
-
+        var playableUuid: String?
+        
+        if playable is UserActionPlayable {
+            if let userActionPlayable: UserActionPlayable = playable as? UserActionPlayable {
+                playableUuid = userActionPlayable.playable_uuid
+            }
+        } else {
+            playableUuid = playable.uuid
+        }
+                
+        if let uuid: String = playableUuid {
+            return FileManager.default.fileExists(atPath: URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path).path)
+//            return FileManager.default.fileExists(atPath: url.path)
+        } else {
+            return false
+        }
     }
 }
