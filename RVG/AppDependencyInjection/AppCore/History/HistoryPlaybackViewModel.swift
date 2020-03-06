@@ -332,7 +332,10 @@ internal final class HistoryPlaybackViewModel: HistoryMediaViewModeling {
                             self.emptyFilteredResult.value = (filteredPlayables.count == 0)
                             self.filteredMedia.value = filteredPlayables
                         case .reachable(_):
-                            os_log("do nothing with filter because we are online(we only filter while offline): %{public}@", log: OSLog.data, String(describing: filterText))
+                            os_log("filteredPlayables count: %{public}@", log: OSLog.data, String(describing: filteredPlayables.count))
+
+                            self.emptyFilteredResult.value = (filteredPlayables.count == 0)
+                            self.filteredMedia.value = filteredPlayables
                         }
                     }).disposed(by: self.bag)
         }.disposed(by: bag)

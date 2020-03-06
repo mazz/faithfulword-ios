@@ -19,6 +19,8 @@ class HistoryViewController: UIViewController {
     var playbackHistoryViewController: MediaHistoryViewController!
     var downloadHistoryViewController: MediaHistoryViewController!
 
+    private var filterController: UISearchController = UISearchController(searchResultsController: nil)
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -26,6 +28,23 @@ class HistoryViewController: UIViewController {
         historySelectionControl.setTitle(NSLocalizedString("Download", comment: "").l10n(), forSegmentAt: 1)
 
         self.embed(playbackHistoryViewController, in: self.listingContainer)
+        
+        
+        filterController.dimsBackgroundDuringPresentation = false
+        filterController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
+        filterController.searchResultsUpdater = playbackHistoryViewController
+        filterController.searchBar.delegate = playbackHistoryViewController // Monitor when the search button is tapped.
+        filterController.searchBar.autocapitalizationType = .none
+        //        searchController.dimsBackgroundDuringPresentation = true // The default is true.
+        filterController.delegate = playbackHistoryViewController
+        
+        filterController.searchBar.enablesReturnKeyAutomatically = true
+        filterController.searchBar.returnKeyType = .done
+        
+        navigationItem.searchController = filterController
+        navigationItem.hidesSearchBarWhenScrolling = false
+
+        
     }
 
     @IBAction func tappedSegmentedControl(_ sender: Any) {

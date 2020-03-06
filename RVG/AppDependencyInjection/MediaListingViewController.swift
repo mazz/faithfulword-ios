@@ -399,6 +399,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     private func reactToViewModel() {
         viewModel.filteredSections.asObservable()
+            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
             .observeOn(MainScheduler.instance)
             //            .debug()
             //            .filter{ $0[Constants.mediaSection].items.count > 0 }

@@ -46,7 +46,7 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
     //    internal var searchViewModel: MediaSearchViewModel!
     internal var playbackViewModel: PlaybackControlsViewModel!
     internal var downloadListingViewModel: DownloadListingViewModel!
-    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
+//    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
     
     // MARK: Fields
     
@@ -77,7 +77,7 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
         var wasFirstResponder = false
     }
     
-    private var searchController: UISearchController = UISearchController(searchResultsController: nil)
+//    private var searchController: UISearchController = UISearchController(searchResultsController: nil)
     private var filterController: UISearchController = UISearchController(searchResultsController: nil)
     
     /// Secondary search results table view.
@@ -217,50 +217,7 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
                     weakSelf.present(actionController, animated: true, completion: nil)
                 }
             }
-            
-            
-            //        if let fileDownload: FileDownload = notification.object as? FileDownload,
-            //            let downloadAsset: Asset = self.downloadAsset.value {
-            //            DDLogDebug("initiateNotification filedownload: \(fileDownload)")
-            //            if fileDownload.localUrl.lastPathComponent == downloadAsset.uuid.appending(String(describing: ".\(downloadAsset.fileExtension)")) {
-            //
-            //                self.downloadState.onNext(.initiating)
-            //            }
-            //
-            //        }
-            
         }
-        // DownloadService
-        //        notificationCenter.addObserver(self, selector: #selector(MediaHistoryViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-        //        notificationCenter.addObserver(self, selector: #selector(MediaHistoryViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-        //        notificationCenter.addObserver(self, selector: #selector(MediaHistoryViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-        //        notificationCenter.addObserver(self, selector: #selector(MediaHistoryViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-        //        notificationCenter.addObserver(self, selector: #selector(MediaHistoryViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
-        
-        /// SEARCH
-        
-        //        resultsTableController = ResultsTableController()
-        
-        //        let dependencyModule = AppDependencyModule()
-        //
-        //        let uiFactory = dependencyModule.resolver.resolve(UIFactory.self)!
-        //        let mediaSearchResultsViewController: MediaSearchResultsViewController = uiFactory.makeMediaSearching(playlistId: viewModel.playlistUuid, mediaCategory: viewModel.mediaCategory)
-        
-        
-        
-        //        resultsTableController.tableView.delegate = self
-        //        searchController = UISearchController(searchResultsController: resultsTableController)
-        
-        searchController = UISearchController(searchResultsController: mediaSearchResultsViewController)
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self // Monitor when the search button is tapped.
-        searchController.searchBar.autocapitalizationType = .none
-        //        searchController.dimsBackgroundDuringPresentation = true // The default is true.
-        searchController.delegate = self
-        
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        
         
         filterController.dimsBackgroundDuringPresentation = false
         filterController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
@@ -272,6 +229,10 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
         
         filterController.searchBar.enablesReturnKeyAutomatically = true
         filterController.searchBar.returnKeyType = .done
+        
+        navigationItem.searchController = filterController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
         //        filterController.searchBar.searchTextField.returnKeyType = .done
         
         
@@ -297,16 +258,16 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
         //            .disposed(by: bag)
         
         // capture search button tap event
-        searchController.searchBar.rx
-            .searchButtonClicked
-            .debug()
-            .subscribe(onNext: { [unowned self] _ in
-                if let searchText: String = self.searchController.searchBar.text {
-                    //                    self.viewModel.searchText.value = searchText
-                    self.mediaSearchResultsViewController.viewModel.searchText.value = searchText
-                }
-            })
-            .disposed(by: bag)
+//        searchController.searchBar.rx
+//            .searchButtonClicked
+//            .debug()
+//            .subscribe(onNext: { [unowned self] _ in
+//                if let searchText: String = self.searchController.searchBar.text {
+//                    //                    self.viewModel.searchText.value = searchText
+//                    self.mediaSearchResultsViewController.viewModel.searchText.value = searchText
+//                }
+//            })
+//            .disposed(by: bag)
         
         // observe changes on the searchedSections and refresh
         // search results if there are
@@ -418,15 +379,15 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Restore the searchController's active state.
-        if restoredState.wasActive {
-            searchController.isActive = restoredState.wasActive
-            restoredState.wasActive = false
-            
-            if restoredState.wasFirstResponder {
-                searchController.searchBar.becomeFirstResponder()
-                restoredState.wasFirstResponder = false
-            }
-        }
+//        if restoredState.wasActive {
+//            searchController.isActive = restoredState.wasActive
+//            restoredState.wasActive = false
+//
+//            if restoredState.wasFirstResponder {
+//                searchController.searchBar.becomeFirstResponder()
+//                restoredState.wasFirstResponder = false
+//            }
+//        }
     }
     
     
@@ -442,6 +403,7 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
     
     private func reactToViewModel() {
         viewModel.filteredSections.asObservable()
+            .throttle(.milliseconds(300), scheduler: MainScheduler.instance)
             .observeOn(MainScheduler.instance)
             //            .debug()
             //            .filter{ $0[Constants.mediaSection].items.count > 0 }
@@ -565,10 +527,10 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
                     //                    self.searchController.searchBar.placeholder = NSLocalizedString("Search", comment: "").l10n()
                     DispatchQueue.main.async {
                         if self.networkUnreachable == true {
-                            self.searchController.isActive = true
+//                            self.searchController.isActive = true
                             self.filterController.isActive = false
                         }
-                        self.navigationItem.searchController = self.searchController
+//                        self.navigationItem.searchController = self.searchController
                         
                         self.networkUnreachable = false
                         //                        self.navigationItem.searchController?.isActive = true
@@ -1170,7 +1132,7 @@ extension MediaHistoryViewController: UISearchBarDelegate {
     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText == "" {
             os_log("probably cleared searchbar", log: OSLog.data)
-            mediaSearchResultsViewController.viewModel.cancelSearch.value = searchText
+//            mediaSearchResultsViewController.viewModel.cancelSearch.value = searchText
         }
         viewModel.filterText.onNext(searchText)
         
@@ -1186,10 +1148,10 @@ extension MediaHistoryViewController: UISearchResultsUpdating {
     public func updateSearchResults(for searchController: UISearchController) {
         os_log("searchController: %{public}@", log: OSLog.data, String(describing: searchController))
         
-        if let mediaSearchResultsViewController: MediaSearchResultsViewController =  searchController.searchResultsController as? MediaSearchResultsViewController {
-            // reset "no result" label
-            mediaSearchResultsViewController.viewModel.emptyResult.value = false
-        }
+//        if let mediaSearchResultsViewController: MediaSearchResultsViewController =  searchController.searchResultsController as? MediaSearchResultsViewController {
+//            // reset "no result" label
+//            mediaSearchResultsViewController.viewModel.emptyResult.value = false
+//        }
     }
 }
 
@@ -1205,13 +1167,13 @@ extension MediaHistoryViewController {
         coder.encode(navigationItem.title!, forKey: RestorationKeys.viewControllerTitle.rawValue)
         
         // Encode the search controller's active state.
-        coder.encode(searchController.isActive, forKey: RestorationKeys.searchControllerIsActive.rawValue)
+//        coder.encode(searchController.isActive, forKey: RestorationKeys.searchControllerIsActive.rawValue)
         
         // Encode the first responser status.
-        coder.encode(searchController.searchBar.isFirstResponder, forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
+//        coder.encode(searchController.searchBar.isFirstResponder, forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
         
         // Encode the search bar text.
-        coder.encode(searchController.searchBar.text, forKey: RestorationKeys.searchBarText.rawValue)
+//        coder.encode(searchController.searchBar.text, forKey: RestorationKeys.searchBarText.rawValue)
     }
     
     override public func decodeRestorableState(with coder: NSCoder) {
@@ -1236,7 +1198,7 @@ extension MediaHistoryViewController {
         restoredState.wasFirstResponder = coder.decodeBool(forKey: RestorationKeys.searchBarIsFirstResponder.rawValue)
         
         // Restore the text in the search field.
-        searchController.searchBar.text = coder.decodeObject(forKey: RestorationKeys.searchBarText.rawValue) as? String
+//        searchController.searchBar.text = coder.decodeObject(forKey: RestorationKeys.searchBarText.rawValue) as? String
     }
     
 }
