@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension MediaHistoryViewController: UICollectionViewDelegate {
+extension DownloadHistoryViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if viewModelSections.count == 0 {
             return 0

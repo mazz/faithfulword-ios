@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ifc-7s-lzu">
+                            <segmentedControl hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ifc-7s-lzu">
                                 <rect key="frame" x="52" y="52" width="310" height="32"/>
                                 <segments>
                                     <segment title="First"/>
@@ -27,7 +27,7 @@
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dfd-uQ-iAC">
-                                <rect key="frame" x="0.0" y="91" width="414" height="771"/>
+                                <rect key="frame" x="0.0" y="52" width="414" height="810"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -38,8 +38,8 @@
                             <constraint firstItem="Ifc-7s-lzu" firstAttribute="top" secondItem="p3g-L3-ZvK" secondAttribute="top" constant="8" id="Dlj-bT-Ffr"/>
                             <constraint firstItem="Ifc-7s-lzu" firstAttribute="width" secondItem="aP0-sH-n3Q" secondAttribute="height" multiplier="121:350" id="GAL-QP-azm"/>
                             <constraint firstItem="dfd-uQ-iAC" firstAttribute="trailing" secondItem="p3g-L3-ZvK" secondAttribute="trailing" id="bDn-dj-ZIt"/>
-                            <constraint firstItem="dfd-uQ-iAC" firstAttribute="top" secondItem="Ifc-7s-lzu" secondAttribute="bottom" constant="8" id="fMC-1I-2cv"/>
                             <constraint firstItem="p3g-L3-ZvK" firstAttribute="bottom" secondItem="dfd-uQ-iAC" secondAttribute="bottom" id="gSf-Yg-bvS"/>
+                            <constraint firstItem="dfd-uQ-iAC" firstAttribute="top" secondItem="p3g-L3-ZvK" secondAttribute="top" constant="8" id="u3N-G2-OA9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="p3g-L3-ZvK"/>
                     </view>
@@ -52,40 +52,10 @@
             </objects>
             <point key="canvasLocation" x="-776.81159420289862" y="45.535714285714285"/>
         </scene>
-        <!--History Download View Controller-->
-        <scene sceneID="YHO-W8-PMo">
-            <objects>
-                <viewController storyboardIdentifier="HistoryDownloadViewController" id="os8-XU-xZH" customClass="HistoryDownloadViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="5L4-Jd-K3g">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="saR-YF-iKZ"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="kWn-ID-RQS" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-128" y="46"/>
-        </scene>
-        <!--History Playback View Controller-->
-        <scene sceneID="bJp-kj-dYl">
-            <objects>
-                <viewController storyboardIdentifier="HistoryPlaybackViewController" id="6x2-6j-x80" customClass="HistoryPlaybackViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="H97-dT-4pA">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="OBr-rp-Sdg"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="a2W-8Z-Fti" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="536" y="46"/>
-        </scene>
-        <!--Media History View Controller-->
+        <!--Playback History View Controller-->
         <scene sceneID="f20-SQ-TgN">
             <objects>
-                <viewController storyboardIdentifier="MediaHistoryViewController" id="AZT-nS-lWl" customClass="MediaHistoryViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlaybackHistoryViewController" id="AZT-nS-lWl" customClass="PlaybackHistoryViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1BI-g9-9R4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -114,7 +84,41 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7ae-Ut-JgZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="535" y="-606"/>
+            <point key="canvasLocation" x="-257" y="-644"/>
+        </scene>
+        <!--Download History View Controller-->
+        <scene sceneID="ZF4-il-9A7">
+            <objects>
+                <viewController storyboardIdentifier="DownloadHistoryViewController" id="nJV-OY-5Bt" customClass="DownloadHistoryViewController" customModule="Faithful_Word" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QUr-Qd-fR1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Azi-yz-Her">
+                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="ZkJ-iS-lSw">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Azi-yz-Her" firstAttribute="leading" secondItem="1OO-vp-bFl" secondAttribute="leading" id="F4x-zC-V1Z"/>
+                            <constraint firstItem="Azi-yz-Her" firstAttribute="top" secondItem="1OO-vp-bFl" secondAttribute="top" id="aV1-y7-DOx"/>
+                            <constraint firstAttribute="bottom" secondItem="Azi-yz-Her" secondAttribute="bottom" id="ize-m3-Vn1"/>
+                            <constraint firstItem="1OO-vp-bFl" firstAttribute="trailing" secondItem="Azi-yz-Her" secondAttribute="trailing" id="vBl-S7-fLS"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="1OO-vp-bFl"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z2e-gG-RCC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="380" y="-644"/>
         </scene>
     </scenes>
 </document>

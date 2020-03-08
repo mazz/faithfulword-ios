@@ -389,7 +389,7 @@ internal final class AppDependencyModule {
 
         container.register(HistoryDownloadViewModel.self) { resolver in
             HistoryDownloadViewModel(
-                historyService: resolver.resolve(HistoryServicing.self)!,
+                downloadService: resolver.resolve(DownloadServicing.self)!,
                 //                searchService: resolver.resolve(SearchServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!

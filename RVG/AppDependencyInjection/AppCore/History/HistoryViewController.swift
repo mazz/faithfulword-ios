@@ -16,8 +16,8 @@ class HistoryViewController: UIViewController {
 //    var historyPlaybackViewModel: MediaFilterViewModel!
 //    var historyDownloadViewModel: MediaFilterViewModel!
     
-    var playbackHistoryViewController: MediaHistoryViewController!
-    var downloadHistoryViewController: MediaHistoryViewController!
+    var playbackHistoryViewController: PlaybackHistoryViewController!
+    var downloadHistoryViewController: DownloadHistoryViewController!
 
     private var filterController: UISearchController = UISearchController(searchResultsController: nil)
 

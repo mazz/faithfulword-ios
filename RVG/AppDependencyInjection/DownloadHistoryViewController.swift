@@ -15,7 +15,7 @@ import MagazineLayout
 import os.log
 
 /// Add service screen
-public final class MediaHistoryViewController: UIViewController, UICollectionViewDataSource /*,  UICollectionViewDelegate */ {
+public final class DownloadHistoryViewController: UIViewController, UICollectionViewDataSource /*,  UICollectionViewDelegate */ {
     // MARK: Private
     
     private struct Constants {
@@ -914,7 +914,7 @@ public final class MediaHistoryViewController: UIViewController, UICollectionVie
     }
 }
 
-extension MediaHistoryViewController: UIScrollViewDelegate {
+extension DownloadHistoryViewController: UIScrollViewDelegate {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         //        DDLogDebug("scrollViewDidEndDecelerating scrollView: \(scrollView)")
         
@@ -937,7 +937,7 @@ extension MediaHistoryViewController: UIScrollViewDelegate {
 
 // MARK: UICollectionViewDelegateMagazineLayout
 
-extension MediaHistoryViewController: UICollectionViewDelegateMagazineLayout {
+extension DownloadHistoryViewController: UICollectionViewDelegateMagazineLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeModeForItemAt indexPath: IndexPath) -> MagazineLayoutItemSizeMode {
         return MagazineLayoutItemSizeMode(widthMode: .fullWidth(respectsHorizontalInsets: true), heightMode: .dynamic)
@@ -1053,7 +1053,7 @@ extension MediaHistoryViewController: UICollectionViewDelegateMagazineLayout {
 
 // MARK: UISearchControllerDelegate
 
-extension MediaHistoryViewController: UISearchControllerDelegate {
+extension DownloadHistoryViewController: UISearchControllerDelegate {
     public func willPresentSearchController(_ searchController: UISearchController) {
         os_log("searchController: %{public}@", log: OSLog.data, String(describing: searchController))
 
@@ -1068,7 +1068,7 @@ extension MediaHistoryViewController: UISearchControllerDelegate {
 
 // MARK: UISearchBarDelegate
 
-extension MediaHistoryViewController: UISearchBarDelegate {
+extension DownloadHistoryViewController: UISearchBarDelegate {
     
     public override func resignFirstResponder() -> Bool {
         return true
@@ -1144,7 +1144,7 @@ extension MediaHistoryViewController: UISearchBarDelegate {
     }
 }
 
-extension MediaHistoryViewController: UISearchResultsUpdating {
+extension DownloadHistoryViewController: UISearchResultsUpdating {
     public func updateSearchResults(for searchController: UISearchController) {
         os_log("searchController: %{public}@", log: OSLog.data, String(describing: searchController))
         
@@ -1157,7 +1157,7 @@ extension MediaHistoryViewController: UISearchResultsUpdating {
 
 // MARK: - UIStateRestoration
 
-extension MediaHistoryViewController {
+extension DownloadHistoryViewController {
     override public func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
         

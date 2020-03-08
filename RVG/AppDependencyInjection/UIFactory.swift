@@ -19,8 +19,8 @@ internal protocol AppUIMaking {
 //    func makeBibleLanguagePage() -> BibleLanguageViewController
     func makeBibleLanguagePage() -> RadioListViewController
     func makeHistoryPage() -> HistoryViewController
-    func makePlaybackHistory() -> MediaHistoryViewController
-    func makeDownloadHistory() -> MediaHistoryViewController
+    func makePlaybackHistory() -> PlaybackHistoryViewController
+    func makeDownloadHistory() -> DownloadHistoryViewController
     func makeMediaListing(playlistId: String, mediaCategory: MediaCategory) -> MediaListingViewController
     func makeMediaSearching(playlistId: String, mediaCategory: MediaCategory) -> MediaSearchResultsViewController
     func makeMediaDetails(playable: Playable) -> MediaDetailsViewController
@@ -82,16 +82,16 @@ extension UIFactory: AppUIMaking {
         return historyViewController
     }
     
-    func makePlaybackHistory() -> MediaHistoryViewController {
-        let mediaHistoryViewController = MediaHistoryViewController.make(storyboardName: StoryboardName.mediaHistory)
+    func makePlaybackHistory() -> PlaybackHistoryViewController {
+        let mediaHistoryViewController = PlaybackHistoryViewController.make(storyboardName: StoryboardName.mediaHistory)
         mediaHistoryViewController.viewModel = resolver.resolve(HistoryPlaybackViewModel.self)
         mediaHistoryViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
         mediaHistoryViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
         return mediaHistoryViewController
     }
     
-    func makeDownloadHistory() -> MediaHistoryViewController {
-        let mediaHistoryViewController = MediaHistoryViewController.make(storyboardName: StoryboardName.mediaHistory)
+    func makeDownloadHistory() -> DownloadHistoryViewController {
+        let mediaHistoryViewController = DownloadHistoryViewController.make(storyboardName: StoryboardName.mediaHistory)
         mediaHistoryViewController.viewModel = resolver.resolve(HistoryDownloadViewModel.self)
         mediaHistoryViewController.playbackViewModel = resolver.resolve(PlaybackControlsViewModel.self)
         mediaHistoryViewController.downloadListingViewModel = resolver.resolve(DownloadListingViewModel.self)
