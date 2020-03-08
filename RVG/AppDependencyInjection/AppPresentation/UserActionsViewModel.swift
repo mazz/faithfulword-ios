@@ -46,7 +46,7 @@ internal final class UserActionsViewModel {
                         .asObservable()
                         .subscribeAndDispose(by: self.bag)
                     
-                    self.historyService.fetchPlaybackHistory()
+                    self.historyService.fetchPlaybackHistory(limit: 0)
                         .asObservable()
                         .next({ playables in
                             self.playbackHistory.onNext(playables)

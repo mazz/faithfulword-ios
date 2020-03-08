@@ -120,7 +120,7 @@ internal final class MediaDetailsViewModel {
             .map { $0.map { playable -> MediaDetailsItemType in
                 let icon: String!
                 
-                switch MediaCategory(rawValue: self.playable.mediaCategory) {
+                switch MediaCategory(rawValue: self.playable.media_category) {
                 case .none:
                     icon = "none"
                 case .some(.gospel):
@@ -147,7 +147,7 @@ internal final class MediaDetailsViewModel {
                     icon = "chapter"
                 }
                 var presenter: String = "Unknown Presenter"
-                if let presenterName: String = playable.presenterName {
+                if let presenterName: String = playable.presenter_name {
                     presenter = presenterName
                 }
                 
@@ -163,7 +163,7 @@ internal final class MediaDetailsViewModel {
                     // details section
                     if let mediaItem: MediaItem = self.playable as? MediaItem {
                         // media section
-                        detailsSection = MediaDetailsSectionViewModel(type: .details, items: [MediaDetailsItemType.details(playable: mediaItem, presentedAt: mediaItem.presentedAt, showBottomSeparator: true)])
+                        detailsSection = MediaDetailsSectionViewModel(type: .details, items: [MediaDetailsItemType.details(playable: mediaItem, presentedAt: mediaItem.presented_at, showBottomSeparator: true)])
 //                        self.sections.value.append(MediaDetailsSectionViewModel(type: .details, items: [MediaDetailsItemType.details(playable: mediaItem, presentedAt: mediaItem.presentedAt, showBottomSeparator: true)]))
                         mediaSection = (MediaDetailsSectionViewModel(type: .media, items: names))
 //                        self.sections.value.append(MediaDetailsSectionViewModel(type: .media, items: names))

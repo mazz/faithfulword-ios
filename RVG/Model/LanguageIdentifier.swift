@@ -3,8 +3,8 @@ import GRDB
 
 public struct LanguageIdentifier: Codable {
     var uuid: String
-    let sourceMaterial: String
-    let languageIdentifier: String
+    let source_material: String
+    let language_identifier: String
     let supported: Bool
 }
 
@@ -12,23 +12,12 @@ public struct LanguageIdentifier: Codable {
 extension LanguageIdentifier {
     enum Columns {
         static let uuid = Column("uuid")
-        static let sourceMaterial = Column("sourceMaterial")
-        static let languageIdentifier = Column("languageIdentifier")
+        static let source_material = Column("source_material")
+        static let language_identifier = Column("language_identifier")
         static let supported = Column("supported")
     }
 }
 
 // Adopt RowConvertible so that we can fetch players from the database.
 // Implementation is automatically derived from Codable.
-extension LanguageIdentifier: FetchableRecord { }
-
-// Adopt MutablePersistable so that we can create/update/delete players in the database.
-// Implementation is partially derived from Codable.
-extension LanguageIdentifier: MutablePersistableRecord {
-    public static let databaseTableName = "languageidentifier"
-    public mutating func didInsert(with rowID: String, for column: String?) {
-        uuid = rowID
-    }
-}
-
-
+extension LanguageIdentifier: FetchableRecord, PersistableRecord { }

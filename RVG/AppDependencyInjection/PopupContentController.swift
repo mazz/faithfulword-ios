@@ -6,6 +6,7 @@ import RxCocoa
 import MarqueeLabel
 import Moya
 import UICircularProgressRing
+import os.log
 
 public enum PlaybackSpeed {
     case oneX
@@ -53,7 +54,12 @@ class PopupContentController: UIViewController {
     
     var scrubbing: Bool = false
     var playingWhileScrubbing: Bool = false
-    
+    var shouldAutostartPlayback: Bool = true {
+        didSet {
+            playbackViewModel.shouldAutoStartPlayback(should: shouldAutostartPlayback)
+        }
+    }
+
     public var playbackViewModel: PlaybackControlsViewModel!
     public var downloadingViewModel: DownloadViewModel!
     public var userActionsViewModel: UserActionsViewModel!
@@ -84,7 +90,6 @@ class PopupContentController: UIViewController {
         nextButton.accessibilityLabel = NSLocalizedString("Next Track", comment: "").l10n()
         
         popupItem.rightBarButtonItems = [ playPauseButton, nextButton ]
-        
     }
     
     func bindPlaybackViewModel() {
@@ -151,67 +156,85 @@ class PopupContentController: UIViewController {
                 guard let path: String = playable.path,
                     let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value,
                     let localizedName: String = playable.localizedname,
-                    let presenterName: String = playable.presenterName ?? "Unknown",
+                    let presenterName: String = playable.presenter_name ?? "Unknown",
                     let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                     let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) else { return }
 
-                let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(selectedPlayable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
+                var playableUuid: String!
                 
-                var playbackPosition: Double = 0
-                var playableUuid: String = playable.uuid
-                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable {
-//                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
-//                    historyPlayable.mediaCategory == "preaching" {
-                    playbackPosition = historyPlayable.playbackPosition
-                    playableUuid = historyPlayable.playableUuid
+                if playable is UserActionPlayable {
+                    if let userActionPlayable: UserActionPlayable = playable as? UserActionPlayable {
+                        playableUuid = userActionPlayable.playable_uuid
+                    }
+                } else {
+                    playableUuid = playable.uuid
                 }
                 
-                var playbackRate: Float = 1.0
-                if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
-                    playbackRate = playbackSpeed
+                if let uuid: String = playableUuid {
+                    let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
+                    
+                    os_log("found playbackPlayable/selectedPlayable file: %{public}@", log: OSLog.data, String(describing: FileManager.default.fileExists(atPath: url.path)))
+                    
+                    var playbackPosition: Double = 0
+//                    var playableUuid: String = playable.uuid
+                    if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable {
+                        //                if let historyPlayable: UserActionPlayable = playable as? UserActionPlayable,
+                        //                    historyPlayable.mediaCategory == "preaching" {
+                        playbackPosition = historyPlayable.playback_position
+//                        playableUuid = historyPlayable.playable_uuid
+                    }
+                    
+                    var playbackRate: Float = 1.0
+                    if let playbackSpeed: Float = UserDefaults.standard.object(forKey: UserPrefs.playbackSpeed.rawValue) as? Float {
+                        playbackRate = playbackSpeed
+                    }
+
+                    os_log("Asset playableUuid: %{public}@", log: OSLog.data, String(describing: playableUuid))
+
+                    self.playbackAsset = Asset(name: localizedName,
+                                               artist: presenterName,
+                                               uuid: playableUuid,
+                                               fileExtension: prodUrl.pathExtension,
+                                               playbackPosition: playbackPosition,
+                                               playbackRate: playbackRate,
+                                               urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
+                    
+                    self.playbackViewModel.pausePlayback()
+                    self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
+                    
+                    self.downloadingViewModel.downloadAssetIdentifier.value = self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))
+                    self.downloadingViewModel.downloadAssetRemoteUrlString.value = self.playbackAsset.urlAsset.url.absoluteString
+                    
+                    // pretty sure we can depend on selectedPlayable to be ready
+                    
+                    if let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value {
+                        self.downloadingViewModel.downloadAssetPlaylistUuid.value = selectedPlayable.playlist_uuid
+                    }
+                    
+                    if let _ = selectedPlayable as? UserActionPlayable {
+                        // no-op
+                    } else {
+                        // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
+                        // get mixed-up
+                        self.userActionsViewModel.playable = selectedPlayable
+                    }
+                    
+                    // initiate the check if we have downloaded the content for this playable before
+                    // if it's nil we never downloaded it before so send .initial
+                    // otherwise just passthrough
+                    self.downloadingViewModel.storedFileDownload(for: playableUuid)
+                        .asObservable()
+                        .take(1)
+                        .subscribe(onNext: { fileDownload in
+                            if let download: FileDownload = fileDownload {
+                                self.downloadingViewModel.downloadState.onNext(download.state)
+                            } else {
+                                self.downloadingViewModel.downloadState.onNext(.initial)
+                            }
+                        })
+                        .disposed(by: self.bag)
+
                 }
-                
-                DDLogDebug("Asset playableUuid: \(playableUuid)")
-
-                self.playbackAsset = Asset(name: localizedName,
-                                      artist: presenterName,
-                                      uuid: playableUuid,
-                                      fileExtension: prodUrl.pathExtension,
-                                      playbackPosition: playbackPosition,
-                                      playbackRate: playbackRate,
-                                      urlAsset: AVURLAsset(url: FileManager.default.fileExists(atPath: url.path) ? url : prodUrl))
-
-                self.playbackViewModel.pausePlayback()
-                self.playbackViewModel.assetPlaybackService.assetPlaybackManager.asset = self.playbackAsset
-
-                self.downloadingViewModel.downloadAssetIdentifier.value = self.playbackAsset.uuid.appending(String(describing: ".\(self.playbackAsset.fileExtension)"))
-                self.downloadingViewModel.downloadAssetRemoteUrlString.value = self.playbackAsset.urlAsset.url.absoluteString
-                
-                // pretty sure we can depend on selectedPlayable to be ready
-                
-                if let selectedPlayable: Playable = self.playbackViewModel.selectedPlayable.value {
-                    self.downloadingViewModel.downloadAssetPlaylistUuid.value = selectedPlayable.playlistUuid
-                }
-
-                // do not pass-in UserActionPlayable to historyservice or the playable.uuid and useractionplayable.playableUuid's will
-                // get mixed-up
-                self.userActionsViewModel.playable = selectedPlayable
-                
-                
-                // initiate the check if we have downloaded the content for this playable before
-                // if it's nil we never downloaded it before so send .initial
-                // otherwise just passthrough
-                self.downloadingViewModel.storedFileDownload(for: playableUuid)
-                    .asObservable()
-                    .take(1)
-                    .subscribe(onNext: { fileDownload in
-                        if let download: FileDownload = fileDownload {
-                            self.downloadingViewModel.downloadState.onNext(download.state)
-                        } else {
-                            self.downloadingViewModel.downloadState.onNext(.initial)
-                        }
-                    })
-                    .disposed(by: self.bag)
                 
             }
             .disposed(by: bag)
@@ -512,7 +535,7 @@ class PopupContentController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         resetViewModelsBag()
 
         bindPlaybackViewModel()

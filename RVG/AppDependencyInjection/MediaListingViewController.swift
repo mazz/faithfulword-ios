@@ -34,27 +34,27 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     // MARK: Dependencies
     
     internal var viewModel: MediaListingViewModel!
-//    internal var searchViewModel: MediaSearchViewModel!
+    //    internal var searchViewModel: MediaSearchViewModel!
     internal var playbackViewModel: PlaybackControlsViewModel!
     internal var downloadListingViewModel: DownloadListingViewModel!
     internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
-
+    
     // MARK: Fields
     
     internal var viewModelSections: [MediaListingSectionViewModel] = []
-//    internal var downloadingItems: [String: FileDownload] = [:]
-//    internal var downloadedItems: [String: FileDownload] = [:]
+    //    internal var downloadingItems: [String: FileDownload] = [:]
+    //    internal var downloadedItems: [String: FileDownload] = [:]
     internal var selectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     internal var previousSelectedPlayable: Field<Playable?> = Field<Playable?>(nil)
     internal var playbackState = Field<AssetPlaybackManager.playbackState>(.initial)
     
     let noResultLabel: UILabel = UILabel(frame: .zero)
-
+    
     
     /// MARK: Search
-
+    
     internal var viewModelSearchSections: [MediaListingSectionViewModel] = []
-
+    
     /// State restoration values.
     private enum RestorationKeys: String {
         case viewControllerTitle
@@ -70,19 +70,23 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     private var searchController: UISearchController = UISearchController(searchResultsController: nil)
     private var filterController: UISearchController = UISearchController(searchResultsController: nil)
-
+    
     /// Secondary search results table view.
-//    internal var resultsTableController: ResultsTableController!
-//    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
+    //    internal var resultsTableController: ResultsTableController!
+    //    internal var mediaSearchResultsViewController: MediaSearchResultsViewController!
     /// Restoration state for UISearchController
     private var restoredState = SearchControllerRestorableState()
-
+    
     /// UISearchBar
     private var filterText: String? = nil
-
+    
     private var lastProgressChangedUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private var lastDownloadCompleteUpdate: PublishSubject<IndexPath> = PublishSubject<IndexPath>()
     private let bag = DisposeBag()
+    private var keyboardBag = DisposeBag()
+    private let keyboardDismissTapGestureRecognizer = UITapGestureRecognizer()
+    private var userTappedDoneWhileFiltering: Bool = false
+    private var networkUnreachable: Bool = false
     
     // MARK: Lifecycle
     
@@ -98,7 +102,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            ])
+        ])
         
         
         noResultLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
@@ -116,23 +120,23 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             noResultLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -100),
             noResultLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
             noResultLabel.heightAnchor.constraint(equalToConstant: 300),
-            ])
-
+        ])
+        
         
         let notificationCenter = NotificationCenter.default
         
         // MediaItemCell
-//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
-//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
+        //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapMoreNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil)
+        //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleUserDidTapCancelNotification(notification:)), name: MediaItemCell.mediaItemCellUserDidTapCancelNotification, object: nil)
         
-//        MediaItemCell.mediaItemCellUserDidTapRetryNotification
+        //        MediaItemCell.mediaItemCellUserDidTapRetryNotification
         notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapRetryNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
             DDLogDebug("notification: \(notification)")
             if let mediaItem: MediaItem = notification.object as? MediaItem,
                 let weakSelf = self {
                 // clear-out from interrupted items
                 weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
-                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
         
@@ -141,10 +145,10 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             DDLogDebug("notification: \(notification)")
             if let mediaItem: MediaItem = notification.object as? MediaItem,
                 let weakSelf = self {
-                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
             }
         }
-
+        
         notificationCenter.addObserver(forName: MediaItemCell.mediaItemCellUserDidTapMoreNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
             
             DDLogDebug("notification: \(notification)")
@@ -168,21 +172,21 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         weakSelf.downloadListingViewModel.deleteFileDownload(for: mediaItem.uuid, pathExtension: remoteUrl.pathExtension)
                     }))
                 } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] {
-                actionController.addAction(Action(ActionData(title: "Restart Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                    
-                    // clear-out from interrupted items
-                    weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
-                    
-                    weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
-                })) } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
+                    actionController.addAction(Action(ActionData(title: "Restart Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
+                        
+                        // clear-out from interrupted items
+                        weakSelf.downloadListingViewModel.downloadInterruptedItems[mediaItem.uuid] = nil
+                        
+                        weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
+                    })) } else if let downloading: FileDownload = weakSelf.downloadListingViewModel.downloadingItems[mediaItem.uuid] {
                     actionController.addAction(Action(ActionData(title: "Cancel Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
-                        weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                        weakSelf.downloadListingViewModel.cancelDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                     }))
                 }
                 else {
                     actionController.addAction(Action(ActionData(title: "Download...", image: UIImage(named: "cloud-gray-38px")!), style: .default, handler: { action in
                         //                self.downloadListingService. fetchDownload(url: remoteUrl.absoluteString, filename: fileIdentifier, playableUuid: mediaItem.uuid)
-                        weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlistUuid)
+                        weakSelf.downloadListingViewModel.fetchDownload(for: mediaItem, playlistUuid: mediaItem.playlist_uuid)
                         
                     }))
                 }
@@ -215,25 +219,25 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             
         }
         // DownloadService
-//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
-//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
-//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
-//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
-//        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
+        //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidInitiateNotification(notification:)), name: DownloadService.fileDownloadDidInitiateNotification, object: nil)
+        //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidProgressNotification(notification:)), name: DownloadService.fileDownloadDidProgressNotification, object: nil)
+        //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCompleteNotification(notification:)), name: DownloadService.fileDownloadDidCompleteNotification, object: nil)
+        //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidCancelNotification(notification:)), name: DownloadService.fileDownloadDidCancelNotification, object: nil)
+        //        notificationCenter.addObserver(self, selector: #selector(MediaListingViewController.handleDownloadDidErrorNotification(notification:)), name: DownloadService.fileDownloadDidErrorNotification, object: nil)
         
         /// SEARCH
         
-//        resultsTableController = ResultsTableController()
+        //        resultsTableController = ResultsTableController()
         
-//        let dependencyModule = AppDependencyModule()
-//
-//        let uiFactory = dependencyModule.resolver.resolve(UIFactory.self)!
-//        let mediaSearchResultsViewController: MediaSearchResultsViewController = uiFactory.makeMediaSearching(playlistId: viewModel.playlistUuid, mediaCategory: viewModel.mediaCategory)
-
+        //        let dependencyModule = AppDependencyModule()
+        //
+        //        let uiFactory = dependencyModule.resolver.resolve(UIFactory.self)!
+        //        let mediaSearchResultsViewController: MediaSearchResultsViewController = uiFactory.makeMediaSearching(playlistId: viewModel.playlistUuid, mediaCategory: viewModel.mediaCategory)
         
         
-//        resultsTableController.tableView.delegate = self
-//        searchController = UISearchController(searchResultsController: resultsTableController)
+        
+        //        resultsTableController.tableView.delegate = self
+        //        searchController = UISearchController(searchResultsController: resultsTableController)
         
         searchController = UISearchController(searchResultsController: mediaSearchResultsViewController)
         searchController.searchResultsUpdater = self
@@ -253,27 +257,32 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         filterController.searchBar.autocapitalizationType = .none
         //        searchController.dimsBackgroundDuringPresentation = true // The default is true.
         filterController.delegate = self
-
+        
+        filterController.searchBar.enablesReturnKeyAutomatically = true
+        filterController.searchBar.returnKeyType = .done
+        //        filterController.searchBar.searchTextField.returnKeyType = .done
+        
+        
         // have view model capture uisearchbar keyboard events
         // for filter use case
-//        searchController.searchBar.rx.text
-//            .orEmpty
-//            .distinctUntilChanged()
-//            .debug()
-//            .bind(to: viewModel.filterText)
-//            .disposed(by: bag)
+        //        searchController.searchBar.rx.text
+        //            .orEmpty
+        //            .distinctUntilChanged()
+        //            .debug()
+        //            .bind(to: viewModel.filterText)
+        //            .disposed(by: bag)
         
         // capture back the filterText to view controller
         // (may not need this)
-//        viewModel.filterText
-//            .observeOn(MainScheduler.instance)
-//            .subscribe { [unowned self] filterText in
-//                DDLogDebug("filterText: \(filterText)")
-//                if let text: String = filterText.element {
-//                    self.filterText = text
-//                }
-//            }
-//            .disposed(by: bag)
+        //        viewModel.filterText
+        //            .observeOn(MainScheduler.instance)
+        //            .subscribe { [unowned self] filterText in
+        //                DDLogDebug("filterText: \(filterText)")
+        //                if let text: String = filterText.element {
+        //                    self.filterText = text
+        //                }
+        //            }
+        //            .disposed(by: bag)
         
         // capture search button tap event
         searchController.searchBar.rx
@@ -281,7 +290,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             .debug()
             .subscribe(onNext: { [unowned self] _ in
                 if let searchText: String = self.searchController.searchBar.text {
-//                    self.viewModel.searchText.value = searchText
+                    //                    self.viewModel.searchText.value = searchText
                     self.mediaSearchResultsViewController.viewModel.searchText.value = searchText
                 }
             })
@@ -289,29 +298,63 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         
         // observe changes on the searchedSections and refresh
         // search results if there are
-//        viewModel.searchedSections
-//            .asObservable()
-//            .observeOn(MainScheduler.instance)
-//            .next { [unowned self] sections in
-//                self.viewModelSearchSections = sections
-//                self.resultsTableController.viewModelSearchSections = sections
-//                self.resultsTableController.tableView.reloadData()
-//            }.disposed(by: bag)
-
-//        mediaSearchResultsViewController.viewModel.sections
-//            .asObservable()
-//            .observeOn(MainScheduler.instance)
-//            .next { [unowned self] sections in
-////                self.viewModelSearchSections = sections
-//                self.mediaSearchResultsViewController.viewModelSections = sections
-////                self.mediaSearchResultsViewController.collectionView.reloadData()
-//            }.disposed(by: bag)
-
+        //        viewModel.searchedSections
+        //            .asObservable()
+        //            .observeOn(MainScheduler.instance)
+        //            .next { [unowned self] sections in
+        //                self.viewModelSearchSections = sections
+        //                self.resultsTableController.viewModelSearchSections = sections
+        //                self.resultsTableController.tableView.reloadData()
+        //            }.disposed(by: bag)
+        
+        //        mediaSearchResultsViewController.viewModel.sections
+        //            .asObservable()
+        //            .observeOn(MainScheduler.instance)
+        //            .next { [unowned self] sections in
+        ////                self.viewModelSearchSections = sections
+        //                self.mediaSearchResultsViewController.viewModelSections = sections
+        ////                self.mediaSearchResultsViewController.collectionView.reloadData()
+        //            }.disposed(by: bag)
+        
         
         reactToViewModel()
         bindPlaybackViewModel()
         bindDownloadListingViewModel()
+        setupKeyboardHandling()
         
+    }
+    
+    // MARK: Private helpers
+    
+    private func setupKeyboardHandling() {
+        NotificationCenter.default.keyboardEvents
+            .next { [unowned self] (isHiding, frame) in
+                let keyboardViewEndFrame = self.view.convert(frame, from: self.view.window)
+                
+                if isHiding {
+                    self.collectionView.contentInset = UIEdgeInsets(top: 0,
+                                                                    left: 0,
+                                                                    bottom: 0,
+                                                                    right: 0)
+                    self.keyboardBag = DisposeBag()
+                    
+                    // removing because it interferes with cell selection
+                    self.view.removeGestureRecognizer(self.keyboardDismissTapGestureRecognizer)
+                } else {
+                    self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height, right: 0)
+                    self.setupKeyboardDismissGestureRecognizer()
+                }
+        }
+        .disposed(by: bag)
+    }
+    
+    private func setupKeyboardDismissGestureRecognizer() {
+        keyboardDismissTapGestureRecognizer.rx.event
+            .next { [unowned self] _ in
+                self.view.endEditing(true)
+        }
+        .disposed(by: keyboardBag)
+        view.addGestureRecognizer(keyboardDismissTapGestureRecognizer)
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -326,7 +369,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
          The search controller should be presented modally and match the physical size of this view controller.
          */
         definesPresentationContext = true
-
+        
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -342,7 +385,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
             }
         }
     }
-
+    
     
     deinit {
         // Remove all KVO and notification observers.
@@ -356,9 +399,14 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     
     private func reactToViewModel() {
         viewModel.filteredSections.asObservable()
+            // debounce because the ValueObservation will deliver an
+            // empty array momentarily showing "No Result Found"
+            // debounce 500 ms helps avoid this
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+//            .throttle(.milliseconds(100), scheduler: MainScheduler.instance)
             .observeOn(MainScheduler.instance)
-//            .debug()
-//            .filter{ $0[Constants.mediaSection].items.count > 0 }
+            //            .debug()
+            //            .filter{ $0[Constants.mediaSection].items.count > 0 }
             .next { [unowned self] sections in
                 // first time loading sections
                 if self.itemsUpdatedAtLeastOnce == false {
@@ -396,37 +444,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                             }
                         }
                     }
-                    
-//
-//
-//
-//
-//                    let amount = 5 // change this to the amount of items to add
-//                    let section = 0 // change this to your needs, too
-//                    let contentHeight = self.collectionView!.contentSize.height
-//                    let offsetY = self.collectionView!.contentOffset.y
-//                    let bottomOffset = contentHeight - offsetY
-//
-//                    CATransaction.begin()
-//                    CATransaction.setDisableActions(true)
-//
-//                    self.collectionView!.performBatchUpdates({
-//                        var indexPaths = [NSIndexPath]()
-//                        for i in 0..<amount {
-//                            let index = 0 + i
-//                            indexPaths.append(NSIndexPath(forItem: index, inSection: section))
-//                        }
-//                        if indexPaths.count > 0 {
-//                            self.collectionView!.insertItemsAtIndexPaths(indexPaths)
-//                        }
-//                    }, completion: {
-//                        finished in
-//                        print("completed loading of new stuff, animating")
-//                        self.collectionView!.contentOffset = CGPointMake(0, self.collectionView!.contentSize.height - bottomOffset)
-//                        CATransaction.commit()
-//                    })
                 }
-            }.disposed(by: bag)
+        }.disposed(by: bag)
         
         
         // refresh the collection view every quarter second
@@ -443,8 +462,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     }
                 }
                 //                UIView.setAnimationsEnabled(true)
-            }
-            .disposed(by: bag)
+        }
+        .disposed(by: bag)
         
         // refresh the collection view when a download completes
         // this should not be throttled to ensure
@@ -459,8 +478,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     }
                 }
                 //                UIView.setAnimationsEnabled(true)
-            }
-            .disposed(by: bag)
+        }
+        .disposed(by: bag)
         
         viewModel.networkStatus
             .asObservable()
@@ -469,43 +488,57 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 switch networkStatus {
                 case .unknown:
                     DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
-//                    self.searchController = UISearchController(searchResultsController: nil)
-//                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
+                    //                    self.searchController = UISearchController(searchResultsController: nil)
+                    //                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
                     DispatchQueue.main.async {
+                        self.searchController.isActive = false
+                        self.filterController.isActive = true
+
                         self.navigationItem.searchController = self.filterController
                     }
                     
                 case .notReachable:
+                    self.networkUnreachable = true
                     DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
-//                    self.searchController = UISearchController(searchResultsController: nil)
-//                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
+                    //                    self.searchController = UISearchController(searchResultsController: nil)
+                    //                    self.searchController.searchBar.placeholder = NSLocalizedString("Filter", comment: "").l10n()
                     DispatchQueue.main.async {
+                        self.searchController.isActive = false
+                        self.filterController.isActive = true
+
                         self.navigationItem.searchController = self.filterController
                     }
-
+                    
                     
                 case .reachable(_):
                     DDLogDebug("MediaListingViewController networkStatus: \(networkStatus)")
-//                    self.searchController = UISearchController(searchResultsController: self.mediaSearchResultsViewController)
-//                    self.searchController.searchBar.placeholder = NSLocalizedString("Search", comment: "").l10n()
+                    //                    self.searchController = UISearchController(searchResultsController: self.mediaSearchResultsViewController)
+                    //                    self.searchController.searchBar.placeholder = NSLocalizedString("Search", comment: "").l10n()
                     DispatchQueue.main.async {
+                        if self.networkUnreachable == true {
+                            self.searchController.isActive = true
+                            self.filterController.isActive = false
+                        }
                         self.navigationItem.searchController = self.searchController
+                        
+                        self.networkUnreachable = false
+//                        self.navigationItem.searchController?.isActive = true
                     }
                 }
-            }.disposed(by: bag)
-
+        }.disposed(by: bag)
+        
         viewModel.emptyFilteredResult.asObservable()
             .observeOn(MainScheduler.instance)
             .next { [unowned self] emptyResult in
                 self.noResultLabel.isHidden = !emptyResult
-            }.disposed(by: bag)
-
+        }.disposed(by: bag)
+        
         viewModel.emptyFetchResult.asObservable()
             .observeOn(MainScheduler.instance)
             .next { [unowned self] emptyResult in
                 self.noResultLabel.isHidden = !emptyResult
-            }.disposed(by: bag)
-
+        }.disposed(by: bag)
+        
     }
     
     private func bindPlaybackViewModel() {
@@ -523,8 +556,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         }
                     }
                 }
-            }
-            .disposed(by: bag)
+        }
+        .disposed(by: bag)
         
         // playbackViewModel.playbackPlayable could either be a Playable or
         // a UserActionPlayable depending upon whether it was found in the
@@ -547,8 +580,8 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         }
                     }
                 }
-            }
-            .disposed(by: bag)
+        }
+        .disposed(by: bag)
         
     }
     
@@ -579,7 +612,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 // by tapping the restart button
                 var interruptedDownloads: [FileDownload] = []
                 notCompleted.forEach({ [unowned self] notCompletedDownload in
-//                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
+                    //                print("notCompletedDownload \(activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid })")
                     
                     let notCompletePresentInActive: Bool = activeDownloads.contains { $0.playableUuid == notCompletedDownload.playableUuid }
                     
@@ -587,26 +620,26 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                         // interrupted
                         interruptedDownloads.append(notCompletedDownload)
                     }
-                
-//                let interruptedDownloads: [FileDownload] = notCompleted.filter({ notCompletedDownload -> Bool in
-//                    activeDownloads.contains(where: { activeDownload -> Bool in
-//                        activeDownload.playlistUuid != notCompletedDownload.playlistUuid
-//                    })
+                    
+                    //                let interruptedDownloads: [FileDownload] = notCompleted.filter({ notCompletedDownload -> Bool in
+                    //                    activeDownloads.contains(where: { activeDownload -> Bool in
+                    //                        activeDownload.playlistUuid != notCompletedDownload.playlistUuid
+                    //                    })
                 })
                 
                 interruptedDownloads.forEach({ [unowned self] fileDownload in
                     self.downloadListingViewModel.downloadInterruptedItems[fileDownload.playableUuid] = fileDownload
-                    })
-
+                })
+                
                 DDLogDebug("interruptedDownloads: \(interruptedDownloads)")
-
+                
             }).disposed(by: bag)
         
-//        downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid)
-//            .asObservable()
-//            .next { activeDownloads in
-//                DDLogDebug("viewModel activeDownloads: \(activeDownloads)")
-//            }.disposed(by: bag)
+        //        downloadListingViewModel.activeFileDownloads(viewModel.playlistUuid)
+        //            .asObservable()
+        //            .next { activeDownloads in
+        //                DDLogDebug("viewModel activeDownloads: \(activeDownloads)")
+        //            }.disposed(by: bag)
         
         // the moment the viewmodel playlistuuid changes we
         // get the file downloads for that playlist
@@ -617,7 +650,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 // put anything that is not .complete in downloadingItems
                 fileDownloads.forEach({ [unowned self] fileDownload in
                     if fileDownload.state != .complete {
-//                        self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
+                        //                        self.downloadListingViewModel.downloadingItems[fileDownload.playableUuid] = fileDownload
                     } else {
                         self.downloadListingViewModel.downloadedItems[fileDownload.playableUuid] = fileDownload
                     }
@@ -645,15 +678,15 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                     
                     // remove it from downloadInterruptedItems
                     self.downloadListingViewModel.downloadInterruptedItems[uuid] = nil
-
+                    
                     if indexPath.row >= 0 {
                         UIView.performWithoutAnimation {
                             self.collectionView.reloadItemsAtIndexPaths([indexPath], animationStyle: .none)
                         }
                     }
                 }
-            }
-            .disposed(by: bag)
+        }
+        .disposed(by: bag)
         
         downloadListingViewModel.fileDownloadDirty
             .asObservable()
@@ -677,7 +710,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
                 }
                 
             }).disposed(by: bag)
-
+        
         
     }
     //    private func reactToContentSizeChange() {
@@ -692,7 +725,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
     //                .disposed(by: bag)
     //        }
     //    }
-        
+    
     // returns -1 on not found
     private func indexOfFileDownloadInViewModel(fileDownload: FileDownload) -> IndexPath {
         // try to find the indexPath of the media item and update
@@ -724,7 +757,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         indexPath = IndexPath(row: index, section: Constants.mediaSection)
         return indexPath
     }
-
+    
     // returns -1 on not found
     private func indexOfPlayableInViewModel(playable: Playable) -> IndexPath {
         // try to find the indexPath of the media item and update
@@ -755,7 +788,7 @@ public final class MediaListingViewController: UIViewController, UICollectionVie
         indexPath = IndexPath(row: index, section: Constants.mediaSection)
         return indexPath
     }
-
+    
     // MARK: DownloadService notifications
     
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
@@ -1018,7 +1051,7 @@ extension MediaListingViewController: UISearchControllerDelegate {
     public func willPresentSearchController(_ searchController: UISearchController) {
         DDLogDebug("searchController: \(String(describing: searchController))")
     }
-
+    
     public func didPresentSearchController(_ searchController: UISearchController) {
         DispatchQueue.main.async {
             searchController.searchBar.becomeFirstResponder()
@@ -1035,6 +1068,17 @@ extension MediaListingViewController: UISearchBarDelegate {
     }
     public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         DDLogDebug("searchBar: \(String(describing: searchBar.text))")
+        
+        if let textCount: Int = searchBar.text?.count {
+            if searchBar == filterController.searchBar && textCount > 0 {
+                // user tapped Done with text in the search bar,
+                // which means they are done filtering. so set
+                // flag to NOT clear the text but allow them to
+                // resign keyboard
+                
+                userTappedDoneWhileFiltering = true
+            }
+        }
         searchBar.resignFirstResponder()
     }
     
@@ -1045,24 +1089,37 @@ extension MediaListingViewController: UISearchBarDelegate {
     }
     
     public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        if searchBar != filterController.searchBar && !userTappedDoneWhileFiltering {
+            searchBar.setShowsCancelButton(false, animated: true)
+            viewModel.filterText.onNext("")
+            return true
+            //            searchBar.resignFirstResponder()
+        } else {
+            searchBar.resignFirstResponder()
+            return true
+        }
         
-        searchBar.setShowsCancelButton(false, animated: true)
         
         // reset the filteredMedia to no filtering to show the entire list
         // of content because they cancelled filtering
-        viewModel.filterText.onNext("")
-        return true
-//        var textHasChars: Bool = false
-//
-//        if let filterText: String = self.filterText {
-//            textHasChars = (filterText.count) > 0
-//        }
-//        return !textHasChars
+        //        viewModel.filterText.onNext("")
+        //        return true
+        //        var textHasChars: Bool = false
+        //
+        //        if let filterText: String = self.filterText {
+        //            textHasChars = (filterText.count) > 0
+        //        }
+        //        return !textHasChars
     }
     
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        // the user ended filtering session, so clear it all out
+        if searchBar == filterController.searchBar && userTappedDoneWhileFiltering {
+            searchBar.setShowsCancelButton(false, animated: true)
+            viewModel.filterText.onNext("")
+            userTappedDoneWhileFiltering = false
+        }
         searchBar.resignFirstResponder()
-        
     }
     
     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -1071,12 +1128,12 @@ extension MediaListingViewController: UISearchBarDelegate {
             mediaSearchResultsViewController.viewModel.cancelSearch.value = searchText
         }
         viewModel.filterText.onNext(searchText)
-
-//        else {
-//            // we are looking for searchText.count > 0 for filtering because
-//            // we filter on the fly
-//            viewModel.filterText.onNext(searchText)
-//        }
+        
+        //        else {
+        //            // we are looking for searchText.count > 0 for filtering because
+        //            // we filter on the fly
+        //            viewModel.filterText.onNext(searchText)
+        //        }
     }
 }
 

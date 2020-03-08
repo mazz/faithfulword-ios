@@ -22,7 +22,7 @@ public protocol AccountServicing {
     // Current user's music service accounts
 //    var musicServiceAccounts: Observable<[MusicServiceAccount]> { get }
     
-//    func addAppUser(user: UserAppUser) -> Single<Void>
+    func replaceAppUser(user: UserAppUser) -> Single<Void>
     func fetchAppUser() -> Single<UserAppUser?>
 
     func start()
@@ -142,6 +142,11 @@ extension AccountService: AccountServicing {
     
     public func startSignupFlow(user: [String: AnyHashable]) -> Single<UserSignupResponse> {
         return loginSequencer.signup(user: user)
+    }
+    
+    public func replaceAppUser(user: UserAppUser) -> Single<Void> {
+        return dataService.replacePersistedAppUser(user: user)
+            .toVoid()
     }
     
     public func fetchAppUser() -> Single<UserAppUser?> {

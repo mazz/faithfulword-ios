@@ -219,7 +219,7 @@ internal final class MediaSearchViewModel {
                 }
                 
                 var presenter: String = "Unknown Presenter"
-                if let presenterName: String = $0.presenterName {
+                if let presenterName: String = $0.presenter_name {
                     presenter = presenterName
                 }
                 
@@ -256,10 +256,10 @@ internal final class MediaSearchViewModel {
                         self.emptyResult.value = (mediaItems.count == 0)
                         DDLogDebug("emptyResult: \(self.emptyResult.value)")
                         self.searchedMedia.value.append(contentsOf: mediaItems)
-                        self.totalEntries = mediaItemResponse.totalEntries
-                        self.totalPages = mediaItemResponse.totalPages
-                        self.pageSize = mediaItemResponse.pageSize
-                        self.pageNumber = mediaItemResponse.pageNumber
+                        self.totalEntries = mediaItemResponse.total_entries
+                        self.totalPages = mediaItemResponse.total_pages
+                        self.pageSize = mediaItemResponse.page_size
+                        self.pageNumber = mediaItemResponse.page_number
             
                         self.lastOffset += 1
 
@@ -329,10 +329,10 @@ internal final class MediaSearchViewModel {
             .subscribe(onSuccess: { mediaItemResponse, mediaItems in
                 DDLogDebug("search media items: \(mediaItems)")
                 self.searchedMedia.value.append(contentsOf: mediaItems)
-                self.totalEntries = mediaItemResponse.totalEntries
-                self.totalPages = mediaItemResponse.totalPages
-                self.pageSize = mediaItemResponse.pageSize
-                self.pageNumber = mediaItemResponse.pageNumber
+                self.totalEntries = mediaItemResponse.total_entries
+                self.totalPages = mediaItemResponse.total_pages
+                self.pageSize = mediaItemResponse.page_size
+                self.pageNumber = mediaItemResponse.page_number
                 
                 self.lastOffset += 1
         })

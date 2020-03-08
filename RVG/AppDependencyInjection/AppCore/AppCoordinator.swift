@@ -5,6 +5,7 @@ import L10n_swift
 import Alamofire
 import Loaf
 import SwiftKeychainWrapper
+import os.log
 
 /// Coordinator in charge of navigating between the two main states of the app.
 /// Operates on the level of the rootViewController and switches between the
@@ -30,14 +31,14 @@ internal class AppCoordinator {
     
     // MARK: Fields
     
-    private var rootViewController: RootViewController!
     private var sideMenuViewController: SideMenuViewController!
+    private var rootViewController: RootViewController!
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     var appFlowStatus: AppFlowStatus = .login
     var serverStatus: ServerConnectivityStatus = .none
     
-    private let bag = DisposeBag()
     
+    private let bag = DisposeBag()
     private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier?
     // MARK: Dependencies
     
@@ -46,12 +47,15 @@ internal class AppCoordinator {
     private let resettableNoResourceCoordinator: Resettable<NoResourceCoordinator>
     private let resettableMainCoordinator: Resettable<MainCoordinator>
     private let resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>
+//    private let resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>
+
     //    private let resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>
     private let accountService: AccountServicing
     private let productService: ProductServicing
     private let languageService: LanguageServicing
     private let assetPlaybackService: AssetPlaybackServicing
     private let downloadService: DownloadServicing
+//    private let historyService: HistoryServicing
     private let reachability: RxClassicReachable
     
     internal init(uiFactory: AppUIMaking,
@@ -59,12 +63,13 @@ internal class AppCoordinator {
         resettableMainCoordinator: Resettable<MainCoordinator>,
         resettableSplashScreenCoordinator: Resettable<SplashScreenCoordinator>,
         resettableNoResourceCoordinator: Resettable<NoResourceCoordinator>,
-        //                  resettableAccountSetupCoordinator: Resettable<AccountSetupCoordinator>,
+//        resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>,
         accountService: AccountServicing,
         productService: ProductServicing,
         languageService: LanguageServicing,
         assetPlaybackService: AssetPlaybackServicing,
         downloadService: DownloadServicing,
+//        historyService: HistoryServicing,
         reachability: RxClassicReachable
         ) {
         self.uiFactory = uiFactory
@@ -72,12 +77,14 @@ internal class AppCoordinator {
         self.resettableMainCoordinator = resettableMainCoordinator
         self.resettableSplashScreenCoordinator = resettableSplashScreenCoordinator
         self.resettableNoResourceCoordinator = resettableNoResourceCoordinator
+//        self.resettablePlaybackCoordinator = resettablePlaybackCoordinator
         //        self.resettableAccountSetupCoordinator = resettableAccountSetupCoordinator
         self.accountService = accountService
         self.productService = productService
         self.languageService = languageService
         self.assetPlaybackService = assetPlaybackService
         self.downloadService = downloadService
+//        self.historyService = historyService
         self.reachability = reachability
         
         
@@ -106,14 +113,6 @@ internal class AppCoordinator {
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(AppCoordinator.handleApplicationWillTerminate(notification:)), name: AppDelegate.applicationWillTerminate, object: nil)
 
-        
-//        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { notification in
-//
-//            DDLogDebug("try and update state of any possible downloads now, downloadService: \(self.downloadService) notification: \(notification)")
-//            self.downloadService.cancelAllDownloads()
-//            sleep(5)
-//        }
-
         reactToReachability()
         
         resettableNoResourceCoordinator.value.tryAgainTapped
@@ -124,18 +123,18 @@ internal class AppCoordinator {
                     let rootViewController = strongSelf.rootViewController,
                     let serverStatus = self?.serverStatus {
                     
-                    var toastMessage: String = NSLocalizedString("Connecting …", comment: "").l10n()
-                    switch serverStatus {
-                    case .none, .notConnected, .connected:
-                        toastMessage = NSLocalizedString("Connecting …", comment: "").l10n()
-                        Loaf(toastMessage,
-                             state: .info,
-                             location: .bottom,
-                             presentingDirection: .vertical,
-                             dismissingDirection: .vertical,
-                             sender: rootViewController)
-                            .show()
-                    }
+//                    var toastMessage: String = NSLocalizedString("Connecting …", comment: "").l10n()
+//                    switch serverStatus {
+//                    case .none, .notConnected, .connected:
+//                        toastMessage = NSLocalizedString("Connecting …", comment: "").l10n()
+//                        Loaf(toastMessage,
+//                             state: .info,
+//                             location: .bottom,
+//                             presentingDirection: .vertical,
+//                             dismissingDirection: .vertical,
+//                             sender: rootViewController)
+//                            .show()
+//                    }
                     
                     switch flowStatus {
                     case .none:
@@ -146,8 +145,28 @@ internal class AppCoordinator {
                         strongSelf.loadDefaultOrg()
                     case .loadChannels:
                         DDLogDebug("loadChannels")
+                        strongSelf.productService.persistedDefaultOrg()
+                            .subscribe(onSuccess: { org in
+                                if let org = org {
+                                    strongSelf.loadChannels(for: org.uuid)
+                                } else {
+                                    DDLogDebug("no persisted org found")
+                                }
+                            }, onError: { error in
+                                DDLogDebug("error fetching persisted org: \(error)")
+                            }).disposed(by: strongSelf.bag)
                     case .main:
                         DDLogDebug("main")
+                        strongSelf.productService.persistedDefaultOrg()
+                            .subscribe(onSuccess: { org in
+                                if let org = org {
+                                    strongSelf.loadChannels(for: org.uuid)
+                                } else {
+                                    DDLogDebug("no persisted org found")
+                                }
+                            }, onError: { error in
+                                DDLogDebug("error fetching persisted org: \(error)")
+                            }).disposed(by: strongSelf.bag)
                     }
                 }
             }.disposed(by: self.bag)
@@ -177,9 +196,52 @@ extension AppCoordinator: NavigationCoordinating {
         swapInSplashScreenFlow()
     }
     
-    private func startHandlingAssetPlaybackEvents() {
-        //        assetPlaybackService.start()
-    }
+//    private func startHandlingAssetPlaybackEvents() {
+//                    self.resettablePlaybackCoordinator.value.flow(with: { playbackViewController in
+//                        // do nothing because the bottom popup should appear
+//                        // when the playbackViewController loads
+//
+//
+//                        // get the playback history
+//                        if let popupController: PopupContentController = playbackViewController as? PopupContentController {
+//                            self.popupController = popupController
+//
+//                            self.historyService.fetchPlaybackHistory()
+//                                .subscribe(onSuccess: { playables in
+//                                    // this assignment is meant to initiate the entire playbackAsset to assetPlaybackManager
+//                                    // assignment and loading of the historyPlayable
+//
+//                                    if let playable = playables.first {
+//                                        popupController.shouldAutostartPlayback = false
+//                                        self.popupController?.playbackViewModel.selectedPlayable.value = playable
+//
+//                                        if let thumbImage = UIImage(named: "creation") {
+//                                            self.popupController?.popupItem.title = playable.localizedname
+//                                            self.popupController?.popupItem.subtitle = playable.presenter_name ?? "Unknown"
+//                                            self.popupController?.popupItem.image = thumbImage
+//                                            //                popupController.albumArt = UIColor.lightGray.image(size: CGSize(width: 128, height: 128))
+//                                            //                popupController.fullAlbumArtImageView.image = thumbImage
+//                                            self.popupController?.popupItem.accessibilityHint = NSLocalizedString("Tap to Expand the Mini Player", comment: "").l10n()
+//
+//                                            if let viewController = self.rootViewController {
+//                                                viewController.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "").l10n()
+//                                                viewController.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
+//                                                viewController.popupBar.imageView.layer.cornerRadius = 5
+//
+//                                                if viewController.popupContent == nil {
+//                                                    os_log("AppCoordinator viewController.popupContent: %{public}@", log: OSLog.data, String(describing: viewController.popupContent))
+//                                                    viewController.presentPopupBar(withContentViewController: popupController, animated: true, completion: nil)
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                })
+//                                .disposed(by: bag)
+//                        }
+//                    }, completion: { _ in
+//                        self.resettablePlaybackCoordinator.reset()
+//                    }, context: .other)
+//        }
     
     private func startHandlingAuthEvents() {
         
@@ -196,24 +258,24 @@ extension AppCoordinator: NavigationCoordinating {
 
                 // we must fetch and set the user language before we do
                 // anything, really
-                self.languageService.fetchUserLanguage()
-                    .subscribe(onSuccess: { [weak self] userLanguage in
-                        
-                        if let rootViewController = self?.rootViewController {
-                            DDLogDebug("self.languageService.userLanguage.value: \(self?.languageService.userLanguage.value) == \(userLanguage)")
-                            L10n.shared.language = (userLanguage == "") ? "en" : userLanguage
+//                self.languageService.fetchUserLanguage()
+//                    .subscribe(onSuccess: { [weak self] userLanguage in
+                
+                        if let rootViewController = self.rootViewController {
+//                            DDLogDebug("self.languageService.userLanguage.value: \(self?.languageService.userLanguage.value) == \(userLanguage)")
+//                            L10n.shared.language = (userLanguage == "") ? "en" : userLanguage
                             
                             if authState == .unauthenticated {
                                 // load default org if unauthenticated
                                 Loaf.dismiss(sender: rootViewController)
                                 
-                                switch self?.networkStatus.value {
-                                case .notReachable?, .reachable(_)?, .unknown?:
-                                    self?.appFlowStatus = .loadOrg
-                                    self?.loadDefaultOrg()
-                                case .none:
-                                    self?.appFlowStatus = .loadOrg
-                                    self?.loadDefaultOrg()
+                                switch self.networkStatus.value {
+                                case .notReachable, .reachable(_), .unknown:
+                                    self.appFlowStatus = .loadOrg
+                                    self.loadDefaultOrg()
+//                                case .none:
+//                                    self.appFlowStatus = .loadOrg
+//                                    self.loadDefaultOrg()
                                 }
                                 
                             } else if authState == .authenticated || authState == .emailUnconfirmed {
@@ -241,9 +303,9 @@ extension AppCoordinator: NavigationCoordinating {
                         
                         
                         
-                    }, onError: { error in
-                        DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
-                    }).disposed(by: self.bag)
+//                    }, onError: { error in
+//                        DDLogDebug("fetch user language failed with error: \(error.localizedDescription)")
+//                    }).disposed(by: self.bag)
             })
             .disposed(by: bag)
     }
@@ -274,13 +336,13 @@ extension AppCoordinator: NavigationCoordinating {
                         }
                     }
                 case .reachable(_):
-                    Loaf(NSLocalizedString("Connecting …", comment: "").l10n(),
-                         state: .info,
-                         location: .bottom,
-                         presentingDirection: .vertical,
-                         dismissingDirection: .vertical,
-                         sender: rootViewController)
-                        .show()
+//                    Loaf(NSLocalizedString("Connecting …", comment: "").l10n(),
+//                         state: .info,
+//                         location: .bottom,
+//                         presentingDirection: .vertical,
+//                         dismissingDirection: .vertical,
+//                         sender: rootViewController)
+//                        .show()
                     
                     if persisted.count == 0 {
                         strongSelf.productService.fetchDefaultOrgs(offset: 1, limit: 100).subscribe(onSuccess: { [weak self] fetchedOrgs in
@@ -332,32 +394,38 @@ extension AppCoordinator: NavigationCoordinating {
             .subscribe(onSuccess: { [weak self] userAppUser in
                 if let strongSelf = self {
                     if let user: UserAppUser = userAppUser,
-                        let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.useridx") {
+                        let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.userpassword") {
                         // found a stored UserAppUser, so start login flow
-                        strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
-                            .subscribe(onSuccess: { userLoginResponse in
-                                DDLogDebug("userLoginResponse \(userLoginResponse)")
-                            }, onError: { error in
-                                DDLogDebug("⚠️ login error! \(error)")
-                                Loaf.dismiss(sender: strongSelf.rootViewController)
-                                //                                        Loaf(error.localizedDescription,
-                                //                                             state: .info,
-                                //                                             location: .bottom,
-                                //                                             presentingDirection: .vertical,
-                                //                                             dismissingDirection: .vertical,
-                                //                                             sender: strongSelf.rootViewController)
-                                //                                            .show()
-                                
-                            }).disposed(by: strongSelf.bag)
+                        
+                        // for v1.3 we will not be actually logging-in
+                        // instead below, make a fake user, even a fake password
+                        // the fake UserAppUser will not have a corresponding UserLoginUser
+                        // so do nothing here
+
+//                        strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
+//                            .subscribe(onSuccess: { userLoginResponse in
+//                                DDLogDebug("userLoginResponse \(userLoginResponse)")
+//                            }, onError: { error in
+//                                DDLogDebug("⚠️ login error! \(error)")
+//                                Loaf.dismiss(sender: strongSelf.rootViewController)
+//                            }).disposed(by: strongSelf.bag)
                         
                     } else {
                         // did not find a stored UserAppUser, so start signup flow
                         
+                        // for v1.3 we will not be actually logging-in
+                        // instead, make a fake user, even a fake password
+                        // the fake UserAppUser will not have a corresponding UserLoginUser
+                        
+                        
                         let hashSource: String = NSUUID().uuidString
                         let faithfulWordAppIdx: String = String("fw\(hashSource.sha512Hex.prefix(30))")
                         let name: String = faithfulWordAppIdx.filter { "abcdefghijklmnopqrstuvwxyz".contains($0) }
-                        
-                        if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.useridx") {
+                        if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.userpassword") {
+                            
+                        }
+                        /** uncomment hopefully someday
+                        if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.userpassword") {
                             strongSelf.accountService.startSignupFlow(user: ["username" : faithfulWordAppIdx,
                                                                              "name": name,
                                                                              "email": "\(faithfulWordAppIdx)@faithfulword.app",
@@ -371,8 +439,18 @@ extension AppCoordinator: NavigationCoordinating {
                                     DDLogDebug("⚠️ login error! \(error)")
                                 }).disposed(by: strongSelf.bag)
                         }
-                        
-                        
+                        */
+                        strongSelf.accountService.replaceAppUser(user: UserAppUser(userId: 0,
+                                                                              uuid: NSUUID().uuidString,
+                                                                              orgId: org.org_id,
+                                                                              name: name,
+                                                                              email: "\(faithfulWordAppIdx)@faithfulword.app",
+                            session: "fake.\(NSUUID().uuidString)",
+                            pushNotifications: false,
+                            language: L10n.shared.language,
+                            userLoginUserUuid: nil))
+                            .asObservable()
+                            .subscribeAndDispose(by: strongSelf.bag)
                     }
                 }
                 }, onError: { error in
@@ -498,7 +576,7 @@ extension AppCoordinator: NavigationCoordinating {
         resettableSplashScreenCoordinator.value.flow(with: { [unowned self] splashScreenFlowViewController in
             self.rootViewController.plant(splashScreenFlowViewController)
             }, completion: { [unowned self] _ in
-                self.startHandlingAssetPlaybackEvents()
+//                self.startHandlingAssetPlaybackEvents()
                 self.startHandlingAuthEvents()
                 self.accountService.start()
                 
@@ -570,7 +648,7 @@ extension AppCoordinator: NavigationCoordinating {
 //                    .subscribe(onSuccess: { [weak self] userAppUser in
 //                        if let strongSelf = self {
 //                            if let user: UserAppUser = userAppUser,
-//                                let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.useridx") {
+//                                let faithfulWordAppIdx: String = KeychainWrapper.standard.string(forKey: "app.faithfulword.userpassword") {
 //                                // found a stored UserAppUser, so start login flow
 //                                strongSelf.accountService.startLoginFlow(email: user.email, password: faithfulWordAppIdx)
 //                                    .subscribe(onSuccess: { userLoginResponse in
@@ -595,7 +673,7 @@ extension AppCoordinator: NavigationCoordinating {
 //                                let faithfulWordAppIdx: String = String("fw\(hashSource.sha512Hex.prefix(30))")
 //                                let name: String = faithfulWordAppIdx.filter { "abcdefghijklmnopqrstuvwxyz".contains($0) }
 //
-//                                if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.useridx") {
+//                                if KeychainWrapper.standard.set(faithfulWordAppIdx, forKey: "app.faithfulword.userpassword") {
 //                                    strongSelf.accountService.startSignupFlow(user: ["username" : faithfulWordAppIdx,
 //                                                                                     "name": name,
 //                                                                                     "email": "\(faithfulWordAppIdx)@faithfulword.app",

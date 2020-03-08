@@ -9,6 +9,8 @@ public protocol AssetPlaybackServicing {
     var assetPlaybackManager: AssetPlaybackManager { get }
     var playableItem: Field<Playable?> { get }
     var playables: Field<[Playable]> { get }
+    var shouldAutostart: Bool { get set }
+
     
     func playPlayback() -> Single<Void>
     func pausePlayback() -> Single<Void>
@@ -56,6 +58,11 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
 
     public private(set) var playableItem = Field<Playable?>(nil)
     public private(set) var playables = Field<[Playable]>([])
+    public var shouldAutostart: Bool {
+        didSet {
+            self.assetPlaybackManager.shouldAutostart = shouldAutostart
+        }
+    }
 
     // MARK: Dependencies
     public let assetPlaybackManager: AssetPlaybackManager
@@ -102,6 +109,8 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
             DDLogDebug("AVAudioSession error: \(error)")
         }
         
+        self.shouldAutostart = true
+
         reactToReachability()
     }
     

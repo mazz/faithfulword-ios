@@ -1,41 +1,41 @@
 import Foundation
 import GRDB
 
-public struct MediaItem: Codable, Playable {
+public struct MediaItem: Codable, Playable {    
 //    public var createdAt: Double?
 //
 //    public var categoryUuid: String?
 //    public var createdAt: Double?
-    public var contentProviderLink: String?
+    public var content_provider_link: String?
     public var duration: TimeInterval
-    public var hashId: String
-    public var insertedAt: TimeInterval
-    public var ipfsLink: String?
-    public var languageId: String
-    public var largeThumbnailPath: String?
+    public var hash_id: String
+    public var inserted_at: String
+    public var ipfs_link: String?
+    public var language_id: String?
+    public var large_thumbnail_path: String?
     public var localizedname: String
 //    public var localizedName: String?
-    public var medThumbnailPath: String?
-    public var mediaCategory: String
+    public var med_thumbnail_path: String?
+    public var media_category: String
     public var medium: String
     public var multilanguage: Bool
     public var ordinal: Int?
     public var path: String?
-    public var playlistUuid: String
-    public var presentedAt: TimeInterval?
-    public var presenterName: String?
-    public var publishedAt: TimeInterval?
-    public var smallThumbnailPath: String?
-    public var sourceMaterial: String?
-    public var tags: [String]
-    public var trackNumber: Int?
-    public var updatedAt: TimeInterval?
+    public var playlist_uuid: String
+    public var presented_at: String?
+    public var presenter_name: String?
+    public var published_at: String?
+    public var small_thumbnail_path: String?
+    public var source_material: String?
+    public var tags: [String]?
+    public var track_number: Int?
+    public var updated_at: String?
     public var uuid: String
     
     //
     // a MediaItem is many-to-one to Playlist
     //
-    static let mediaitemForeignKey = ForeignKey([Columns.playlistUuid])
+    static let mediaitemForeignKey = ForeignKey([Columns.playlist_uuid])
 
 //    enum CodingKeys: String, CodingKey {
 ////        case createdAt
@@ -170,29 +170,29 @@ public struct MediaItem: Codable, Playable {
 // Define columns so that we can build GRDB requests
 extension MediaItem {
     enum Columns {
-        static let contentProviderLink = Column("contentProviderLink")
+        static let content_provider_link = Column("content_provider_link")
         static let duration = Column("duration")
-        static let hashId = Column("hashId")
-        static let insertedAt = Column("insertedAt")
-        static let ipfsLink = Column("ipfsLink")
-        static let languageId = Column("languageId")
+        static let hash_id = Column("hash_id")
+        static let inserted_at = Column("inserted_at")
+        static let ipfs_link = Column("ipfs_link")
+        static let language_id = Column("language_id")
         static let localizedname = Column("localizedname")
-        static let largeThumbnailPath = Column("largeThumbnailPath")
-        static let mediaCategory = Column("mediaCategory")
+        static let large_thumbnail_path = Column("large_thumbnail_path")
+        static let media_category = Column("media_category")
         static let medium = Column("medium")
-        static let medThumbnailPath = Column("medThumbnailPath")
+        static let med_thumbnail_path = Column("med_thumbnail_path")
         static let multilanguage = Column("multilanguage")
         static let ordinal = Column("ordinal")
         static let path = Column("path")
-        static let playlistUuid = Column("playlistUuid")
-        static let presentedAt = Column("presentedAt")
-        static let presenterName = Column("presenterName")
-        static let publishedAt = Column("publishedAt")
-        static let smallThumbnailPath = Column("smallThumbnailPath")
-        static let sourceMaterial = Column("sourceMaterial")
+        static let playlist_uuid = Column("playlist_uuid")
+        static let presented_at = Column("presented_at")
+        static let presenter_name = Column("presenter_name")
+        static let published_at = Column("published_at")
+        static let small_thumbnail_path = Column("small_thumbnail_path")
+        static let source_material = Column("source_material")
         static let tags = Column("tags")
-        static let trackNumber = Column("trackNumber")
-        static let updatedAt = Column("updatedAt")
+        static let track_number = Column("track_number")
+        static let updated_at = Column("updated_at")
         static let uuid = Column("uuid")
     }
 }

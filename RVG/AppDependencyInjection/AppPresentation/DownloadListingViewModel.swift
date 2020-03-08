@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import os.log
 
 internal final class DownloadListingViewModel {
     // MARK: Fields
@@ -34,6 +35,7 @@ internal final class DownloadListingViewModel {
     public var downloadingItems: [String: FileDownload] = [:]
     public var downloadedItems: [String: FileDownload] = [:]
     public var downloadInterruptedItems: [String: FileDownload] = [:]
+    public var storedDownloads: [String: FileDownload] = [:]
 
     
     
@@ -77,14 +79,22 @@ internal final class DownloadListingViewModel {
         return self.downloadService.fetchFileDownloadHistory(playableUuid: playableUuid)
     }
     
-    public func storedFileDownloads(for playableUuid: String) -> Single<[FileDownload]> {
-        return self.downloadService.fetchStoredFileDownloads(for: playableUuid)
+    public func storedFileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
+        return self.downloadService.fetchStoredFileDownloads(for: playlistUuid)
     }
-    
+
+    public func storedFileDownloads() -> Single<[FileDownload]> {
+        return self.downloadService.fetchStoredFileDownloads()
+    }
+
     public func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]> {
         return self.downloadService.activeFileDownloads(playlistUuid)
     }
-    
+
+    public func activeFileDownloads() -> Single<[FileDownload]> {
+        return self.downloadService.activeFileDownloads()
+    }
+
     public func updateFileDownloadHistory(for fileDownload: FileDownload) {
         self.downloadService.updateFileDownloadHistory(fileDownload: fileDownload)
             .asObservable()
@@ -100,7 +110,7 @@ internal final class DownloadListingViewModel {
         
         Observable.combineLatest(self.downloadService.deleteFileDownloadFile(playableUuid: playableUuid, pathExtension: pathExtension).asObservable(), self.downloadService.deleteFileDownloadHistory(playableUuid: playableUuid).asObservable())
             .next({ _ in
-                DDLogDebug("deleteFileDownload deleted playableUuid: \(playableUuid)")
+                os_log("deleteFileDownload deleted playableUuid: %{public}@", log: OSLog.data, String(describing: playableUuid))
                 self.fileDownloadDeleted.value = playableUuid
             })
             .disposed(by: bag)
@@ -134,8 +144,8 @@ internal final class DownloadListingViewModel {
     
     @objc func handleDownloadDidInitiateNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("DownloadListingViewModel initiateNotification filedownload: \(fileDownload)")
-            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            os_log("DownloadListingViewModel initiateNotification filedownload: %{public}@", log: OSLog.data, String(describing: fileDownload))
+            os_log("DownloadListingViewModel lastPathComponent: %{public}@", log: OSLog.data, String(describing: fileDownload.localUrl.lastPathComponent))
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -151,11 +161,11 @@ internal final class DownloadListingViewModel {
     
     @objc func handleDownloadDidProgressNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("DownloadListingViewModel didProgressNotification fileDownload: \(fileDownload.localUrl) | \(fileDownload.completedCount) / \(fileDownload.totalCount)(\(fileDownload.progress) | \(fileDownload.state))")
-            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
-            
+            os_log("DownloadListingViewModel didProgressNotification fileDownload: %{public}@", log: OSLog.data, String(describing: fileDownload.localUrl.lastPathComponent))
+            os_log("DownloadListingViewModel didProgressNotification filedownload: %{public}@", log: OSLog.data, String(describing: fileDownload))
+
             downloadingItems[fileDownload.playableUuid] = fileDownload
-            
+
             // it is possible it once was downloadInterruptedItems, so let's clobber it out
             if let _: FileDownload = downloadInterruptedItems[fileDownload.playableUuid] {
                 downloadInterruptedItems[fileDownload.playableUuid] = nil
@@ -175,8 +185,7 @@ internal final class DownloadListingViewModel {
     
     @objc func handleDownloadDidCompleteNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("DownloadListingViewModel completeNotification filedownload: \(fileDownload)")
-            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            os_log("DownloadListingViewModel completeNotification filedownload: %{public}@", log: OSLog.data, String(describing: fileDownload))
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -196,8 +205,7 @@ internal final class DownloadListingViewModel {
     
     @objc func handleDownloadDidErrorNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("DownloadListingViewModel errorNotification filedownload: \(fileDownload)")
-            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            os_log("DownloadListingViewModel errorNotification filedownload: %{public}@", log: OSLog.data, String(describing: fileDownload))
             
 //            downloadingItems[fileDownload.playableUuid] = fileDownload
             
@@ -234,8 +242,7 @@ internal final class DownloadListingViewModel {
     
     @objc func handleDownloadDidCancelNotification(notification: Notification) {
         if let fileDownload: FileDownload = notification.object as? FileDownload {
-            DDLogDebug("DownloadListingViewModel cancelNotification filedownload: \(fileDownload)")
-            DDLogDebug("DownloadListingViewModel lastPathComponent: \(fileDownload.localUrl.lastPathComponent)")
+            os_log("DownloadListingViewModel cancelNotification filedownload: %{public}@", log: OSLog.data, String(describing: fileDownload))
             
             downloadingItems[fileDownload.playableUuid] = fileDownload
             

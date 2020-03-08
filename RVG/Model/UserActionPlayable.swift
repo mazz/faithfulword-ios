@@ -2,18 +2,24 @@ import Foundation
 import GRDB
 
 public struct UserActionPlayable: Codable, Playable {
+    public var language_id: String?
+    
+    public var ordinal: Int?
+    
+    public var tags: [String]?
+    
 //    public var userActionPlayableId: Int64?
     public var downloaded: Bool
     public var duration: TimeInterval
 //    public var categoryUuid: String?
-    public var hashId: String
-    public var playableUuid: String
-    public var playablePath: String?
-    public var playbackPosition: Double
-    public var updatedAt: Double?
+    public var hash_id: String
+    public var playable_uuid: String
+    public var playable_path: String?
+    public var playback_position: Double
+    public var updated_at: String?
     public var uuid: String
     // Playable
-//    public var localizedName: String?
+    public var localizedname: String
 //    public var path: String?
 //    public var presenterName: String?
 //    public var sourceMaterial: String?
@@ -26,28 +32,27 @@ public struct UserActionPlayable: Codable, Playable {
     //    public var createdAt: Double?
 //    public var contentProviderLink: String?
 //    public var hashId: String
-    public var insertedAt: TimeInterval
+    public var inserted_at: String
 //    public var ipfsLink: String?
-//    public var languageId: String
-    public var largeThumbnailPath: String?
-    public var localizedname: String
+//    public var language_id: String
+    public var large_thumbnail_path: String?
+//    public var localizedname: String
     //    public var localizedName: String?
 //    public var medThumbnailPath: String?
-    public var mediaCategory: String
+    public var media_category: String
     public var multilanguage: Bool
 //    public var medium: String
-//    public var ordinal: Int?
+//    public var ordinal: Int
     public var path: String?
-    public var playlistUuid: String
-//    public var presentedAt: TimeInterval?
-    public var presenterName: String?
-//    public var publishedAt: TimeInterval?
-    public var smallThumbnailPath: String?
-    public var medThumbnailPath: String?
-    public var sourceMaterial: String?
-//    public var tags: String
-    public var trackNumber: Int?
-//    public var updatedAt: TimeInterval?
+    public var playlist_uuid: String
+    public var presented_at: String?
+    public var presenter_name: String?
+    public var published_at: String?
+    public var small_thumbnail_path: String?
+    public var med_thumbnail_path: String?
+    public var source_material: String?
+//    public var tags: [String]
+    public var track_number: Int?
 //    public var uuid: String
 }
 
@@ -57,26 +62,31 @@ extension UserActionPlayable {
 //        static let userActionPlayableId = Column("userActionPlayableId")
         static let downloaded = Column("downloaded")
         static let duration = Column("duration")
-        static let playablePath = Column("playablePath")
-        static let insertedAt = Column("insertedAt")
-        static let updatedAt = Column("updatedAt")
-        static let playbackPosition = Column("playbackPosition")
+        static let playable_path = Column("playable_path")
+        static let inserted_at = Column("inserted_at")
+        static let updated_at = Column("updated_at")
+        static let playback_position = Column("playback_position")
         static let uuid = Column("uuid")
 
         // Playable
-        static let hashId = Column("hashId")
-        static let largeThumbnailPath = Column("smallThumbnailPath")
+        static let hash_id = Column("hash_id")
+        static let large_thumbnail_path = Column("large_thumbnail_path")
         static let localizedname = Column("localizedname")
-        static let mediaCategory = Column("mediaCategory")
-        static let medThumbnailPath = Column("medThumbnailPath")
+        static let language_id = Column("language_id")
+        static let media_category = Column("media_category")
+        static let med_thumbnail_path = Column("med_thumbnail_path")
         static let multilanguage = Column("multilanguage")
+        static let ordinal = Column("ordinal")
         static let path = Column("path")
-        static let playableUuid = Column("playableUuid")
-        static let playlistUuid = Column("playlistUuid")
-        static let presenterName = Column("presenterName")
-        static let sourceMaterial = Column("sourceMaterial")
-        static let smallThumbnailPath = Column("smallThumbnailPath")
-        static let trackNumber = Column("trackNumber")
+        static let playable_uuid = Column("playable_uuid")
+        static let playlist_uuid = Column("playlist_uuid")
+        static let presented_at = Column("presented_at")
+        static let published_at = Column("published_at")
+        static let presenter_name = Column("presenter_name")
+        static let source_material = Column("source_material")
+        static let small_thumbnail_path = Column("small_thumbnail_path")
+        static let tags = Column("tags")
+        static let track_number = Column("track_number")
     }
 }
 

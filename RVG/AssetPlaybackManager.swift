@@ -63,7 +63,8 @@ public class AssetPlaybackManager: NSObject {
     /// The state that the internal `AVPlayer` is in.
     var state: AssetPlaybackManager.playbackState = .initial
     var repeatState: RepeatSetting = .repeatOff
-    
+    var shouldAutostart: Bool = true
+
     /// A Bool for tracking if playback should be resumed after an interruption.  See README.md for more information.
     private var shouldResumePlaybackAfterInterruption = true
     
@@ -95,6 +96,7 @@ public class AssetPlaybackManager: NSObject {
             if asset != nil {
                 DDLogDebug("asset didSet: \(String(describing: asset))")
                 asset.urlAsset.addObserver(self, forKeyPath: #keyPath(AVURLAsset.isPlayable), options: [.initial, .new], context: nil)
+                NotificationCenter.default.post(name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
             }
             else {
                 // Unload currentItem so that the state is updated globally.
@@ -102,7 +104,6 @@ public class AssetPlaybackManager: NSObject {
                 player.replaceCurrentItem(with: nil)
             }
 
-            NotificationCenter.default.post(name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
         }
     }
 
@@ -131,6 +132,8 @@ public class AssetPlaybackManager: NSObject {
             self?.playbackPosition = timeElapsed
             self?.duration = durationInSeconds
             self?.percentProgress = timeElapsed / durationInSeconds
+                
+            self?.updatePlaybackRateMetadata()
         })
 
     }
@@ -284,8 +287,12 @@ public class AssetPlaybackManager: NSObject {
         var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
         
         let title = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyTitle, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? asset.name
-        let album = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyAlbumName, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? "Unknown"
-        let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common).first?.value as? Data ?? Data()
+//        let album = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyAlbumName, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? "Unknown"
+        let artist = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtist, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? asset.artist
+        let albumArtist = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.iTunesMetadataKeyAlbumArtist, keySpace: AVMetadataKeySpace.common).first?.value as? String ?? asset.artist
+
+        let artworkData = AVMetadataItem.metadataItems(from: urlAsset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace:
+            AVMetadataKeySpace.common).first?.value as? Data ?? Data()
         
         
         #if os(macOS)
@@ -301,7 +308,9 @@ public class AssetPlaybackManager: NSObject {
         #endif
         
         nowPlayingInfo[MPMediaItemPropertyTitle] = title
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
+//        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
+        nowPlayingInfo[MPMediaItemPropertyArtist] = artist
+        nowPlayingInfo[MPMediaItemPropertyAlbumArtist] = albumArtist
         nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
         
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
@@ -389,29 +398,45 @@ public class AssetPlaybackManager: NSObject {
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == #keyPath(AVURLAsset.isPlayable) {
             if asset.urlAsset.isPlayable {
+//                updateGeneralMetadata()
                 playerItem = AVPlayerItem(asset: asset.urlAsset)
                 player.replaceCurrentItem(with: playerItem)
+//                DispatchQueue.main.async {
+                    self.updateGeneralMetadata()
+//                }
             }
         }
         else if keyPath == #keyPath(AVPlayerItem.status) {
             if playerItem.status == .readyToPlay {
+//                DispatchQueue.main.async {
+                    self.updateGeneralMetadata()
+//                }
+//                self.seekTo(asset.playbackPosition)
+//                player.play()
+//                self.playbackRate(asset.playbackRate)
                 self.seekTo(asset.playbackPosition)
-                player.play()
-                self.playbackRate(asset.playbackRate)
+                if shouldAutostart {
+                    player.play()
+                    self.playbackRate(asset.playbackRate)
+                }
             }
         }
         else if keyPath == #keyPath(AVPlayer.currentItem) {
-            
+//            DispatchQueue.main.async {
+                self.updateGeneralMetadata()
+//            }
+
             // Cleanup if needed.
             if player.currentItem == nil {
                 asset = nil
                 playerItem = nil
             }
             
-            updateGeneralMetadata()
         }
         else if keyPath == #keyPath(AVPlayer.rate) {
-            updatePlaybackRateMetadata()
+//            DispatchQueue.main.async {
+                self.updateGeneralMetadata()
+//            }
             NotificationCenter.default.post(name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
         }
         else {

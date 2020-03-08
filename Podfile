@@ -16,7 +16,8 @@ target 'FaithfulWord' do
     pod 'Moya/RxSwift', '~> 14.0.0-beta.1'
     pod 'RxSwift'
 #    pod 'RxGRDB'
-    pod 'GRDB.swift', '~> 4.0.1'
+#    pod 'GRDB.swift', '~> 4.9.0'
+    pod 'GRDB.swift'
     pod 'L10n-swift'
     pod 'SwiftLint'
     pod 'Swinject'
@@ -37,4 +38,5 @@ target 'FaithfulWord' do
     pod 'Loaf'
     pod 'Starscream'
     pod 'SwiftKeychainWrapper'
+    pod 'SideMenu'
 end

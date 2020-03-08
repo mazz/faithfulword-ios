@@ -1,9 +1,16 @@
 import Foundation
 import RxSwift
 import GRDB
+import RxDataSources
+import L10n_swift
+import os.log
+
+protocol PlaylistViewModeling {
+    func item(at indexPath: IndexPath) -> PlaylistItemType
+}
 
 private struct Constants {
-    static let limit: Int = 100
+    static let limit: Int = 500
 }
 
 final class PlaylistViewModel {
@@ -26,6 +33,13 @@ final class PlaylistViewModel {
     // false - the network fetch succeeded and yielded a result > 0
     public var emptyFetchResult: Field<Bool> = Field<Bool>(false)
 
+
+    public var fetchingPlaylists: Field<Bool> = Field<Bool>(false)
+
+    // db observation
+    private var observer: TransactionObserver?
+
+    
     public var drillInEvent: Observable<PlaylistDrillInType> {
         // Emit events by mapping a tapped index path to setting-option.
         return self.selectItemEvent.filterMap { [unowned self] indexPath -> PlaylistDrillInType? in
@@ -56,6 +70,7 @@ final class PlaylistViewModel {
             // possibly show an error to user
         case .reachable(_):
             
+            self.fetchingPlaylists.value = true
             // we can get playlists from server, so get them
             DDLogDebug("PlaylistViewModel reachability.reachable")
             self.fetchPlaylist(offset: lastOffset + 1,
@@ -72,6 +87,7 @@ final class PlaylistViewModel {
     
     private let channelUuid: String!
     private let productService: ProductServicing!
+    private let languageService: LanguageServicing!
     private let reachability: RxClassicReachable!
     
     // MARK: Fields
@@ -89,15 +105,68 @@ final class PlaylistViewModel {
     
     internal init(channelUuid: String,
                   productService: ProductServicing,
+                  languageService: LanguageServicing,
                   reachability: RxClassicReachable                  
         ) {
         self.channelUuid = channelUuid
         self.productService = productService
+        self.languageService = languageService
         self.reachability = reachability
         setupDataSource()
     }
     
     func setupDataSource() {
+        
+//        let request = Playlist
+//            .filter(Column("channelUuid") == self.channelUuid)
+        
+//        let playlistObservation = ValueObservation.tracking { db in
+//            try request.fetchAll(db)
+//        }
+
+        let playlistObservation = ValueObservation.tracking { db in
+            try Playlist
+                .filter(Column("channel_uuid") == self.channelUuid)
+                .fetchAll(db)
+        }
+        
+        
+        
+        observer = playlistObservation.start(in: dbPool, onError: { error in
+            print("Playlist could not be fetched: \(error)")
+        }, onChange: { [weak self] (playlists: [Playlist]) in
+//            let thisChannelPlaylists = playlists.filter { $0.channel_uuid == self?.channelUuid }
+//            print("Playlist fetched, filtered: \(thisChannelPlaylists)")
+//            print("Playlist fetched, filtered count: \(thisChannelPlaylists.count)")
+            
+//            var ch: Channel?
+//            do {
+//                try dbPool.read { db in
+//                    ch = try Channel
+//                        .filter(Column("uuid") == self?.channelUuid)
+//                        .fetchOne(db)
+//                    print("channel fetched, channel basename: \(String(describing: ch?.basename))")
+//                }
+//            } catch {
+//                print("error fetching channel: \(error)")
+//            }
+            
+//            if ch?.uuid == self?.self.channelUuid {
+                
+                if playlists.count == 0 {
+                    self?.playlists.value = []
+                    self?.emptyFetchResult.value = true
+                } else if playlists.count > 0 {
+                    self?.totalEntries = playlists.count
+                    self?.playlists.value = playlists
+                    self?.emptyFetchResult.value = false
+                }
+//            }
+            
+        })
+        
+        
+        
         reactToReachability()
 
         networkStatus.asObservable()
@@ -127,7 +196,7 @@ final class PlaylistViewModel {
         self.playlists.asObservable()
             .map { $0.map {
                 var icon: String = "feetprint"
-                switch $0.mediaCategory {
+                switch $0.media_category {
                 case MediaCategory.bible.rawValue:
                     icon = "books-stack-of-three"
                 case MediaCategory.gospel.rawValue:
@@ -153,7 +222,7 @@ final class PlaylistViewModel {
                 default:
                     icon = "creation"
                 }
-                return PlaylistItemType.drillIn(type: .playlistItemType(item: $0, mediaCategory: $0.mediaCategory), iconName: icon, title: $0.localizedname, showBottomSeparator: true)
+                return PlaylistItemType.drillIn(type: .playlistItemType(item: $0, mediaCategory: $0.media_category), iconName: icon, title: $0.localizedname, showBottomSeparator: true)
                 }
             }
             .next { [unowned self] list in
@@ -168,7 +237,37 @@ final class PlaylistViewModel {
                 self.fetchMorePlaylists()
             }.disposed(by: bag)
         
+//        languageService.fetchUserLanguage()
+        languageService.languageChangeEvent
+            .asObservable()
+            .next { [weak self] languageEvent in
+            os_log("languageEvent: %{public}@", log: OSLog.data, String(describing: languageEvent))
+            DDLogDebug("languageEvent user language: \(languageEvent) current language: \(L10n.shared.language) languageService user language: \(self?.languageService.userLanguage.value)")
+            
+                self?.totalEntries = -1
+                self?.totalPages = -1
+                self?.pageSize = -1
+                self?.pageNumber = -1
+                self?.lastOffset = 0
 
+                self?.emptyFetchResult.value = true
+//            if let strongSelf = self {
+//                if languageEvent != "none" {
+//                    DDLogDebug("languageEvent strongSelf.channelUuid: \(languageEvent)")
+//                    strongSelf.productService.deletePlaylists(strongSelf.channelUuid)
+//                        .flatMap({ _ -> Single<Void> in
+//
+//                            strongSelf.sections.value = []
+//                            strongSelf.fetchPlaylist(offset: strongSelf.lastOffset + 1,
+//                                               limit: Constants.limit,
+//                                               cacheDirective: .fetchAndAppend)
+//                            return Single.just(())
+//                        })
+//                        .asObservable()
+//                        .subscribeAndDispose(by: strongSelf.bag)
+//                }
+//            }
+        }.disposed(by: bag)
     }
     
     func initialFetch() {
@@ -180,10 +279,10 @@ final class PlaylistViewModel {
                 case .reachable(_):
                     self.fetchPlaylist(offset: self.lastOffset + 1,
                                        limit: Constants.limit,
-                                       cacheDirective: .fetchAndReplace)
+                                       cacheDirective: .fetchAndAppend)
                 }
             } else {
-                self.playlists.value = playlists
+//                self.playlists.value = playlists
                 self.lastOffset = Int(ceil(CGFloat(playlists.count / Constants.limit)))
             }
         }) { error in
@@ -192,49 +291,60 @@ final class PlaylistViewModel {
     }
     
     func fetchPlaylist(offset: Int, limit: Int, cacheDirective: CacheDirective) {
-        productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheDirective: cacheDirective).subscribe(onSuccess: { (playlistResponse, playlists) in
-            DDLogDebug("fetchPlaylists: \(playlists)")
-            self.playlists.value.append(contentsOf: playlists)
-            self.totalEntries = playlistResponse.totalEntries
-            self.totalPages = playlistResponse.totalPages
-            self.pageSize = playlistResponse.pageSize
-            self.pageNumber = playlistResponse.pageNumber
-
-            self.lastOffset += 1
-            
-            self.emptyFetchResult.value = (playlists.count == 0)
-
-        }) { error in
-            
-            if let dbError: DatabaseError = error as? DatabaseError {
-                switch dbError.extendedResultCode {
-                case .SQLITE_CONSTRAINT:            // any constraint error
-                    DDLogDebug("SQLITE_CONSTRAINT error")
-                    // it is possible that we already have some or all the playlists
-                    // from a previous run and that the last fetch tried to
-                    // insert values that were already present. So increment
-                    // lastOffset by one so that eventually we will stop getting
-                    // errors
-//                    if self.playlists.value.count == limit && self.totalEntries == -1 {
-//                        self.lastOffset += 1
-//                    }
-                    
-                    // we got a SQLITE_CONSTRAINT error, assume that we at least have
-                    // `limit` number of items
-                    // this will stop the data service from continually calling the server
-                    // because of the fetchMorePlaylists() guards
-                    if self.playlists.value.count >= limit && self.totalEntries == -1 {
-                        self.totalEntries = self.playlists.value.count
+        DDLogDebug("fetchPlaylist self.channelUuid: \(self.channelUuid)")
+        
+        productService.fetchPlaylists(for: self.channelUuid, offset:  offset, limit: limit, cacheDirective: cacheDirective)
+            .observeOn(MainScheduler.instance)
+            .subscribe(onSuccess: { (playlistResponse, playlists) in
+                DDLogDebug("fetchPlaylists: \(playlists)")
+                
+                // sometimes we need to replace the sections, for instance when the user changed the language
+//                if cacheDirective == .fetchAndReplace {
+//                    self.playlists.value = playlists
+//                } else {
+//                self.playlists.value.append(contentsOf: playlists)
+//                }
+                self.totalEntries = playlistResponse.total_entries
+                self.totalPages = playlistResponse.total_pages
+                self.pageSize = playlistResponse.page_size
+                self.pageNumber = playlistResponse.page_number
+                
+                self.lastOffset += 1
+                
+                self.fetchingPlaylists.value = false
+                self.emptyFetchResult.value = (playlists.count == 0)
+                
+            }) { error in
+                
+                if let dbError: DatabaseError = error as? DatabaseError {
+                    switch dbError.extendedResultCode {
+                    case .SQLITE_CONSTRAINT:            // any constraint error
+                        DDLogDebug("SQLITE_CONSTRAINT error")
+                        // it is possible that we already have some or all the playlists
+                        // from a previous run and that the last fetch tried to
+                        // insert values that were already present. So increment
+                        // lastOffset by one so that eventually we will stop getting
+                        // errors
+                        //                    if self.playlists.value.count == limit && self.totalEntries == -1 {
+                        //                        self.lastOffset += 1
+                        //                    }
+                        
+                        // we got a SQLITE_CONSTRAINT error, assume that we at least have
+                        // `limit` number of items
+                        // this will stop the data service from continually calling the server
+                        // because of the fetchMorePlaylists() guards
+                        if self.playlists.value.count >= limit && self.totalEntries == -1 {
+                            self.totalEntries = self.playlists.value.count
+                        }
+                    default:                            // any other database error
+                        DDLogDebug("some db error: \(dbError)")
                     }
-                default:                            // any other database error
-                    DDLogDebug("some db error: \(dbError)")
+                    
+                } else {
+                    DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
                 }
                 
-            } else {
-                DDLogDebug("fetchPlaylists failed with error: \(error.localizedDescription)")
-            }
-            
-            
+                
         }.disposed(by: self.bag)
     }
     
@@ -243,7 +353,6 @@ final class PlaylistViewModel {
             self.reachability.startNotifier().asObservable()
                 .subscribe(onNext: { networkStatus in
                     self.networkStatus.value = networkStatus
-//                    single(.success(()))
                     switch networkStatus {
                     case .unknown:
                         DDLogDebug("PlaylistViewModel \(self.reachability.status.value)")
@@ -253,8 +362,5 @@ final class PlaylistViewModel {
                         DDLogDebug("PlaylistViewModel \(self.reachability.status.value)")
                     }
                 }).disposed(by: self.bag)
-            
-//            return Disposables.create { }
-//        }
     }
 }

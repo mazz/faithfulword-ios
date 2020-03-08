@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import Moya
 import HWIFileDownload
+import os.log
 
 protocol DownloadServicing {
 //    var operations: [String: DownloadOperation] { get }
@@ -30,12 +31,17 @@ protocol DownloadServicing {
     func updateFileDownloads(playableUuids: [String], to state: FileDownloadState) -> Single<Void>
     
     func fetchStoredFileDownloads(for playlistUuid: String) -> Single<[FileDownload]>
+    func fetchStoredFileDownloads() -> Single<[FileDownload]>
     func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]>
+    func activeFileDownloads() -> Single<[FileDownload]>
 }
 
 extension DownloadService: HWIFileDownloadDelegate {
     public func downloadDidComplete(withIdentifier identifier: String, localFileURL: URL) {
-        DDLogDebug("downloadDidComplete: \(String(describing: identifier)) localFileURL: \(String(describing: localFileURL))")
+        os_log("downloadDidComplete: %{public}@", log: OSLog.data, String(describing: identifier))
+        os_log("localFileURL: %{public}@", log: OSLog.data, String(describing: localFileURL))
+
+//        DDLogDebug("downloadDidComplete: \(String(describing: identifier)) localFileURL: \(String(describing: localFileURL))")
         //        if let stateItem: DownloadStateItem = self.fileDownloadStateItems[identifier],
         if let fileDownload: FileDownload = self.fileDownloads[identifier] {
             
@@ -127,7 +133,8 @@ extension DownloadService: HWIFileDownloadDelegate {
                             weakSelf.fileDownloads[identifier] = download
                             NotificationCenter.default.post(name: DownloadService.fileDownloadDidProgressNotification, object: download)
                         } else {
-                            DDLogDebug("stateItem.cancelImmediately: \(String(describing: stateItem.cancelImmediately))")
+                            os_log("stateItem.cancelImmediately: %{public}@", log: OSLog.data, String(describing: stateItem.cancelImmediately))
+
                         }
                     }
             }
@@ -135,8 +142,11 @@ extension DownloadService: HWIFileDownloadDelegate {
     }
 
     public func downloadFailed(withIdentifier identifier: String, error: Error, httpStatusCode: Int, errorMessagesStack: [String]?, resumeData: Data?) {
-        DDLogDebug("downloadFailed: \(String(describing: identifier)) error: \(error) httpStatusCode: \(httpStatusCode) errorMessagesStack:\(errorMessagesStack ?? [""])")
-        
+        os_log("downloadFailed: %{public}@", log: OSLog.data, String(describing: identifier))
+        os_log("error: %{public}@", log: OSLog.data, String(describing: error))
+        os_log("httpStatusCode: %{public}@", log: OSLog.data, String(describing: httpStatusCode))
+        os_log("errorMessagesStack: %{public}@", log: OSLog.data, String(describing: (errorMessagesStack ?? [""])))
+
 //        if let stateItem: DownloadStateItem = self.fileDownloadStateItems[identifier],
         if let fileDownload: FileDownload = self.fileDownloads[identifier] {
 //            let fileDownloader: HWIFileDownloader = self.fileDownloader,
@@ -304,13 +314,25 @@ extension DownloadService: DownloadServicing {
     func fetchStoredFileDownloads(for playlistUuid: String) -> Single<[FileDownload]> {
         return self.dataService.fileDownloads(for: playlistUuid)
     }
-    
+
+    func fetchStoredFileDownloads() -> Single<[FileDownload]> {
+        return self.dataService.allFileDownloads()
+    }
+
     func activeFileDownloads(_ playlistUuid: String) -> Single<[FileDownload]> {
         return Single.create { [unowned self] single in
             var values = Array(self.fileDownloads.values)
             
             values = values.filter { $0.playlistUuid == playlistUuid }
             
+            single(.success(values))
+            return Disposables.create {}
+        }
+    }
+    
+    func activeFileDownloads() -> Single<[FileDownload]> {
+        return Single.create { [unowned self] single in
+            let values = Array(self.fileDownloads.values)
             single(.success(values))
             return Disposables.create {}
         }
@@ -338,7 +360,8 @@ extension DownloadService: DownloadServicing {
                     .asObservable()
                     .subscribeAndDispose(by: self.bag)
             }, onError: { error in
-                DDLogDebug("interruptedDownloads error: \(error)")
+                os_log("interruptedDownloads error: %{public}@", log: OSLog.data, String(describing: error))
+
             })
 
         updateFileDownloads(playableUuids: inProgressDownloads(), to: toState)
@@ -448,7 +471,7 @@ extension DownloadService: DownloadServicing {
                 inProgressUuids.append(download.playableUuid)
             }
         }
-        DDLogDebug("inProgressDownloads: \(inProgressDownloads)")
+        os_log("inProgressDownloads: %{public}@", log: OSLog.data, String(describing: inProgressDownloads))
         return inProgressUuids
     }
     
@@ -464,13 +487,14 @@ extension DownloadService: DownloadServicing {
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
         } catch {
             DDLogDebug("error while creating directory")
+            os_log("inProgressDownloads", log: OSLog.data)
         }
         
         do {
             try fileManager.removeItem(at: directory)
         }
         catch let error {
-            print("Ooops! Something went wrong removing dir: \(error)")
+            os_log("Ooops! Something went wrong removing dir: %{public}@", log: OSLog.data, String(describing: error))
         }
     }
 }
@@ -488,11 +512,11 @@ extension DownloadService {
                 
                 switch networkStatus {
                 case .unknown:
-                    DDLogDebug("DownloadService \(self.reachability.status.value)")
+                    os_log("DownloadService: %{public}@", log: OSLog.data, String(describing: self.reachability.status.value))
                 case .notReachable:
-                    DDLogDebug("DownloadService \(self.reachability.status.value)")
+                    os_log("DownloadService: %{public}@", log: OSLog.data, String(describing: self.reachability.status.value))
                 case .reachable(_):
-                    DDLogDebug("DownloadService \(self.reachability.status.value)")
+                    os_log("DownloadService: %{public}@", log: OSLog.data, String(describing: self.reachability.status.value))
                 }
             }).disposed(by: bag)
     }
@@ -507,7 +531,7 @@ extension DownloadService {
             let audioData: Data = try Data(contentsOf: localSourceUrl, options: .uncached)
             try audioData.write(to: localDestinationUrl, options: .atomicWrite)
         } catch {
-            DDLogDebug("error writing audio file: \(error)")
+            os_log("error writing audio file: %{public}@", log: OSLog.data, String(describing: error))
             return
         }
         
@@ -515,7 +539,7 @@ extension DownloadService {
             // need to manually set 644 perms: https://github.com/Alamofire/Alamofire/issues/2527
             try fileManager.setAttributes([FileAttributeKey.posixPermissions: NSNumber(value: 0o644)], ofItemAtPath: localDestinationUrl.path)
         } catch {
-            DDLogDebug("error while setting file permissions")
+            os_log("error while setting file permissions:", log: OSLog.data)
         }
         
         if deleteSource {
@@ -523,7 +547,7 @@ extension DownloadService {
                 try fileManager.removeItem(at: localSourceUrl)
             }
             catch let error {
-                print("Ooops! Something went wrong removing file: \(error)")
+                os_log("Ooops! Something went wrong removing file: %{public}@", log: OSLog.data, String(describing: error))
             }
         }
 
@@ -541,7 +565,7 @@ extension DownloadService {
         do {
             try fileManager.createDirectory(at: directory, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            DDLogDebug("error while creating directory")
+            os_log("error while creating directory", log: OSLog.data)
         }
         
         let fullPath: URL = directory.appendingPathComponent(targetFilename)
@@ -551,11 +575,10 @@ extension DownloadService {
                 try fileManager.removeItem(atPath: fullPath.path)
             }
             catch let error {
-                print("Ooops! Something went wrong removing file: \(error)")
+                os_log("Ooops! Something went wrong removing file: %{public}@", log: OSLog.data, String(describing: error))
             }
         }
-        
-        DDLogDebug("fullPath: \(fullPath)")
+        os_log("fullPath: %{public}@", log: OSLog.data, String(describing: fullPath))
         
         return fullPath
     }

@@ -2,28 +2,33 @@ import Foundation
 import Moya
 
 private enum Constants {
-    static let versionPrefix: String = "/v1.3"
+    static let versionPrefix: String = "/api/v1.3"
 }
 
 public enum FwbcApiService {
     case appVersions(offset: Int, limit: Int)
-    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String, userUuid: String)
+    case pushTokenUpdate(fcmToken: String, apnsToken: String, preferredLanguage: String, userAgent: String, userVersion: String, userUuid: String, orgId: Int)
     // v1.1/languages/supported
     // v1.2/languages/supported
     // v1.3/languages/supported?offset=1&limit=50
     case languagesSupported(offset: Int, limit: Int)
-    // v1.3/orgs/default?offset=1&limit=50
+    // api/v1.3/orgs/default?offset=1&limit=50
     case defaultOrgs(offset: Int, limit: Int)
     
-    // v1.3/orgs/{uuid}/channels?language-id=en&offset=1&limit=50
+    // api/v1.3/orgs/{uuid}/channels?language-id=en&offset=1&limit=50
     case channels(uuid: String, offset: Int, limit: Int)
     
-    // v1.3/channels/{uuid}/playlists?language-id=en&offset=1&limit=50
+    // api/v1.3/channels/{uuid}/playlists?language-id=en&offset=1&limit=50
     case playlists(uuid: String, languageId: String, offset: Int, limit: Int)
     
-    // v1.3/playlists/{uuid}/media?language-id=en&offset=1&limit=50
+    // api/v1.3/playlists/{uuid}/media?language-id=en&offset=1&limit=50
     case mediaItems(uuid: String, languageId: String, offset: Int, limit: Int)
-    
+
+    // api/v1.3/playlists/{uuid}/media?language-id=en&offset=1&limit=50
+    case mediaItem(uuid: String)
+
+    case mediaItemForHashId(hashId: String)
+
     // v1.3/search
     case search(query: String,
         mediaCategory: String?,
@@ -73,11 +78,11 @@ public enum FwbcApiService {
 // MARK: - TargetType Protocol Implementation
 extension FwbcApiService: TargetType {
     
-//    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)")! }
-        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)")! }
+    public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.DevelopmentServerRootUrl.rawValue)")! }
+//        public var baseURL: URL { return URL(string: "\(EnvironmentUrlItemKey.LocalServerRootUrl.rawValue)")! }
     public var path: String {
         switch self {
-        case .pushTokenUpdate(_, _, _, _, _, _):
+        case .pushTokenUpdate(_, _, _, _, _, _, _):
             return String(describing: "\(Constants.versionPrefix)/device/pushtoken/update")
         case .appVersions(_, _):
             return String(describing: "\(Constants.versionPrefix)/app/versions")
@@ -95,6 +100,10 @@ extension FwbcApiService: TargetType {
 //            return "/channels/\(uuid)/playlists"
         case .mediaItems(let uuid, _, _, _):
             return String(describing: "\(Constants.versionPrefix)/playlists/\(uuid)/media")
+        case .mediaItem(let uuid):
+            return String(describing: "\(Constants.versionPrefix)/mediaitem/\(uuid)/details")
+        case .mediaItemForHashId(let hashId):
+            return String(describing: "\(Constants.versionPrefix)/mediaitem/\(hashId)/detailshashid")
 //            return "/playlists/\(uuid)/media"
         case .search(_, _, _, _, _, _, _, _, _):
             return String(describing: "\(Constants.versionPrefix)/search")
@@ -141,6 +150,10 @@ extension FwbcApiService: TargetType {
             return .get
         case .mediaItems:
             return .get
+        case .mediaItem:
+            return .get
+        case .mediaItemForHashId:
+            return .get
         case .search:
             return .post
         case .userLogin:
@@ -174,13 +187,15 @@ extension FwbcApiService: TargetType {
                               let preferredLanguage,
                               let userAgent,
                               let userVersion,
-                              let userUuid):
+                              let userUuid,
+                              let orgId):
             return ["fcmToken": fcmToken,
                     "apnsToken": apnsToken,
                     "preferredLanguage": preferredLanguage,
                     "userAgent": userAgent,
                     "userVersion": userVersion,
-                    "userUuid": userUuid]
+                    "userUuid": userUuid,
+                    "orgId": orgId]
         case .languagesSupported(let offset, let limit):
             return ["offset": offset,
                     "limit": limit]
@@ -194,6 +209,10 @@ extension FwbcApiService: TargetType {
             return ["language-id": languageId, "offset": offset, "limit": limit]
         case .mediaItems(_, let languageId, let offset, let limit):
             return ["language-id": languageId, "offset": offset, "limit": limit]
+        case .mediaItem(_):
+            return nil
+        case .mediaItemForHashId(_):
+            return nil
         case .search(let query,
                      let mediaCategory,
                      let playlistUuid,
@@ -262,6 +281,10 @@ extension FwbcApiService: TargetType {
             return URLEncoding.default
         case .mediaItems:
             return URLEncoding.default
+        case .mediaItem:
+            return URLEncoding.default
+        case .mediaItemForHashId:
+            return URLEncoding.default
         case .search:
             return JSONEncoding.default // Send parameters as JSON in request body
         case .userLogin:
@@ -292,15 +315,17 @@ extension FwbcApiService: TargetType {
                               let preferredLanguage,
                               let userAgent,
                               let userVersion,
-                              let userUuid):
+                              let userUuid,
+                              let orgId):
             let pushTokenJson = [
                 "fcmToken": fcmToken,
                 "apnsToken": apnsToken,
                 "preferredLanguage": preferredLanguage,
                 "userAgent": userAgent,
                 "userVersion": userVersion,
-                "userUuid": userUuid
-            ]
+                "userUuid": userUuid,
+                "orgId": orgId
+                ] as [String : Any]
             return jsonSerializedUTF8(json: pushTokenJson)
         case .languagesSupported(let offset, let limit):
             return "{\"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
@@ -313,7 +338,10 @@ extension FwbcApiService: TargetType {
             return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
         case .mediaItems(let uuid, let languageId, let offset, let limit):
             return "{\"uuid\": \(uuid), \"language-id\": \"\(languageId)\", \"offset\": \"\(offset)\", \"limit\": \"\(limit)\"}".utf8Encoded
-            
+        case .mediaItem(let uuid):
+            return "{\"uuid\": \(uuid)\"}".utf8Encoded
+        case .mediaItemForHashId(let hashId):
+            return "{\"hashId\": \(hashId)}".utf8Encoded
         case .search(let query,
                      let mediaCategory,
                      let playlistUuid,
@@ -355,13 +383,14 @@ extension FwbcApiService: TargetType {
             return .requestParameters(parameters:  ["offset": offset,
                                                     "limit": limit],
                                       encoding: URLEncoding.default)
-        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion, let userUuid):
+        case .pushTokenUpdate(let fcmToken, let apnsToken, let preferredLanguage, let userAgent, let userVersion, let userUuid, let orgId):
             return .requestParameters(parameters:  ["fcmToken": fcmToken,
                                                     "apnsToken": apnsToken,
                                                     "preferredLanguage": preferredLanguage,
                                                     "userAgent": userAgent,
                                                     "userVersion": userVersion,
-                                                    "userUuid": userUuid],
+                                                    "userUuid": userUuid,
+                                                    "orgId": orgId],
                                       encoding: JSONEncoding.default)
         case .languagesSupported(let offset, let limit):
             return .requestParameters(parameters:  ["offset": offset,
@@ -386,7 +415,10 @@ extension FwbcApiService: TargetType {
                                                    "offset": offset,
                                                    "limit": limit],
                                       encoding: URLEncoding.default)
-
+        case .mediaItem(_):
+            return .requestParameters(parameters: [:], encoding: URLEncoding.default)
+        case .mediaItemForHashId(_):
+            return .requestParameters(parameters: [:], encoding: URLEncoding.default)
         case .search(let query,
                      let mediaCategory,
                      let playlistUuid,

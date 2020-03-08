@@ -3,6 +3,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import MagazineLayout
+import GRDB
 
 public final class ChannelViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -13,7 +14,7 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        DDLogDebug("viewModelSections[0].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
+        //        DDLogDebug("viewModelSections[0].items[indexPath.row]: \(viewModelSections[indexPath.section].items[indexPath.row])")
         //        }
         let item: PlaylistItemType = viewModelSections[indexPath.section].items[indexPath.row]
         
@@ -52,9 +53,11 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
     
     // MARK: Fields
     let noResultLabel: UILabel = UILabel(frame: .zero)
-
+    
     private var viewModelSections: [PlaylistSectionViewModel] = []
     private let bag = DisposeBag()
+    
+    private var observer: TransactionObserver?
     
     // MARK: Lifecycle
     
@@ -69,7 +72,7 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            ])
+        ])
         
         noResultLabel.text = NSLocalizedString("No Result Found", comment: "").l10n()
         noResultLabel.textAlignment = .center
@@ -86,8 +89,8 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
             noResultLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor, constant: -100),
             noResultLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
             noResultLabel.heightAnchor.constraint(equalToConstant: 300),
-            ])
-
+        ])
+        
         reactToViewModel()
     }
     
@@ -107,9 +110,30 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
     //        }
     
     private func reactToViewModel() {
+        
+        //                let request = Playlist
+        ////                    .filter(Column("orgUuid") == viewModel.orgUuid.value)
+        //                    .filter(Column("archived") == false)
+        //                    .order(Column("updatedAt").desc)
+        //
+        //                let coursesObservation = ValueObservation.tracking { db in
+        //                    try request.fetchAll(db)
+        //                }
+        //
+        //                //        do {
+        //                observer = coursesObservation.start(in: dbPool, onError: { error in
+        //                    print("CourseListController courses could not be fetched: \(error)")
+        //                }, onChange: { [weak self] (mbyCourses: [Playlist]) in
+        //                    print("CourseListController courses fetched: \(mbyCourses)")
+        //                    self?.viewModel.courses.value = mbyCourses
+        //        //            if let strongSelf = self {
+        //        //                strongSelf.sections.value = strongSelf.coursesRefresh(refreshedCourses: mbyCourses)
+        //        //            }
+        //                })
+        //
         viewModel.sections.asObservable()
             .observeOn(MainScheduler.instance)
-            .filter{ $0[0].items.count > 0 }
+            //            .filter{ $0[0].items.count > 0 }
             .next { [unowned self] sections in
                 // first time loading sections
                 if self.itemsUpdatedAtLeastOnce == false {
@@ -118,31 +142,78 @@ public final class ChannelViewController: UIViewController, UICollectionViewData
                     self.itemsUpdatedAtLeastOnce = true
                 }
                 else {
-                    let currentItemsCount: Int = self.viewModelSections[0].items.count
-                    let appendCount: Int = sections[0].items.count - currentItemsCount
-                    let newItems = Array(sections[0].items.suffix(appendCount))
-                    DDLogDebug("newItems.count: \(newItems.count)")
+                    // if sections are empty, that means the viewmodels sections were
+                    // deleted(probably because the language was changed)
+                    // in this case just hard reloadData() similar to when
+                    // medialistingviewcontroller is filtering
                     
-                    let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
-                    DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
-                    self.viewModelSections = sections
-                    
-                    DispatchQueue.main.async {
-                        self.collectionView.performBatchUpdates({
-                            self.collectionView.insertItems(at: insertIndexPaths)
-                        }, completion: { result in
+                    if sections.count == 0 || self.viewModelSections.count == 0 {
+                        DispatchQueue.main.async {
+                            self.viewModelSections = sections
                             self.collectionView.reloadData()
-                        })
+                        }
+                    } else {
+                        let currentItemsCount: Int = self.viewModelSections[0].items.count
+                        let appendCount: Int = sections[0].items.count - currentItemsCount
+                        
+                        if appendCount > 0 {
+                            let newItems = Array(sections[0].items.suffix(appendCount))
+                            DDLogDebug("newItems.count: \(newItems.count)")
+                            
+                            let insertIndexPaths = Array(currentItemsCount...currentItemsCount + newItems.count-1).map { IndexPath(item: $0, section: 0) }
+                            DDLogDebug("insertIndexPaths: \(insertIndexPaths)")
+                            self.viewModelSections = sections
+                            
+                            DispatchQueue.main.async {
+                                self.collectionView.performBatchUpdates({
+                                    self.collectionView.insertItems(at: insertIndexPaths)
+                                }, completion: { result in
+                                    self.collectionView.reloadData()                                    
+                                })
+                            }
+                        } else if appendCount < 0 { // deleting items
+                            let currentItemsCount: Int = self.viewModelSections[0].items.count
+                            var deleteCount: Int = abs(appendCount)
+                            
+                            let newArray = Array(sections[0].items.dropLast(deleteCount))
+                            
+                            DDLogDebug("newArray.count: \(newArray.count)")
+                            
+                            let deleteIndexPaths = Array(currentItemsCount - deleteCount ... (currentItemsCount-1)).map { IndexPath(item: $0, section: 0) }
+                            DDLogDebug("deleteIndexPaths: \(deleteIndexPaths)")
+                            self.viewModelSections[0].items = newArray
+                            
+                            DispatchQueue.main.async {
+                                self.collectionView.performBatchUpdates({
+                                    self.collectionView.deleteItems(at: deleteIndexPaths)
+                                }, completion: // nil
+                                    { result in
+                                        self.collectionView.reloadData()
+                                }
+                                )
+                            }
+                        }
                     }
                 }
-            }.disposed(by: bag)
+        }.disposed(by: bag)
         
         viewModel.emptyFetchResult.asObservable()
             .observeOn(MainScheduler.instance)
             .next { [unowned self] emptyResult in
                 self.noResultLabel.isHidden = !emptyResult
-//                self.noResultLabel.isHidden = false
-            }.disposed(by: bag)
+                //                self.noResultLabel.isHidden = false
+        }.disposed(by: bag)
+        
+        viewModel.fetchingPlaylists.asObservable()
+            .observeOn(MainScheduler.instance)
+            .next { [unowned self] fetchingResult in
+                DispatchQueue.main.async {
+                    self.noResultLabel.text = NSLocalizedString("Loading ...", comment: "").l10n()
+                    self.noResultLabel.isHidden = !fetchingResult
+                    self.collectionView.isHidden = fetchingResult
+                }
+        }.disposed(by: bag)
+        
         
     }
 }
@@ -186,16 +257,16 @@ extension ChannelViewController: UIScrollViewDelegate {
         }
     }
     
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        
-        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
-        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
-        
-        if offsetDiff - collectionView.frame.size.height <= 20.0 {
-            DDLogDebug("fetch!")
-            viewModel.fetchAppendPlaylists.onNext(true)
-        }
-    }
+    //    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    //
+    //        let offsetDiff: CGFloat = scrollView.contentSize.height - scrollView.contentOffset.y
+    //        DDLogDebug("near bottom: \(offsetDiff - collectionView.frame.size.height)")
+    //
+    //        if offsetDiff - collectionView.frame.size.height <= 20.0 {
+    //            DDLogDebug("fetch!")
+    //            viewModel.fetchAppendPlaylists.onNext(true)
+    //        }
+    //    }
 }
 
 

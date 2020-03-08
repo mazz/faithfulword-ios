@@ -3,23 +3,23 @@ import GRDB
 
 public struct Playlist: Codable {
     var uuid: String
-    public var channelUuid: String
-    public var bannerPath: String?
+    public var channel_uuid: String
+    public var banner_path: String?
     public var localizedname: String
-    public var languageId: String
-    public var mediaCategory: String
+    public var language_id: String
+    public var media_category: String
     public var ordinal: Int?
-    public var insertedAt: TimeInterval
-    public var updatedAt: TimeInterval
-    public var largeThumbnailPath: String?
-    public var medThumbnailPath: String?
-    public var smallThumbnailPath: String?
-    
+    public var inserted_at: String
+    public var updated_at: String
+    public var large_thumbnail_path: String?
+    public var med_thumbnail_path: String?
+    public var small_thumbnail_path: String?
+
     
     //
     // a Playlist is many-to-one to Channel
     //
-    static let playlistForeignKey = ForeignKey([Columns.channelUuid])
+    static let playlistForeignKey = ForeignKey([Columns.channel_uuid])
 
     //
     // a Playlist is one-to-many to MediaItem
@@ -80,17 +80,17 @@ public struct Playlist: Codable {
 extension Playlist {
     enum Columns {
         static let uuid = Column("uuid")
-        static let channelUuid = Column("channelUuid")
-        static let bannerPath = Column("bannerPath")
+        static let channel_uuid = Column("channel_uuid")
+        static let banner_path = Column("banner_path")
         static let localizedname = Column("localizedname")
-        static let languageId = Column("languageId")
-        static let mediaCategory = Column("mediaCategory")
+        static let language_id = Column("language_id")
+        static let media_category = Column("media_category")
         static let ordinal = Column("ordinal")
-        static let insertedAt = Column("insertedAt")
-        static let updatedAt = Column("updatedAt")
-        static let largeThumbnailPath = Column("largeThumbnailPath")
-        static let medThumbnailPath = Column("medThumbnailPath")
-        static let smallThumbnailPath = Column("smallThumbnailPath")
+        static let inserted_at = Column("inserted_at")
+        static let update_at = Column("update_at")
+        static let large_thumbnail_path = Column("large_thumbnail_path")
+        static let med_thumbnail_path = Column("med_thumbnail_path")
+        static let small_thumbnail_path = Column("small_thumbnail_path")
     }
 }
 

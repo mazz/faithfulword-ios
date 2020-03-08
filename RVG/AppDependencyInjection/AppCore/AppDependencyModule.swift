@@ -56,6 +56,14 @@ internal final class AppDependencyModule {
                                   dataService: resolver.resolve(DataService.self)!)
             //            return ProductService(dataService: resolver.resolve(DataService.self)!)
             }.inObjectScope(.container)
+        
+        container.register(MediaRouteHandling.self) { _ in
+            return MediaRouteHandler()
+        }.inObjectScope(.container)
+
+        container.register(MediaUniversalLinkHandling.self) { _ in
+            return MediaUniversalLinkHandler()
+        }.inObjectScope(.container)
 
         attachUtilityDependencies(to: container)
         attachAppLevelDependencies(to: container)
@@ -121,6 +129,9 @@ internal final class AppDependencyModule {
                 resettableNoResourceCoordinator: Resettable {
                     resolver.resolve(NoResourceCoordinator.self)!
                 },
+//                resettablePlaybackCoordinator: Resettable {
+//                    resolver.resolve(PlaybackCoordinator.self)!
+//                },
                 //                resettableAccountSetupCoordinator: Resettable {
                 //                    resolver.resolve(AccountSetupCoordinator.self)!
                 //                },
@@ -129,9 +140,10 @@ internal final class AppDependencyModule {
                 languageService: resolver.resolve(LanguageServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 downloadService: resolver.resolve(DownloadServicing.self)!,
+//                historyService: resolver.resolve(HistoryServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-        }
+        }//.inObjectScope(.container)
 
         container.register(AppUIMaking.self) { resolver in
             UIFactory(resolver: resolver)
@@ -197,6 +209,16 @@ internal final class AppDependencyModule {
 
     private static func attachMainFlowDependencies(to container: Container) {
 
+        container.register(MediaRouteCoordinator.self) { resolver in
+            MediaRouteCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+//                                  mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
+                productService: resolver.resolve(ProductServicing.self)!,
+                                  resettablePlaybackCoordinator: Resettable {
+                resolver.resolve(PlaybackCoordinator.self)!
+                }
+            )
+        }
+
         container.register(MediaListingCoordinator.self) { resolver in
             MediaListingCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!, resettablePlaybackCoordinator: Resettable {
                                         resolver.resolve(PlaybackCoordinator.self)!
@@ -235,7 +257,9 @@ internal final class AppDependencyModule {
         }
 
         container.register(HistoryCoordinator.self) { resolver in
-            HistoryCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
+            HistoryCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!, resettablePlaybackCoordinator: Resettable {
+                                    resolver.resolve(PlaybackCoordinator.self)!
+            }
             )
         }
 
@@ -260,10 +284,17 @@ internal final class AppDependencyModule {
                     resolver.resolve(BibleLanguageCoordinator.self)!
                 }, resettableHistoryCoordinator: Resettable {
                     resolver.resolve(HistoryCoordinator.self)!
+                }, resettableMediaRouteCoordinator: Resettable {
+                    resolver.resolve(MediaRouteCoordinator.self)!
+                }, resettablePlaybackCoordinator: Resettable {
+                    resolver.resolve(PlaybackCoordinator.self)!
                 },
-                productService: resolver.resolve(ProductServicing.self)!
+                   mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
+                   mediaUniversalLinkHandler: resolver.resolve(MediaUniversalLinkHandling.self)!,
+                   productService: resolver.resolve(ProductServicing.self)!,
+                   historyService: resolver.resolve(HistoryServicing.self)!
             )
-        }
+        }.inObjectScope(.container)
         
         /**
          view models should be stored as transient, otherwise they will
@@ -326,6 +357,7 @@ internal final class AppDependencyModule {
             PlaylistViewModel(
                 channelUuid: channelUuid,
                 productService: resolver.resolve(ProductServicing.self)!,
+                languageService: resolver.resolve(LanguageServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
             }.inObjectScope(.transient)
@@ -346,40 +378,23 @@ internal final class AppDependencyModule {
             DownloadListingViewModel(downloadService: resolver.resolve(DownloadServicing.self)!)
             }.inObjectScope(.transient)
         
-//        container.register(HistoryPlaybackViewModel.self) { resolver, playlistId, mediaCategory in
-//            HistoryPlaybackViewModel(
-//                playlistUuid: playlistId,
-//                mediaCategory: mediaCategory,
-//                productService: resolver.resolve(ProductServicing.self)!,
-//                //                searchService: resolver.resolve(SearchServicing.self)!,
-//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
-//                reachability: resolver.resolve(RxClassicReachable.self)!
-//            )
-//            }.inObjectScope(.container)
-//
-//        container.register(HistoryDownloadViewModel.self) { resolver, playlistId, mediaCategory in
-//            HistoryDownloadViewModel(
-//                playlistUuid: playlistId,
-//                mediaCategory: mediaCategory,
-//                productService: resolver.resolve(ProductServicing.self)!,
-//                //                searchService: resolver.resolve(SearchServicing.self)!,
-//                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
-//                reachability: resolver.resolve(RxClassicReachable.self)!
-//            )
-//            }.inObjectScope(.container)
-        
-        container.register(MediaFilterViewModel.self) { resolver, playlistId, mediaCategory in
-            MediaFilterViewModel(
-                playlistUuid: playlistId,
-                mediaCategory: mediaCategory,
-                productService: resolver.resolve(ProductServicing.self)!,
+        container.register(HistoryPlaybackViewModel.self) { resolver in
+            HistoryPlaybackViewModel(
+                historyService: resolver.resolve(HistoryServicing.self)!,
                 //                searchService: resolver.resolve(SearchServicing.self)!,
                 assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
                 reachability: resolver.resolve(RxClassicReachable.self)!
             )
-            }.inObjectScope(.transient)
+            }.inObjectScope(.container)
 
-
+        container.register(HistoryDownloadViewModel.self) { resolver in
+            HistoryDownloadViewModel(
+                downloadService: resolver.resolve(DownloadServicing.self)!,
+                //                searchService: resolver.resolve(SearchServicing.self)!,
+                assetPlaybackService: resolver.resolve(AssetPlaybackServicing.self)!,
+                reachability: resolver.resolve(RxClassicReachable.self)!
+            )
+            }.inObjectScope(.container)        
     }
 
     private static func attachSplashScreenFlowDependencies(to container: Container) {

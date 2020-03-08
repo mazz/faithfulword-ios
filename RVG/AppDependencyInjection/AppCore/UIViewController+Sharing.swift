@@ -12,9 +12,9 @@ import UIKit
 public extension UIViewController {
 
     func shareLink(mediaItem: MediaItem) {
-        if let hashLink: URL = URL(string: "https://api.faithfulword.app/m"),
-            let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
-            let shareUrl: URL = hashLink.appendingPathComponent(mediaItem.hashId) {
+        if let hashLink: URL = URL(string: "https://faithfulword.app/m"),
+            let presenterName: String = mediaItem.presenter_name ?? "Unknown Presenter",
+            let shareUrl: URL = hashLink.appendingPathComponent(mediaItem.hash_id) {
             DDLogDebug("hashLink: \(shareUrl)")
             
             let message = MessageWithSubjectActivityItem(subject: String(describing: "\(mediaItem.localizedname) by \(presenterName)"), message: "Shared via the Faithful Word App: https://faithfulwordapp.com/")
@@ -43,7 +43,7 @@ public extension UIViewController {
         let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
         // generate temp file url path
         
-        if let presenterName: String = mediaItem.presenterName ?? "Unknown Presenter",
+        if let presenterName: String = mediaItem.presenter_name ?? "Unknown Presenter",
             let path: String = mediaItem.path,
             let percentEncoded: String = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
             let remoteUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded)) {

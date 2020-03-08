@@ -73,7 +73,7 @@ internal final class LanguageViewModel: RadioListViewModeling {
     private func setupDatasource() {
         productService.fetchBibleLanguages(stride: 100).asObservable()
             .map { $0.map {
-                (RadioListItemType.selectable(header: String("\($0.sourceMaterial) (\(self.localizedString(identifier: $0.languageIdentifier))) "), isSelected: false), $0.languageIdentifier)
+                (RadioListItemType.selectable(header: String("\($0.source_material) (\(self.localizedString(identifier: $0.language_identifier))) "), isSelected: false), $0.language_identifier)
                 }
             }
             .next({ tuples in
@@ -96,10 +96,29 @@ internal final class LanguageViewModel: RadioListViewModeling {
         self.selectionEvent.next { [unowned self] event in
             let identifier: String = self.datasource.value[event.section].languageIdentifiers[event.row]
             L10n.shared.language = identifier
+//            self.languageService.swappedUserLanguage.value = identifier
+            
+            let deleted: Single<Void> = self.productService.deletePlaylists()
+            
+            deleted.flatMap { _ -> Single<String> in
+                return self.languageService.updateUserLanguage(languageIdentifier: identifier)
+            }
+            .asObservable()
+            .subscribeAndDispose(by: self.bag)
+//                .asObservable()
+//                .subscribeAndDispose(by: self.bag)
 
-            self.languageService.updateUserLanguage(languageIdentifier: identifier)
-                .asObservable()
-                .subscribeAndDispose(by: self.bag)
+//                .flatMap { _ -> Single<String> in
+//                return "test"
+//            }
+            
+            
+//            self.languageService.updateUserLanguage(languageIdentifier: identifier)
+//                .asObservable()
+//                .subscribe(onNext: { string in
+//
+//                }).disposed(by: self.bag)
+            
             }.disposed(by: bag)
     }
 

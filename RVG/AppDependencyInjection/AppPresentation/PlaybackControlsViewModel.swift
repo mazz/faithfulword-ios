@@ -4,7 +4,7 @@ import RxSwift
 
 public final class PlaybackControlsViewModel {
     // MARK: Fields
-    public let assetPlaybackService: AssetPlaybackServicing
+    public var assetPlaybackService: AssetPlaybackServicing
     private let historyService: HistoryServicing
     private let reachability: RxClassicReachable
     private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
@@ -86,7 +86,7 @@ public final class PlaybackControlsViewModel {
                     
                 case .unknown:
                     self.pausePlayback()
-                    self.playDisabled.value = !fileExists
+                    self.playDisabled.value = false
                 case .notReachable:
                     if !fileExists {
                         self.pausePlayback()
@@ -121,6 +121,10 @@ public final class PlaybackControlsViewModel {
                     .disposed(by: self.bag)
             }
             .disposed(by: bag)
+    }
+    
+    func shouldAutoStartPlayback(should: Bool) {
+        self.assetPlaybackService.shouldAutostart = should
     }
     
     func playPlayback() {
@@ -248,7 +252,7 @@ public final class PlaybackControlsViewModel {
             
         case .unknown:
             self.pausePlayback()
-            self.playDisabled.value = !fileExists
+            self.playDisabled.value = false
         case .notReachable:
             if !fileExists {
                 self.pausePlayback()
@@ -358,8 +362,21 @@ extension PlaybackControlsViewModel {
             let prodUrl: URL = URL(string: EnvironmentUrlItemKey.ProductionFileStorageRootUrl.rawValue.appending("/").appending(percentEncoded))
             else { return false }
         
-        let url: URL = URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(playable.uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path)
-        return FileManager.default.fileExists(atPath: url.path)
-
+        var playableUuid: String?
+        
+        if playable is UserActionPlayable {
+            if let userActionPlayable: UserActionPlayable = playable as? UserActionPlayable {
+                playableUuid = userActionPlayable.playable_uuid
+            }
+        } else {
+            playableUuid = playable.uuid
+        }
+                
+        if let uuid: String = playableUuid {
+            return FileManager.default.fileExists(atPath: URL(fileURLWithPath: FileSystem.savedDirectory.appendingPathComponent(uuid.appending(String(describing: ".\(prodUrl.pathExtension)"))).path).path)
+//            return FileManager.default.fileExists(atPath: url.path)
+        } else {
+            return false
+        }
     }
 }

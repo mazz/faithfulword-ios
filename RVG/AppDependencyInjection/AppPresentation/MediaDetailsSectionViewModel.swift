@@ -14,7 +14,7 @@ internal enum MediaDetailsSectionType {
 internal enum MediaDetailsItemType {
     case details(
         playable: Playable,
-        presentedAt: TimeInterval?,
+        presentedAt: String?,
         showBottomSeparator: Bool)
     case drillIn(
         type: MediaDetailsDrillInType,

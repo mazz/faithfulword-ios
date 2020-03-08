@@ -188,11 +188,13 @@ extension SideMenuViewController: UICollectionViewDelegateMagazineLayout {
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForSectionAtIndex index: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 40)
+//        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 40)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetsForItemsInSectionAtIndex index: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 12, right: 40)
+//        return UIEdgeInsets(top: 0, left: 0, bottom: 12, right: 40)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 12, right: 0)
     }
 }
 
