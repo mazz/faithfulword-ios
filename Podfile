@@ -6,15 +6,15 @@ target 'FaithfulWord' do
     use_frameworks!
     pod 'CocoaLumberjack/Swift'
 #    pod "SkeletonView"
-    pod 'RxCocoa'
+    pod 'RxCocoa', '~> 5.1.0'
     pod 'MBProgressHUD', '~> 1.0.0'
     pod 'FirebaseInstanceID'
     pod 'Firebase/Core'
     pod 'Firebase/Messaging'
 #    pod 'Firebase/Crash'
 #    pod 'Moya/RxSwift'
-    pod 'Moya/RxSwift', '~> 14.0.0-beta.1'
-    pod 'RxSwift'
+    pod 'Moya/RxSwift', '~> 14.0'
+    pod 'RxSwift', '~> 5.1.0'
 #    pod 'RxGRDB'
 #    pod 'GRDB.swift', '~> 4.9.0'
     pod 'GRDB.swift'

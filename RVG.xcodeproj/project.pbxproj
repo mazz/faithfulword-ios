@@ -402,7 +402,6 @@
 		4C7EB869228B8EA7000E8DAB /* MediaChapterResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaChapterResponse.swift; path = Model/MediaChapterResponse.swift; sourceTree = "<group>"; };
 		4C7EB86A228B8EA7000E8DAB /* Asset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Asset.swift; path = Model/Asset.swift; sourceTree = "<group>"; };
 		4C7EB86B228B8EA7000E8DAB /* Music.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Music.swift; path = Model/Music.swift; sourceTree = "<group>"; };
-		4C7EB86C228B8EA7000E8DAB /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Device.swift; path = Model/Device.swift; sourceTree = "<group>"; };
 		4C7EB86D228B8EA7000E8DAB /* MediaMusic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaMusic.swift; path = Model/MediaMusic.swift; sourceTree = "<group>"; };
 		4C7EB86E228B8EA8000E8DAB /* MediaGospelResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaGospelResponse.swift; path = Model/MediaGospelResponse.swift; sourceTree = "<group>"; };
 		4C7EB86F228B8EA8000E8DAB /* OrgResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrgResponse.swift; path = Model/OrgResponse.swift; sourceTree = "<group>"; };
@@ -1062,7 +1061,6 @@
 				4C7EB866228B8EA7000E8DAB /* Channel.swift */,
 				4C7EB872228B8EA8000E8DAB /* ChannelResponse.swift */,
 				4C7EB871228B8EA8000E8DAB /* ContactUsModel.swift */,
-				4C7EB86C228B8EA7000E8DAB /* Device.swift */,
 				4C7EB857228B8EA6000E8DAB /* Environment.swift */,
 				4C7EB85B228B8EA6000E8DAB /* EnvironmentUrlItemKey.swift */,
 				4C7EB85E228B8EA6000E8DAB /* EnvironmentUrlItems.swift */,
