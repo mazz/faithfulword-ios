@@ -2,7 +2,7 @@ import Foundation
 import WebKit
 
 internal protocol DeviceInfoProviding {
-    var userAgent: String? { get }
+    var userAgent: String { get }
 }
 
 internal final class DeviceInfoProvider: DeviceInfoProviding {
@@ -13,13 +13,18 @@ internal final class DeviceInfoProvider: DeviceInfoProviding {
         self.userAgent
     }
 
-    internal var userAgent: String? {
-        var userAgent: String? = nil
+    internal var userAgent: String {
+        var userAgent: String = "iOS"
+        
+        if let ua: String = UserDefaults.standard.object(forKey: "device_user_agent") as? String {
+            return ua
+        }
+        
         DispatchQueue.main.async {
             self.webView.evaluateJavaScript("navigator.userAgent") { (result, error) in
                 if error != nil {
                     print("Error occured to get userAgent")
-                    return
+                    userAgent = "iOS"
                 }
                 if let unwrappedUserAgent = result as? String {
                     userAgent = unwrappedUserAgent
@@ -27,7 +32,7 @@ internal final class DeviceInfoProvider: DeviceInfoProviding {
                 }
                 else {
                     print("Failed to get userAgent")
-                    userAgent = nil
+                    userAgent = "iOS"
                 }
             }
         }
