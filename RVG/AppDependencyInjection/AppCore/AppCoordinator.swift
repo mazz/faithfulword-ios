@@ -523,6 +523,8 @@ extension AppCoordinator: NavigationCoordinating {
         resettableNoResourceCoordinator.value.appFlowStatus = self.appFlowStatus
         resettableNoResourceCoordinator.value.serverStatus = self.serverStatus
         resettableNoResourceCoordinator.value.networkStatus = self.networkStatus.value
+        resettableNoResourceCoordinator.value.viewControllerSiblingStatus = .embedded
+        
         resettableNoResourceCoordinator.value.flow(with: { [unowned self] noResourceViewController in
             self.rootViewController.plant(noResourceViewController, withAnimation: AppAnimations.fade)
             }, completion: { [unowned self] _ in

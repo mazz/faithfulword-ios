@@ -24,6 +24,7 @@ internal final class MainCoordinator: NSObject {
     internal var preachingChannelUuid: String?
     internal var musicChannelUuid: String?
     internal var bibleChannelUuid: String?
+    private var networkStatus = Field<ClassicReachability.NetworkStatus>(.unknown)
     
     private let bag = DisposeBag()
     private var mediaRouteListenerBag = DisposeBag()
@@ -50,6 +51,8 @@ internal final class MainCoordinator: NSObject {
     private let resettableHistoryCoordinator: Resettable<HistoryCoordinator>
     private let resettableMediaRouteCoordinator: Resettable<MediaRouteCoordinator>
     private let resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>
+    private let resettableNoResourceCoordinator: Resettable<NoResourceCoordinator>
+    private let reachability: RxClassicReachable
     
     private let productService: ProductServicing
     private let historyService: HistoryServicing
@@ -72,6 +75,8 @@ internal final class MainCoordinator: NSObject {
         resettableHistoryCoordinator: Resettable<HistoryCoordinator>,
         resettableMediaRouteCoordinator: Resettable<MediaRouteCoordinator>,
         resettablePlaybackCoordinator: Resettable<PlaybackCoordinator>,
+        resettableNoResourceCoordinator: Resettable<NoResourceCoordinator>,
+        reachability: RxClassicReachable,
         mediaRouteHandler: MediaRouteHandling,
         mediaUniversalLinkHandler: MediaUniversalLinkHandling,
         productService: ProductServicing,
@@ -91,6 +96,8 @@ internal final class MainCoordinator: NSObject {
         self.resettableHistoryCoordinator = resettableHistoryCoordinator
         self.resettableMediaRouteCoordinator = resettableMediaRouteCoordinator
         self.resettablePlaybackCoordinator = resettablePlaybackCoordinator
+        self.resettableNoResourceCoordinator = resettableNoResourceCoordinator
+        self.reachability = reachability
         self.mediaRouteHandler = mediaRouteHandler
         self.mediaUniversalLinkHandler = mediaUniversalLinkHandler
 
@@ -122,6 +129,41 @@ extension MainCoordinator: NavigationCoordinating {
         // -    fetched the default org
         // -    fetched all the channels of the default org
         
+        reachability.startNotifier().asObservable()
+            .subscribe(onNext: { networkStatus in
+                self.networkStatus.value = networkStatus
+                
+                switch networkStatus {
+                case .unknown, .notReachable, .reachable(_):
+                    os_log("mediaroutecoordinator %@", log: OSLog.data, String(describing: self.reachability.status.value))
+                }
+            }).disposed(by: bag)
+        
+        
+        self.resettableNoResourceCoordinator.value.tryAgainTapped
+            .asObservable()
+            .next {
+                switch self.networkStatus.value {
+                case .unknown, .notReachable:
+                    os_log("not reachable, no change", log: OSLog.data)
+                case .reachable(_):
+                    self.mainNavigationController.popViewController(animated: false)
+                    self.resettableBibleLanguageCoordinator.value.flow(with: { viewController in
+                        
+                        self.mainNavigationController.pushViewController(
+                            viewController,
+                            animated: true
+                        )
+                        //            self.mainNavigationController.present(viewController, animated: true)
+                    }, completion: { _ in
+                        self.mainNavigationController.dismiss(animated: true)
+                        self.resettableBibleLanguageCoordinator.reset()
+                        //            self.resettableSplashScreenCoordinator.reset()
+                        
+                    }, context: .push(onto: self.mainNavigationController))
+                }
+        }.disposed(by: bag)
+
         // we now need to load all the playlists of a channel of our choice
         // for now, let's get the Bible channel and then pass the playlist that contains
         // the old and new testaments
@@ -348,19 +390,38 @@ extension MainCoordinator: NavigationCoordinating {
     
     func goToBibleLanguageFlow() {
         self.mainNavigationController.dismiss(animated: true, completion: {
-            self.resettableBibleLanguageCoordinator.value.flow(with: { viewController in
+            
+            switch self.networkStatus.value {
+            case .unknown, .notReachable:
+                self.resettableNoResourceCoordinator.value.networkStatus = self.networkStatus.value
+                self.resettableNoResourceCoordinator.value.viewControllerSiblingStatus = .pushed
                 
-                self.mainNavigationController.pushViewController(
-                    viewController,
-                    animated: true
-                )
-                //            self.mainNavigationController.present(viewController, animated: true)
-            }, completion: { _ in
-                self.mainNavigationController.dismiss(animated: true)
-                self.resettableBibleLanguageCoordinator.reset()
-                //            self.resettableSplashScreenCoordinator.reset()
-                
-            }, context: .push(onto: self.mainNavigationController))
+                self.resettableNoResourceCoordinator.value.flow(with: { [unowned self] noResourceViewController in
+                    
+                    self.mainNavigationController.pushViewController(
+                        noResourceViewController,
+                        animated: true
+                    )
+                    
+                    }, completion: { [unowned self] _ in
+                        //                    self.swapInMainFlow()
+                        self.resettableNoResourceCoordinator.reset()
+                    }, context: .other)
+            case .reachable(_):
+                self.resettableBibleLanguageCoordinator.value.flow(with: { viewController in
+                    
+                    self.mainNavigationController.pushViewController(
+                        viewController,
+                        animated: true
+                    )
+                    //            self.mainNavigationController.present(viewController, animated: true)
+                }, completion: { _ in
+                    self.mainNavigationController.dismiss(animated: true)
+                    self.resettableBibleLanguageCoordinator.reset()
+                    //            self.resettableSplashScreenCoordinator.reset()
+                    
+                }, context: .push(onto: self.mainNavigationController))
+            }
         })
     }
     
@@ -410,6 +471,31 @@ extension MainCoordinator: NavigationCoordinating {
             DDLogDebug("mediaroutecoordinator viewController: \(viewController)")
         }, completion: { [weak self] _ in
             
+            }, context: .other)
+    }
+    
+    private func reactToReachability() {
+        reachability.startNotifier().asObservable()
+            .subscribe(onNext: { networkStatus in
+                self.networkStatus.value = networkStatus
+                
+                switch networkStatus {
+                case .unknown, .notReachable, .reachable(_):
+                    os_log("mediaroutecoordinator %@", log: OSLog.data, String(describing: self.reachability.status.value))
+                }
+            }).disposed(by: bag)
+    }
+    private func swapInNoResourceFlow() {
+        DDLogDebug("swapInNoResourceFlow")
+        
+        //        resettableNoResourceCoordinator.value.appFlowStatus = self.appFlowStatus
+        //        resettableNoResourceCoordinator.value.serverStatus = self.serverStatus
+        resettableNoResourceCoordinator.value.networkStatus = self.networkStatus.value
+        resettableNoResourceCoordinator.value.flow(with: { [unowned self] noResourceViewController in
+            //            self.rootViewController.plant(noResourceViewController, withAnimation: AppAnimations.fade)
+            }, completion: { [unowned self] _ in
+                //                    self.swapInMainFlow()
+                self.resettableNoResourceCoordinator.reset()
             }, context: .other)
     }
     
