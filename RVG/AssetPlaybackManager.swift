@@ -41,6 +41,9 @@ public class AssetPlaybackManager: NSObject {
     /// Notification that is posted when the internal AVPlayer rate did change.
     static let playerRateDidChangeNotification = Notification.Name("playerRateDidChangeNotification")
     
+    /// Notification that is posted when the internal AVPlayer rate did change.
+    static let playerIsPlayingNotification = Notification.Name("playerIsPlayingNotification")
+
     // MARK: Properties
     
     /// The instance of AVPlayer that will be used for playback of AssetPlaybackManager.playerItem.
@@ -134,6 +137,13 @@ public class AssetPlaybackManager: NSObject {
             self?.percentProgress = timeElapsed / durationInSeconds
                 
             self?.updatePlaybackRateMetadata()
+                
+                if self?.player.rate != 0.0 {
+                    self?.state = .playing
+                    NotificationCenter.default.post(name: AssetPlaybackManager.playerIsPlayingNotification, object: nil)
+                } else {
+                    self?.state = .paused
+                }
         })
 
     }
@@ -164,8 +174,9 @@ public class AssetPlaybackManager: NSObject {
             
             return
         }
-        
+        state = .playing
         player.play()
+        NotificationCenter.default.post(name: AssetPlaybackManager.playerIsPlayingNotification, object: nil)
     }
     
     func pause() {
@@ -176,7 +187,7 @@ public class AssetPlaybackManager: NSObject {
             
             return
         }
-        
+        state = .paused
         player.pause()
     }
     
@@ -184,9 +195,11 @@ public class AssetPlaybackManager: NSObject {
         guard asset != nil else { return }
         
         if player.rate != 0.0 {
+            state = .paused
             pause()
         }
         else {
+            state = .playing
             play()
         }
     }
@@ -417,6 +430,7 @@ public class AssetPlaybackManager: NSObject {
                 self.seekTo(asset.playbackPosition)
                 if shouldAutostart {
                     player.play()
+                    NotificationCenter.default.post(name: AssetPlaybackManager.playerIsPlayingNotification, object: nil)
                     self.playbackRate(asset.playbackRate)
                 }
             }
