@@ -235,7 +235,7 @@ extension KJVRVGService: TargetType {
     }
     
     public var headers: [String: String]? {        
-        var deviceUserAgent: String = ""
+        var deviceUserAgent: String = "iOS"
         if let ua: String = UserDefaults.standard.object(forKey: "device_user_agent") as? String {
             deviceUserAgent = ua
         }

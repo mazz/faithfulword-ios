@@ -121,7 +121,6 @@
 		4C7EB88A228B8EA8000E8DAB /* MediaChapterResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB869228B8EA7000E8DAB /* MediaChapterResponse.swift */; };
 		4C7EB88B228B8EA8000E8DAB /* Asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB86A228B8EA7000E8DAB /* Asset.swift */; };
 		4C7EB88C228B8EA8000E8DAB /* Music.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB86B228B8EA7000E8DAB /* Music.swift */; };
-		4C7EB88D228B8EA8000E8DAB /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB86C228B8EA7000E8DAB /* Device.swift */; };
 		4C7EB88E228B8EA8000E8DAB /* MediaMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB86D228B8EA7000E8DAB /* MediaMusic.swift */; };
 		4C7EB88F228B8EA8000E8DAB /* MediaGospelResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB86E228B8EA8000E8DAB /* MediaGospelResponse.swift */; };
 		4C7EB890228B8EA8000E8DAB /* OrgResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7EB86F228B8EA8000E8DAB /* OrgResponse.swift */; };
@@ -403,7 +402,6 @@
 		4C7EB869228B8EA7000E8DAB /* MediaChapterResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaChapterResponse.swift; path = Model/MediaChapterResponse.swift; sourceTree = "<group>"; };
 		4C7EB86A228B8EA7000E8DAB /* Asset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Asset.swift; path = Model/Asset.swift; sourceTree = "<group>"; };
 		4C7EB86B228B8EA7000E8DAB /* Music.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Music.swift; path = Model/Music.swift; sourceTree = "<group>"; };
-		4C7EB86C228B8EA7000E8DAB /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Device.swift; path = Model/Device.swift; sourceTree = "<group>"; };
 		4C7EB86D228B8EA7000E8DAB /* MediaMusic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaMusic.swift; path = Model/MediaMusic.swift; sourceTree = "<group>"; };
 		4C7EB86E228B8EA8000E8DAB /* MediaGospelResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MediaGospelResponse.swift; path = Model/MediaGospelResponse.swift; sourceTree = "<group>"; };
 		4C7EB86F228B8EA8000E8DAB /* OrgResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrgResponse.swift; path = Model/OrgResponse.swift; sourceTree = "<group>"; };
@@ -1063,7 +1061,6 @@
 				4C7EB866228B8EA7000E8DAB /* Channel.swift */,
 				4C7EB872228B8EA8000E8DAB /* ChannelResponse.swift */,
 				4C7EB871228B8EA8000E8DAB /* ContactUsModel.swift */,
-				4C7EB86C228B8EA7000E8DAB /* Device.swift */,
 				4C7EB857228B8EA6000E8DAB /* Environment.swift */,
 				4C7EB85B228B8EA6000E8DAB /* EnvironmentUrlItemKey.swift */,
 				4C7EB85E228B8EA6000E8DAB /* EnvironmentUrlItems.swift */,
@@ -1309,7 +1306,7 @@
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
@@ -1337,7 +1334,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
@@ -1467,7 +1464,6 @@
 				4C3EA13C206B24A000310024 /* DeviceNowPlayingViewModel.swift in Sources */,
 				4C6D8E4F22AC6E010025DA28 /* Listable.swift in Sources */,
 				4CFB85042005B92E00FEBB53 /* UIView+Instantiating.swift in Sources */,
-				4C7EB88D228B8EA8000E8DAB /* Device.swift in Sources */,
 				4C8BCCED23ED0B01001975AC /* MediaItemRouteResponse.swift in Sources */,
 				4C21A724201591E1000F02CE /* UIBarButtonItem+BaseMaking.swift in Sources */,
 				4C7EB896228B8EA8000E8DAB /* MediaMusicResponse.swift in Sources */,

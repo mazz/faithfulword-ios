@@ -25,6 +25,11 @@ var dbPool: DatabasePool!
 // The shared app dependency module
 var dependencyModule: AppDependencyModule = AppDependencyModule()
 
+// device info needs to be a long-lived instance. Long enough lived
+// so that it's internal wkwebview is not invalidated before the javascript
+// gets evaluated
+var deviceInfo: DeviceInfoProviding!
+
 // store launch info if the app was launched via push/deeplink and
 // the main coordinator has not yet started handling media routes
 var launchUserinfo: [AnyHashable: Any]?
@@ -216,8 +221,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
     private func setupDeviceInfoCache() {
-        let deviceInfo = dependencyModule.resolver.resolve(DeviceInfoProviding.self)!
-        UserDefaults.standard.set(deviceInfo.userAgent, forKey: "device_user_agent")
+        deviceInfo = dependencyModule.resolver.resolve(DeviceInfoProviding.self)!        
     }
     
     func optInForPushNotifications(application: UIApplication) {
@@ -291,12 +295,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             
             let deviceInfo = dependencyModule.resolver.resolve(DeviceInfoProviding.self)!
             
-            if let apnsToken = Messaging.messaging().apnsToken {
+            if let apnsToken = Messaging.messaging().apnsToken,
+                let userAgent: String = deviceInfo.userAgent {
                 let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
                 self.updatePushToken(fcmToken: firebaseToken,
                                      apnsToken: apnsTokenString,
                                      preferredLanguage: L10n.shared.preferredLanguage,
-                                     userAgent: deviceInfo.userAgent, userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, userUuid: NSUUID().uuidString)
+                                     userAgent: userAgent, userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String, userUuid: NSUUID().uuidString)
             }
         }
     }
@@ -487,14 +492,19 @@ extension AppDelegate {
             let apnsTokenString = apnsToken.map { String(format: "%02X", $0) }.joined()
             
             let deviceInfo = dependencyModule.resolver.resolve(DeviceInfoProviding.self)!
-            
-            self.updatePushToken(fcmToken: fcmToken,
-                                 apnsToken: apnsTokenString,
-                                 preferredLanguage: L10n.shared.preferredLanguage,
-                                 userAgent: deviceInfo.userAgent,
-                                 userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String,
-                                 // TODO: cache User.uuid in product or a session service
-                userUuid: NSUUID().uuidString)
+            os_log("deviceInfo.userAgent: %@", log: OSLog.data, String(describing: deviceInfo.userAgent))
+
+            if let userAgent: String = deviceInfo.userAgent {
+                self.updatePushToken(fcmToken: fcmToken,
+                                     apnsToken: apnsTokenString,
+                                     preferredLanguage: L10n.shared.preferredLanguage,
+                                     userAgent: userAgent,
+                                     userVersion: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String,
+                                     // TODO: cache User.uuid in product or a session service
+                    userUuid: NSUUID().uuidString)
+            } else {
+                os_log("updatePushToken failed because userAgent is nil", log: OSLog.data)
+            }
         }
     }
     

@@ -6,38 +6,36 @@ internal protocol DeviceInfoProviding {
 }
 
 internal final class DeviceInfoProvider: DeviceInfoProviding {
-    
+    var webView: WKWebView
+
     internal init() {
+        webView = WKWebView.init(frame: .zero)
         self.userAgent
     }
-    
-    internal var userAgent: String {
-        let webView: UIWebView = UIWebView.init(frame: .zero)
-        let userAgent: String = webView.stringByEvaluatingJavaScript(from: "navigator.userAgent")!
-        return userAgent
-        
-//        var userAgent: String!
-//        var webView: WKWebView!
-//
-//        let semaphore = DispatchSemaphore(value: 0)
-//
-//        DispatchQueue.main.async {
-//            webView = WKWebView.init(frame: .zero)
-//            webView.evaluateJavaScript("navigator.userAgent") { (result, error) in
-//                if error != nil {
-//                    semaphore.signal()
-//                    return
-//                }
-//                if let ua = result as? String {
-//                    webView.customUserAgent = ua
-//                    userAgent = ua
-//                    semaphore.signal()
-//                }
-//            }
-//        }
-//
-//        semaphore.wait()
-//        return userAgent
 
+    internal var userAgent: String {
+        var userAgent: String = "iOS"
+        
+        if let ua: String = UserDefaults.standard.object(forKey: "device_user_agent") as? String {
+            return ua
+        }
+        
+        DispatchQueue.main.async {
+            self.webView.evaluateJavaScript("navigator.userAgent") { (result, error) in
+                if error != nil {
+                    print("Error occured to get userAgent")
+                    userAgent = "iOS"
+                }
+                if let unwrappedUserAgent = result as? String {
+                    userAgent = unwrappedUserAgent
+                    UserDefaults.standard.set(userAgent, forKey: "device_user_agent")
+                }
+                else {
+                    print("Failed to get userAgent")
+                    userAgent = "iOS"
+                }
+            }
+        }
+        return userAgent
     }
 }

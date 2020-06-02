@@ -29,25 +29,25 @@ public final class NoResourceViewController: UIViewController {
         
         var internetReachable: Bool = false
         
-        switch viewModel.appNetworkStatus {
-        case .unknown, .notReachable:
+//        switch viewModel.appNetworkStatus {
+//        case .unknown, .notReachable:
             titleMessage.text = NSLocalizedString("Connect to the Internet", comment: "").l10n()
             bodyMessage.text = NSLocalizedString("You're offline. Check your connection.", comment: "").l10n()
             actionButton.setTitle(NSLocalizedString("Try Again", comment: "").l10n(), for: .normal)
-        case .reachable(_):
-            internetReachable = true
-        }
+//        case .reachable(_):
+//            internetReachable = true
+//        }
 
-        switch viewModel.serverStatus {
-        case .none, .notConnected:
-            if internetReachable {
-                titleMessage.text = NSLocalizedString("Server Not Available", comment: "").l10n()
-                bodyMessage.text = NSLocalizedString("You're online, but cannot connect. Please try again later.", comment: "").l10n()
-                actionButton.setTitle(NSLocalizedString("Try Again", comment: "").l10n(), for: .normal)
-            }
-        case .connected:
-            DDLogDebug("this should never reach here")
-        }
+//        switch viewModel.serverStatus {
+//        case .none, .notConnected:
+//            if internetReachable {
+//                titleMessage.text = NSLocalizedString("Server Not Available", comment: "").l10n()
+//                bodyMessage.text = NSLocalizedString("You're online, but cannot connect. Please try again later.", comment: "").l10n()
+//                actionButton.setTitle(NSLocalizedString("Try Again", comment: "").l10n(), for: .normal)
+//            }
+//        case .connected:
+//            DDLogDebug("this should never reach here")
+//        }
         
 //        self.manyLanguagesLabel.alpha = NoResourceViewController.fullAlpha
     }
@@ -56,7 +56,7 @@ public final class NoResourceViewController: UIViewController {
     
     @IBAction func tryAgainAction(_ sender: Any) {
         
-        viewModel.tapTryAgainEvent.onNext(viewModel.appFlowStatus)
+        viewModel.tapTryAgainEvent.onNext(())
     }
     //    public static func create() -> NoResourceViewController {
 //        let storyboard = UIStoryboard(name: StoryboardName.splashScreen, bundle: nil)

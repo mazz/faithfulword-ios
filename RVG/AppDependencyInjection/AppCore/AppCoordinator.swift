@@ -123,51 +123,38 @@ internal class AppCoordinator {
                     let rootViewController = strongSelf.rootViewController,
                     let serverStatus = self?.serverStatus {
                     
-//                    var toastMessage: String = NSLocalizedString("Connecting …", comment: "").l10n()
-//                    switch serverStatus {
-//                    case .none, .notConnected, .connected:
-//                        toastMessage = NSLocalizedString("Connecting …", comment: "").l10n()
-//                        Loaf(toastMessage,
-//                             state: .info,
-//                             location: .bottom,
-//                             presentingDirection: .vertical,
-//                             dismissingDirection: .vertical,
-//                             sender: rootViewController)
-//                            .show()
-//                    }
-                    
-                    switch flowStatus {
-                    case .none:
-                        DDLogDebug("none")
-                    case .login:
-                        DDLogDebug("login")
-                    case .loadOrg:
+//                    switch flowStatus {
+//                    case .none:
+//                        DDLogDebug("none")
+//                    case .login:
+//                        DDLogDebug("login")
+//                    case .loadOrg:
                         strongSelf.loadDefaultOrg()
-                    case .loadChannels:
-                        DDLogDebug("loadChannels")
-                        strongSelf.productService.persistedDefaultOrg()
-                            .subscribe(onSuccess: { org in
-                                if let org = org {
-                                    strongSelf.loadChannels(for: org.uuid)
-                                } else {
-                                    DDLogDebug("no persisted org found")
-                                }
-                            }, onError: { error in
-                                DDLogDebug("error fetching persisted org: \(error)")
-                            }).disposed(by: strongSelf.bag)
-                    case .main:
-                        DDLogDebug("main")
-                        strongSelf.productService.persistedDefaultOrg()
-                            .subscribe(onSuccess: { org in
-                                if let org = org {
-                                    strongSelf.loadChannels(for: org.uuid)
-                                } else {
-                                    DDLogDebug("no persisted org found")
-                                }
-                            }, onError: { error in
-                                DDLogDebug("error fetching persisted org: \(error)")
-                            }).disposed(by: strongSelf.bag)
-                    }
+//                    case .loadChannels:
+//                        DDLogDebug("loadChannels")
+//                        strongSelf.productService.persistedDefaultOrg()
+//                            .subscribe(onSuccess: { org in
+//                                if let org = org {
+//                                    strongSelf.loadChannels(for: org.uuid)
+//                                } else {
+//                                    DDLogDebug("no persisted org found")
+//                                }
+//                            }, onError: { error in
+//                                DDLogDebug("error fetching persisted org: \(error)")
+//                            }).disposed(by: strongSelf.bag)
+//                    case .main:
+//                        DDLogDebug("main")
+//                        strongSelf.productService.persistedDefaultOrg()
+//                            .subscribe(onSuccess: { org in
+//                                if let org = org {
+//                                    strongSelf.loadChannels(for: org.uuid)
+//                                } else {
+//                                    DDLogDebug("no persisted org found")
+//                                }
+//                            }, onError: { error in
+//                                DDLogDebug("error fetching persisted org: \(error)")
+//                            }).disposed(by: strongSelf.bag)
+//                    }
                 }
             }.disposed(by: self.bag)
 
@@ -523,6 +510,8 @@ extension AppCoordinator: NavigationCoordinating {
         resettableNoResourceCoordinator.value.appFlowStatus = self.appFlowStatus
         resettableNoResourceCoordinator.value.serverStatus = self.serverStatus
         resettableNoResourceCoordinator.value.networkStatus = self.networkStatus.value
+        resettableNoResourceCoordinator.value.viewControllerSiblingStatus = .embedded
+        
         resettableNoResourceCoordinator.value.flow(with: { [unowned self] noResourceViewController in
             self.rootViewController.plant(noResourceViewController, withAnimation: AppAnimations.fade)
             }, completion: { [unowned self] _ in

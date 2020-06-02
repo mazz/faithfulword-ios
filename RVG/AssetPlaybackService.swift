@@ -2,6 +2,8 @@ import Foundation
 import RxSwift
 import AVFoundation
 import MediaPlayer
+import os.log
+
 //import RxAVFoundation
 
 public protocol AssetPlaybackServicing {
@@ -10,6 +12,7 @@ public protocol AssetPlaybackServicing {
     var playableItem: Field<Playable?> { get }
     var playables: Field<[Playable]> { get }
     var shouldAutostart: Bool { get set }
+    var playerStateChange: PublishSubject<AssetPlaybackManager.playbackState> { get }
 
     
     func playPlayback() -> Single<Void>
@@ -63,6 +66,8 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
             self.assetPlaybackManager.shouldAutostart = shouldAutostart
         }
     }
+    
+    public var playerStateChange: PublishSubject<AssetPlaybackManager.playbackState> = PublishSubject<AssetPlaybackManager.playbackState>()
 
     // MARK: Dependencies
     public let assetPlaybackManager: AssetPlaybackManager
@@ -112,6 +117,13 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
         self.shouldAutostart = true
 
         reactToReachability()
+        
+        // Add the notification observers needed to respond to events from the `AssetPlaybackManager`.
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(self, selector: #selector(AssetPlaybackService.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(AssetPlaybackService.handlePlayerIsPlayingNotification(notification:)), name: AssetPlaybackManager.playerIsPlayingNotification, object: nil)
+
     }
     
     public func playPlayback() -> Single<Void> {
@@ -335,6 +347,17 @@ public final class AssetPlaybackService: AssetPlaybackServicing {
                 }
             }).disposed(by: bag)
     }
+    
+    @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
+        DDLogDebug("handlePlayerRateDidChangeNotification notification: \(notification)")
+        playerStateChange.onNext(assetPlaybackManager.state)
+    }
+
+    @objc func handlePlayerIsPlayingNotification(notification: Notification) {
+        os_log("playerIsPlayingNotification", log: OSLog.data)
+        playerStateChange.onNext(assetPlaybackManager.state)
+    }
+
 }
 
 extension Playable {

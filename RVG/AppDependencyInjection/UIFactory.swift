@@ -26,7 +26,7 @@ internal protocol AppUIMaking {
     func makeMediaDetails(playable: Playable) -> MediaDetailsViewController
     func makeCategoryListing(categoryType: CategoryListingType) -> CategoryListingViewController
     func makeSplashScreen() -> SplashScreenViewController
-    func makeNoResourcePage(_ appFlowStatus: AppFlowStatus,_ appNetworkStatus: ClassicReachability.NetworkStatus,_ serverStatus: ServerConnectivityStatus) -> NoResourceViewController
+    func makeNoResourcePage() -> NoResourceViewController
 
     func makePopupPlayer() -> PopupContentController
 }
@@ -193,9 +193,9 @@ extension UIFactory: AppUIMaking {
             .make(storyboardName: StoryboardName.splashScreen)
     }
 
-    internal func makeNoResourcePage(_ appFlowStatus: AppFlowStatus,_ appNetworkStatus: ClassicReachability.NetworkStatus,_ serverStatus: ServerConnectivityStatus) -> NoResourceViewController {
+    internal func makeNoResourcePage() -> NoResourceViewController {
         let controller = NoResourceViewController.make(storyboardName: StoryboardName.noResource)
-        controller.viewModel = resolver.resolve(NoResourceViewModel.self, arguments: appFlowStatus, appNetworkStatus, serverStatus)
+        controller.viewModel = resolver.resolve(NoResourceViewModel.self)
         return controller
     }
 }

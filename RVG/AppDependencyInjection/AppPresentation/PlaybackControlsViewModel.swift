@@ -1,6 +1,7 @@
 import Foundation
 import AVFoundation
 import RxSwift
+import os.log
 
 public final class PlaybackControlsViewModel {
     // MARK: Fields
@@ -43,7 +44,8 @@ public final class PlaybackControlsViewModel {
         notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleCurrentAssetDidChangeNotification(notification:)), name: AssetPlaybackManager.currentAssetDidChangeNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleRemoteCommandNextTrackNotification(notification:)), name: AssetPlaybackManager.nextTrackNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleRemoteCommandPreviousTrackNotification(notification:)), name: AssetPlaybackManager.previousTrackNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handlePlayerRateDidChangeNotification(notification:)), name: AssetPlaybackManager.playerRateDidChangeNotification, object: nil)
+//        notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handlePlayerDidPlayNotification(notification:)), name: AssetPlaybackManager.playerIsPlayingNotification, object: nil)
 //        notificationCenter.addObserver(self, selector: #selector(PlaybackControlsViewModel.handleAVPlayerItemDidPlayToEndTimeNotification(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: nil)
         
         reactToReachability()
@@ -121,6 +123,15 @@ public final class PlaybackControlsViewModel {
                     .disposed(by: self.bag)
             }
             .disposed(by: bag)
+        
+        assetPlaybackService.playerStateChange
+            .asObservable()
+//            .distinctUntilChanged()
+            .subscribe(onNext: { (state) in
+                os_log("playbackstate: %@", log: OSLog.data, String(describing: state))
+                self.playbackState.value = state
+
+            }).disposed(by: bag)
     }
     
     func shouldAutoStartPlayback(should: Bool) {
@@ -319,11 +330,17 @@ public final class PlaybackControlsViewModel {
         }
     }
     
-    @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
-        DDLogDebug("handlePlayerRateDidChangeNotification notification: \(notification)")
-        playbackState.value = assetPlaybackService.assetPlaybackManager.state
-        //        updateTransportUIState()
-    }
+//    @objc func handlePlayerRateDidChangeNotification(notification: Notification) {
+//        DDLogDebug("handlePlayerRateDidChangeNotification notification: \(notification)")
+//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
+//        //        updateTransportUIState()
+//    }
+//
+//    @objc func handlePlayerDidPlayNotification(notification: Notification) {
+//        os_log("handlePlayerDidPlayNotification", log: OSLog.data)
+//        playbackState.value = assetPlaybackService.assetPlaybackManager.state
+//        //        updateTransportUIState()
+//    }
     
     @objc func handleAVPlayerItemDidPlayToEndTimeNotification(notification: Notification) {
         DDLogDebug("handleAVPlayerItemDidPlayToEndTimeNotification notification: \(notification)")

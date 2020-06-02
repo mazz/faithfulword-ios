@@ -252,7 +252,11 @@ internal final class AppDependencyModule {
         }
 
         container.register(BibleLanguageCoordinator.self) { resolver in
-            BibleLanguageCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!
+            BibleLanguageCoordinator(uiFactory: resolver.resolve(AppUIMaking.self)!,
+                                     resettableNoResourceCoordinator: Resettable {
+                                        resolver.resolve(NoResourceCoordinator.self)!
+                },
+                reachability: resolver.resolve(RxClassicReachable.self)!
             )
         }
 
@@ -289,10 +293,14 @@ internal final class AppDependencyModule {
                 }, resettablePlaybackCoordinator: Resettable {
                     resolver.resolve(PlaybackCoordinator.self)!
                 },
-                   mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
-                   mediaUniversalLinkHandler: resolver.resolve(MediaUniversalLinkHandling.self)!,
-                   productService: resolver.resolve(ProductServicing.self)!,
-                   historyService: resolver.resolve(HistoryServicing.self)!
+                   resettableNoResourceCoordinator: Resettable {
+                    resolver.resolve(NoResourceCoordinator.self)!
+                },
+                   reachability: resolver.resolve(RxClassicReachable.self)!,
+                mediaRouteHandler: resolver.resolve(MediaRouteHandling.self)!,
+                mediaUniversalLinkHandler: resolver.resolve(MediaUniversalLinkHandling.self)!,
+                productService: resolver.resolve(ProductServicing.self)!,
+                historyService: resolver.resolve(HistoryServicing.self)!
             )
         }.inObjectScope(.container)
         
@@ -311,10 +319,8 @@ internal final class AppDependencyModule {
             )
         }.inObjectScope(.transient)
 
-        container.register(NoResourceViewModel.self) { resolver, appFlowStatus, appNetworkStatus, serverStatus in
-            NoResourceViewModel(appFlowStatus: appFlowStatus,
-                                appNetworkStatus: appNetworkStatus,
-                                serverStatus: serverStatus)
+        container.register(NoResourceViewModel.self) { resolver in
+            NoResourceViewModel()
             }.inObjectScope(.transient)
 
         container.register(MediaListingViewModel.self) { resolver, playlistId, mediaCategory in

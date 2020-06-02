@@ -11,17 +11,25 @@ import RxSwift
 
 /// Coordinator in charge of all navigation through the splash screen.
 
+enum NoResourceViewSiblingStatus {
+    case embedded
+    case pushed
+}
+
 internal final class NoResourceCoordinator {
     
     // MARK: Fields
     private var noResourceViewController: NoResourceViewController!
     public var noResourceNavigationController: UINavigationController?
     public var noResourceRootViewController: RootViewController?
+    
+    public var viewControllerSiblingStatus: NoResourceViewSiblingStatus?
+    
     public var appFlowStatus: AppFlowStatus?
     public var networkStatus: ClassicReachability.NetworkStatus?
     public var serverStatus: ServerConnectivityStatus?
 
-    public var tryAgainTapped: PublishSubject<AppFlowStatus> = PublishSubject()
+    public var tryAgainTapped: PublishSubject<Void> = PublishSubject()
     private var noResourceFlowCompletion: FlowCompletion!
     
     // MARK: Dependencies
@@ -40,11 +48,12 @@ extension NoResourceCoordinator: NavigationCoordinating {
     /// the splashScreenNavigationController, triggers animation
     
     internal func flow(with setup: FlowSetup, completion: @escaping FlowCompletion, context: FlowContext) {
-        if let appFlowStatus: AppFlowStatus = self.appFlowStatus,
-            let networkStatus: ClassicReachability.NetworkStatus = self.networkStatus,
-            let serverStatus: ServerConnectivityStatus = self.serverStatus {
-            self.noResourceViewController = uiFactory.makeNoResourcePage(appFlowStatus, networkStatus, serverStatus)
-        }
+//        if let appFlowStatus: AppFlowStatus = self.appFlowStatus,
+//            if let networkStatus: ClassicReachability.NetworkStatus = self.networkStatus
+//            let serverStatus: ServerConnectivityStatus = self.serverStatus
+//        {
+        self.noResourceViewController = uiFactory.makeNoResourcePage()
+//        }
         //        noResourceNavigationController = UINavigationController(rootViewController: noResourceViewController)
         
         // first check if nav controller is not nil
@@ -73,14 +82,16 @@ extension NoResourceCoordinator: NavigationCoordinating {
         //        }
     }
     
-    internal func tryAppFlowAgain(_ status: AppFlowStatus) {
+    internal func tryAppFlowAgain() {
         
-        if let viewController: NoResourceViewController = self.noResourceViewController {
-            viewController.remove(viewController)
+        if self.viewControllerSiblingStatus == .embedded {
+            if let viewController: NoResourceViewController = self.noResourceViewController {
+                viewController.remove(viewController)
+            }
         }
         
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.tryAgainTapped.onNext(status)
+            self.tryAgainTapped.onNext(())
 //        }
     }
 }
@@ -88,7 +99,7 @@ extension NoResourceCoordinator: NavigationCoordinating {
 extension NoResourceCoordinator {
     private func handle(eventsFrom viewModel: NoResourceViewModel) {
         viewModel.tapTryAgainEvent.next { appFlowStatus in
-            self.tryAppFlowAgain(appFlowStatus)
+            self.tryAppFlowAgain()
         }
     }
     

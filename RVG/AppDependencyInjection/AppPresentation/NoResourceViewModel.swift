@@ -11,9 +11,9 @@ import RxSwift
 
 internal final class NoResourceViewModel {
     // MARK: Fields
-    public var appFlowStatus: AppFlowStatus
-    public var appNetworkStatus: ClassicReachability.NetworkStatus
-    public var serverStatus: ServerConnectivityStatus
+//    public var appFlowStatus: AppFlowStatus
+//    public var appNetworkStatus: ClassicReachability.NetworkStatus
+//    public var serverStatus: ServerConnectivityStatus
 //    public func section(at index: Int) -> SideMenuSectionViewModel {
 //        return sections.value[index]
 //    }
@@ -23,7 +23,7 @@ internal final class NoResourceViewModel {
 //    }
     
 //    public private(set) var sections = Field<[SideMenuSectionViewModel]>([])
-    public let tapTryAgainEvent = PublishSubject<AppFlowStatus>()
+    public let tapTryAgainEvent = PublishSubject<Void>()
     
 //    public var drillInEvent: Observable<SideMenuDrillInType> {
 //        // Emit events by mapping a tapped index path to setting-option.
@@ -41,13 +41,14 @@ internal final class NoResourceViewModel {
     // MARK: Dependencies
     private var bag = DisposeBag()
     
-    internal init(appFlowStatus: AppFlowStatus,
-                  appNetworkStatus: ClassicReachability.NetworkStatus,
-                  serverStatus: ServerConnectivityStatus
+    internal init(
+//        appFlowStatus: AppFlowStatus,
+//                  appNetworkStatus: ClassicReachability.NetworkStatus
+//                  serverStatus: ServerConnectivityStatus
                   ) {
-        self.appFlowStatus = appFlowStatus
-        self.appNetworkStatus = appNetworkStatus
-        self.serverStatus = serverStatus
+//        self.appFlowStatus = appFlowStatus
+//        self.appNetworkStatus = appNetworkStatus
+//        self.serverStatus = serverStatus
         setupDatasource()
     }
     
